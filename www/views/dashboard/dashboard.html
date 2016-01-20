@@ -176,8 +176,8 @@ function ObtenerDatosDashboard(){
 	
 	db.transaction(
 		function (tx){
-			console.log('SELECT COUNT(*) AS number_rows FROM facturas WHERE fecha >='+fdesde.getTime()+' AND fecha <='+fhasta.getTime()+'');
-			tx.executeSql('SELECT COUNT(*) AS number_rows FROM facturas WHERE fecha >=? AND fecha <=?',[fdesde.getTime(),fhasta.getTime()],
+			//console.log('SELECT COUNT(*) AS number_rows FROM facturas WHERE fecha >='+fdesde.getTime()+' AND fecha <='+fhasta.getTime()+'');
+			tx.executeSql('SELECT COUNT(*) AS number_rows FROM facturas WHERE anulada=0 and fecha >=? AND fecha <=?',[fdesde.getTime(),fhasta.getTime()],
 			function(tx,res){
 				console.log('trans'+res.rows.item(0).number_rows);
 				console.log('fecha'+fdesde.getTime()+'/'+fhasta.getTime());
@@ -215,8 +215,8 @@ function ObtenerDatosDashboard(){
 	
 	db.transaction(
 		function (tx){
-			console.log('SELECT s.formulado as formu,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, productos s WHERE f.fecha >='+fdesde.getTime()+' AND s.timespan=p.timespan_formulado AND f.fecha <='+fhasta.getTime()+' and f.timespan=p.timespan_factura group by timespan_formulado order by tot desc limit 10');
-			tx.executeSql('SELECT s.formulado as formu,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, productos s WHERE f.fecha >=? AND s.timespan=p.timespan_formulado AND f.fecha <=? and f.timespan=p.timespan_factura group by timespan_formulado order by tot desc limit 10',[fdesde.getTime(),fhasta.getTime()],
+			//console.log('SELECT s.formulado as formu,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, productos s WHERE f.fecha >='+fdesde.getTime()+' AND s.timespan=p.timespan_formulado AND f.fecha <='+fhasta.getTime()+' and f.timespan=p.timespan_factura group by timespan_formulado order by tot desc limit 10');
+			tx.executeSql('SELECT s.formulado as formu,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, productos s WHERE f.anulada=0 and f.fecha >=? AND s.timespan=p.timespan_formulado AND f.fecha <=? and f.timespan=p.timespan_factura group by timespan_formulado order by tot desc limit 10',[fdesde.getTime(),fhasta.getTime()],
 			function(tx,res){
 				if(res.rows.length>0){
 					var datap = new google.visualization.DataTable();
@@ -236,8 +236,8 @@ function ObtenerDatosDashboard(){
 	
 	db.transaction(
 		function (tx){
-			console.log('SELECT s.categoria as categ,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, categorias s,productos pr WHERE f.fecha >='+fdesde.getTime()+' AND s.timespan=pr.categoriaid AND p.timespan_formulado=pr.timespan AND f.fecha <='+fhasta.getTime()+' and f.timespan=p.timespan_factura group by categoriaid order by tot desc');
-			tx.executeSql('SELECT s.categoria as categ,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, categorias s,productos pr WHERE f.fecha >=? AND s.timespan=pr.categoriaid AND p.timespan_formulado=pr.timespan AND f.fecha <=? and f.timespan=p.timespan_factura group by categoriaid order by tot desc',[fdesde.getTime(),fhasta.getTime()],
+			//console.log('SELECT s.categoria as categ,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, categorias s,productos pr WHERE f.fecha >='+fdesde.getTime()+' AND s.timespan=pr.categoriaid AND p.timespan_formulado=pr.timespan AND f.fecha <='+fhasta.getTime()+' and f.timespan=p.timespan_factura group by categoriaid order by tot desc');
+			tx.executeSql('SELECT s.categoria as categ,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, categorias s,productos pr WHERE f.anulada=0 and f.fecha >=? AND s.timespan=pr.categoriaid AND p.timespan_formulado=pr.timespan AND f.fecha <=? and f.timespan=p.timespan_factura group by categoriaid order by tot desc',[fdesde.getTime(),fhasta.getTime()],
 			function(tx,res){
 				if(res.rows.length>0){
 					var data = new google.visualization.DataTable();
@@ -273,58 +273,5 @@ function ObtenerDatosDashboard(){
 			});
 		},errorCB,successCB);
 }
-
-/*function drawChart(vectorcat) {
-	//console.log(vectorcat);
-	var data = new google.visualization.DataTable();
-	data.addColumn('string', 'Categoria');
-	data.addColumn('number', 'Ventas');
-	for(var k in vectorcat){
-		data.addRow([vectorcat[k].nombre,parseFloat(vectorcat[k].venta)]);
-	}
-    var options = {
-        title: 'Ventas por Categoría'
-    };
-
-    var chart = new google.visualization.PieChart(document.getElementById('ventascategoria'));
-    chart.draw(data,options);
-}
-
-var categoriasvector= new Array();
-function SumarCategoria(idprod,precio,cant){
-		console.log(idprod);
-		var db = window.openDatabase("Database","1.0","PractisisMobile", 200000);
-		db.transaction(
-			function (tx4){
-				//console.log(misproductos[s].id_producto);
-				tx4.executeSql('SELECT c.categoria as cat,c.timespan as idcat from categorias c left join productos p on p.categoriaid=c.timespan where p.timespan=?',[idprod],
-				function(tx4,res4){
-					//console.log(res4);
-					if(res4.rows.length>0){
-						for(var t=0;t<res4.rows.length;t++){
-							var miitem=res4.rows.item(t);
-							//console.log(miitem);
-							var cati=miitem.idcat;
-							var catn=miitem.cat;
-							if(categoriasvector['"'+cati+'"']==null){
-								categoriasvector['"'+cati+'"']=new Array();
-								categoriasvector['"'+cati+'"'].venta=parseFloat(precio)*parseFloat(cant);
-								categoriasvector['"'+cati+'"'].nombre=catn;
-							}else{
-								var antes=parseFloat(categoriasvector['"'+cati+'"'].venta);
-								var ahora=(parseFloat(cant)*parseFloat(precio))+antes;
-								//console.log(misproductos[s].cant_prod);
-								categoriasvector['"'+cati+'"'].venta=ahora.toFixed(2);
-								var antesc=parseFloat(categoriasvector['"'+cati+'"'].cantidad);
-							}
-						}
-										
-					}
-					console.log(categoriasvector);
-					drawChart(categoriasvector);
-				});								
-		},errorCB,successCB);
-			
-}*/
 </script>
   

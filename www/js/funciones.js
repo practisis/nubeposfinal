@@ -628,7 +628,7 @@ function cambiarCantidad(){
 						var servnew=0;
 						$('.productDetails').each(function(){
 							var datosimp=$(this).val().split('|');
-							if(datosimp[7].indexOf('1@')>=0){
+							if(datosimp[7].indexOf('1')>=0){
 								subconivanew+=parseFloat(datosimp[3])*parseFloat(datosimp[2]);
 								ivanew+=parseFloat(datosimp[3])*parseFloat(datosimp[2])*0.12;
 							}
@@ -637,7 +637,7 @@ function cambiarCantidad(){
 							}
 							
 							//para servicio
-							if(datosimp[7].indexOf('@2')>=0){
+							if(datosimp[7].indexOf('2')>=0){
 								servnew+=parseFloat(datosimp[3])*0.10*parseFloat(datosimp[2]);
 							}
 						})
@@ -795,22 +795,19 @@ function pagar(){
 			});
 		});
 	
-	var nombreEmpresa="NubePOS"; 
-	var dirEmpresa="Av. Direccion";
-	$('#JSONclientesLocal').html('"empresa":{'+'"nombre":"'+nombreEmpresa+'","direccion":"'+dirEmpresa+'"}');
+	/*var nombreEmpresa="NubePOS"; 
+	var dirEmpresa="Av. Direccion"; 
 		
 	db.transaction(function (tx){
-		tx.executeSql('SELECT * FROM CONFIG where id=1',[],
+		tx.executeSql('SELECT * FROM CONFIG',[],
 		function(tx,res){
 			if(res.rows.length>0){
 				var datosem=res.rows.item(0);
 				dirEmpresa=datosem.nombre;
 				nombreEmpresa=datosem.direccion;
-				var jsonEmpresa='"empresa":{'+'"nombre":"'+nombreEmpresa+'","direccion":"'+dirEmpresa+'"}';
-				$('#JSONclientesLocal').html(jsonEmpresa);
 			}
 		});
-	});
+	});*/
 	
 	var subtotalSinIva = $('#subtotalSinIva').val();
 	var subtotalIva = $('#subtotalIva').val();
@@ -908,7 +905,7 @@ function pagar(){
 		json += '"total" : "'+ total +'",';
 		json += '"numerofact" : "'+ nofactura +'"';
 		json += '},';
-		json +=$('#JSONclientesLocal').html()+',"pagos":[';
+		json +=$('#JSONempresaLocal').html()+'"pagos":[';
 		
 		var nformas=0;
 		var cadefectivo='';
@@ -1248,6 +1245,7 @@ function AntesDePagar(){
 	//$('#paymentModule').modal('show');
 	changePaymentCategory('1','Efectivo');
 	$('#paymentModule').slideDown();
+	$('#cedulaP').val('9999999999999');
 	BuscarCliente(13);
 	//$("#cuadroClientes").css('display','none');
 	$("#cuadroClientes,#opaco").css("display","none");
@@ -1325,7 +1323,7 @@ function ColocarFormasPago(){
 }
 
 function BuscarCliente(e){
-	var valor=$('#busquedacliente').val();
+	var valor=$('#cedulaP').val();
 	if(e==13){
 		mostrarClientes();
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);

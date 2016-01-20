@@ -2227,7 +2227,11 @@ function jsonNuevoCliente()
 }
 function noCliente()
 {
-	$("#cuadroClientes,#opaco").fadeOut("fast",function(){});
+	if($('#cedulaP').val()==''){
+		$('#cedulaP').val('9999999999999');
+		BuscarCliente(13);
+		$("#cuadroClientes,#opaco").fadeOut("fast",function(){});
+	}
 }
 
 function mostrarClientes(){
@@ -2254,13 +2258,13 @@ function mostrarClientes(){
 											<td>\
 										<div class="input-group" style="width:100%; margin-bottom:10px;"><span class="input-group-addon" style="width:30%">\
 													&nbsp;Cédula* \
-											</span><input tabindex="0" id="cedulaP" value="9999999999" class="form-control"/> </div>\
+											</span><input tabindex="0" id="cedulaP" value="9999999999999" class="form-control"/> </div>\
 												</td>\
 										</tr>\
 										<tr>\
 											<td>\
 												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%">&nbsp;Nombre*</span>\
-													<input  tabindex="1" id="nombreP" class="form-control"/></div>\
+													<input  tabindex="1" id="nombreP" class="form-control" value="Consumidor Final"/></div>\
 											</td>\
 										</tr>\
 										\
@@ -2357,8 +2361,8 @@ function mostrarClientes(){
 			$('#clientefind').html('');
 			BuscarCliente(13);
 		}else if(idcli.length==0){
-			$('#clientefind').html('');
 			$('#busquedacliente').val('9999999999999');
+			$('#clientefind').val('Consumidor Final');
 			BuscarCliente(13);
 		}else{
 			/*$('#cuadroClientes input').each(function(){

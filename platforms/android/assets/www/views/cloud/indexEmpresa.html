@@ -167,7 +167,7 @@
 				setTimeout(function() {
 					$('#msjOk').fadeOut('slow');
 				}, 3000);
-			},errorCB,successCB);
+			},errorCB,function(){$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+nombreEsta+'","direccion":"'+dir+'"},');});
 		}
 		
 	}

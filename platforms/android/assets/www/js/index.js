@@ -100,7 +100,7 @@ var app = {
 		
 		window.StarIOAdapter = {};
 		var handle_error_callback = function(error_message) {
-			alert(error_message);
+			//alert(error_message);
 			showalert(error_message);
 		};
 
@@ -241,7 +241,7 @@ var app = {
             //console.log('Ana');
             //$('#myModal').modal('hide');
         });
-		tx.executeSql('CREATE TABLE IF NOT EXISTS PRESUPUESTO (id integer primary key AUTOINCREMENT,timespan text UNIQUE,valor real,fecha integer,transacciones integer);');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS PRESUPUESTO (id integer primary key AUTOINCREMENT,timespan text,valor real,fecha integer UNIQUE,transacciones integer);');
     }
 
     function populateDB(tx){
@@ -437,7 +437,6 @@ var app = {
                 //console.log(row);
                 $('#idfactura').val(row.id);
                 $('#cliente').val(row.clientName);
-                $('#numerofactura').html('Factura N° 00000000'+row.id);
 				if(row.anulada=='1'||row.anulada==1){
 					$('#btnanularf').css('display','none');
 				}
@@ -458,9 +457,11 @@ var app = {
 				var descAplicado=parseFloat(datosfact.Pagar[0].factura.descuento).toFixed(2);
 				console.log('Descuento : '+descAplicado);
 				
+				var facturanumber=datosfact.Pagar[0].factura.numerofact;
+				$('#numerofactura').html('Factura N° '+facturanumber);
 				
                 $('#total').html(totalf);
-                $('#invoiceTotal').html(totalf)
+                $('#invoiceTotal').html(totalf);
                 var intabla='';
                 var variosprods=(datosfact.Pagar[0].producto);
                 for(var n=0;n<variosprods.length;n++){
@@ -625,6 +626,21 @@ function hidealert(){
     $('#alert').html('');
     $('#alert').slideUp('fast');
 }
+
+function showalertred(msg){
+    $('#alertred').html(msg);
+    $('html, body').animate( { scrollTop : 0 },500,function(){
+        $('#alertred').slideDown('slow',function(){
+            setTimeout(function(){hidealertred()},1500);
+        });
+    });
+}
+
+function hidealertred(){
+    $('#alertred').html('');
+    $('#alertred').slideUp('fast');
+}
+
 
 function imprimervprueba(){
   //alert('entra');

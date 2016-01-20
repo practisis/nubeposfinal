@@ -30,7 +30,7 @@
 		StarIOAdapter.searchall("USB:", function(dataprint){
 			//alert(res);
 			var res=dataprint.split('@');
-			var linea="<tr><td>"+res[1]+"</td><td><input class='printerradio' data-value='"+res[0]+"' type='radio' name='printer' value='"+res[0]+"' checked id='print_"+res[0]+"'/></td></tr>";
+			var linea="<tr><td>"+res[1]+"</td><td><input class='printerradio' data-value='"+res[0]+"' type='radio' name='printer' value='"+res[0]+"' id='print_"+res[0]+"'/></td></tr>";
 			$('#listaimpresoras tbody').append(linea);
 			if($('#listaimpresoras tbody').html()!=''){
 					$('#btnsetear,#btnprobar').fadeIn();
@@ -42,14 +42,14 @@
 							if(results.rows.length>0){
 								var idprinter=results.rows.item(0);
 								if(idprinter.printer!=''){
-									$('#print_'+idprinter.printer).click();
+									$('#print_'+idprinter.printer).attr('checked','true');
 								}
 							}
 						});},errorCB,successCB);
 			}else
 				$('#btnsetear,#btnprobar').css("display","none");
 		}, function(error) {
-			showalert("Ocurrió un problema: " + error);
+			showalert("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
 		});	
 	}
 	
@@ -63,7 +63,7 @@
 				break;
 			}
 		});*/
-		
+		alert(laprinter);
 		if(laprinter!=''){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			var cuantos=0;
@@ -110,14 +110,14 @@
 			console.log(results);
 			var idprinter='';
 			if(results.rows.length>0){
-				//alert("printer: "+results.rows.item(0).printer);
+				alert("printer: "+results.rows.item(0).printer);
 				var idprinter=results.rows.item(0);
-				if(idprinter.printer!=''){
-					var datapr=$('#jsonprint').html();
-						StarIOAdapter.rawprint(datapr,idprinter.printer.toString(), function() {
-						//StarIOAdapter.rawprint(datapr,"USB:SN:12345678", function() {
+				if(idprinter.printer!=null){
+					    var datapr=$('#jsonprint').html();
+						alert(datapr+'/'+idprinter.printer);
+						StarIOAdapter.rawprint(datapr,idprinter.printer, function() {
 						showalert("Imprimiendo test");
-					});
+						});
 				}else{
 					showalert("No se ha configurado una impresora.");
 				}

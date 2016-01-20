@@ -23,7 +23,7 @@
 	}
 
 	$("#imprimirDetalle").click(function(){
-		alert("imprimir cierre");
+		//alert("imprimir cierre");
 		fechaFiltro=parseInt(convertirTime($("#fechadesde").val()));//1447263393685;//"2015-11-11"; ////$("#select").val();
 
 		fechaRealFiltro=saberFecha(fechaFiltro);
@@ -39,7 +39,7 @@
 
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
-				tx.executeSql('SELECT * FROM FACTURAS',[],function(tx,results){
+				tx.executeSql('SELECT * FROM FACTURAS WHERE anulada!=1',[],function(tx,results){
 				strDetalle='';
 				intToday=parseInt(today);
 				var contPasa=0;
@@ -69,9 +69,10 @@
 												sumaTotales=sumaTotales+currentTotal;
 										currentSubtotal=parseFloat(obj.Pagar[0].factura.subtotal_iva);
 											sumaSubtotales=sumaSubtotales+currentSubtotal;
-										expImp=(obj.Pagar[0].factura.impuestos).split("/");
-										iva=parseFloat(expImp[1]);
-											sumaIvas = sumaIvas + iva;
+										/*expImp=(obj.Pagar[0].factura.impuestos).split("/");
+										iva=parseFloat(expImp[1]);*/
+											//sumaIvas = sumaIvas + iva;
+											sumaIvas = sumaIvas + parseFloat(obj.Pagar[0].factura.iva);
 									}
 
 

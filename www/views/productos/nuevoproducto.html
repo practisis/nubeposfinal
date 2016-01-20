@@ -47,7 +47,7 @@
                 <div class="col-xs-4">
     				<h4>Código</h4>
         				<div class="input-group">
-        					<input style="" class="form-control" type="text" autofocus=""  placeholder="Ingrese aquí su código" name='codigoproducto' id='codigoproducto'/>
+        					<input style="" class="form-control" type="text" autofocus=""  placeholder="Ingrese aquí su código" type='number' name='codigoproducto' id='codigoproducto'/>
         					<span class="input-group-btn"> <button class="btn btn-default" type="button"><span class='fa fa-barcode'></span></button> </span>
                         </div>
         		</div>
@@ -372,12 +372,13 @@
 					tx.executeSql('SELECT COUNT(codigo) as cuantos FROM PRODUCTOS WHERE codigo='+codigop+';',[],function(tx,res){
 						var existen=res.rows.item(0).cuantos;
 						if(existen > 0){
-							$('#alert').html('El codigo de producto : '+ codigop +' ya existe no puede ser el mismo');
-							$('#alert').fadeIn();
-							setTimeout(function() {
-								$('#alert').fadeOut();
+							showalertred('El codigo de producto : '+ codigop +' ya existe no puede ser el mismo');
+							setTimeout(function(){
 								$('#codigoproducto').focus();
-							}, 3000);
+								$('#codigoproducto').effect('highlight',{color:'red'},2500);
+							},1500);
+							
+							
 						}else{
 							if(currentTimeSpanCat==0){
 								db.transaction(function(tx){

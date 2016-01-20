@@ -19,11 +19,17 @@ function SyncStart(){
 		$('.navbar').slideDown('slow');
 		envia('dashboard');
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-		db.transaction(function(tx){tx.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1',[],function(tx,results){
-			if(results.rows.item(0).cp==0||results.rows.item(0).cp==null){
-				LaunchBoarding();
-			}
-		});
+		db.transaction(function(tx){
+			tx.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1',[],function(tx,results){
+				if(results.rows.item(0).cp==0||results.rows.item(0).cp==null){
+					LaunchBoarding();
+				}
+			});
+			
+			tx.executeSql('SELECT nombre,direccion from config WHERE id=1',[],function(tx,results){
+				var dataemp=results.rows.item(0);
+				$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+dataemp.nombre+'","direccion":"'+dataemp.direccion+'"},');
+			});
 		});
 		setTimeout(function(){SincronizadorNormal();},30000);
 		//setInterval(function(){SincronizadorNormal();},3000);
@@ -56,7 +62,7 @@ function ExtraeDatosApi(donde){
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
 				tx.executeSql('delete from categorias',[],function(tx,results){});
-				tx.executeSql("delete from sqlite_sequence where name='categorias'",[],function(tx,results){});
+				tx.executeSql("delete from sqlite_sequence where name='CATEGORIAS'",[],function(tx,results){});
 				
 			for(var n=0;n<jsoncategorias.length;n++){
 				var item=jsoncategorias[n];
@@ -82,10 +88,10 @@ function ExtraeDatosApi(donde){
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
 				tx.executeSql('delete from productos',[],function(tx,results){});
-				tx.executeSql("delete from sqlite_sequence where name='productos'",[],function(tx,results){});
+				tx.executeSql("delete from sqlite_sequence where name='PRODUCTOS'",[],function(tx,results){});
 			for(var n=0;n<jsonproductos.length;n++){
 				var item=jsonproductos[n];
-				tx.executeSql('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar) VALUES("'+item.formulado_nombre+'", "'+item.formulado_codigo+'" ,'+item.formulado_precio+','+item.categoria_timespan+','+item.cargaiva+','+item.formulado_productofinal+','+item.formulado_matprima+',"'+item.formulado_timespan+'",'+item.carga_servicio+',"false")',[],function(tx,results){
+				tx.executeSql('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color) VALUES("'+item.formulado_nombre+'", "'+item.formulado_codigo+'" ,'+item.formulado_precio+','+item.categoria_timespan+','+item.cargaiva+','+item.formulado_productofinal+','+item.formulado_matprima+',"'+item.formulado_timespan+'",'+item.carga_servicio+',"false","'+item.color+'")',[],function(tx,results){
 				console.log("insertado producto:"+results.insertId);
 				});
 			}
@@ -107,7 +113,7 @@ function ExtraeDatosApi(donde){
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
 			tx.executeSql('delete from clientes',[],function(tx,results){});
-			tx.executeSql("delete from sqlite_sequence where name='clientes'",[],function(tx,results){});
+			tx.executeSql("delete from sqlite_sequence where name='CLIENTES'",[],function(tx,results){});
 			for(var n=0;n<jsonclientes.length;n++){
 				var item=jsonclientes[n];
 				tx.executeSql('INSERT INTO CLIENTES(nombre,cedula,email,direccion,telefono,sincronizar,existe,timespan) VALUES("'+item.nombre+'" , "'+item.cedula+'" , "'+item.email+'" , "'+item.direccion+'" ,  "'+item.telefono+'" ,  "false" , "0" , "0" )',[],function(tx,results){
@@ -130,7 +136,7 @@ function ExtraeDatosApi(donde){
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
 				tx.executeSql('delete from presupuesto',[],function(tx,results){});
-				tx.executeSql("delete from sqlite_sequence where name='presupuesto'",[],function(tx,results){});
+				tx.executeSql("delete from sqlite_sequence where name='PRESUPUESTO'",[],function(tx,results){});
 				for(var n=0;n<jsonpresupuestos.length;n++){
 					var item=jsonpresupuestos[n];
 					tx.executeSql('INSERT INTO PRESUPUESTO(timespan,valor,fecha,transacciones) VALUES("'+item.timespan+'",'+item.valor+','+item.fecha+','+item.transacciones+')',[],function(tx,results){
@@ -259,7 +265,7 @@ function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direcc
 					$('#msjOk').fadeOut('slow');
 				}, 3000);
 				});
-	},errorCB,successCB);
+	},errorCB,function(){$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+nombre+'","direccion":"'+direccion+'"},');});
 		
 	
 	db2.transaction(
@@ -417,11 +423,11 @@ function DatosRecurrentes(cual){
 					var item=jsonproductos[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
 					
-					tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar)VALUES("'+item.formulado+'","'+item.formulado_codigo+'",'+item.precio+',"'+item.formulado_tipo_timespan+'",'+item.ivacompra+','+item.esproductofinal+','+item.esmateria+',"'+item.timespan+'" ,'+item.tieneservicio+',"false")',[],function(tx,results){
+					tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color)VALUES("'+item.formulado+'","'+item.formulado_codigo+'",'+item.precio+',"'+item.formulado_tipo_timespan+'",'+item.ivacompra+','+item.esproductofinal+','+item.esmateria+',"'+item.timespan+'" ,'+item.tieneservicio+',"false","'+item.color+'")',[],function(tx,results){
 						console.log("insertado prod:"+results.insertId);
 					});
 					
-					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+item.formulado+'",codigo="'+item.formulado_codigo+'",precio='+item.precio+',categoriaid="'+item.formulado_tipo_timespan+'",cargaiva='+item.ivacompra+',productofinal='+item.esproductofinal+',materiaprima='+item.esmateria+',timespan="'+item.timespan+'",servicio='+item.tieneservicio+',sincronizar="false" WHERE timespan="'+item.timespan+'"',[],function(tx,results){
+					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+item.formulado+'",codigo="'+item.formulado_codigo+'",precio='+item.precio+',categoriaid="'+item.formulado_tipo_timespan+'",cargaiva='+item.ivacompra+',productofinal='+item.esproductofinal+',materiaprima='+item.esmateria+',timespan="'+item.timespan+'",servicio='+item.tieneservicio+',sincronizar="false",color="'+item.color+'" WHERE timespan="'+item.timespan+'"',[],function(tx,results){
 						console.log("actualizado prod");
 					});
 				}
@@ -463,7 +469,7 @@ function DatosRecurrentes(cual){
 						console.log("insertado cliente:"+results.insertId);
 					});
 					
-					tx.executeSql('UPDATE CLIENTES SET nombre=  "'+item.nombre+'"  , cedula = "'+item.cedula+'" , email="'+item.email+'"  , direccion = "'+item.direccion+'" , sincronizar="false"  WHERE cedula='+item.cedula,[],function(tx,results){
+					tx.executeSql('UPDATE CLIENTES SET nombre=  "'+item.nombre+'"  , cedula = "'+item.cedula+'" , email="'+item.email+'"  , direccion = "'+item.direccion+'" , sincronizar="false"  WHERE cedula="'+item.cedula+'"',[],function(tx,results){
 						console.log("actualizado cliente");
 					});
 				}
@@ -505,7 +511,7 @@ function DatosRecurrentes(cual){
 						console.log("insertado presupuesto:"+results.insertId);
 					});
 					
-					tx.executeSql('UPDATE PRESUPUESTO SET timespan=  "'+item.id+'"  , valor = "'+item.valor+'" , fecha="'+item.fecha+'", transacciones = "'+item.transacciones+'" WHERE timespan='+item.id,[],function(tx,results){
+					tx.executeSql('UPDATE PRESUPUESTO SET timespan=  "'+item.id+'"  , valor = '+item.valor+' , fecha='+item.fecha+', transacciones = '+item.transacciones+' WHERE fecha='+item.fecha,[],function(tx,results){
 						console.log("actualizado presupuesto");
 					});
 				}
@@ -610,7 +616,7 @@ function PostaLaNube(arraydatos,cual,accion,t){
 	if(accion=='Categorias'){
 		jsonc='{"id":"'+item.id+'","categoria":"'+item.categoria+'","activo":"'+item.activo+'","timeSpan":"'+item.timespan+'"}';
 	}else if(accion=='Productos'){
-		jsonc='{  "id" : "'+item.id_local+'" , "formulado" : "'+item.formulado+'" , "timespan" : "'+item.timespan+'" , "codigo" : "'+item.codigo+'" , "precio" : "'+item.precio+'" , "cargaiva" : "'+item.cargaiva+'" , "categoriaid" : "'+item.categoriaid+'" , "productofinal" : "'+item.productofinal+'" , "materiaprima" : "'+item.materiaprima+'" , "servicio" : "'+item.servicio+'" , "activo" : "'+item.estado+'" }';
+		jsonc='{  "id" : "'+item.id_local+'" , "formulado" : "'+item.formulado+'" , "timespan" : "'+item.timespan+'" , "codigo" : "'+item.codigo+'" , "precio" : "'+item.precio+'" , "cargaiva" : "'+item.cargaiva+'" , "categoriaid" : "'+item.categoriaid+'" , "productofinal" : "'+item.productofinal+'" , "materiaprima" : "'+item.materiaprima+'" , "servicio" : "'+item.servicio+'" , "activo" : "'+item.estado+'","color":"'+item.color+'" }';
 	}else if(accion=='Clientes'){
 		jsonc='{  "id" : "'+item.id+'" , "cedula" : "'+item.cedula+'" , "nombre" : "'+item.nombre+'"  , "email" : "'+item.email+'" , "direccion" : "'+item.direccion+'" , "telefono" : "'+item.telefono+'" }';
 	}else if(accion=='Facturas'){

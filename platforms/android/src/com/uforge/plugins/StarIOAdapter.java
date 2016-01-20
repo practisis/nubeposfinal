@@ -165,6 +165,8 @@ public class StarIOAdapter extends CordovaPlugin {
 		String totalfact="0.00";
 		String subtotal="0.00";
 		String iva="0.00";
+		String servicio="0.00";
+		String descuento="0.00";
 		String nofact="";
 		SimpleDateFormat hoyformat=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String hoy= hoyformat.format(new Date());
@@ -195,9 +197,11 @@ public class StarIOAdapter extends CordovaPlugin {
 			subconiva=DoubleFormat(objfactura.getDouble("subtotal_iva"));
 			//iva=DoubleFormat(objfactura.getDouble("subtotal_iva")*0.12);
 			iva=DoubleFormat(objfactura.getDouble("iva"));
+			servicio=DoubleFormat(objfactura.getDouble("servicio"));
 			subsiniva=DoubleFormat(objfactura.getDouble("subtotal_sin_iva"));
 			subtotal=DoubleFormat(objfactura.getDouble("subtotal_sin_iva")+objfactura.getDouble("subtotal_iva"));
-			totalfact=DoubleFormat(objfactura.getDouble("total"));
+			descuento=DoubleFormat(objfactura.getDouble("descuento"));
+			totalfact=DoubleFormat(objfactura.getDouble("total")-objfactura.getDouble("descuento"));
 			nofact=objfactura.getString("numerofact");
 			nombreEmpresa=objempresa.getString("nombre");
 			direccionEmpresa=objempresa.getString("direccion");
@@ -352,11 +356,28 @@ public class StarIOAdapter extends CordovaPlugin {
 								totalfact=" "+totalfact;
 							}
 						}
+						
+						if(iva.length()<6){
+							int tam=6-iva.length();
+							for(int n=0;n<tam;n++){
+								iva=" "+iva;
+							}
+						}
+						
+						if(servicio.length()<6){
+							int tam=6-servicio.length();
+							for(int n=0;n<tam;n++){
+								servicio=" "+servicio;
+							}
+						}
 
 				list.add(createCp1252("                 SUBTOTAL:"+String.valueOf(subconiva)+"\r\n"));
 				list.add(createCp1252("                SUBCONIVA:"+String.valueOf(subconiva)+"\r\n"));
 				list.add(createCp1252("                SUBSINIVA:"+String.valueOf(subsiniva)+"\r\n"));
 				list.add(createCp1252("                      IVA:"+String.valueOf(iva)+"\r\n"));
+				list.add(createCp1252("                 SERVICIO:"+String.valueOf(servicio)+"\r\n"));
+				if(descuento!="0.00")
+				list.add(createCp1252("                DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
 				
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
 				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x02 });
@@ -593,11 +614,28 @@ public class StarIOAdapter extends CordovaPlugin {
 								totalfact=" "+totalfact;
 							}
 						}
+						
+						if(descuento.length()<6){
+							int tam=6-descuento.length();
+							for(int n=0;n<tam;n++){
+								descuento=" "+descuento;
+							}
+						}
+						
+						if(servicio.length()<6){
+							int tam=6-servicio.length();
+							for(int n=0;n<tam;n++){
+								servicio=" "+servicio;
+							}
+						}
 
 				list.add(createCp1252("                           SUBTOTAL:"+String.valueOf(subtotal)+"\r\n"));
 				list.add(createCp1252("                          SUBCONIVA:"+String.valueOf(subconiva)+"\r\n"));
 				list.add(createCp1252("                          SUBSINIVA:"+String.valueOf(subsiniva)+"\r\n"));
 				list.add(createCp1252("                                IVA:"+String.valueOf(iva)+"\r\n"));
+				list.add(createCp1252("                           SERVICIO:"+String.valueOf(servicio)+"\r\n"));
+				
+				list.add(createCp1252("                          DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
 				
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
 				list.add(new byte[] { 0x1b, 0x57, 0x01});

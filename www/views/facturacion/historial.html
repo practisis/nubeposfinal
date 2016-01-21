@@ -18,13 +18,15 @@
 	function convertirTime(strFecha){
 		var myDate=strFecha; // 2015-11-11 var myDate="26-02-2012";
 		myDate=myDate.split("-");
-		var newDate=myDate[1]+"/"+myDate[2]+"/"+myDate[0]; // var newDate=myDate[1]+"/"+myDate[0]+"/"+myDate[2];
+		var newDate=myDate[0]+"/"+myDate[1]+"/"+myDate[2]+" "+myDate[3]; // var newDate=myDate[1]+"/"+myDate[0]+"/"+myDate[2];
+		console.log(newDate);
 		return (new Date(newDate).getTime());
 	}
 
 	$("#imprimirDetalle").click(function(){
 		//alert("imprimir cierre");
-		fechaFiltro=parseInt(convertirTime($("#fechadesde").val()));//1447263393685;//"2015-11-11"; ////$("#select").val();
+		var fechaFiltro=parseInt(convertirTime($("#fechadesde").val()+"-00:00:00"));//1447263393685;//"2015-11-11"; ////$("#select").val();
+		var fechaFiltroh=parseInt(convertirTime($("#fechadesde").val()+"-23:59:59"));//1447263393685;//"2015-11-11"; ////$("#select").val();
 
 		fechaRealFiltro=saberFecha(fechaFiltro);
 		fechaNow=obtenerFechaHoy();
@@ -33,54 +35,63 @@
 		var sumaTotales=0;
 		var sumaSubtotales=0;
 		var sumaIvas=0;
+		var sumaDescuentos=0;
+		var sumaServicios=0;
+		var sumaAnuladas=0;
 		var today = new Date().getTime();
 
 		jsonFormaPago=$.parseJSON($("#jsonformaspago").text());
-
+		console.log('misfiltros:'+fechaFiltro+'/'+fechaFiltroh);
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
-				tx.executeSql('SELECT * FROM FACTURAS WHERE anulada!=1',[],function(tx,results){
+				tx.executeSql('SELECT * FROM FACTURAS WHERE anulada!=1 and fecha>=? and fecha<=?',[fechaFiltro,fechaFiltroh],function(tx,results){
 				strDetalle='';
 				intToday=parseInt(today);
 				var contPasa=0;
 					for (var i=0; i <= results.rows.length-1; i++){
-									var row = results.rows.item(i);
-									var fechaFactura = parseInt(row.fecha);
+						var row = results.rows.item(i);
+						var fechaFactura = parseInt(row.fecha);
 
-									if(fechaFactura>=fechaFiltro && fechaFactura<=intToday){
-										contPasa++;
+						//if(fechaFactura>=fechaFiltro && fechaFactura<=intToday){
+						contPasa++;
 
-										var Json = row.fetchJson;
-										var formaPago = row.paymentsUsed;
-
-										obj=$.parseJSON(Json);
-										currentTotal=parseFloat(obj.Pagar[0].factura.total);
-										var cash = currentTotal;//row.cash;
-										for(j=0;j<=(jsonFormaPago.FormaPago.length-1);j++){
-											idForma=jsonFormaPago.FormaPago[j].id;
-											nombreForma=jsonFormaPago.FormaPago[j].nombre;
-
-											if(idForma==formaPago){
-												strDetalle+=idForma+'@'+nombreForma+'@'+cash+"|";
-											}
-										}
+						var Json = row.fetchJson;
+						var formaPago = row.paymentsUsed;
+						obj=$.parseJSON(Json);
+						currentTotal=parseFloat(obj.Pagar[0].factura.total);
+						var cash = currentTotal;//row.cash;
+						for(j=0;j<=(jsonFormaPago.FormaPago.length-1);j++){
+							idForma=jsonFormaPago.FormaPago[j].id;
+							nombreForma=jsonFormaPago.FormaPago[j].nombre;
+							if(idForma==formaPago){
+								strDetalle+=idForma+'@'+nombreForma+'@'+cash+"|";
+							}
+						}
 
 
-												sumaTotales=sumaTotales+currentTotal;
-										currentSubtotal=parseFloat(obj.Pagar[0].factura.subtotal_iva);
-											sumaSubtotales=sumaSubtotales+currentSubtotal;
+						sumaTotales=sumaTotales+currentTotal;
+						currentSubtotal=parseFloat(obj.Pagar[0].factura.subtotal_iva)+parseFloat(obj.Pagar[0].factura.subtotal_sin_iva);
+						sumaSubtotales=sumaSubtotales+currentSubtotal;
 										/*expImp=(obj.Pagar[0].factura.impuestos).split("/");
 										iva=parseFloat(expImp[1]);*/
 											//sumaIvas = sumaIvas + iva;
-											sumaIvas = sumaIvas + parseFloat(obj.Pagar[0].factura.iva);
-									}
-
-
+						sumaIvas = sumaIvas + parseFloat(obj.Pagar[0].factura.iva);
+						sumaDescuentos = sumaDescuentos + parseFloat(obj.Pagar[0].factura.descuento);
+						sumaServicios = sumaServicios + parseFloat(obj.Pagar[0].factura.servicio);
+				    }
+					
+					tx.executeSql('SELECT count(*) as c FROM FACTURAS WHERE anulada=1 and fecha>=? and fecha<=?',[fechaFiltro,fechaFiltroh],function(tx,results2){
+						if(results2.rows.length>0){
+							var item=results2.rows.item(0);
+							if(item.c!=null&&parseInt(item.c)>0){
+								sumaAnuladas=item.c;
 							}
+						}
+					});
 							if(contPasa){
 								strDetalle=strDetalle.substring(0,strDetalle.length-1);
 								nFacturas=results.rows.length;
-								var respuesta = imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,sumaSubtotales.toFixed(2),sumaTotales.toFixed(2),sumaIvas.toFixed(2),strDetalle);
+								var respuesta = imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,sumaSubtotales.toFixed(2),sumaTotales.toFixed(2),sumaIvas.toFixed(2),sumaServicios.toFixed(2),sumaDescuentos.toFixed(2),strDetalle,sumaAnuladas);
 								var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 								db.transaction(function(tx){
 										tx.executeSql("SELECT printer FROM CONFIG where id=1",[],function(tx,results){
@@ -106,7 +117,7 @@
 
 
 				});
-									},errorCB,successCB);
+			},errorCB,successCB);
 
 
 		console.log('SELECT * FROM FACTURAS WHERE fecha>="'+fechaFiltro+'" AND fecha<="'+today+'"');
@@ -127,12 +138,12 @@
   word=word.replace("Ñ","N");
   return word;
 }
-function imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,subtotales,totales,ivas,strDetalle){
+function imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,subtotales,totales,ivas,servicios,descuentos,strDetalle,anuladas){
 		console.log(fechaNow);
 		console.log(fechaRealFiltro);
 		console.log(subtotales);
 		console.log(totales);
-		console.log(ivas);
+		console.log(ivas+'/'+servicios+'/'+descuentos);
 		console.log(strDetalle);
 		jsonFormaPago=$.parseJSON($("#jsonformaspago").text());
 		strImprimir = '"formaspago":[{';
@@ -156,6 +167,8 @@ function imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,subtotales,totales,i
 										cont=cont+40;
 										espacio=340+cont;
 										//strImprimir+="TEXT+7+0+20+"+espacio+"+"+nombreForma+"+$"+parseFloat(sumaCurrent).toFixed(2)+"+"+BR;
+										if(idForma==1)
+											sumaCurrent=sumaCurrent-parseFloat(descuentos);
 										
 										strImprimir+='"'+nombreForma+'":"'+parseFloat(sumaCurrent).toFixed(2)+'"';
 										if(k<jsonFormaPago.FormaPago.length-1)
@@ -187,7 +200,9 @@ valor="0 @0 ";
   var seg=f.getSeconds();
   finali=extend+100;
   dosIvas=parseFloat(ivas).toFixed(2);
-  dosTotal=parseFloat(totales).toFixed(2);
+  dosServicios=parseFloat(servicios).toFixed(2);
+  dosDescuentos=parseFloat(descuentos).toFixed(2);
+  dosTotal=(parseFloat(totales)-parseFloat(dosDescuentos)).toFixed(2);
   /*txt_titleHead="TEXT+4+0+20+10+DETALLE+DE+CAJA" + BR;
   txt_linea1="TEXT+7+0+20+60+Fecha+caja+"+fechaRealFiltro + BR;
   txt_linea2="TEXT+7+0+20+100+Fecha+de+impresion+"+fechaNow+BR;
@@ -197,7 +212,7 @@ valor="0 @0 ";
   txt_linea6="TEXT+7+0+20+280+IVA+$"+dosIvas+BR;
   txt_linea7="TEXT+7+0+20+320+TOTAL+$"+dosTotal+BR;
   txt_linea8="TEXT+7+0+20+"+finali+"+"+BR;*/
-  txt_linea='{"Cierre": [{"fecha_caja":"'+fechaRealFiltro+'","fecha_imp":"'+fechaNow+'","num_facts":"'+nFacturas+'","fact_anuladas":"0","subtotal":"'+subtotales+'","iva":"'+dosIvas+'","total":"'+dosTotal+'",'+strImprimir+'}]}';
+  txt_linea='{"Cierre": [{"fecha_caja":"'+fechaRealFiltro+'","fecha_imp":"'+fechaNow+'","num_facts":"'+nFacturas+'","fact_anuladas":"'+anuladas+'","subtotal":"'+subtotales+'","iva":"'+dosIvas+'","servicio":"'+dosServicios+'","descuento":"'+dosDescuentos+'","total":"'+dosTotal+'",'+strImprimir+'}]}';
   //extend=extend+100;
   //baseu+="TEXT+4+0+20+10+"+SinTildes(nombrelocal).replace(" ","+")+"%0d%0aTEXT+7+0+20+60+"+SinTildes(nombreCliente).replace(" ","+")+"-RUC."+rucCliente+"%0d%0aTEXT+7+0+20+110+"+midate+"+"+hora+"%3a"+min+"%3a"+seg+"%0d%0a";
   //baseu+="%0d%0aTEXT+7+0+20+60+"+SinTildes(nombreCliente).replace(" ","+")+"-RUC."+rucCliente+"%0d%0aTEXT+7+0+20+110+"+midate+"+"+hora+"%3a"+min+"%3a"+seg+"%0d%0a";
@@ -377,11 +392,11 @@ function getSearch(){
             var totalfaux = 0;
         		tx.executeSql('select fetchJson from FACTURAS where anulada=0 and '+queryextra+' and paymentsUsed="'+v['id']+'" ORDER BY id desc',[],function(tx,resulta){
                     for (var k=0; k < resulta.rows.length; k++){
-                    var rowa = resulta.rows.item(k);
-                    var datosfacta=JSON.parse(rowa.fetchJson);
-			        var totalfa = parseFloat(datosfacta.Pagar[0].factura.total);
-                    totalfaux += totalfa;
-			        console.log(rowa.total);
+						var rowa = resulta.rows.item(k);
+						var datosfacta=JSON.parse(rowa.fetchJson);
+						var totalfa = parseFloat(datosfacta.Pagar[0].factura.total);
+							totalfaux += totalfa;
+							console.log(rowa.total);
                     }
                     con++;
                     inhtmla+='<tr><td style="text-align: right;">'+v['nombre']+'$</td><td style="text-align:right;">'+totalfaux.toFixed(2)+'</td></tr>';

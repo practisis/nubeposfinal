@@ -387,7 +387,7 @@ function performPurchase(restaurant){
 	if($('#idCliente').val()!=''&&$('#idCliente').val()>0){
 		var table;
 		var aux=$('#invoiceNr').val();
-		var acc = document.getElementById('acc').value;
+		var acc = 0;
 		var echo = document.getElementById('echo').value;
 		//alert(acc+'**'+echo);
 
@@ -509,6 +509,7 @@ function performPurchase(restaurant){
 			//console.log(hoy);
 			
 			var mitimespan=$('#timespanFactura').val();
+			echo=parseFloat($('#changeFromPurchase').html());
 			
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(Ingresafacturas, errorCB, successCB);

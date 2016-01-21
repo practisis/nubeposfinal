@@ -163,7 +163,8 @@ $(document).ready(function(){
 
 
 function ObtenerDatosDashboard(){
-	$('#ventascategoria,#productosten').html('');
+	$('#ventascategoria,#productosten,#mipres').html('');
+	$('#cumplimiento').html('0.00');
 	var fdesde=$('#desde').val();
 	fdesde=fdesde.replace("-","/");
 	fdesde=new Date(fdesde);
@@ -173,7 +174,6 @@ function ObtenerDatosDashboard(){
 	categoriasvector= new Array();
 	var misubtotal=0;
 	var db = window.openDatabase("Database","1.0","PractisisMobile", 200000);
-	
 	db.transaction(
 		function (tx){
 			//console.log('SELECT COUNT(*) AS number_rows FROM facturas WHERE fecha >='+fdesde.getTime()+' AND fecha <='+fhasta.getTime()+'');

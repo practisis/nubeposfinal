@@ -215,7 +215,7 @@ public class StarIOAdapter extends CordovaPlugin {
 			nofact=objfactura.getString("numerofact");
 			nombreEmpresa=objempresa.getString("nombre");
 			direccionEmpresa=objempresa.getString("direccion");
-			fechanumber=(long)objempresa.getDouble("fecha");
+			fechanumber=(long)objfactura.getDouble("fecha");
 			tipo="pagar";
 			}else if(nombres.toString().contains("Cierre")){
 				tipo="cierre";

@@ -186,7 +186,6 @@ function agregarCompra(item,origen){
 	if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
 		if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
 			$.each(productoImpuestosIndexes.split('@'), function(index,value){
-				
 				if(productoImpuestosIndexes.indexOf('1') !== -1){
 					subtotalIvaCompra = (parseFloat(productoCantidad) * parseFloat(productoPrecio));
 					}
@@ -195,15 +194,20 @@ function agregarCompra(item,origen){
 					}
 				
 				if($('#impuestoFactura-'+ value).length == 0){
+					
 					var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
-					taxTotal += ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
-					$('#factura').append('<input type="hidden" id="impuestoFactura-'+ value +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ taxTotal +'"/>');
+					var currentimp=((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
+					taxTotal+= currentimp;
+					
+					$('#factura').append('<input type="hidden" id="impuestoFactura-'+ value +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ currentimp +'"/>');
 					}
 				else{
 					var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
 					var currentTax = $('#impuestoFactura-'+ value).val();
-					taxTotal += ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
-					$('#impuestoFactura-'+ value).val(parseFloat(currentTax) + parseFloat(taxTotal));
+					var calcimp=((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
+					taxTotal += calcimp;
+
+					$('#impuestoFactura-'+ value).val(parseFloat(currentTax) + parseFloat(calcimp));
 					}
 				});
 			}
@@ -212,16 +216,18 @@ function agregarCompra(item,origen){
 			
 			if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
 				var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
-				taxTotal = ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
+				taxTotal+= ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
 				$('#factura').append('<input type="hidden" id="impuestoFactura-'+ productoImpuestosIndexes +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ taxTotal +'"/>');
 				}
 			else{
 				var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
 				var currentTax = $('#impuestoFactura-'+ productoImpuestosIndexes).val();
-				taxTotal = ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
+				taxTotal+= ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
 				$('#impuestoFactura-'+ productoImpuestosIndexes).val(parseFloat(currentTax) + parseFloat(taxTotal));
 				}
 			}
+		}else{
+			subtotalSinIvaCompra=(parseFloat(productoCantidad) * parseFloat(productoPrecio))
 		}
 	//impuestos end
 	$('.totales').each(function(){
@@ -902,7 +908,7 @@ function pagar(){
 		json += '"iva" : "'+ ivavalor +'",';
 		json += '"servicio" : "'+ servalor +'",';
 		json += '"descuento" : "'+ descuento +'",';
-		json += '"total" : "'+ total +'",';
+		json += '"total" : "'+ (total-descuento) +'",';
 		json += '"numerofact" : "'+ nofactura +'"';
 		json += '},';
 		json +=$('#JSONempresaLocal').html()+'"pagos":[';
@@ -920,6 +926,22 @@ function pagar(){
 		}
 		
 		var count=0;
+		var mivuelto=parseFloat($('#invoicePaid').html())-parseFloat($('#total').html().substr(1));
+		//alert(mivuelto);
+		if(mivuelto>0)
+		{
+			if(nformas>0&&count==0)
+					cadefectivo+=',';
+			if(count>0)
+					cadefectivo+=',';
+				
+			cadefectivo+='{"forma":"efectivo","valor":"-'+mivuelto+'","tipotarjeta":"","lote":"","numerocheque":"","banco":""}';
+			nformas++;
+			count++;
+		}
+		
+		
+		
 		$('.cardv').each(function(){
 			if($(this).html()!=''&&parseFloat($(this).parent().attr("data-value"))>0){
 				
@@ -1009,7 +1031,7 @@ function addDiscount(){
 			$('#justo').html((parseFloat(totales) - parseFloat(discount)).toFixed(2));
 			$('#justo').attr('data-value',-1*(parseFloat(totales) - parseFloat(discount)).toFixed(2));
 			$('#redondeado').html(Math.ceil((parseFloat(totales) - parseFloat(discount))).toFixed(2));
-			$('#changeFromPurchase').html((parseFloat(totales) - parseFloat(discount)).toFixed(2)+'hola');
+			$('#changeFromPurchase').html((parseFloat(totales) - parseFloat(discount)).toFixed(2));
 			$('#redondeado').attr('data-value',-1*Math.ceil((parseFloat(totales) - parseFloat(discount))).toFixed(2));
 			if(discount.toFixed(2)>0)
 				$('#btn_descuento').html('DESC  $'+discount.toFixed(2));

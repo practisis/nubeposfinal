@@ -273,22 +273,27 @@ function CambiarMetodo(cual){
 function AnularFactura(){
 	var id=$('#idfactura').val();
     var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-    db.transaction(function(tx){
+    /*db.transaction(function(tx){
     tx.executeSql('SELECT c.* FROM CARDEX c WHERE c.idfactura=?',[id],function(tx,results){
 		db.transaction(function(tx2){
-			console.log(results);		
+			console.log(results);		*/
 			/**/
 			db.transaction(function(tx3){
-				tx3.executeSql('UPDATE FACTURAS SET anulada=? where id=?',[1,id],function(tx3,results3){
-					console.log(results3);
-                    showalert("Factura anulada con éxito.");
-                    $('#factanulada').fadeIn('slow');
-                    $('#btnanularf').fadeOut('slow');
-                    //location.reload(true);
-				},errorCB,successCB);
+				tx3.executeSql('select fetchJson as j from facturas where id=?',[id],function(tx3,results){
+					var mijson=results.rows.item(0).j;
+					mijson=mijson.replace('"anulada" : "false"','"anulada" : "true"');
+					//console.log(mijson);
+					tx3.executeSql('UPDATE FACTURAS SET anulada=?,sincronizar="true",fetchJson=? where id=?',[1,mijson,id],function(tx3,results3){
+						console.log(results3);
+						showalert("Factura anulada con éxito.");
+						$('#factanulada').fadeIn('slow');
+						$('#btnanularf').fadeOut('slow');
+						//location.reload(true);
+					});
 				});
+			},errorCB,successCB);
 			/**/
-			for(var n=0;n<results.rows.lenght;n++){
+			/*for(var n=0;n<results.rows.lenght;n++){
 				var itemr=results.rows.item(n);
 				var times=getTimeSpan();
 				db.transaction(function(tx){
@@ -296,10 +301,10 @@ function AnularFactura(){
 					console.log(results2);
 				},errorCB,successCB);
 				});
-			}
-		});
-    },errorCB,successCB);
-    });
+			}*/
+		/*});
+        },errorCB,successCB);*/
+    /*});*/
 }
 
 function ReimprimirFactura(){

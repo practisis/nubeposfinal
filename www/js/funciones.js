@@ -908,7 +908,7 @@ function pagar(){
 		json += '"iva" : "'+ ivavalor +'",';
 		json += '"servicio" : "'+ servalor +'",';
 		json += '"descuento" : "'+ descuento +'",';
-		json += '"total" : "'+ total +'",';
+		json += '"total" : "'+ (total-descuento) +'",';
 		json += '"numerofact" : "'+ nofactura +'"';
 		json += '},';
 		json +=$('#JSONempresaLocal').html()+'"pagos":[';
@@ -926,7 +926,7 @@ function pagar(){
 		}
 		
 		var count=0;
-		var mivuelto=parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html());
+		var mivuelto=parseFloat($('#invoicePaid').html())-parseFloat($('#total').html().substr(1));
 		//alert(mivuelto);
 		if(mivuelto>0)
 		{
@@ -1031,7 +1031,7 @@ function addDiscount(){
 			$('#justo').html((parseFloat(totales) - parseFloat(discount)).toFixed(2));
 			$('#justo').attr('data-value',-1*(parseFloat(totales) - parseFloat(discount)).toFixed(2));
 			$('#redondeado').html(Math.ceil((parseFloat(totales) - parseFloat(discount))).toFixed(2));
-			$('#changeFromPurchase').html((parseFloat(totales) - parseFloat(discount)).toFixed(2)+'hola');
+			$('#changeFromPurchase').html((parseFloat(totales) - parseFloat(discount)).toFixed(2));
 			$('#redondeado').attr('data-value',-1*Math.ceil((parseFloat(totales) - parseFloat(discount))).toFixed(2));
 			if(discount.toFixed(2)>0)
 				$('#btn_descuento').html('DESC  $'+discount.toFixed(2));

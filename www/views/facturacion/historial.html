@@ -83,7 +83,7 @@
 					tx.executeSql('SELECT count(*) as c FROM FACTURAS WHERE anulada=1 and fecha>=? and fecha<=?',[fechaFiltro,fechaFiltroh],function(tx,results2){
 						if(results2.rows.length>0){
 							var item=results2.rows.item(0);
-							if(item.c!=null&&parseInt(item.c)>0){
+							if(item.c!=null){
 								sumaAnuladas=item.c;
 							
 							if(contPasa){
@@ -166,7 +166,7 @@ function imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,subtotales,totales,i
 										espacio=340+cont;
 										//strImprimir+="TEXT+7+0+20+"+espacio+"+"+nombreForma+"+$"+parseFloat(sumaCurrent).toFixed(2)+"+"+BR;
 										if(idForma==1)
-											sumaCurrent=sumaCurrent-parseFloat(descuentos);
+											sumaCurrent=sumaCurrent;
 										
 										strImprimir+='"'+nombreForma+'":"'+parseFloat(sumaCurrent).toFixed(2)+'"';
 										if(k<jsonFormaPago.FormaPago.length-1)
@@ -200,7 +200,7 @@ valor="0 @0 ";
   dosIvas=parseFloat(ivas).toFixed(2);
   dosServicios=parseFloat(servicios).toFixed(2);
   dosDescuentos=parseFloat(descuentos).toFixed(2);
-  dosTotal=(parseFloat(totales)-parseFloat(dosDescuentos)).toFixed(2);
+  dosTotal=(parseFloat(totales)).toFixed(2);
   /*txt_titleHead="TEXT+4+0+20+10+DETALLE+DE+CAJA" + BR;
   txt_linea1="TEXT+7+0+20+60+Fecha+caja+"+fechaRealFiltro + BR;
   txt_linea2="TEXT+7+0+20+100+Fecha+de+impresion+"+fechaNow+BR;
@@ -370,7 +370,7 @@ function getSearch(){
 			//console.log(row);
 			var func="EditarFactura("+row.id+");";
 			var datosfact=JSON.parse(row.fetchJson);
-			var totalf=(parseFloat(datosfact.Pagar[0].factura.total)-parseFloat(datosfact.Pagar[0].factura.descuento)).toFixed(2);
+			var totalf=(parseFloat(datosfact.Pagar[0].factura.total)).toFixed(2);
 			var anulada='No';
 			if(row.anulada==1){
 				anulada='Si';
@@ -394,7 +394,7 @@ function getSearch(){
                     for (var k=0; k < resulta.rows.length; k++){
 						var rowa = resulta.rows.item(k);
 						var datosfacta=JSON.parse(rowa.fetchJson);
-						var totalfa = parseFloat(datosfacta.Pagar[0].factura.total)-parseFloat(datosfacta.Pagar[0].factura.descuento);
+						var totalfa = parseFloat(datosfacta.Pagar[0].factura.total);
 							totalfaux += totalfa;
 							console.log(rowa.total);
                     }

@@ -7,7 +7,7 @@ function receiveJson(){
 		$('#payClientName').html(jsonObject.Pagar[0].cliente.nombre);
 		$('#payClientIDCard').html(jsonObject.Pagar[0].cliente.cedula);
 		//$('#invoiceTotal').html(parseFloat(jsonObject.Pagar[0].factura.total).toFixed(2));
-		$('#invoiceTotal').html(parseFloat(jsonObject.Pagar[0].factura.total-jsonObject.Pagar[0].factura.descuento).toFixed(2));
+		$('#invoiceTotal').html(parseFloat(jsonObject.Pagar[0].factura.total));
 		$('#cardValue').val(jsonObject.Pagar[0].factura.total);
 		$('#chequeValue').val(jsonObject.Pagar[0].factura.total);
 		$('#valueCxX').val(jsonObject.Pagar[0].factura.total);
@@ -407,7 +407,7 @@ function performPurchase(restaurant){
 			alert('El valor pagado es menor del total');
             //$('#printFactura').hide();
 			return false;
-			}
+		}
 			
 		$('#payButton').hide();
 		$('#payButtonActivated').show();
@@ -1939,6 +1939,7 @@ function CambiarMetodo(cual){
 		$(this).css('backgroundColor','');
 	});
 	$('#paymentCategory-'+ index).attr('class','categoryChosen');
+	//alert($('#invoiceTotal').html());
 	var faltante=parseFloat($('#invoiceTotal').html());
 	var pagado=0;
 	$('.paymentMethods').each(function(){

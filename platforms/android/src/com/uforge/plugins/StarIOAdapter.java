@@ -287,7 +287,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				//list.add(createCp1252("MESA: 100 P: - FECHA: YYYY-MM-DD\r\n"));
 			
 				Date fechafact=new Date(fechanumber);
-				String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),format(fechafact);
+				String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
 				
 				list.add(createCp1252("NO:"+nofact+"                   \r\n"));
 				list.add(createCp1252("FECHA:"+fechaf+"                   \r\n"));
@@ -569,7 +569,9 @@ public class StarIOAdapter extends CordovaPlugin {
 				}
 				list.add(createCp1252("------------------------------------------\r\n"));
 				list.add(createCp1252("NO:"+nofact+"                      \r\n"));
-				list.add(createCp1252("FECHA:"+hoy+"                      \r\n"));
+				Date fechafact=new Date(fechanumber);
+				String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
+				list.add(createCp1252("FECHA:"+fechaf+"                      \r\n"));
 				list.add(createCp1252("  # DESCRIPCION                       SUMA\r\n"));
 				
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment

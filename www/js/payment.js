@@ -509,7 +509,8 @@ function performPurchase(restaurant){
 			//console.log(hoy);
 			
 			var mitimespan=$('#timespanFactura').val();
-			echo=parseFloat($('#changeFromPurchase').html());
+			
+			echo=parseFloat(invoicePaid-invoiceTotal);
 			
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(Ingresafacturas, errorCB, successCB);

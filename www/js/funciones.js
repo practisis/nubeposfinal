@@ -926,14 +926,16 @@ function pagar(){
 		}
 		
 		var count=0;
-		if($('#changeFromPurchase').html()!=''&&parseFloat($('#changeFromPurchase').html())>0)
+		var mivuelto=parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html());
+		//alert(mivuelto);
+		if(mivuelto>0)
 		{
 			if(nformas>0&&count==0)
 					cadefectivo+=',';
 			if(count>0)
 					cadefectivo+=',';
 				
-			cadefectivo+='{"forma":"efectivo","valor":"-'+$('#changeFromPurchase').html()+'","tipotarjeta":"","lote":"","numerocheque":"","banco":""}';
+			cadefectivo+='{"forma":"efectivo","valor":"-'+mivuelto+'","tipotarjeta":"","lote":"","numerocheque":"","banco":""}';
 			nformas++;
 			count++;
 		}

@@ -41,7 +41,7 @@
 							var idprinter='';
 							if(results.rows.length>0){
 								var idprinter=results.rows.item(0);
-								if(idprinter.printer!=''){
+								if(idprinter.printer!=null){
 									$('#print_'+idprinter.printer).prop('checked','checked');
 								}
 							}
@@ -64,21 +64,23 @@
 			}
 		});*/
 		//alert(laprinter);
-		if(laprinter!=''){
+		if(laprinter!=null){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			var cuantos=0;
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT printer from CONFIG where id=1",[],
+				tx1.executeSql("SELECT count(*) as c from CONFIG",[],
 				function(tx1,results1){
 					if(results1.rows.length>0){
-						tx1.executeSql("UPDATE CONFIG SET printer=? where id=1",[laprinter],function(tx1,results2){
-							showalert("Se ha vinculado la impresora: "+laprinter);
-						});
-					}else{
-						tx1.executeSql("INSERT INTO CONFIG (printer) VALUES (?)",[laprinter],function(tx1,results3){
-							showalert("Se ha vinculado la impresora: "+laprinter);
-						});
-						
+						if(results1.rows.item(0).c>0){
+							tx1.executeSql("UPDATE CONFIG SET printer=? where id=1",[laprinter],function(tx1,results2){
+								showalert("Se ha vinculado la impresora: "+laprinter);
+							});
+						}else{
+							tx1.executeSql("INSERT INTO CONFIG (printer) VALUES (?)",[laprinter],function(tx1,results3){
+								showalert("Se ha vinculado la impresora: "+laprinter);
+							});
+							
+						}
 					}
 				});}
 			,errorCB,successCB);
@@ -111,7 +113,8 @@
 			if(results.rows.length>0){
 				//alert(results.rows.item(0).printer);
 				var idprinter=results.rows.item(0);
-				if(idprinter.printer!=''){
+				console.log(idprinter);
+				if(idprinter.printer!=null){
 					StarIOAdapter.rawprint($('#jsonprint').html(),idprinter.printer, function() {
 						showalert("Imprimiendo Cierre de Caja");
 					});

@@ -237,7 +237,7 @@ function ObtenerDatosDashboard(){
 	db.transaction(
 		function (tx){
 			//console.log('SELECT s.categoria as categ,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, categorias s,productos pr WHERE f.fecha >='+fdesde.getTime()+' AND s.timespan=pr.categoriaid AND p.timespan_formulado=pr.timespan AND f.fecha <='+fhasta.getTime()+' and f.timespan=p.timespan_factura group by categoriaid order by tot desc');
-			tx.executeSql('SELECT s.categoria as categ,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, categorias s,productos pr WHERE f.anulada=0 and f.fecha >=? AND s.timespan=pr.categoriaid AND p.timespan_formulado=pr.timespan AND f.fecha <=? and f.timespan=p.timespan_factura group by categoriaid order by tot desc',[fdesde.getTime(),fhasta.getTime()],
+			tx.executeSql('SELECT s.categoria as categ,sum(p.cantidad*p.precio_unitario) as tot FROM facturas f, facturas_formulados p, categorias s,productos pr WHERE f.anulada=0 and f.fecha >=? AND s.timespan=pr.categoriaid AND p.timespan_formulado=pr.timespan AND f.fecha <=? and f.timespan=p.timespan_factura group by categoriaid order by tot desc',[fdesde.getTime(),fhasta.getTime()],
 			function(tx,res){
 				if(res.rows.length>0){
 					var data = new google.visualization.DataTable();

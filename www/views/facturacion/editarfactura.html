@@ -311,7 +311,7 @@ function ReimprimirFactura(){
 			//console.log(results);
 			if(results.rows.length>0){
 				var idprinter=results.rows.item(0);
-				if(idprinter.printer!=''){
+				if(idprinter.printer!=null){
 					laprint=idprinter.printer;
 				}else{
 					showalert("No se ha configurado una impresora.");
@@ -325,7 +325,7 @@ function ReimprimirFactura(){
 							if(results2.rows.length>0){
 								var jsonfact=results2.rows.item(0);
 								if(jsonfact.j!=''){
-									StarIOAdapter.rawprint(jsonfact.j,laprint, function() {
+									StarIOAdapter.rawprint(jsonfact.j+"reimpr",laprint, function() {
 										showalert("Imprimiendo Factura");
 									},function(error) {
 										showalert("Ocurrió un problema: " + error);

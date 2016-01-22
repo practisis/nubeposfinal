@@ -144,6 +144,7 @@ public class StarIOAdapter extends CordovaPlugin {
     private void rawPrint(CallbackContext callbackContext, String message, String portNameSearch, String portSettings) throws StarIOPortException {
         String portName = "";
         Context context = this.cordova.getActivity().getApplicationContext();
+			
         //byte[] data;
         //ArrayList<byte[]> list = new ArrayList<byte[]>();
         //Byte[] tempList;
@@ -174,13 +175,20 @@ public class StarIOAdapter extends CordovaPlugin {
 		String fechaCierre="";
 		String fechaImpresion="";
 		String numeroFacturas="";
-		String anuladas="";
+		String anuladas="0";
 		String subtotalCierre="0.00";
 		String descuentoCierre="0.00";
 		String servicioCierre="0.00";
 		String totalCierre="0.00";
 		String ivaCierre="0.00";
+		long fechanumber=0;
 		JSONArray expformas=new JSONArray();
+		String textoreimpr="";
+		if(message.contains("reimpr")){
+			message=message.replace("reimpr","");
+			textoreimpr="Reimpresion Factura "+hoy;
+		}
+		
 		
 		try{
 			JSONObject jsonobject = new JSONObject(message);
@@ -203,10 +211,11 @@ public class StarIOAdapter extends CordovaPlugin {
 			subsiniva=DoubleFormat(objfactura.getDouble("subtotal_sin_iva"));
 			subtotal=DoubleFormat(objfactura.getDouble("subtotal_sin_iva")+objfactura.getDouble("subtotal_iva"));
 			descuento=DoubleFormat(objfactura.getDouble("descuento"));
-			totalfact=DoubleFormat(objfactura.getDouble("total")-objfactura.getDouble("descuento"));
+			totalfact=DoubleFormat(objfactura.getDouble("total"));
 			nofact=objfactura.getString("numerofact");
 			nombreEmpresa=objempresa.getString("nombre");
 			direccionEmpresa=objempresa.getString("direccion");
+			fechanumber=(long)objempresa.getDouble("fecha");
 			tipo="pagar";
 			}else if(nombres.toString().contains("Cierre")){
 				tipo="cierre";
@@ -261,6 +270,10 @@ public class StarIOAdapter extends CordovaPlugin {
 				//list.add(createCp1252("08029 BARCELONA\r\n\r\n"));
 				
 				list.add(createCp1252(nombreCliente+"-"+cedulaCliente+"\r\n"));
+				if(textoreimpr!=""){
+					list.add(createCp1252(textoreimpr+"\r\n"));
+				}
+					
 				list.add(createCp1252("--------------------------------\r\n"));
 
 				//list.add(createCp1252("TEL :934199465\r\n"));
@@ -272,9 +285,12 @@ public class StarIOAdapter extends CordovaPlugin {
 				
 				
 				//list.add(createCp1252("MESA: 100 P: - FECHA: YYYY-MM-DD\r\n"));
+			
+				Date fechafact=new Date(fechanumber);
+				String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),format(fechafact);
 				
 				list.add(createCp1252("NO:"+nofact+"                   \r\n"));
-				list.add(createCp1252("FECHA:"+hoy+"                   \r\n"));
+				list.add(createCp1252("FECHA:"+fechaf+"                   \r\n"));
 				
 
 				
@@ -548,6 +564,9 @@ public class StarIOAdapter extends CordovaPlugin {
 				//list.add(createCp1252("08029 BARCELONA\r\n\r\n"));
 				
 				list.add(createCp1252(nombreCliente+"-"+cedulaCliente+"\r\n"));
+				if(textoreimpr!=""){
+					list.add(createCp1252(textoreimpr+"\r\n"));
+				}
 				list.add(createCp1252("------------------------------------------\r\n"));
 				list.add(createCp1252("NO:"+nofact+"                      \r\n"));
 				list.add(createCp1252("FECHA:"+hoy+"                      \r\n"));

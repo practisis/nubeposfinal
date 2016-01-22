@@ -30,7 +30,7 @@
 		StarIOAdapter.searchall("USB:", function(dataprint){
 			//alert(res);
 			var res=dataprint.split('@');
-			alert(res[0]+''+res[1]);
+			//alert(res[0]+''+res[1]);
 			var linea="<tr><td>"+res[1]+"</td><td><input class='printerradio' data-value='"+res[0]+"' type='radio' name='printer' value='"+res[0]+"' id='print_"+res[0]+"'/></td></tr>";
 			$('#listaimpresoras tbody').append(linea);
 			if($('#listaimpresoras tbody').html()!=''){
@@ -43,7 +43,7 @@
 							if(results.rows.length>0){
 								var idprinter=results.rows.item(0);
 								if(idprinter.printer!=null){
-									alert(idprinter.printer);
+									//alert(idprinter.printer);
 									$('#print_'+idprinter.printer).prop('checked','checked');
 								}
 							}
@@ -117,7 +117,7 @@
 				var idprinter=results.rows.item(0);
 				console.log(idprinter);
 				if(idprinter.printer!=null){
-					alert(idprinter.printer);
+					//alert(idprinter.printer);
 					StarIOAdapter.rawprint($('#jsonprint').html(),idprinter.printer, function() {
 						showalert("Imprimiendo Cierre de Caja");
 					});

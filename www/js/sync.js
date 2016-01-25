@@ -194,7 +194,7 @@ function registrarUser(){
 			var iddevice=$('#deviceid').html();
 			//alert(iddevice+'/'+nombre+'/'+email+'/'+nombre);
     		$("#btnNewEmp").html('<img src="images/loader.gif"  width="50%" />');
-    		$.post("http://practisis.net/registro/registroNubePOS.php", {
+    		$.post("https://practisis.net/registro/registroNubePOS.php", {
     			nombre : nombre,
     			celular : celular,
     			email :newEmail,
@@ -339,6 +339,7 @@ function DatosIniciales(cual){
 		$("#JSONCategoriasNube").html(JSONcategoriasNube);
 		$("#JSONproductosNube").html(JSONproductosNube);	
 		$("#JSONpresupuestoNube").html(JSONpresupuestoNube);
+
 		ExtraeDatosApi(cual);
 	});
 }
@@ -351,16 +352,28 @@ function DatosRecurrentes(cual){
 		id_barra : localStorage.getItem("idbarra"),
 		deviceid:$("#deviceid").html()
 		}).done(function(response){
-			jsonSync=JSON.parse(response);
-			//console.log(jsonSync);
-			recurrenteJsonEmpresa=jsonSync.BigJson[0].Empresa;
-			$('#JSONproductosNube').html(JSON.stringify(jsonSync.BigJson[1].Productos));
-			$('#JSONclientesNube').html(JSON.stringify(jsonSync.BigJson[2].Clientes));
-			$('#JSONCategoriasNube').html(JSON.stringify(jsonSync.BigJson[3].Categorias));
-			$('#JSONpresupuestoNube').html(JSON.stringify(jsonSync.BigJson[4].Presupuesto));
-			console.log( ">>>>>>recurrente");
-			DatosRecurrentes(1);
-			updateOnlineStatus("ONLINE");
+			if(response!='block'){
+				jsonSync=JSON.parse(response);
+				recurrenteJsonEmpresa=jsonSync.BigJson[0].Empresa;
+				$('#JSONproductosNube').html(JSON.stringify(jsonSync.BigJson[1].Productos));
+				$('#JSONclientesNube').html(JSON.stringify(jsonSync.BigJson[2].Clientes));
+				$('#JSONCategoriasNube').html(JSON.stringify(jsonSync.BigJson[3].Categorias));
+				$('#JSONpresupuestoNube').html(JSON.stringify(jsonSync.BigJson[4].Presupuesto));
+				$('#JSONEmpresaNube').html(JSON.stringify(jsonSync.BigJson[0].Empresa));
+				console.log( ">>>>>>recurrente");
+				DatosRecurrentes(1);
+				updateOnlineStatus("ONLINE");
+			}else{
+				envia('cloud');
+				setTimeout(function(){
+					$('#linklogin').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro").css("display","none");
+					$('#bloqueo').fadeIn();
+				},500);
+				
+			}
+			
 		}).fail(function(){
 			updateOnlineStatus("OFFLINE");
 			setTimeout(function(){SincronizadorNormal()},60000);
@@ -516,12 +529,52 @@ function DatosRecurrentes(cual){
 					});
 				}
 				},errorCB,function(){
+					$("#theProgress").css("width" , "80%");
+					$.post(apiURL,{
+							id_emp: localStorage.getItem("empresa"),
+							action: 'DeleteSinc',
+							id_barra: localStorage.getItem("idbarra"),
+							tabla: "('presupuestos')",
+							idreal:localStorage.getItem("dataupdate"),
+							deviceid:$("#deviceid").html()
+					}).done(function(response){
+						
+						console.log(response);
+						localStorage.setItem("dataupdate","");
+						DatosRecurrentes(5);
+						updateOnlineStatus('ONLINE');
+						
+					}).fail(function(){
+						updateOnlineStatus("OFFLINE");
+						setTimeout(function(){SincronizadorNormal()},60000);
+					});
+				});
+		}
+	}else if(cual==5){
+		console.log("recurrentes 5: Empresa");
+		$("#contentStepSincro").fadeIn();
+		$("#txtSincro").html("Sincronizando Presupuesto...");
+		if($('#JSONEmpresaNube').html().length>0){
+			var jsonpresup=JSON.parse($('#JSONEmpresaNube').html());
+			console.log(jsonpresup);
+			localStorage.setItem('dataupdate','');
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){
+				for(var n=0;n<jsonpresup.length;n++){
+					var item=jsonpresup[n];
+					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+'1,');
+						
+					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'" WHERE id=1',[],function(tx,results){
+						console.log("actualizada empresa");
+					});
+				}
+				},errorCB,function(){
 					$("#theProgress").css("width" , "100%");
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
 							id_barra: localStorage.getItem("idbarra"),
-							tabla: "('presupuesto')",
+							tabla: "('configuraciones_globales,id_barras_cajas')",
 							idreal:localStorage.getItem("dataupdate"),
 							deviceid:$("#deviceid").html()
 					}).done(function(response){

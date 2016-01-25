@@ -774,7 +774,7 @@ function pagar(){
 				serie=res2.rows.item(0).serie;
 				establecimiento=res2.rows.item(0).establecimiento;
 				//alert(serie+'/'+establecimiento);
-				$('#seriesfact').html(serie+'-'+establecimiento+'-');
+				$('#seriesfact').html(establecimiento+'-'+serie+'-');
 			});
 			tx.executeSql('SELECT MAX(aux)+1 as max FROM FACTURAS',[],
 			function(tx,res){
@@ -797,7 +797,7 @@ function pagar(){
 					ceroscount++;
 				}
 				$('#invoiceNr').val(ceros+nfact);
-				$('#invoiceNrComplete').val(serie+'-'+establecimiento+'-'+ceros+nfact);
+				$('#invoiceNrComplete').val(establecimiento+'-'+serie+'-'+ceros+nfact);
 			});
 		});
 	
@@ -2358,7 +2358,7 @@ function VerificarNumero(valor){
 							var miserie=results.rows.item(0).serie;
 							var miestablecimiento=results.rows.item(0).establecimiento;
 							var invoicenr=$('#invoiceNr').val();
-							$('#invoiceNrComplete').val(miserie+'-'+miestablecimiento+'-'+invoicenr);
+							$('#invoiceNrComplete').val(miestablecimiento+'-'+miserie+'-'+invoicenr);
 						});
 					});
 				}else{
@@ -2368,7 +2368,7 @@ function VerificarNumero(valor){
 							var miserie=results.rows.item(0).serie;
 							var miestablecimiento=results.rows.item(0).establecimiento;
 							var invoicenr=$('#invoiceNr').val();
-							$('#invoiceNrComplete').val(miserie+'-'+miestablecimiento+'-'+invoicenr);
+							$('#invoiceNrComplete').val(miestablecimiento+'-'+miserie+'-'+invoicenr);
 						});
 					});
 				}

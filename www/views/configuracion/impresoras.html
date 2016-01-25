@@ -72,9 +72,11 @@
 			}
 		});*/
 		//alert(laprinter);
-		if(laprinter!=null&&laprinter!=0){
+		if(laprinter!=null){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			var cuantos=0;
+			if(laprinter==0)
+				laprinter='';
 			db.transaction(function(tx1){
 				tx1.executeSql("SELECT count(*) as c from CONFIG",[],
 				function(tx1,results1){

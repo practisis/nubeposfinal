@@ -27,7 +27,9 @@
 	function BuscarImpresoras(){
 		//alert("hola impresora");
 		$('#listaimpresoras tbody').html('');
-		StarIOAdapter.searchall("USB:", function(dataprint){
+		StarIOAdapter.searchall("", function(dataprint){
+			var linea1="<tr><td>No print</td><td><input class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
+			$('#listaimpresoras tbody').append(linea1);
 			//alert(res);
 			var res=dataprint.split('@');
 			//alert(res[0]+''+res[1]);
@@ -48,9 +50,13 @@
 								}
 							}
 						});},errorCB,successCB);
-			}else
+			}else{
 				$('#btnsetear,#btnprobar').css("display","none");
-		}, function(error) {
+			}
+				
+		}, function(error){
+			var linea="<tr><td>No print</td><td><input class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
+			$('#listaimpresoras tbody').append(linea);
 			showalert("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
 		});	
 	}
@@ -66,7 +72,7 @@
 			}
 		});*/
 		//alert(laprinter);
-		if(laprinter!=null){
+		if(laprinter!=null&&laprinter!=0){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			var cuantos=0;
 			db.transaction(function(tx1){
@@ -119,7 +125,7 @@
 				if(idprinter.printer!=null){
 					//alert(idprinter.printer);
 					StarIOAdapter.rawprint($('#jsonprint').html(),idprinter.printer, function() {
-						showalert("Imprimiendo Cierre de Caja");
+						showalert("Imprimiendo Test");
 					});
 				}else{
 					showalert("No se ha configurado una impresora.");

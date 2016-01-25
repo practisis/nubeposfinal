@@ -27,10 +27,12 @@
 	function BuscarImpresoras(){
 		//alert("hola impresora");
 		$('#listaimpresoras tbody').html('');
-		StarIOAdapter.searchall("USB:", function(dataprint){
+		StarIOAdapter.searchall("", function(dataprint){
+			var linea1="<tr><td>No print</td><td><input class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
+			$('#listaimpresoras tbody').append(linea1);
 			//alert(res);
 			var res=dataprint.split('@');
-			alert(res[0]+''+res[1]);
+			//alert(res[0]+''+res[1]);
 			var linea="<tr><td>"+res[1]+"</td><td><input class='printerradio' data-value='"+res[0]+"' type='radio' name='printer' value='"+res[0]+"' id='print_"+res[0]+"'/></td></tr>";
 			$('#listaimpresoras tbody').append(linea);
 			if($('#listaimpresoras tbody').html()!=''){
@@ -43,14 +45,19 @@
 							if(results.rows.length>0){
 								var idprinter=results.rows.item(0);
 								if(idprinter.printer!=null){
-									alert(idprinter.printer);
-									$('#print_'+idprinter.printer).prop('checked','checked');
+									//alert(idprinter.printer);
+									$("input[name=printer][value='"+idprinter.printer+"']").prop("checked",true);
+									//$("input[name=printer][value='"+idprinter.printer+"']").attr("checked","checked");
 								}
 							}
 						});},errorCB,successCB);
-			}else
+			}else{
 				$('#btnsetear,#btnprobar').css("display","none");
-		}, function(error) {
+			}
+				
+		}, function(error){
+			var linea="<tr><td>No print</td><td><input class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
+			$('#listaimpresoras tbody').append(linea);
 			showalert("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
 		});	
 	}
@@ -69,6 +76,8 @@
 		if(laprinter!=null){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			var cuantos=0;
+			if(laprinter==0)
+				laprinter='';
 			db.transaction(function(tx1){
 				tx1.executeSql("SELECT count(*) as c from CONFIG",[],
 				function(tx1,results1){
@@ -117,9 +126,9 @@
 				var idprinter=results.rows.item(0);
 				console.log(idprinter);
 				if(idprinter.printer!=null){
-					alert(idprinter.printer);
+					//alert(idprinter.printer);
 					StarIOAdapter.rawprint($('#jsonprint').html(),idprinter.printer, function() {
-						showalert("Imprimiendo Cierre de Caja");
+						showalert("Imprimiendo Test");
 					});
 				}else{
 					showalert("No se ha configurado una impresora.");

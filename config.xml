@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.practisis.cloudprint2" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>PractiPOS 2.0</name>
+<widget id="com.practisis.practipos" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>PractiPOS 1.0</name>
     <description>
         App de Facturacion para Tablets
     </description>
     <author email="info@practisis.com" href="http://www.practipos.com">
         Practisis S.A.
     </author>
-    <content src="index.html" />
+    <content src="index.html"/>
     <preference name="permissions" value="none" />
     <preference name="orientation" value="landscape" />
     <preference name="target-device" value="universal" />

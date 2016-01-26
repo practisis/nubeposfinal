@@ -17,7 +17,7 @@
        under the License.
  */
 
-package com.practisis.cloudprint2;
+package com.practisis.practipos;
 
 import android.os.Bundle;
 import org.apache.cordova.*;

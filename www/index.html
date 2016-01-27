@@ -20,6 +20,7 @@
 			<link href="css/formated.css" rel="stylesheet" type="text/css">
 			<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
 			<link rel="stylesheet" href="bower_components/weather-icons/css/weather-icons.min.css">
+			<link rel="stylesheet" href="css/jquery-ui.css">
 			<link rel="stylesheet" href="css/estilotemp.css">
 			<script type="text/javascript" src="js/jsapi"></script>
 			<style>
@@ -79,8 +80,7 @@
 			</style>
 		</head>
 		<body>
-			<div id="fadeCloud" style="display:none;width:100%;height:100%;position:absolute;left:0px;top:0px;background:rgba(255,255,255,0.7);z-index:90000;"></div>
-			<nav class="navbar navbar-inverse" style='position:fixed; width:100%; top:-3px; left:0px; z-index:20000;'>
+			<nav class="navbar navbar-inverse">
 			  <div class="container-fluid" >
 				<div class="navbar-header">
 				  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -114,8 +114,8 @@
 				  </ul>
 				</div>
 			  </div>
-			</nav><br/><br/>
-			<div class='container-fluid' style='margin-top:5px;'>
+			</nav>
+			<div class='container-fluid'>
 				<div id='deviceid' style='display:none;'>a383bc4552bfb701f96a17a4541b5565</div>
 				<div class="alert alert-success" role="alert" id='alert' style='display:none;'></div>
 				<div class="alert alert-danger" role="alert" id='alertred' style='display:none;'></div>
@@ -123,14 +123,14 @@
 					<div class='col-lg-12 col-md-12 col-sm-12 ui-mobile'>
 						<div class="row">
 							<div class="col-lg-12">
-								<div id="main" Align="center" style="width:100%;"></div>	
+								<div id="main" style="width:100%; text-align:center; overflow-y:auto; overflow-x:hidden; height:100%;"></div>	
 							</div>
 						</div>
 					</div>
 				</div>
 				<div id="jsonformaspago" style="display: none;">{"FormaPago":[{"id":"1","nombre":"Efectivo","imagen":"Efectivo"},{"id":"2","nombre":"Tarjetas","imagen":"Tarjetas"},{"id":"3","nombre":"Cheques","imagen":"Bancos"},{"id":"4","nombre":"CxC","imagen":"CxC"}]}</div>
-				<div id="jsontarjetas" style="display: none;">{"Tarjetas":[{"id":"1","nombre":"Visa","imagen":"Tarjetas"},{"id":"2","nombre":"Mastercard","imagen":"Tarjetas"},{"id":"3","nombre":"Discover","imagen":"Bancos"},{"id":"4","nombre":"Dinners","imagen":"CxC"},{"id":"5","nombre":"Amex","imagen":"CxC"}]}</div>
-			</div>
+				<div id="jsontarjetas" style="display: none;">{"Tarjetas":[{"id":"1","nombre":"Visa","imagen":"Tarjetas"},{"id":"2","nombre":"Mastercard","imagen":"Tarjetas"},{"id":"3","nombre":"Discover","imagen":"Bancos"},{"id":"4","nombre":"Diners","imagen":"CxC"},{"id":"5","nombre":"Amex","imagen":"CxC"}]}</div>
+			
 			<div class="modal-backdrop fade in" id='cargandoTabs' style='z-index:1000;display:none;'>
 				<table width='100%' height='100%'>
 					<tr>
@@ -341,6 +341,9 @@
 		<div id="JSONclientesNube" style="color:red;display:none;"></div>
 	    <div id="JSONclientesLocal" style="color:red;display:none;" ></div>
 		<div id="JSONempresaLocal" style="color:red;display:none;" ></div>
+		<div id="fadeCloud" style="display:none;width:100%;height:100%;position:absolute;left:0px;top:0px;background:rgba(255,255,255,0.7);"></div>
+		</div>
+		</div>
 		</body>
 		<!--<script type="text/javascript" src="barcodescanner.js"></script>
 		<script type="text/javascript" src="js/jsscan.js"></script>
@@ -413,7 +416,6 @@
 				}  
 			}
 			google.load("visualization", "1", {packages:["corechart"]});
-			startAnimation();
 			var timerFade;
 			function startAnimation(){
 				$("#logo").load(function() {
@@ -434,6 +436,7 @@
 				$('#deviceid').html(uuid);
 			});
 			$( document ).ready(function(){
+				startAnimation();
 				SyncStart();
 				/*var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 				db.transaction(function(tx){

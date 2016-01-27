@@ -370,7 +370,7 @@ function DatosRecurrentes(cual){
 					$('.navbar').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro").css("display","none");
 					$('#bloqueo').fadeIn();
-				},500);
+				},100);
 				
 			}
 			

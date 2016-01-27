@@ -16,7 +16,7 @@ function SyncStart(){
 	if(presupuestoya){
 		$('#fadeRow,#demoGratis').css("display","none");
 		yaesta=true;
-		$('.navbar').slideDown('slow');
+		$('.navbar').slideDown();
 		envia('dashboard');
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
@@ -247,6 +247,7 @@ function registrarUser(){
 
 
 function LaunchBoarding(){
+	$('.navbar').slideDown();
 	$('#myDash').fadeIn('slow',function(){
         setTimeout(function() {$("#menu_1").effect('highlight',{},1500);},1000);
     });

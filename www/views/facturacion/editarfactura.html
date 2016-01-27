@@ -1,24 +1,28 @@
-<div id="mainDiv" style="margin: 0px; padding: 0px; width:100%; height: 800px; background-color: #ffffff; font-size:14px; color:#404041;">
-	<table class='table'>
-		<tr>
-			<td>
-				<h3 id='numerofactura'></h3>
-				<input type='hidden' style='display:none;' id='idfactura'/>
-			</td>
-			<td>
+<div id="mainDiv" class="row">
+	<div class='col-lg-12 col-md-12 col-sm-12'>
+	<div class='row'>
+		<div class='col-lg-10 col-md-10 col-sm-10' style='margin-bottom:20px;'>
+		<h3 style='text-align:left;' id='numerofactura'></h3>
+		<input type='hidden' style='display:none;' id='idfactura'/>
+		</div>
+		<div class='col-lg-2 col-md-2 col-sm-2'>
 				<div style='width:100%;text-align:right;padding-right:5px;padding-top:15px;cursor:pointer;color:#1495C0;'>
 					<i class="fa fa-chevron-circle-left fa-3x" title='Volver...' onclick="envia('historial')"></i>
 				</div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-			<div class='input-group'><span class='input-group-addon'><b>Cliente</b> </span><input type='text' name='cliente' disabled='disabled' value="" class='form-control' id='cliente'/></div>
-			</td>
-			<td>
-			<div class='input-group'><span class='input-group-addon'><b>Fecha</b> </span><input type='text' name='fecha' disabled='disabled' value="" class='form-control' id='fecha'/></div>
-			</td>
-		</tr>
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col-lg-6 col-md-6 col-sm-6'>
+		<div class='input-group'><span class='input-group-addon'><b>Cliente</b> </span><input type='text' name='cliente' disabled='disabled' value="" class='form-control' id='cliente'/></div>
+		</div>
+		<div class='col-lg-6 col-md-6 col-sm-6'>
+		<div class='input-group'><span class='input-group-addon'><b>Fecha</b> </span><input type='text' name='fecha' disabled='disabled' value="" class='form-control' id='fecha'/></div>
+		</div>
+	</div>
+	<div class='row'>
+	<div class='col-lg-12 col-md-12 col-sm-12'>
+	<div id='contentdetail' style='overflow-x:hidden; overflow-y:auto; margin-top:10px;'>
+	<table class='table'>
 		<tr>
 			<td colspan='2'>
 				<div style='text-align:center; font-size:26px; color:red; display:none;' id='factanulada'>FACTURA ANULADA</div>
@@ -78,6 +82,9 @@
 			</td>
 		</tr>
 	</table>
+	</div>
+	</div>
+	</div>
 	<div style='background-color:rgba(0,0,0,0.8); ' class="modal fade" id="divformaspago" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
 		<div class="modal-dialog" style='width:35%;'>
 		<div class='modal-content text-center'>
@@ -124,9 +131,11 @@
 		</div>
 		</div>
 	</div>
+	</div>
 </div>
 <script>
 	$(document).ready(function(){
+		$('#contentdetail').css("height",parseInt($(window).height())*67/100);
 		ColocarFormasPago();
 	});
 	function MostrarFormasPago(){

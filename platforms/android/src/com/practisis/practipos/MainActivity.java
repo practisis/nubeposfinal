@@ -21,6 +21,7 @@ package com.practisis.practipos;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
+import android.view.WindowManager;
 
 public class MainActivity extends CordovaActivity
 {
@@ -30,5 +31,7 @@ public class MainActivity extends CordovaActivity
         super.onCreate(savedInstanceState);
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
+		//getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 }

@@ -231,12 +231,14 @@ valor="0 @0 ";
 	color:#404041;
 }
 </style>
-<div id="mainDiv" style="margin: 0px; padding: 0px; width:100%; height: 800px; background-color: #ffffff; font-size:14px; color:#404041;">
-		<table style="width:100%;" border="0" cellpadding='10px' class='table table-striped'>
-			<tr><td colspan='3'><h3>Historial de Facturas</h3></td></tr>
-			<tr>
-				<td style="text-align:center; vertical-align:middle; width: 550px;">
-					<table align='center' style="text-align:center;margin-left: 0px; margin-right: auto;" border="0" cellpadding="4px" cellspacing="10px">
+<div id="mainDiv" class='row'>
+		<div class='col-lg-12 col-sm-12 col-md-12'>
+		<div class='row' style='margin-bottom:10px;'>
+			<div class='col-lg-12 col-md-12 col-sm-12'  style='padding-top:20px; padding-bottom:20px; background-color:white;'><h2>Historial de Facturas</h2></div>
+		</div>
+		<div class='row' style='padding-top:20px; padding-bottom:20px; background-color:white;'>
+			<div class='col-lg-6 col-sm-6 col-md-6' style='padding-left:20px;'>
+				<table align='left' border="0" cellpadding="4px" cellspacing="10px">
 						<tr>
 							<td style='vertical-align:middle;'>
 								<input placeholder='Desde' type="text" class='form-control' id="fechadesde" name="fechadesde" style='margin:5px;' readonly />
@@ -246,26 +248,26 @@ valor="0 @0 ";
 							</td>
 
 						</tr>
-					</table>
-				</td>
-                <td style="text-align:right; vertical-align:middle; width: 50px;">
-					<table align='center' style="text-align:center;margin-left: 0px; margin-right: auto;" border="0" cellpadding="4px" cellspacing="10px">
+				</table>
+			</div>
+			<div class='col-lg-6 col-sm-6 col-md-6'>
+				<table align='right' style="text-align:center; margin-left: 0px; margin-right: auto;" border="0" cellpadding="4px" cellspacing="10px">
 						<tr>
-							<td style='vertical-align:middle;width: 20%;'>
-							</td>
 							<td  style='vertical-align:middle;'>
-								  <button class="btn btn-success"  style="width:200px;margin-right:15px;" id="imprimirDetalle" type="button" >Imprimir Cierre de Caja</button>
+								  <button class="btn btn-success" style="margin-right:15px;" id="imprimirDetalle" type="button" >Imprimir Cierre de Caja</button>
 							</td>
 
-							<td  style='vertical-align:middle;'>
-                                <b>TOTAL$</b> <span id="totalencabezado"></span>
-							</td>
-                            <td style='vertical-align:middle;width: 20%;'>
+							<td  style='vertical-align:middle; padding-right:20px;'>
+                                <b>TOTAL$</b><br/><span id="totalencabezado"></span>
 							</td>
 						</tr>
 					</table>
-				</td>
-			</tr>
+			</div>
+		</div>
+		<div class='row'>
+		<div class='col-lg-12 col-md-12 col-sm-12' style='margin-top:10px;'>
+		<div id='contentdetail' style='overflow-x:hidden; overflow-y:auto;'>
+		<table style="width:100%;" border="0" cellpadding='10px' class='table table-striped'>
 			<tr>
 				<td colspan="2">
 					<div id="detailDiv" style="height:100%; padding-top:20px; margin:0px; font-size:15px;"></div>
@@ -284,12 +286,18 @@ valor="0 @0 ";
 				</td>
 			</tr>
 		</table>
+		</div>
+		</div>
+		</div>
+		</div>
 </div>
 
 <script type="text/javascript">
 var page=0;
 
 $(document).ready(function(){
+
+$('#contentdetail').css("height",parseInt($(window).height())*57/100);
 $('#fechahasta,#fechadesde').datepicker({"dateFormat":"yy-mm-dd"});
 
 var fechahoyaux=new Date();

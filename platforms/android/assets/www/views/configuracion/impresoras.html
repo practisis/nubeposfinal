@@ -46,8 +46,7 @@
 								var idprinter=results.rows.item(0);
 								if(idprinter.printer!=null){
 									//alert(idprinter.printer);
-									$("input[name=printer][value='"+idprinter.printer+"']").prop("checked",true);
-									//$("input[name=printer][value='"+idprinter.printer+"']").attr("checked","checked");
+									$('#print_'+idprinter.printer).prop('checked','checked');
 								}
 							}
 						});},errorCB,successCB);

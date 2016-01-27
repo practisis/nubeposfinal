@@ -15,6 +15,9 @@
         },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.practisis.cloudprint2"
+        },
+        "com.ionic.keyboard": {
+            "PACKAGE_NAME": "com.practisis.practipos"
         }
     },
     "dependent_plugins": {}

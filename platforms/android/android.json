@@ -19,6 +19,10 @@
                         {
                             "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Keyboard\"><param name=\"android-package\" value=\"com.ionic.keyboard.IonicKeyboard\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -44,6 +48,9 @@
         },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.practisis.cloudprint2"
+        },
+        "com.ionic.keyboard": {
+            "PACKAGE_NAME": "com.practisis.practipos"
         }
     },
     "dependent_plugins": {},
@@ -61,11 +68,20 @@
             "clobbers": [
                 "device"
             ]
+        },
+        {
+            "file": "plugins/com.ionic.keyboard/www/keyboard.js",
+            "id": "com.ionic.keyboard.keyboard",
+            "pluginId": "com.ionic.keyboard",
+            "clobbers": [
+                "cordova.plugins.Keyboard"
+            ]
         }
     ],
     "plugin_metadata": {
         "cordova-plugin-whitelist": "1.2.0",
         "com.uforge.plugins.StarIOAdapter": "1.0.1",
-        "cordova-plugin-device": "1.1.0"
+        "cordova-plugin-device": "1.1.0",
+        "com.ionic.keyboard": "1.0.4"
     }
 }

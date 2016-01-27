@@ -97,6 +97,30 @@ var app = {
 		//alert("device Ready>>" + device.uuid);
 		//$('#deviceid').html(device.uuid);
 		//setInterval(function(){updateOnlineStatus()},60000);
+		window.addEventListener('native.keyboardshow', keyboardShowHandler);
+
+		function keyboardShowHandler(e){
+			//alert("show");
+			var inp=$(":focus");
+			var padding = 15;
+            var targetPosition = parseInt($(inp).offset().top + padding);
+            var keyboardHeight = parseInt($(window).height())-parseInt(e.keyboardHeight);//get keyboard height   
+
+                    //if the input is hidden by the keyboard,scroll to the input 
+			alert(targetPosition+'/'+keyboardHeight);
+            if (targetPosition >= keyboardHeight) {
+                padding *=5;
+                document.getElementById('mybodycontent').css("top",targetPosition-keyboardHeight-padding);
+            }
+		}
+
+		// This event fires when the keyboard will show
+		window.addEventListener('native.keyboardhide', keyboardHideHandler);
+
+		function keyboardHideHandler(e){
+			alert("hide");
+			$("body").removeClass("keyboardOn");
+		}
 		
 		window.StarIOAdapter = {};
 		var handle_error_callback = function(error_message) {

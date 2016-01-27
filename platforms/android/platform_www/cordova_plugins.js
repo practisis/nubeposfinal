@@ -13,6 +13,14 @@ module.exports = [
         "clobbers": [
             "device"
         ]
+    },
+    {
+        "file": "plugins/com.ionic.keyboard/www/keyboard.js",
+        "id": "com.ionic.keyboard.keyboard",
+        "pluginId": "com.ionic.keyboard",
+        "clobbers": [
+            "cordova.plugins.Keyboard"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -20,7 +28,8 @@ module.exports.metadata =
 {
     "cordova-plugin-whitelist": "1.2.0",
     "com.uforge.plugins.StarIOAdapter": "1.0.1",
-    "cordova-plugin-device": "1.1.0"
+    "cordova-plugin-device": "1.1.0",
+    "com.ionic.keyboard": "1.0.4"
 }
 // BOTTOM OF METADATA
 });

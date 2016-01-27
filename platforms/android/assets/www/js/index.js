@@ -107,10 +107,10 @@ var app = {
             var keyboardHeight = parseInt($(window).height())-parseInt(e.keyboardHeight);//get keyboard height   
 
                     //if the input is hidden by the keyboard,scroll to the input 
-			alert(targetPosition+'/'+keyboardHeight);
+			//alert(targetPosition+'/'+keyboardHeight);
             if (targetPosition >= keyboardHeight) {
-                padding *=5;
-                document.getElementById('page').scrollTop = targetPosition - padding;
+                //padding *=5;
+                $('#mybodycontent').css("top",-(targetPosition-keyboardHeight+padding)+"px");
             }
 		}
 
@@ -118,8 +118,8 @@ var app = {
 		window.addEventListener('native.keyboardhide', keyboardHideHandler);
 
 		function keyboardHideHandler(e){
-			alert("hide");
-			$("body").removeClass("keyboardOn");
+			//alert("hide");
+			$('#mybodycontent').css("top","0px");
 		}
 		
 		window.StarIOAdapter = {};

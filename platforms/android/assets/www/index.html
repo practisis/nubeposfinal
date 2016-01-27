@@ -80,7 +80,7 @@
 			</style>
 		</head>
 		<body>
-			<nav class="navbar navbar-inverse">
+			<nav class="navbar navbar-inverse" style='z-index:3;'>
 			  <div class="container-fluid" >
 				<div class="navbar-header">
 				  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -115,6 +115,7 @@
 				</div>
 			  </div>
 			</nav>
+			<div id='mybodycontent' style='position:relative;'>
 			<div class='container-fluid'>
 				<div id='deviceid' style='display:none;'>a383bc4552bfb701f96a17a4541b5565</div>
 				<div class="alert alert-success" role="alert" id='alert' style='display:none;'></div>
@@ -144,20 +145,6 @@
 		<div id="status" style='display:none;'>
 			<p id="state"/>
 			<div id='log'><input type='hidden' id='conexion' value=''/></div>
-		</div>
-				
-		<div style="overflow:hidden;position:absolute;left:0px;top:0px;width:100%;height:100%;background:rgba(40,40,41,1);z-index:9000;display:block;" id="fade">
-			<table width="100%" height="100%" cellpadding="0" cellspacing="0" >
-				<tr>
-					<td valign="center" align="center" >
-						<div id="contentCenterFadeArea">
-							<img src="" id="logo" style="display:none;"><BR/>
-							<img src='images/loader.gif' width='30px'/>
-							<br/><label style="color:white;" id="putText">Inicializando...</label>
-						</div>
-					</td>
-				</tr>
-			</table>
 		</div>
 		<div  id="myDash" class='panel-default'>
 			<div class='row'>
@@ -344,6 +331,19 @@
 		<div id="fadeCloud" style="display:none;width:100%;height:100%;position:absolute;left:0px;top:0px;background:rgba(255,255,255,0.7);"></div>
 		</div>
 		</div>
+		<div style="overflow:hidden;position:absolute;left:0px;top:0px;width:100%;height:100%;background:rgba(40,40,41,1);display:block;z-index:4;" id="fade">
+			<table width="100%" height="100%" cellpadding="0" cellspacing="0" >
+				<tr>
+					<td valign="center" align="center" >
+						<div id="contentCenterFadeArea">
+							<img src="" id="logo" style="display:none;"><BR/>
+							<img src='images/loader.gif' width='30px'/>
+							<br/><label style="color:white;" id="putText">Inicializando...</label>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
 		</body>
 		<!--<script type="text/javascript" src="barcodescanner.js"></script>
 		<script type="text/javascript" src="js/jsscan.js"></script>
@@ -422,9 +422,9 @@
 					$("#logo").fadeIn("slow");
 					timerFade=setTimeout(function(){
 						$("#fade").animate({  top: "-100%", display : "none"  } , 1500 , "easeOutQuint" , function(){
-						
 								$("#contentCenterFadeArea").html('');
 						});
+						//$("#fade").slideUp();
 					},3000);
 					
 				}).attr('src', 'img/logo.png');

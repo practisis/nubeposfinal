@@ -29,8 +29,8 @@ function ActivarCategoria(cual,categoria){
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(
 	function (tx){
-		console.log('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 ORDER BY formulado asc');
-		tx.executeSql('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 ORDER BY formulado asc',[],function(tx,res){
+		console.log('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc');
+		tx.executeSql('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc',[],function(tx,res){
 			console.log(res);
 			if(res.rows.length>0){
 				//alert('prods');
@@ -313,6 +313,7 @@ function agregarCompra(item,origen){
 		}, 1000).clearQueue();
 	$('#tablaCompra tr:last-child').effect('highlight',{},'normal');
 	celdaenfocada=-1;
+	PlaySound(0);
 	/*$('.lineadetalle').css('font-size',$('.lineadetalle').css('font-size'));
 	if(vertical==true)
 		$('.product_del').css('width',(pantAlto*2.7/100)+'px');
@@ -705,7 +706,7 @@ function formarCategorias(){
 	var objcategoria='';
 	db.transaction(
 	function (tx){
-		tx.executeSql('SELECT c.* FROM CATEGORIAS c, PRODUCTOS p where c.timespan in (p.categoriaid) and p.productofinal=1  group by categoria ORDER BY categoria asc',[],function(tx,res){
+		tx.executeSql('SELECT c.* FROM CATEGORIAS c, PRODUCTOS p where c.timespan in (p.categoriaid) and p.productofinal=1 and p.estado=1 group by categoria ORDER BY categoria asc',[],function(tx,res){
 			if(res.rows.length>0){
 				for(m=0;m<res.rows.length;m++){
 					selected = 'categoria';
@@ -1036,7 +1037,7 @@ function addDiscount(){
 			if(discount.toFixed(2)>0)
 				$('#btn_descuento').html('DESC  $'+discount.toFixed(2));
 			else
-				$('#btn_descuento').html('DESC');
+				$('#btn_descuento').html('DESCUENTO');
 			$('#msjDescuentoError').html('');
 			$('#btn_descuento').effect('highlight',{},'normal');
 		}else{
@@ -1241,8 +1242,8 @@ function AclararSugerencia(celda,focus){
 }
 
 function PlaySound(id) {
- /* var thissound=document.getElementById("beep"+id);
-  thissound.play();*/
+  var thissound=document.getElementById("beep1");
+  thissound.play();
 }
 
 function DetalleArriba(){
@@ -1265,16 +1266,18 @@ function DetalleAbajo(){
 }
 function AntesDePagar(){
 	//$('#paymentModule').modal('show');
-	changePaymentCategory('1','Efectivo');
-	$('#paymentModule').slideDown();
-	$('#cedulaP').val('9999999999999');
-	BuscarCliente(13);
-	//$("#cuadroClientes").css('display','none');
-	$("#cuadroClientes,#opaco").css("display","none");
-	pagar();
-	if($('#idCliente').val!=''){
-	}else{
-		alert("Por favor elija primero un cliente.");
+	if(parseFloat($('#total').html().substring(1))>0){
+		changePaymentCategory('1','Efectivo');
+		$('#paymentModule').slideDown();
+		$('#cedulaP').val('9999999999999');
+		BuscarCliente(13);
+		//$("#cuadroClientes").css('display','none');
+		$("#cuadroClientes,#opaco").css("display","none");
+		pagar();
+		if($('#idCliente').val!=''){
+		}else{
+			alert("Por favor elija primero un cliente.");
+		}
 	}
 }
 
@@ -1329,7 +1332,7 @@ function ColocarFormasPago(){
 				}
 					
 				mihtml+= '<div style="height:100%; background-color:'+inputfondo+'; border-top-right-radius: 10px; border-bottom-right-radius:10px; border:1px solid #CCCCCC; text-align:center; padding-right:10px;">';
-				mihtml+= '<input class="paymentMethods" paymentMethod="'+evalJson[k][j].nombre+'" idPaymentMethod="'+evalJson[k][j].id+'" id="payment'+evalJson[k][j].nombre.replace(" ","")+'" style="height:100%; width:100%; background:'+fondo+'; border:0px; text-align:right;" placeholder="0.00" value="" onclick="CambiarMetodo('+"'"+evalJson[k][j].nombre.replace(" ","")+"'"+');" type="number" min="0.00" step="0.10" onfocus="this+select();" onchange="CambiarMetodo('+"'"+evalJson[k][j].nombre.replace(" ","")+"'"+');" onkeypress="return soloNumerost(event);" '+read+' />';
+				mihtml+= '<input class="paymentMethods" paymentMethod="'+evalJson[k][j].nombre+'" idPaymentMethod="'+evalJson[k][j].id+'" id="payment'+evalJson[k][j].nombre.replace(" ","")+'" style="height:100%; width:100%; background:'+fondo+'; border:0px; text-align:right;" placeholder="0.00" value="" onclick="CambiarMetodo('+"'"+evalJson[k][j].nombre.replace(" ","")+"'"+');" type="number" min="0.00" step="0.10" onfocus="this+select();" onchange="CambiarMetodo('+"'"+evalJson[k][j].nombre.replace(" ","")+"'"+');" onkeypress="isalphanumeric(event);" '+read+' />';
 				mihtml+= '</div>';
 				mihtml+= '</td><td width="5%"><button class="btn" type="button" onclick="ResetPagos('+evalJson[k][j].id+');"><span class="glyphicon glyphicon-trash"></span></button></td>';
 				mihtml+= '</tr>';

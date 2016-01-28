@@ -69,7 +69,7 @@
 					<div class="row" align="center" > <!-- Row Table of products.. -->
 				
 					<div class="col-sm-12">
-						<div id="recibeTodosLosProductos" style="font-size:14px; height:420px;overflow-y:auto;" class="table-responsive">
+						<div id="recibeTodosLosProductos" style="font-size:14px; overflow-y:auto;" class="table-responsive">
 						</div>
 						<input id='totalpags' style='display:none;'/>
 					</div>
@@ -270,6 +270,8 @@ var startForma=0;
 ListarCategorias();
 getSearch();
 
+$(document).ready(function(){$('#recibeTodosLosProductos').css("height",parseFloat($(window).height())*60/100);});
+	
 
 
 
@@ -546,7 +548,7 @@ function EliminarProduct(){
 	var id_local=$('#timeproduct').val();
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function(tx){
-	tx.executeSql(' UPDATE PRODUCTOS SET estado = 0 WHERE id_local="'+id_local+'" ',[],function(tx,results){
+	tx.executeSql(' UPDATE PRODUCTOS SET estado = 0, sincronizar="true" WHERE id_local="'+id_local+'" ',[],function(tx,results){
 		envia("listaproductos");
 	});
 	});

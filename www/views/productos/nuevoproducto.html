@@ -19,13 +19,13 @@
     			<div class="col-xs-8">
     				<h4>Nombre</h4>
     					<input style='display:none;' id='idproducto' name='idproducto'/>
-    					<input class="form-control" type="text" autofocus=""  placeholder="Ingrese aquí el nombre de su producto " name='nombreproducto' id='nombreproducto' style="width:100%;" onkeydown='verbusquedaproductos()'/>
+    					<input class="form-control" type="text" autofocus=""  placeholder="Ingrese aquí el nombre de su producto " name='nombreproducto' id='nombreproducto' style="width:100%;" onkeypress='isalphanumeric(event);'/>
     					<label style="color:red;display:none;" class="errorLabel1">Ingrese un nombre válido</label>
     					<br/>
     			</div>
                 <div class="col-xs-4">
     				<h4>Categoría </h4>
-    				<input style="width:100%;" class="form-control" type="text" autofocus="" placeholder="Ingrese aquí su categoría" id="search-renderitem" name="search-renderitem" onkeydown='verbusquedacateg();'/>
+    				<input style="width:100%;" class="form-control" type="text" autofocus="" placeholder="Ingrese aquí su categoría" id="search-renderitem" name="search-renderitem" onkeydown='verbusquedacateg();' onkeypress='isalphanumeric(event);'/>
     				<label style="color:red;display:none;" class="errorLabel2">Ingrese una categoría</label>
     				<input type='hidden' style='display:none;' id='idcategoria'/>
     			</div>
@@ -36,19 +36,19 @@
             <div class="col-xs-12">
     			<div class="col-xs-4">
     				<h4> Precio (sin imp.)  </h4>
-    				<input style="width:100%;" class="form-control soloFloat" type="number" autofocus=""  placeholder="Precio sin imp " name='precioproducto' id='precioproducto' onkeypress="return soloNumerosprecio(event);"/>
+    				<input style="width:100%;" class="form-control soloFloat" type="number" autofocus=""  placeholder="Precio sin imp " name='precioproducto' id='precioproducto' onkeypress="isalphanumeric(event);"/>
     				<label style="color:red;display:none;" class="errorLabel3">Ingrese un precio válido</label>
     			</div>
     			<div class="col-xs-4">
     				<h4> Precio (con imp.)  </h4>
-    				<input style="width:100%;" class="form-control" type="number" autofocus="" id='precioConImpuestos'  placeholder="Precio con imp" onchange='CalcularSinImpuestos();' />
+    				<input style="width:100%;" class="form-control" type="number" autofocus="" id='precioConImpuestos' onkeypress="isalphanumeric(event);"  placeholder="Precio con imp" onchange='CalcularSinImpuestos();' />
     				<label style="color:red;display:none;" class="errorLabel">Ingrese un precio válido</label>
     			</div>
                 <div class="col-xs-4">
     				<h4>Código</h4>
         				<div class="input-group">
-        					<input style="" class="form-control" type="text" autofocus=""  placeholder="Ingrese aquí su código" type='number' name='codigoproducto' id='codigoproducto'/>
-        					<span class="input-group-btn"> <button class="btn btn-default" type="button"><span class='fa fa-barcode'></span></button> </span>
+        					<input style="" class="form-control" type="text" autofocus=""  placeholder="Ingrese aquí su código" type='number' name='codigoproducto' id='codigoproducto' onkeypress="isalphanumeric(event);"/>
+        					<!--<span class="input-group-btn"> <button class="btn btn-default" type="button"><span class='fa fa-barcode'></span></button> </span>-->
                         </div>
         		</div>
             </div>
@@ -462,8 +462,10 @@
 		if(nombrep!=''&&codigop!=''&&preciop!=''&&categoria!=''){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			if(idcategoria==0||idcategoria==null){
+				var currentTimespanCategory=getTimeSpan();
+					
 				db.transaction(function(tx){
-				tx.executeSql('INSERT INTO CATEGORIAS(categoria,activo,existe,timespan) SELECT "'+categoria+'",1,0,'+currentTimespanCategory+' WHERE NOT EXISTS(SELECT 1 FROM CATEGORIAS WHERE categoria like "'+categoria+'");',[],function(tx,results){
+				tx.executeSql('INSERT INTO CATEGORIAS(categoria,activo,existe,timespan) SELECT "'+categoria+'",1,0,"'+currentTimespanCategory+'" WHERE NOT EXISTS(SELECT 1 FROM CATEGORIAS WHERE categoria like "'+categoria+'");',[],function(tx,results){
 					$('#idcategoria').val(currentTimespanCategory);
 					idcategoria=$('#idcategoria').val();
 					db.transaction(function(tx){

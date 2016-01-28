@@ -385,6 +385,7 @@ function performPurchase(restaurant){
 	$('#btn_descuento').html('DESC');
 	pagar();
 	if($('#idCliente').val()!=''&&$('#idCliente').val()>0){
+		if(parseFloat($('#invoicePaid').html())>0){
 		var table;
 		var aux=$('#invoiceNr').val();
 		var acc = 0;
@@ -404,7 +405,7 @@ function performPurchase(restaurant){
 		var invoiceTotal = parseFloat($('#invoiceTotal').html());
 		
 		if(invoicePaid < invoiceTotal){
-			alert('El valor pagado es menor del total');
+			showalertred('El valor pagado es menor del total');
             //$('#printFactura').hide();
 			return false;
 		}
@@ -658,6 +659,9 @@ function performPurchase(restaurant){
 					/*}
 				});*/
                 impresionMovil(fetchJson.toString());
+		}else{
+			showalertred("El valor pagado es menor que el total.");
+		}
 
 	}else{
 		alert("Por favor, elija un cliente.");
@@ -2261,24 +2265,24 @@ function mostrarClientes(){
 											<td>\
 										<div class="input-group" style="width:100%; margin-bottom:10px;"><span class="input-group-addon" style="width:30%">\
 													&nbsp;Cédula* \
-											</span><input tabindex="0" id="cedulaP" value="9999999999999" class="form-control"/> </div>\
+											</span><input tabindex="0" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control"/> </div>\
 												</td>\
 										</tr>\
 										<tr>\
 											<td>\
 												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%">&nbsp;Nombre*</span>\
-													<input  tabindex="1" id="nombreP" class="form-control" value="Consumidor Final"/></div>\
+													<input  tabindex="1" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
 											</td>\
 										</tr>\
 										\
 										<tr>\
 												<td>\
-											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" id="telefonoP"class="form-control" type="number"/></div>				</td>\
+											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control" type="number"/></div>				</td>\
 										</tr>\
 										<tr>\
 												<td>\
 												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon"  style="width:30%">&nbsp;Dirección</span>\
-													<input tabindex="4" id="direccionP" class="form-control"/></div> \
+													<input tabindex="4" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
 												</td>\
 										</tr>\
 										<tr>\
@@ -2381,8 +2385,11 @@ function mostrarClientes(){
 
 function cedula () {
 numero = document.getElementById("cedulaP").value;
-if(cedula=='9999999999999')
+if(numero=='9999999999999')
 	return true;
+if(numero.indexOf("p")>=0||numero.indexOf("P")>=0)
+	return true;
+
 var suma = 0;
 var residuo = 0;
 var pri = false;

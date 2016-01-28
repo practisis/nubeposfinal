@@ -221,9 +221,10 @@ function ObtenerDatosDashboard(){
 				if(res.rows.length>0){
 					var datap = new google.visualization.DataTable();
 					datap.addColumn('string', 'Producto');
-					datap.addColumn('number', 'Ventas');
+					datap.addColumn('number', 'Ventas $USD');
 					for(var n=0;n<res.rows.length;n++){
-						datap.addRow([res.rows.item(n).formu,parseFloat(res.rows.item(n).tot)]);
+						var entot=parseFloat(res.rows.item(n).tot).toFixed(2);
+						datap.addRow([res.rows.item(n).formu,Number(entot)]);
 					var optionsp = {
 						title: 'Ranking de ventas por Producto'
 					};
@@ -242,9 +243,10 @@ function ObtenerDatosDashboard(){
 				if(res.rows.length>0){
 					var data = new google.visualization.DataTable();
 					data.addColumn('string', 'Categoria');
-					data.addColumn('number', 'Ventas');
+					data.addColumn('number', 'Ventas USD');
 					for(var t=0;t<res.rows.length;t++){
-						data.addRow([res.rows.item(t).categ,parseFloat(res.rows.item(t).tot)]);
+						var entot=parseFloat(res.rows.item(t).tot).toFixed(2);
+						data.addRow([res.rows.item(t).categ+' USD',Number(entot)]);
 					}
 					var options = {
 						title: 'Ventas por Categoría'

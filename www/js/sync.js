@@ -437,11 +437,11 @@ function DatosRecurrentes(cual){
 					var item=jsonproductos[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
 					
-					tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color)VALUES("'+item.formulado+'","'+item.formulado_codigo+'",'+item.precio+',"'+item.formulado_tipo_timespan+'",'+item.ivacompra+','+item.esproductofinal+','+item.esmateria+',"'+item.timespan+'" ,'+item.tieneservicio+',"false","'+item.color+'")',[],function(tx,results){
-						console.log("insertado prod:"+results.insertId);
+					tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado)VALUES("'+item.formulado+'","'+item.formulado_codigo+'",'+item.precio+',"'+item.formulado_tipo_timespan+'",'+item.ivacompra+','+item.esproductofinal+','+item.esmateria+',"'+item.timespan+'" ,'+item.tieneservicio+',"false","'+item.color+'",'+item.activo+')',[],function(tx,results){
+						console.log("insertado prod:"+results.insertId);       
 					});
 					
-					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+item.formulado+'",codigo="'+item.formulado_codigo+'",precio='+item.precio+',categoriaid="'+item.formulado_tipo_timespan+'",cargaiva='+item.ivacompra+',productofinal='+item.esproductofinal+',materiaprima='+item.esmateria+',timespan="'+item.timespan+'",servicio='+item.tieneservicio+',sincronizar="false",color="'+item.color+'" WHERE timespan="'+item.timespan+'"',[],function(tx,results){
+					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+item.formulado+'",codigo="'+item.formulado_codigo+'",precio='+item.precio+',categoriaid="'+item.formulado_tipo_timespan+'",cargaiva='+item.ivacompra+',productofinal='+item.esproductofinal+',materiaprima='+item.esmateria+',timespan="'+item.timespan+'",servicio='+item.tieneservicio+',sincronizar="false",color="'+item.color+'",estado='+item.activo+' WHERE timespan="'+item.timespan+'"',[],function(tx,results){
 						console.log("actualizado prod");
 					});
 				}
@@ -670,7 +670,10 @@ function PostaLaNube(arraydatos,cual,accion,t){
 	if(accion=='Categorias'){
 		jsonc='{"id":"'+item.id+'","categoria":"'+item.categoria+'","activo":"'+item.activo+'","timeSpan":"'+item.timespan+'"}';
 	}else if(accion=='Productos'){
-		jsonc='{  "id" : "'+item.id_local+'" , "formulado" : "'+item.formulado+'" , "timespan" : "'+item.timespan+'" , "codigo" : "'+item.codigo+'" , "precio" : "'+item.precio+'" , "cargaiva" : "'+item.cargaiva+'" , "categoriaid" : "'+item.categoriaid+'" , "productofinal" : "'+item.productofinal+'" , "materiaprima" : "'+item.materiaprima+'" , "servicio" : "'+item.servicio+'" , "activo" : "'+item.estado+'","color":"'+item.color+'" }';
+		var boolactivo='true';
+		if(item.estado==0)
+			boolactivo='false';
+		jsonc='{  "id" : "'+item.id_local+'" , "formulado" : "'+item.formulado+'" , "timespan" : "'+item.timespan+'" , "codigo" : "'+item.codigo+'" , "precio" : "'+item.precio+'" , "cargaiva" : "'+item.cargaiva+'" , "categoriaid" : "'+item.categoriaid+'" , "productofinal" : "'+item.productofinal+'" , "materiaprima" : "'+item.materiaprima+'" , "servicio" : "'+item.servicio+'" , "activo" : "'+boolactivo+'","color":"'+item.color+'" }';
 	}else if(accion=='Clientes'){
 		jsonc='{  "id" : "'+item.id+'" , "cedula" : "'+item.cedula+'" , "nombre" : "'+item.nombre+'"  , "email" : "'+item.email+'" , "direccion" : "'+item.direccion+'" , "telefono" : "'+item.telefono+'" }';
 	}else if(accion=='Facturas'){

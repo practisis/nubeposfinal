@@ -489,9 +489,12 @@ var app = {
                 $('#invoiceTotal').html(totalf);
                 var intabla='';
                 var variosprods=(datosfact.Pagar[0].producto);
+				var itemsfact=0;
                 for(var n=0;n<variosprods.length;n++){
                     intabla+="<tr><td style='text-align:left;'>"+variosprods[n].nombre_producto+"</td><td style='text-align:right;'>"+parseInt(variosprods[n].cant_prod)+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].precio_prod).toFixed(2)+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].precio_total).toFixed(2)+"</td></tr>";
+					itemsfact+=parseInt(parseInt(variosprods[n].cant_prod));
                 }
+				$('#itemsfacturados').html("<b>Items Facturados:</b> "+itemsfact);
                 $('#cuerpodetalle').html(intabla);
 				var formaDePago = row.paymentsUsed;
 				var totalpagof=0;
@@ -694,3 +697,15 @@ function getTimeSpan(){
 		var n = d.getTime();
 		return n+''+rn;
 }
+
+function isalphanumeric(e){
+	console.log(e.keyCode);
+	if ((e.keyCode >= 48 && e.keyCode <= 60)||(e.keyCode >= 64 && e.keyCode <= 90) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode == 8 || e.keyCode == 9 || e.keyCode == 13 || e.keyCode == 46 || e.which == 0 || e.keyCode == 32 ||((e.keyCode >= 106 && e.keyCode <= 122))) 
+	{
+		return;
+	} 
+	else 
+	{ 
+		 e.preventDefault();
+	} 
+} 

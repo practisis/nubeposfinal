@@ -770,12 +770,16 @@ function pagar(){
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	var serie='001';
 	var establecimiento='001';
+	var encabezado=0;
+	var largo=0;
 		db.transaction(function (tx){
-			tx.executeSql('SELECT establecimiento,serie from config where id=1',[],function(tx,res2){
+			tx.executeSql('SELECT establecimiento,serie,largo,encabezado from config where id=1',[],function(tx,res2){
 				serie=res2.rows.item(0).serie;
 				establecimiento=res2.rows.item(0).establecimiento;
 				//alert(serie+'/'+establecimiento);
 				$('#seriesfact').html(establecimiento+'-'+serie+'-');
+				localStorage.setItem("encabezado",res2.rows.item(0).encabezado);
+				localStorage.setItem("largo",res2.rows.item(0).largo);
 			});
 			tx.executeSql('SELECT MAX(aux)+1 as max FROM FACTURAS',[],
 			function(tx,res){
@@ -910,7 +914,9 @@ function pagar(){
 		json += '"servicio" : "'+ servalor +'",';
 		json += '"descuento" : "'+ descuento +'",';
 		json += '"total" : "'+ (total-descuento) +'",';
-		json += '"numerofact" : "'+ nofactura +'"';
+		json += '"numerofact" : "'+ nofactura +'",';
+		json += '"encabezado" : "'+ localStorage.getItem("encabezado") +'",';
+		json += '"largo" : "'+ localStorage.getItem("largo") +'"';
 		json += '},';
 		json +=$('#JSONempresaLocal').html()+'"pagos":[';
 		

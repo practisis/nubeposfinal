@@ -266,7 +266,8 @@ function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direcc
 					$('#msjOk').fadeOut('slow');
 				}, 3000);
 				});
-	},errorCB,function(){$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+nombre+'","direccion":"'+direccion+'"},');});
+				
+		},errorCB,function(){$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+nombre+'","direccion":"'+direccion+'"},');});
 		
 	
 	db2.transaction(

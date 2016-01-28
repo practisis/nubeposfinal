@@ -1,0 +1,546 @@
+<link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css">
+<div id="mainDiv" class="row" style="padding-bottom:150px;">
+	<div class="col-sm-12" align="left" id="contentAll">
+		<table width='100%'>
+			<tr>
+				<td width='90%'>
+					<h2 style='text-align:center;' id='titulonuevopr'>Datos Producto</h2>
+				</td>
+				<td width='10%'>
+					<div style='width:100%;text-align:right;padding-right:30px;padding-top:15px;cursor:pointer;color:#1495C0;'>
+						<i class="fa fa-chevron-circle-left fa-2x" title='Volver...' onclick="envia('listaproductos')"></i>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<hr/>
+		<div class="row">
+			<div class="col-xs-12">
+    			<div class="col-xs-8">
+    				<h4>Nombre</h4>
+    					<input style='display:none;' id='idproducto' name='idproducto'/>
+    					<input class="form-control" type="text" autofocus=""  placeholder="Ingrese aquí el nombre de su producto " name='nombreproducto' id='nombreproducto' style="width:100%;" onkeypress='isalphanumeric(event);'/>
+    					<label style="color:red;display:none;" class="errorLabel1">Ingrese un nombre válido</label>
+    					<br/>
+    			</div>
+                <div class="col-xs-4">
+    				<h4>Categoría </h4>
+    				<input style="width:100%;" class="form-control" type="text" autofocus="" placeholder="Ingrese aquí su categoría" id="search-renderitem" name="search-renderitem" onkeydown='verbusquedacateg();' onkeypress='isalphanumeric(event);'/>
+    				<label style="color:red;display:none;" class="errorLabel2">Ingrese una categoría</label>
+    				<input type='hidden' style='display:none;' id='idcategoria'/>
+    			</div>
+            </div>
+        </div>
+
+		<div class="row">
+            <div class="col-xs-12">
+    			<div class="col-xs-4">
+    				<h4> Precio (sin imp.)  </h4>
+    				<input style="width:100%;" class="form-control soloFloat" type="number" autofocus=""  placeholder="Precio sin imp " name='precioproducto' id='precioproducto' onkeypress="isalphanumeric(event);"/>
+    				<label style="color:red;display:none;" class="errorLabel3">Ingrese un precio válido</label>
+    			</div>
+    			<div class="col-xs-4">
+    				<h4> Precio (con imp.)  </h4>
+    				<input style="width:100%;" class="form-control" type="number" autofocus="" id='precioConImpuestos' onkeypress="isalphanumeric(event);"  placeholder="Precio con imp" onchange='CalcularSinImpuestos();' />
+    				<label style="color:red;display:none;" class="errorLabel">Ingrese un precio válido</label>
+    			</div>
+                <div class="col-xs-4">
+    				<h4>Código</h4>
+        				<div class="input-group">
+        					<input style="" class="form-control" type="text" autofocus=""  placeholder="Ingrese aquí su código" type='number' name='codigoproducto' id='codigoproducto' onkeypress="isalphanumeric(event);"/>
+        					<!--<span class="input-group-btn"> <button class="btn btn-default" type="button"><span class='fa fa-barcode'></span></button> </span>-->
+                        </div>
+        		</div>
+            </div>
+		</div>
+
+		<div class="row">
+            <div class="col-xs-12">
+                    <div class="col-xs-2" style='display:none;'>
+    					<h4>Materia Prima</h4>
+                        <input type="checkbox" id="mprima" name="my-checkbox" data-size='mini' />
+    				</div>
+    				<div class="col-xs-4">
+    					<h4>Es para la venta?</h4><input type="checkbox" id='pfinal' name="my-checkbox"  data-size='mini' />
+    				</div>
+    				<div class="col-xs-2">
+    				<h4>IVA</h4>
+    				<input type="checkbox"  id='coniva' name="my-checkbox" class='impventa' data-id="1" data-value="0.12" data-size="mini">
+    				</div>
+    				<div class="col-xs-2">
+    				<h4>Servicio</h4>
+    				<input type="checkbox"  id='conservicio' name="my-checkbox" class='impventa' data-id="2" data-value="0.1" data-size="mini">
+    				</div>
+    			</div>
+        </div>
+			<div class='row'>
+				<div style='padding-left:15px; padding-right:15px;'>
+				<div class='col-xs-8'>
+				<div>
+				<h4>Color</h4>
+				<div class='row' id='paleta' style='margin-left:3px;'>
+					<div class='color col-lg-2 col-xs-2 col-md-2' data-col='1' style='background-color:#337ab7; border:2px solid 337ab7;height:50px;'>&nbsp;</div>
+					<div class='color col-lg-2 col-xs-2 col-md-2' data-col='2' style='background-color:#f68a1e; border:2px solid #f68a1e;height:50px;'>&nbsp;</div>
+					<div class='color col-lg-2 col-xs-2 col-md-2' data-col='3' style='background-color:#713c19; border:2px solid #713c19;height:50px;'>&nbsp;</div>
+					<div class='color col-lg-2 col-xs-2 col-md-2' data-col='4' style='background-color:#524fa1; border:2px solid #524fa1;height:50px;'>&nbsp;</div>
+					<div class='color col-lg-2 col-xs-2 col-md-2' data-col='5' style='background-color:#b62367; border:2px solid #b62367;height:50px;'>&nbsp;</div>
+					<div class='color col-lg-2 col-xs-2 col-md-2' data-col='6' style='background-color:#6cc8be; border:2px solid #6cc8be;height:50px;'>&nbsp;</div>
+					<!--<div class='color col-lg-1 col-xs-1 col-md-1' data-col='7' style='background-color:#00a550; border:2px solid #00a550'>&nbsp;</div>-->
+				</div>
+				</div>
+				</div>
+                <div class='col-xs-2'>
+                </div>
+				<div class='col-xs-2' style='text-align:right; padding-top:35px;'><button  class='btn btn-primary btn-lg' onclick='GuardaProducto();'>Guardar</button></div>
+				<input style="display:none;" class="form-control input-sm" autofocus="" placeholder="Color" name='colorproducto' id='colorproducto' type='text' value=''/>
+				</div>
+			</div>
+		<br/>
+	</div>
+<div id='jsoncomplete' style='display:none;'></div>
+<div id='jsonSugerenciasProductos' style='display:none;'></div>
+</div>
+</div>
+<script>
+	$(document).ready(function(){
+		$("[name='my-checkbox']").bootstrapSwitch();
+		$('.color').each(function(){
+			$(this).click(function(){
+				$('.color').each(function(){
+					var fondo=$(this).css('background-color');
+					$(this).css('border','2px solid '+fondo);
+					$(this).html('');
+				});
+				$(this).css('border','2px solid white');
+				$('#colorproducto').val($(this).css('background-color'));
+				$(this).html('<h4 style="margin-top:21px;"><span class="fa fa-check-square-o"></span></h4>');
+			});
+		});
+		
+		$( "#precioproducto" ).change(function() {
+			var precioHis = parseFloat($( "#precioproducto" ).val());
+			$( "#precioproducto" ).val(precioHis.toFixed(4).toString().replace(",","."));
+			var sumaimpuesto=1;
+			if($('#conservicio').is(":checked"))
+				sumaimpuesto+=0.10;
+
+			if($('#coniva').is(":checked"))
+				sumaimpuesto+=0.12;
+
+			var precioConImpuestos=(precioHis*sumaimpuesto).toFixed(2);
+			$('#precioConImpuestos').val(precioConImpuestos);
+		});
+		$('#coniva').on('switchChange.bootstrapSwitch',function(event,state){
+			jsonimpuestosventa();
+		});
+		
+		$('#conservicio').on('switchChange.bootstrapSwitch',function(event,state){
+			jsonimpuestosventa();
+		});
+	});
+	
+	
+	
+	function jsonimpuestosventa(){
+		var arrayimpventa=new Array();
+		var precioprod=parseFloat($('#precioproducto').val());
+		var nuevoprecio1=0;
+		var nuevoprecio2=0;
+		$('.impventa').each(function(){
+			var datoimp= new Array($(this).attr('data-id'),$(this).is(':checked').toString());
+			arrayimpventa.push(datoimp);
+			if($(this).is(':checked')){
+				if($(this).attr('data-id')==1){
+					nuevoprecio1=precioprod*0.12;
+				}
+				if($(this).attr('data-id')==2){
+					nuevoprecio2=precioprod*0.10;
+				}
+			}
+		});
+		precioprod+=nuevoprecio1+nuevoprecio2;
+		console.log(precioprod);
+		$('#precioConImpuestos').val(precioprod.toFixed(2));
+	}
+	function quebloque(quien){
+	  if(quien == 1){
+		$('#ingresos').fadeIn('slow');
+	  }
+	}
+	DataAutocomplete(); // Precarga la categoria
+	DataAutocompleteProductos(); // Precarga productos
+	var datoscateg='';
+		function leerProducto(){
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){
+			tx.executeSql('\
+				SELECT p.*,sum(c.cantidad) as cantidad FROM PRODUCTOS p\
+				LEFT JOIN CARDEX c \
+				ON c.id_formulado = p.timespan\
+				WHERE p.timespan="'+editarProductoID+'"',[],function(tx,results){
+				console.log(results);
+				for (var i=0; i < results.rows.length; i++){
+					console.log(results);
+					var row=results.rows.item(i);
+					var estadoIva = row.cargaiva;
+					var estadoServicio = row.servicio;
+					var precioproducto = parseFloat(row.precio).toFixed(4);
+						
+					var sumaimpuestos=1;
+					if(estadoIva == 1)
+						sumaimpuestos+=0.12;
+					if(estadoServicio==1)
+						sumaimpuestos+=0.10;
+					
+					precioConImpuestos=parseFloat(precioproducto)*sumaimpuestos;
+					
+					
+					$('#precioConImpuestos').val(precioConImpuestos.toFixed(2));
+					$("#nombreproducto").val(row.formulado);
+					$("#titulonuevopr").html("Datos Producto " + row.formulado + "");
+					str=row.codigo;
+						codigop='';
+					if(str.indexOf('ocode')!=-1) codigop=''; else codigop=str;
+					$("#codigoproducto").val( codigop);
+					$("#precioproducto").val(precioproducto);
+					$("#search-renderitem").val( saberNombreCategoria(row.categoriaid) );
+					//console.log("Ana");
+					$("#idcategoria").val(row.categoriaid);
+					$("#costo").val(row.ppq);
+					$("#cantidad").val(row.cantidad);
+					$("#costoreal").val(row.ppq);
+					$("#cantidadreal").val(row.cantidad);
+					$("#colorproducto").val(row.color);
+					if(row.cargaiva==1) $('#coniva').bootstrapSwitch('state', true, true);
+					if(row.servicio==1) $('#conservicio').bootstrapSwitch('state', true, true);
+					if(row.productofinal==1)  $('#pfinal').bootstrapSwitch('state', true, true);
+					if(row.materiaprima==1)  $('#mprima').bootstrapSwitch('state', true, true);
+					
+					var col=$("#colorproducto").val();
+					$('.color').each(function(){
+						console.log(col+"/"+$(this).css('background-color'));
+						if($(this).css('background-color')==col)
+							$(this).click();
+					});
+
+				}
+				
+				
+			});
+			},errorCB,successCB);	
+		}
+		
+		function saberNombreCategoria(id){
+		
+			json=$("#jsoncomplete").text();
+			obj=$.parseJSON(json);
+			for(k=0; k<= obj.length-1; k++){
+				currentCategory = obj[k].label;
+				currentIDCategory=obj[k].id;
+				currentTimespanCategory=obj[k].timespan;
+				if(currentTimespanCategory == id){
+					theCategoryMatch=currentCategory;
+				}
+				
+				
+			}
+			return theCategoryMatch;
+		}
+	function DataAutocomplete(){
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx){
+		tx.executeSql('SELECT * FROM CATEGORIAS ORDER BY id asc;',[],function(tx,results){
+			console.log(results);
+			var datac='';
+			for (var i=0; i < results.rows.length; i++){
+				var row=results.rows.item(i);
+				if(i>0) datac+=",";
+				datac+='{"label":"'+row.categoria+'", "id":"'+row.timespan+'" , "timespan" : "'+row.timespan+'"}';
+			}
+			$('#jsoncomplete').html("["+datac+"]");
+			if(editarProductoID) {
+					leerProducto();
+					$('#ingresost').fadeIn('slow');
+				}
+			
+			console.log(datac);
+		});
+		},errorCB,successCB);
+	}
+	
+	
+	function DataAutocompleteProductos(){
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx){
+		tx.executeSql('SELECT * FROM PRODUCTOS where estado = 1 ORDER BY formulado asc;',[],function(tx,results){
+			console.log(results);
+			var dataP='';
+			for (var i=0; i < results.rows.length; i++){
+				var row=results.rows.item(i);
+				if(i>0) dataP+=",";
+				dataP+='{"label":"'+row.formulado+'", "id":"'+row.id_local+'" , "timespan" : "'+row.timespan+'"}';
+			}
+			$('#jsonSugerenciasProductos').html("["+dataP+"]");
+			if(editarProductoID) {
+					leerProducto();
+					$('#ingresost').fadeIn('slow');
+				}
+			
+			console.log(dataP);
+		});
+		},errorCB,successCB);
+	}
+	function verbusquedaproductos(){
+		datosProd =JSON.parse($('#jsonSugerenciasProductos').html());
+		console.log(datoscateg);
+		$("#nombreproducto").autocomplete(
+			{
+				source:datosProd,
+				create : function(event , ui){
+				$("li[id^='ui-id-'").css("background-color", "red");
+				},
+				select: function( event, ui ) {
+					$("#nombreproducto").val(""+ui.item.label +"");
+					return false;
+				}
+			});
+			
+	}
+	
+	var currentTimeSpanCat=0;
+	function verbusquedacateg(){
+		datoscateg =JSON.parse($('#jsoncomplete').html());
+		$("#idcategoria").val('0');
+		$("#search-renderitem").autocomplete(
+			{
+				source:datoscateg,
+				create : function(event , ui){
+				$("li[id^='ui-id-'").css("background-color", "red");
+				},
+				select: function( event, ui ) {
+					$("#search-renderitem").val(""+ui.item.label +"");
+					$("#idcategoria").val(ui.item.id);
+					currentTimeSpanCat=ui.item.timespan;
+					return false;
+				}
+			});
+	}
+	function GuardaProducto(){
+		var timeSpanCat=getTimeSpan();
+		var timeSpanCardex=getTimeSpan();
+		var timeSpanFormulado=getTimeSpan();
+
+		if(!editarProductoID){
+			var nombrep=$('#nombreproducto').val();
+			var codigop=$('#codigoproducto').val();
+			var preciop=$('#precioproducto').val();
+			var categoria=$('#search-renderitem').val();
+			idcategoria=parseInt($('#idcategoria').val());
+			var micolor='"'+$('#colorproducto').val()+'"';
+			console.log(idcategoria);
+			if(!idcategoria) idcategoria=0;
+			var costo=0;
+			var canti=0;
+			var iva=0;
+			var serv=0;
+			var prfinal=0;
+			var matprima=0;
+
+			var fechaaux = new Date();
+			var fecha = fechaaux.getTime();
+
+			if($('#coniva').prop('checked'))
+				iva=1;
+				
+			if($('#conservicio').prop('checked'))
+				serv=1;
+			
+			if($('#mprima').prop('checked'))
+				matprima=1;
+			if($('#pfinal').prop('checked'))
+				prfinal=1;
+				
+				var rnd= Math.floor((Math.random() * 10000) + 1);
+				if($.trim(codigop)==''){
+                  codigop=rnd;
+				}
+			
+			if(nombrep!=''&&codigop!=''&&preciop!=''&&categoria!=''){
+				
+				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){
+					tx.executeSql('SELECT COUNT(codigo) as cuantos FROM PRODUCTOS WHERE codigo='+codigop+';',[],function(tx,res){
+						var existen=res.rows.item(0).cuantos;
+						if(existen > 0){
+							showalertred('El codigo de producto : '+ codigop +' ya existe no puede ser el mismo');
+							setTimeout(function(){
+								$('#codigoproducto').focus();
+								$('#codigoproducto').effect('highlight',{color:'red'},2500);
+							},1500);
+							
+							
+						}else{
+							if(currentTimeSpanCat==0){
+								db.transaction(function(tx){
+								tx.executeSql('INSERT INTO CATEGORIAS(categoria,activo,existe,timespan) SELECT "'+categoria+'",1,0,"'+timeSpanCat+'" WHERE NOT EXISTS(SELECT 1 FROM CATEGORIAS WHERE categoria = "'+categoria+'");',[],function(tx,results){
+								idInsert=timeSpanCat;
+								if(!idInsert) timeSpanCat=currentTimeSpanCat;
+									$('#idcategoria').val(results.timeSpanCat);
+										console.log('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,ppq,color,servicio) SELECT "'+nombrep+'","'+codigop+'","'+preciop+'","'+timeSpanCat+'",'+iva+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+' WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");');
+									db.transaction(function(tx){
+									tx.executeSql('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,ppq,color,servicio,estado) SELECT "'+nombrep+'","'+codigop+'","'+preciop+'","'+timeSpanCat+'",'+iva+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+' ,1 WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");',[],function(tx,results){
+									console.log("prod:"+results.insertId);
+									showalert("Producto <b>" + nombrep + "</b> Creado con éxito.");
+									});
+									},errorCB,successCB);
+									});
+								},errorCB,successCB);
+							}else{
+								idcategoria=$('#idcategoria').val();
+								db.transaction(function(tx){
+								timeSpan=getTimeSpan();
+								tx.executeSql('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,ppq,color,servicio,estado) SELECT "'+nombrep+'","'+codigop+'","'+preciop+'",'+currentTimeSpanCat+','+iva+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+' , 1 WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");',[],function(tx,results){
+								console.log('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,ppq,color,servicio) SELECT '+nombrep+'","'+codigop+'","'+preciop+'",'+currentTimeSpanCat+','+iva+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+' WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");');
+									showalert("Producto <b>" + nombrep + "</b> Creado con éxito.");
+								});
+								},errorCB,successCB);
+							}
+							setTimeout(function() {
+								envia('nuevoproducto');
+							}, 3000);
+						}
+					},errorCB,successCB);
+				});
+			}else{
+				showalert("Por favor complete todos los datos");
+				if($("#nombreproducto").val()=='') {$(".errorLabel1").fadeIn();setTimeout(function(){$('.errorLabel1').fadeOut('slow');},5000);}
+				if($("#search-renderitem").val()=='') {$(".errorLabel2").fadeIn();setTimeout(function(){$('.errorLabel2').fadeOut('slow');},5000);}
+				if($("#precioproducto").val()=='') {$(".errorLabel3").fadeIn();setTimeout(function(){$('.errorLabel3').fadeOut('slow');},5000);}
+
+				setTimeout(function(){$('#jsalert').effect('highlight',{color:'white'},1000);},500);
+				setTimeout(function(){$('#jsalert').fadeOut('slow');},4000);
+			}
+		}else{
+			ActualizarProducto();
+		}
+	}
+
+	function ActualizarProducto(){
+		var timeSpanCardex=getTimeSpan();
+		var idproducto=editarProductoID;//$('#idproducto').val();
+		var nombrep=$('#nombreproducto').val();
+		var codigop=$('#codigoproducto').val();
+		var preciop=$('#precioproducto').val();
+		var categoria=$('#search-renderitem').val();
+		var idcategoria=$('#idcategoria').val();
+		var iva=0;
+		var serv=0;
+		var prfinal=0;
+		var matprima=0;
+		var costo=0;
+		var canti=$('#cantidad').val();
+		var costoreal = $("#costoreal").val();
+		var cantidadreal = $("#cantidadreal").val();
+		var costoin=$('#costoingreso').val();
+		var cantidadin=$('#cantidadingreso').val();
+		var ajuste = 0;
+		var micolor='"'+$('#colorproducto').val()+'"';
+		ajuste = canti-cantidadreal;
+		var fechaaux = new Date();
+		var fecha = fechaaux.getTime();
+
+		if($('#coniva').is(':checked'))
+			iva=1;
+		if($('#conservicio').is(':checked'))
+			serv=1;
+		if($('#mprima').is(':checked'))
+			matprima=1;
+		if($('#pfinal').is(':checked'))
+			prfinal=1;
+		if($.trim(codigop)=='')  codigop=idproducto;
+		
+		if(nombrep!=''&&codigop!=''&&preciop!=''&&categoria!=''){
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			if(idcategoria==0||idcategoria==null){
+				var currentTimespanCategory=getTimeSpan();
+					
+				db.transaction(function(tx){
+				tx.executeSql('INSERT INTO CATEGORIAS(categoria,activo,existe,timespan) SELECT "'+categoria+'",1,0,"'+currentTimespanCategory+'" WHERE NOT EXISTS(SELECT 1 FROM CATEGORIAS WHERE categoria like "'+categoria+'");',[],function(tx,results){
+					$('#idcategoria').val(currentTimespanCategory);
+					idcategoria=$('#idcategoria').val();
+					db.transaction(function(tx){
+					console.log('UPDATE PRODUCTOS SET formulado="'+nombrep+'",codigo="'+codigop+'",precio='+preciop+',categoriaid="'+currentTimespanCategory+'",cargaiva='+iva+',productofinal='+prfinal+',materiaprima='+matprima+',ppq='+costo+',color='+micolor+',servicio='+serv+' WHERE timespan='+idproducto+' AND NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE (formulado like "'+nombrep+'" or codigo like "'+codigop+'") and timespan!='+idproducto+');');
+					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+nombrep+'",codigo="'+codigop+'",precio='+preciop+',categoriaid="'+currentTimespanCategory+'",cargaiva='+iva+',productofinal='+prfinal+',materiaprima='+matprima+',ppq='+costo+',color='+micolor+' ,sincronizar="true" WHERE timespan='+idproducto+' AND NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE (formulado like "'+nombrep+'" or codigo like "'+codigop+'") and timespan!="'+idproducto+'");',[],function(tx,results){
+					console.log("prod:"+idproducto);
+					$('#jsalert').html("Datos Actualizados con éxito.");
+					showalert("Datos Actualizados con éxito.");
+					setTimeout(function(){$('#jsalert').effect('highlight',{color:'white'},1000);},500);
+					setTimeout(function(){$('#jsalert').fadeOut('slow');},4000);
+					showalert("Producto " + nombrep + " Actualizado con éxito");
+					});
+					},errorCB,successCB);
+					});
+				},errorCB,successCB);
+			}else{
+				idcategoria=$('#idcategoria').val();
+				console.log('UPDATE PRODUCTOS SET formulado="'+nombrep+'",codigo="'+codigop+'",precio='+preciop+',categoriaid="'+idcategoria+'",cargaiva='+iva+',productofinal='+prfinal+',materiaprima='+matprima+',ppq='+costo+',color='+micolor+',servicio='+serv+' WHERE timespan="'+idproducto + '"');
+				db.transaction(function(tx){
+					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+nombrep+'",codigo="'+codigop+'",precio='+preciop+',categoriaid="'+idcategoria+'",cargaiva='+iva+',productofinal='+prfinal+',materiaprima='+matprima+',ppq='+costo+',color='+micolor+',servicio='+serv+' ,sincronizar="true" WHERE timespan="'+idproducto + '"',[],function(tx,results){
+					console.log(results);
+					showalert("Datos Actualizados con éxito.");
+					});
+					},errorCB,successCB);
+			}
+		}else{
+			$('#jsalert').html("Por favor complete todos los datos.");
+			showalert("Por favor complete todos los datos.");
+			setTimeout(function(){$('#jsalert').effect('highlight',{color:'white'},1000);},500);
+			setTimeout(function(){$('#jsalert').fadeOut('slow');},4000);
+		}
+	}
+	function soloNumerosprecio(e){
+		key = e.keyCode || e.which;
+		if(key==44){
+		document.getElementById('precioproducto').value=document.getElementById('precioproducto').value+'.';
+		}
+		tecla = String.fromCharCode(key).toLowerCase();
+		letras = "0123456789";
+		especiales = [8,9,37,39,46];
+
+		tecla_especial = false
+		for(var i in especiales){
+			if(key == especiales[i]){
+			tecla_especial = true;
+			break;
+				}
+		}
+		if(letras.indexOf(tecla)==-1 && !tecla_especial){
+			return false;
+		}
+	}
+	function intOrFloat(e,value){
+			if(value.indexOf(',') !== -1 && (e.keyCode == 190 || e.keyCode == 110)){
+				e.preventDefault();
+			}
+
+			if((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode == 8 || e.keyCode == 9 || e.keyCode == 37 || e.keyCode == 39 || e.keyCode == 46 || e.keyCode == 190 || e.keyCode == 110 || e.keyCode == 13){
+				return;
+			}
+			else{
+				e.preventDefault();
+			}
+	}
+	
+	function CalcularSinImpuestos(){
+		var precioHis = parseFloat($( "#precioConImpuestos" ).val());
+		var sumaimpuesto=1;
+			if($('#conservicio').is(":checked"))
+				sumaimpuesto+=0.10;
+				
+			if($('#coniva').is(":checked"))
+				sumaimpuesto+=0.12;
+				
+			var precioConImpuestos=(precioHis/sumaimpuesto).toFixed(4);
+			$('#precioproducto').val(precioConImpuestos.toString().replace(",","."));
+	}
+</script>

@@ -2233,8 +2233,8 @@ function noCliente()
 	if($('#cedulaP').val()==''){
 		$('#cedulaP').val('9999999999999');
 		BuscarCliente(13);
-		$("#cuadroClientes,#opaco").fadeOut("fast",function(){});
 	}
+	$("#cuadroClientes,#opaco").fadeOut("fast",function(){});
 }
 
 function mostrarClientes(){
@@ -2251,7 +2251,7 @@ function mostrarClientes(){
 			$("#newCliente ").html('\
 			<div style="position:relative; left:0%; width:100%; height:100%" id="borrable">\
 				<div id="cuadroClientes" class="cuadroClientes" style="height:100%;"> \
-					<h3>Cliente</h3><div style="width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:-10px; right:12px; cursor:pointer;" onclick="noCliente();"><i class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
+					<h3>Cliente</h3><div style="width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:-10px; right:12px; cursor:pointer;"><i onclick="noCliente();" class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
 					<table id="descripcionD" class="table table-striped">\
 						<tr> \
 							<td colspan=2>\
@@ -2299,8 +2299,8 @@ function mostrarClientes(){
 								<div>\
 									<table style="cursor:pointer;position: relative; margin: 0px auto;" cellspacing="5px">\
 										<tr>\
-											<td onclick="noCliente(1);" style="vertical-align:top;">\
-												<button tabindex="8" class="btn btn-default">Cancelar</button> \
+											<td style="vertical-align:top;">\
+												<button onclick="noCliente();" tabindex="8" class="btn btn-default">Cancelar</button> \
 											</td>\
 											<td style="vertical-align: top;">\
 												<button tabindex="7" class="btn btn-success" onclick="jsonNuevoCliente()">Guardar</button> \

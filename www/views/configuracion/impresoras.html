@@ -177,7 +177,7 @@
 				encab=$('#encabezado').val();
 			var largo=18;
 			if(parseInt($('#largo').val())>0)
-				encab=$('#largo').val();
+				largo=$('#largo').val();
 				
 			tx.executeSql('UPDATE CONFIG set encabezado=?,largo=? WHERE id=1;',[encab,largo],
 			function(tx,res){
@@ -186,6 +186,5 @@
 				showalert("Actualizado con éxito.");
 			});				
 		},errorCB,successCB);
-		
 	}
 </script>

@@ -178,11 +178,12 @@ public class StarIOAdapter extends CordovaPlugin {
 		String anuladas="0";
 		String subtotalCierre="0.00";
 		String descuentoCierre="0.00";
+		String subdes="0.00";
 		String servicioCierre="0.00";
 		String totalCierre="0.00";
 		String ivaCierre="0.00";
-		Integer lineastotales=36; //18cm-2lineas
-		Integer lineasencabezado=6; //3cm-2lineas
+		Integer lineastotales=30; //18cm-2lineas
+		Integer lineasencabezado=0; //3cm-2lineas
 		long fechanumber=0;
 		JSONArray expformas=new JSONArray();
 		String textoreimpr="";
@@ -218,8 +219,8 @@ public class StarIOAdapter extends CordovaPlugin {
 			nombreEmpresa=objempresa.getString("nombre");
 			direccionEmpresa=objempresa.getString("direccion");
 			fechanumber=(long)objfactura.getDouble("fecha");
-			lineastotales=2*objfactura.getInt("largo");
-			lineasencabezado=2*objfactura.getInt("encabezado");
+			lineastotales=(2*objfactura.getInt("largo")-6;
+			lineasencabezado=(2*objfactura.getInt("encabezado"))-6;
 			tipo="pagar";
 			}else if(nombres.toString().contains("Cierre")){
 				tipo="cierre";
@@ -235,6 +236,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				totalCierre=expjson.getString("total");
 				servicioCierre=expjson.getString("servicio");
 				descuentoCierre=expjson.getString("descuento");
+				subdes=expjson.getString("subdesc");
 				expformas=expjson.getJSONArray("formaspago");
 				//{"Cierre": [{"fecha_caja":"2015-12-17","fecha_imp":"2015-12-17","num_facts":"1","fact_anuladas":"0","subtotal":"3.13","iva":"0.38","total":"3.50","formaspago":[{"Efectivo":"3.50","Tarjetas":"0.00","Cheques":"0.00","CxC":"0.00"}]}]}
 			}
@@ -562,15 +564,15 @@ public class StarIOAdapter extends CordovaPlugin {
 				// how Java expresses these bytes as double byte unicode
 
 				// Character expansion
-				list.add(new byte[] { 0x1b, 0x68, 0x01 });
+				//list.add(new byte[] { 0x1b, 0x68, 0x01 });
 
-				list.add(createCp1252(nombreEmpresa+"\r\n")); lineasescritas=lineasescritas+1;
-				list.add(new byte[] { 0x1b, 0x68, 0x00 }); // Cancel Character Expansion
-				list.add(createCp1252(direccionEmpresa+"\r\n")); lineasescritas=lineasescritas+1;
+				//list.add(createCp1252(nombreEmpresa+"\r\n")); lineasescritas=lineasescritas+1;
+				//list.add(new byte[] { 0x1b, 0x68, 0x00 }); // Cancel Character Expansion
+				//list.add(createCp1252(direccionEmpresa+"\r\n")); lineasescritas=lineasescritas+1;
 				//list.add(createCp1252("08029 BARCELONA\r\n\r\n"));
 				
 				while(lineasescritas<lineasencabezado){
-					list.add(createCp1252(".\r\n"));
+					list.add(createCp1252("\r\n"));
 					lineasescritas=lineasescritas+1;
 				}
 				
@@ -706,7 +708,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				//aumentar filas si faltan
 				if(lineasescritas<lineastotales){
 					while(lineasescritas<lineastotales){
-						list.add(createCp1252(".\r\n"));
+						list.add(createCp1252("\r\n"));
 						lineasescritas=lineasescritas+1;
 					}
 				}
@@ -776,6 +778,13 @@ public class StarIOAdapter extends CordovaPlugin {
 						}
 				}
 				
+				if(subdes.length()<9){
+					int tam=9-subdes.length();
+						for(int n=0;n<tam;n++){
+								subdes=" "+subdes;
+						}
+				}
+				
 				if(servicioCierre.length()<9){
 					int tam=9-servicioCierre.length();
 						for(int n=0;n<tam;n++){
@@ -789,9 +798,11 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(createCp1252("--------------------------------\r\n"));
 				list.add(createCp1252("TOTALES\r\n"));
 				list.add(createCp1252("Subtotal        "+subtotalCierre+"\r\n"));
+				list.add(createCp1252("Descuentos      "+descuentoCierre+"\r\n"));
+				list.add(createCp1252("Sub-desc        "+subdes+"\r\n"));
 				list.add(createCp1252("Iva             "+ivaCierre+"\r\n"));
 				list.add(createCp1252("Servicio        "+servicioCierre+"\r\n"));
-				list.add(createCp1252("Descuentos      "+descuentoCierre+"\r\n"));
+				
 				list.add(createCp1252("TOTAL           "+totalCierre+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(createCp1252("--------------------------------\r\n"));

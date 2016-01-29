@@ -1,4 +1,4 @@
-<script>
+﻿<script>
 	function obtenerFechaHoy(){
 	var today = new Date();
 		var m = today.getMonth()+1; // 0-11
@@ -49,26 +49,55 @@
 				intToday=parseInt(today);
 				var contPasa=0;
 					for (var i=0; i <= results.rows.length-1; i++){
-						var row = results.rows.item(i);
-						var fechaFactura = parseInt(row.fecha);
+						var rowa = results.rows.item(i);
+						var fechaFactura = parseInt(rowa.fecha);
 
 						//if(fechaFactura>=fechaFiltro && fechaFactura<=intToday){
 						contPasa++;
 
-						var Json = row.fetchJson;
-						var formaPago = row.paymentsUsed;
-						obj=$.parseJSON(Json);
-						currentTotal=parseFloat(obj.Pagar[0].factura.total);
-						var cash = currentTotal;//row.cash;
+						
+						var formaPago = rowa.paymentsUsed.split(',');
+						
 						for(j=0;j<=(jsonFormaPago.FormaPago.length-1);j++){
 							idForma=jsonFormaPago.FormaPago[j].id;
 							nombreForma=jsonFormaPago.FormaPago[j].nombre;
-							if(idForma==formaPago){
-								strDetalle+=idForma+'@'+nombreForma+'@'+cash+"|";
+							var cash=0;
+							if(formaPago.indexOf(idForma)>=0){
+								if(idForma==1){
+									cash=parseFloat(rowa.cash)-parseFloat(rowa.echo);
+								}
+								if(idForma==2){
+									var cadena=rowa.cards.split('@');
+									for(var k in cadena){
+										if(cadena[k]!=''){
+											var datocard=cadena[k].split('|');
+											cash+=parseFloat(datocard[2]);
+										}
+									}
+								}
+								if(idForma==3){
+									var cadena=rowa.cheques.split('@');
+									for(var k in cadena){
+										if(cadena[k]!=''){
+											var datocard=cadena[k].split('|');
+											cash+=parseFloat(datocard[2]);
+										}
+									}
+								}
+								
+								if(idForma==4){
+									cash=parseFloat(rowa.vauleCxC);
+								}
 							}
+							strDetalle+=idForma+'@'+nombreForma+'@'+cash+"|";
 						}
-
-
+						
+						
+					
+					
+						var Json = rowa.fetchJson;
+						obj=$.parseJSON(Json);
+						currentTotal=parseFloat(obj.Pagar[0].factura.total);
 						sumaTotales=sumaTotales+currentTotal;
 						currentSubtotal=parseFloat(obj.Pagar[0].factura.subtotal_iva)+parseFloat(obj.Pagar[0].factura.subtotal_sin_iva);
 						sumaSubtotales=sumaSubtotales+currentSubtotal;
@@ -78,7 +107,7 @@
 						sumaIvas = sumaIvas + parseFloat(obj.Pagar[0].factura.iva);
 						sumaDescuentos = sumaDescuentos + parseFloat(obj.Pagar[0].factura.descuento);
 						sumaServicios = sumaServicios + parseFloat(obj.Pagar[0].factura.servicio);
-				    }
+					}
 					
 					tx.executeSql('SELECT count(*) as c FROM FACTURAS WHERE anulada=1 and fecha>=? and fecha<=?',[fechaFiltro,fechaFiltroh],function(tx,results2){
 						if(results2.rows.length>0){
@@ -210,7 +239,8 @@ valor="0 @0 ";
   txt_linea6="TEXT+7+0+20+280+IVA+$"+dosIvas+BR;
   txt_linea7="TEXT+7+0+20+320+TOTAL+$"+dosTotal+BR;
   txt_linea8="TEXT+7+0+20+"+finali+"+"+BR;*/
-  txt_linea='{"Cierre": [{"fecha_caja":"'+fechaRealFiltro+'","fecha_imp":"'+fechaNow+'","num_facts":"'+nFacturas+'","fact_anuladas":"'+anuladas+'","subtotal":"'+subtotales+'","iva":"'+dosIvas+'","servicio":"'+dosServicios+'","descuento":"'+dosDescuentos+'","total":"'+dosTotal+'",'+strImprimir+'}]}';
+  var subdesc=(subtotales-dosDescuentos).toFixed(2);
+  txt_linea='{"Cierre": [{"fecha_caja":"'+fechaRealFiltro+'","fecha_imp":"'+fechaNow+'","num_facts":"'+nFacturas+'","fact_anuladas":"'+anuladas+'","subtotal":"'+subtotales+'","iva":"'+dosIvas+'","servicio":"'+dosServicios+'","descuento":"'+dosDescuentos+'","subdesc":"'+subdesc+'","total":"'+dosTotal+'",'+strImprimir+'}]}';
   //extend=extend+100;
   //baseu+="TEXT+4+0+20+10+"+SinTildes(nombrelocal).replace(" ","+")+"%0d%0aTEXT+7+0+20+60+"+SinTildes(nombreCliente).replace(" ","+")+"-RUC."+rucCliente+"%0d%0aTEXT+7+0+20+110+"+midate+"+"+hora+"%3a"+min+"%3a"+seg+"%0d%0a";
   //baseu+="%0d%0aTEXT+7+0+20+60+"+SinTildes(nombreCliente).replace(" ","+")+"-RUC."+rucCliente+"%0d%0aTEXT+7+0+20+110+"+midate+"+"+hora+"%3a"+min+"%3a"+seg+"%0d%0a";
@@ -398,13 +428,38 @@ function getSearch(){
             //var dba = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
         	//db.transaction(function(txa){
             var totalfaux = 0;
-        		tx.executeSql('select fetchJson from FACTURAS where anulada=0 and '+queryextra+' and paymentsUsed="'+v['id']+'" ORDER BY id desc',[],function(tx,resulta){
+        		tx.executeSql('select * from FACTURAS where anulada=0 and '+queryextra+' and paymentsUsed like "%'+v['id']+'%" ORDER BY id desc',[],function(tx,resulta){
                     for (var k=0; k < resulta.rows.length; k++){
 						var rowa = resulta.rows.item(k);
-						var datosfacta=JSON.parse(rowa.fetchJson);
-						var totalfa = parseFloat(datosfacta.Pagar[0].factura.total);
-							totalfaux += totalfa;
-							console.log(rowa.total);
+						var totalfa=0;
+						if(v['id']==1){
+									totalfa=parseFloat(rowa.cash)-parseFloat(rowa.echo);
+						}
+						if(v['id']==2){
+							var cadena=rowa.cards.split('@');
+							for(var k in cadena){
+								if(cadena[k]!=''){
+									var datocard=cadena[k].split('|');
+									totalfa+=parseFloat(datocard[2]);
+								}
+							}
+						}
+						if(v['id']==3){
+							var cadena=rowa.cheques.split('@');
+							for(var k in cadena){
+								if(cadena[k]!=''){
+									var datocard=cadena[k].split('|');
+									totalfa+=parseFloat(datocard[2]);
+								}
+							}
+						}
+								
+						if(v['id']==4){
+							totalfa=parseFloat(rowa.vauleCxC);
+						}
+						
+						totalfaux += totalfa;
+						console.log(rowa.total);
                     }
                     con++;
                     inhtmla+='<tr><td style="text-align: right;">'+v['nombre']+'$</td><td style="text-align:right;">'+totalfaux.toFixed(2)+'</td></tr>';

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.practisis.practipos" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>PractiPOS 1.0</name>
+    <name>PractiPOS</name>
     <description>
         App de Facturacion para Tablets
     </description>
@@ -43,10 +43,11 @@
     <gap:plugin name="org.apache.cordova.splashscreen" />
     <gap:plugin name="org.apache.cordova.vibration" />
     <icon src="icon.png"/>
-	<icon platform="android" density="ldpi" src="www/res/icon/android/icon-36-ldpi.png" />
-    <icon platform="android" density="mdpi" src="www/res/icon/android/icon-48-mdpi.png" />
+	<icon platform="android" density="ldpi" src="www/res/icon/android/icon-36.png" />
+    <icon platform="android" density="mdpi" src="www/res/icon/android/icon-48.png" />
     <icon platform="android" density="hdpi" src="www/res/icon/android/icon-72-hdpi.png" />
-    <icon platform="android" density="xhdpi" src="www/res/icon/android/icon-96-xhdpi.png" />
+    <icon platform="android" density="xhdpi" src="www/res/icon/android/icon-96.png" />
+    <icon platform="android" density="xxhdpi" src="www/res/icon/android/icon-128.png" />
     <icon gap:platform="blackberry" src="www/res/icon/blackberry/icon-80.png" />
     <icon gap:platform="blackberry" gap:state="hover" src="www/res/icon/blackberry/icon-80.png" />
     <icon gap:platform="ios" height="57" src="www/res/icon/ios/icon-57.png" width="57" />

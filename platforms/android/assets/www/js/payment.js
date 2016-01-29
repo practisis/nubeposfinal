@@ -469,8 +469,8 @@ function performPurchase(restaurant){
 				}
 				
 			if(value == 4){
-				valueCxC = $('#paymentXCobrar').val();
-				justificationCxC = $('#justification').val();
+				valueCxC = $('#paymentCxC').val();
+				justificationCxC = $('#justcxc').val();
 			}
 			
 			if(value == 5){

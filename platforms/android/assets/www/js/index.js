@@ -499,29 +499,38 @@ var app = {
 				var formaDePago = row.paymentsUsed;
 				var totalpagof=0;
 				console.log('Forma de pago es :'+formaDePago);
-				if(formaDePago == 1){
+				if(formaDePago == '1'){
 					$('#detaFormPago').html('Efectivo');
 					$('#detaFormPagoValor').html(parseFloat(row.cash).toFixed(2));
 					totalpagof+=parseFloat(row.cash);
 					$('#detaFormPago').parent().fadeIn();
 				}
-				if(formaDePago == 2){
+				if(formaDePago == '2'){
 					var datocard=row.cards.split('|');
 					$('#detaFormPago').html('Tarjeta');
-					$('#detaFormPagoValor').html(datocard[2].substring(0,datocard[2].length - 1));
+					$('#detaFormPagoValor').html(parseFloat(datocard[2].substring(0,datocard[2].length - 1)).toFixed(2));
 					totalpagof+=parseFloat(parseFloat(datocard[2].substring(0,datocard[2].length - 1)));
 					$('#detaFormPago').parent().fadeIn();
 				}
-				if(formaDePago == 3){
+				if(formaDePago == '3'){
 				var datocheque=row.cheques.split('|');
 				//alert(datocheque[2].substring(0,datocheque[2].length - 1));
 					$('#detaFormPago').html('Cheques');
-					$('#detaFormPagoValor').html(datocheque[2].substring(0,datocheque[2].length - 1));
+					$('#detaFormPagoValor').html(parseFloat(datocheque[2].substring(0,datocheque[2].length - 1)).toFixed(2));
 					totalpagof+=parseFloat(datocheque[2].substring(0,datocheque[2].length - 1));
 					$('#detaFormPago').parent().fadeIn();
 				}
 				
-				if(formaDePago != 1 && formaDePago != 2 && formaDePago != 3){
+				if(formaDePago == '4'){
+				var datocxc=row.vauleCxC;
+				//alert(datocheque[2].substring(0,datocheque[2].length - 1));
+					$('#detaFormPago').html('CxC');
+					$('#detaFormPagoValor').html(parseFloat(datocxc).toFixed(2));
+					totalpagof+=parseFloat(datocxc);
+					$('#detaFormPago').parent().fadeIn();
+				}
+				
+				if(formaDePago != '1' && formaDePago != '2' && formaDePago != '3' && formaDePago != '4'){
 					var fpago=row.paymentsUsed.split(',');
 					console.log(fpago);
 					var c=0;
@@ -536,7 +545,7 @@ var app = {
 							var datocard=row.cards.split('|');
 							$('#detaFormPago1').html('Tarjeta');
 							//console.log(datocard);
-							$('#detaFormPagoValor1').html(datocard[2].substring(0,datocard[2].length - 1));
+							$('#detaFormPagoValor1').html(parseFloat(datocard[2].substring(0,datocard[2].length - 1)).toFixed(2));
 							$('#detaFormPago1').parent().fadeIn();
 						}
 						
@@ -544,19 +553,27 @@ var app = {
 							var datocheque=row.cheques.split('|');
 							$('#detaFormPago2').html('Cheques');
 							//console.log(datocard);
-							$('#detaFormPagoValor2').html(datocheque[2].substring(0,datocheque[2].length - 1));
+							$('#detaFormPagoValor2').html(parseFloat(datocheque[2].substring(0,datocheque[2].length - 1)).toFixed(2));
 							$('#detaFormPago2').parent().fadeIn();
+						}
+						
+						if(fpago[t]==4){
+							var datocheque=row.vauleCxC;
+							$('#detaFormPago3').html('CxC');
+							//console.log(datocard);
+							$('#detaFormPagoValor3').html(parseFloat(datocheque).toFixed(2));
+							$('#detaFormPago3').parent().fadeIn();
 						}
 					}
                 }
 				
 				var tot=parseFloat($('#total').html());
 				if((tot-totalpagof)<0){
-					$('#tabladetformaspago').append('<tr><td><b>Vuelto</b></td><td>'+(-1*(tot-totalpagof)).toFixed(2)+'</td></tr>');
+					$('#tabladetformaspago').append('<tr><td><b>Vuelto</b></td><td style="text-align:right;">'+(-1*(tot-totalpagof)).toFixed(2)+'</td></tr>');
 				}
 				
 				if((descAplicado)>0){
-					$('#tabladetformaspago').append('<tr><td><b>Descuento</b></td><td>'+descAplicado+'</td></tr>');
+					$('#tabladetformaspago').append('<tr><td><b>Descuento</b></td><td style="text-align:right;">'+descAplicado+'</td></tr>');
 				}
 				
 				

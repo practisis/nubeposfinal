@@ -11,20 +11,11 @@
 					min-height: 16.42857143px;">
 			  		NubePOS Conectado <br/> <label class="putEmp"></label>
 			  		<small><br/>Sincronizando...</small>
-			  		<center><a href="https://www.practisis.net/login.php" target="_blank" ><input class="btn btn-md btn-primary btn-center" type="button"  value="Abrir punto de venta en la nube" /> </a></center>
-			</div>
-
+			  		<center><a href="https://www.practisis.net/login.php" target="_blank" ><input class="btn btn-md btn-primary btn-center" type="button"  value="Abrir punto de venta en la nube" /></a></center>
+				</div>
 			</div>
 		</div>
 	</div>
-
-    <div id="bloqueo" style="display: none;">
-  		<div class="modal-header">
-  	  		Su cuenta de NubePOS se encuentra bloqueada por falta de pago <br/> <label class="putEmp"></label>
-  	  		<center><a id="linklogin" href="" target="_blank" ><input class="btn btn-md btn-primary btn-center" type="button"  value="Abrir punto de venta en la nube" /> </a></center>
-  	    </div>
-	</div>
-
     <div class="alert alert-danger" role="alert" style="display: none;"></div>
 
 <div class="row" id="contentStepSincro" style="display:none;" >
@@ -63,15 +54,14 @@
 		-webkit-margin-after: 1em;
 		-webkit-margin-start: 0px;
 		-webkit-margin-end: 0px;">Ingresa a tu sistema y <span style="color:#0893d2;">Empecemos!</span></h3>
-
 			  <form method="post" class="contact-form form-validate4" id="myloginform" novalidate="novalidate">
 				<div class="form-group">
-				  <input class="form-control input-lg" type="text" id="user2" name="usuario" placeholder="Usuario" required="" value="" autocomplete="off" aria-required="true">
+				  <input class="form-control input-lg" type="text" id="user2" name="usuario" placeholder="Usuario" required="" value="" tabindex='1' autocomplete="off" aria-required="true">
 				</div>
 				<div class="form-group">
-				  <input type="password" id="pass2" name="mipass" value="" class="form-control input-lg" placeholder="Password" required="" autocomplete="off" aria-required="true">
+				  <input type="password" id="pass2" name="mipass" value="" class="form-control input-lg" placeholder="Password" required="" tabindex='2' autocomplete="off" aria-required="true">
 				</div>
-			   <button class="btn btn-success"  id="btnvalida2" type="button" onclick="UserLogin();">Login</button>
+			   <button class="btn btn-success" tabindex='3'  id="btnvalida2" type="button" onclick="UserLogin();">Login</button>
 			  </form>
 			  </div>
 			  
@@ -91,11 +81,31 @@
 
 	  </div>
 	  <div class='row'>
-		<div class='col-lg-12' id='finalizado'>
-		<img style='max-width:60%;' src='images/doneSync.png' style='cursor:pointer;' />
+		<div class='col-lg-12' id='finalizado' style='margin-top:10px; margin-bottom:10px;'>
+		<!--<img style='max-width:60%;' src='images/doneSync.png' style='cursor:pointer;' />-->
+		<h1>Sincronizado con exito! </h1>
 		</div>
 	  </div>
-	  
+	  <div class='row' id='cuentaactiva' style='display:none;'>
+		<div class='col-lg-12'>
+			<div style='margin-top:10px; margin-bottom:10px;'>Ingresa a tu cuenta PractiPOS en la nube</div>
+			<center><a id="linklogin" href="" target="_blank" ><input class="btn btn-md btn-primary btn-center" type="button"  value="Ir a la nube" /></a></center>
+			<div class='alert alert-success' style='margin-top:20px; margin-bottom:20px;'>Su cuenta se encuentra activa por <b><span id='dias'>x</span></b> dias.</div>
+		</div>
+	  </div>
+	  <div class='row'  id="bloqueo" style="display: none;">
+			<div class="col-lg-12">
+				<h1>Licencia Caducada!</h1>
+				<div class='alert alert-danger' style='margin-top:30px;'>Su cuenta PractiPOS se encuentra bloqueada, ya que se ha terminado la validez de la licencia.</div>
+				<center style='margin-top:20px; margin-bottom:20px;'><a id="linkloginb" href="" target="_blank" ><input class="btn btn-md btn-primary btn-center" type="button"  value="Abrir PractiPOS en la nube" /></a></center>
+			</div>
+	  </div>
+	  <div class='row'>
+		<div class='col-lg-12' style='font-size:14px; color:#404041; display:none;' id='mensajeperso'>
+			PractiPOS 2016
+		</div>
+	  </div>
+		
 	<!--End row -->
 
 	  <script>
@@ -117,6 +127,7 @@
 	  </script>
 	  <!-- Registro -->
 	  <div class="row" style="display:block; padding:20px; color:#404041;" id="demoGratis" >
+		<form>
 		<!--<div class="col-md-3" >
 		</div>-->
 		  <h1 style='vertical-align:bottom; font-size:45px;'><img style='margin-top:-10px;' src='img/solo.png' width='40px;'/>&nbsp;<span>PractiPOS</span></h1>
@@ -125,17 +136,17 @@
 			 <div id="divdatoslogin" style="overflow:auto;">
 			  <h4 style="text-align:left; margin-top:40px; margin-bottom:30px;">Regístrate! Ingresa tus datos y crea tu cuenta PractiPOS.</h4>
             <div class="form-group">
-              <input type="form-control input-lg" name="empresa"  class="form-control input-lg" id="newEmpresa" placeholder="Nombre de tu Negocio" required="" autocomplete="off">
+              <input type="form-control input-lg" name="empresa"  class="form-control input-lg" id="newEmpresa" placeholder="Nombre de tu Negocio" tabindex="1" required="" autocomplete="off">
             </div>
 
             <div class="form-group">
-              <input class="form-control input-lg" type="email" name="email" id="newEmail" placeholder="E-mail" required="" autocomplete="off">
+              <input class="form-control input-lg" type="email" tabindex="2" name="email" id="newEmail" placeholder="E-mail" required="" autocomplete="off">
             </div>
          <div class="form-group">
-              <input type="password" name="pass" id="newPass"  class="form-control input-lg" placeholder="Ingresa una contraseña" required="" autocomplete="off">
+              <input type="password" name="pass" id="newPass" tabindex="3"  class="form-control input-lg" placeholder="Ingresa una contraseña" required="" autocomplete="off">
             </div>
 			 <div class="form-group">
-              <input type="password" name="pass" id="newConfirm"  class="form-control input-lg" placeholder="Confirma tu contraseña" required="" autocomplete="off">
+              <input type="password" name="pass" id="newConfirm"  class="form-control input-lg" placeholder="Confirma tu contraseña" required="" tabindex="4" autocomplete="off">
             </div>
 			
 			<div class="form-group">
@@ -155,7 +166,7 @@
 		<div id="mensaje2"></div>
 		<input id="user" type="hidden" />
 		<input id="pass" type="hidden" />
-		
+		</form>
 		
 	  </div> <!--End row -->
 	  <br/><br/><br/><br/><br/><br/>
@@ -289,19 +300,23 @@
 <input type="hidden" id="idcategoria" />
 <script>
 $(document).ready(function(){
+	$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+	$('#dias').html(localStorage.getItem('dias'));
+	$('#mensajeperso').html(localStorage.getItem('msj'));
+	
 	if(procesocount==0){
-		$('#fadeRow,#contentStepSincro').css("display","none");
+		$('#fadeRow,#contentStepSincro,#cuentaactiva,#mensajeperso,#demoGratis').css("display","none");
 		if(localStorage.getItem("idbarra")==null){
 			$('#demoGratis').fadeIn();
 			$('.navbar').slideUp();
-			$('#finalizado').css('display','none');
+			$('#finalizado,#cuentaactiva,#mensajeperso').css('display','none');
 		}else{
-			$('#finalizado').fadeIn();
+			$('#finalizado,#cuentaactiva,#mensajeperso').fadeIn();
 			$('#demoGratis').css("display","none");
 		}
 	}else{
 		$('#finalizado,#demoGratis,#fadeRow').css("display","none");
-		$('#contentStepSincro').fadeIn();
+		$('#contentStepSincro,#cuentaactiva,#mensajeperso').fadeIn();
 	}
 });
 		//SyncStart();

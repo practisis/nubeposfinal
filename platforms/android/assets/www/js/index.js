@@ -110,6 +110,9 @@ var app = {
 			//alert(targetPosition+'/'+keyboardHeight);
             if (targetPosition >= keyboardHeight) {
                 //padding *=5;
+				if(inp.attr('id')=='search-renderitem')
+                $('#mybodycontent').css("top",-(targetPosition-keyboardHeight+padding+20)+"px");
+				else
                 $('#mybodycontent').css("top",-(targetPosition-keyboardHeight+padding)+"px");
             }
 		}

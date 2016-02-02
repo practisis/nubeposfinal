@@ -103,6 +103,7 @@
 </div>
 <script>
 	$(document).ready(function(){
+	    $('#contentAll').css('height',parseInt($(window).height())*125/100);
 		$("[name='my-checkbox']").bootstrapSwitch();
 		$('.color').each(function(){
 			$(this).click(function(){

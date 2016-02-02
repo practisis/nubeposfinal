@@ -61,11 +61,11 @@
                         <input type="checkbox" id="mprima" name="my-checkbox" data-size='mini' />
     				</div>
     				<div class="col-xs-4">
-    					<h4>Es para la venta?</h4><input type="checkbox" id='pfinal' name="my-checkbox"  data-size='mini' />
+    					<h4>Es para la venta?</h4><input type="checkbox" id='pfinal' name="my-checkbox"  data-size='mini' checked />
     				</div>
     				<div class="col-xs-2">
     				<h4>IVA</h4>
-    				<input type="checkbox"  id='coniva' name="my-checkbox" class='impventa' data-id="1" data-value="0.12" data-size="mini">
+    				<input type="checkbox"  id='coniva' name="my-checkbox" class='impventa' data-id="1" data-value="0.12" data-size="mini" checked >
     				</div>
     				<div class="col-xs-2">
     				<h4>Servicio</h4>
@@ -211,9 +211,14 @@
 					$("#costoreal").val(row.ppq);
 					$("#cantidadreal").val(row.cantidad);
 					$("#colorproducto").val(row.color);
-					if(row.cargaiva==1) $('#coniva').bootstrapSwitch('state', true, true);
-					if(row.servicio==1) $('#conservicio').bootstrapSwitch('state', true, true);
+					if(row.cargaiva==1) 
+						$('#coniva').bootstrapSwitch('state', true, true);
+					else
+						$('#coniva').bootstrapSwitch('state', false, true);
+					if(row.servicio==1) 
+						$('#conservicio').bootstrapSwitch('state', true, true);
 					if(row.productofinal==1)  $('#pfinal').bootstrapSwitch('state', true, true);
+					else $('#pfinal').bootstrapSwitch('state', false, true);
 					if(row.materiaprima==1)  $('#mprima').bootstrapSwitch('state', true, true);
 					
 					var col=$("#colorproducto").val();

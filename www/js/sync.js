@@ -55,7 +55,7 @@ function ExtraeDatosApi(donde){
 		console.log("Datos API 1: Categorias");
 		//$(".navbar").slideUp();
 		$("#demoGratis,#fadeRow,#finalizado").css("display","none");
-		$("#contentStepSincro").fadeIn();
+		$("#contentStepSincro,#cuentaactiva,#mensajeperso").fadeIn();
 		$("#txtSincro").html("Sincronizando Categorías...");
 		var jsoncateg=JSON.parse($('#JSONCategoriasNube').html());
 		var jsoncategorias=jsoncateg.Categorias;
@@ -155,7 +155,7 @@ function SincronizadorNormal(){
 	console.log("sincronizador normal");
 	procesocount=1;
 	$('#fadeRow,#demoGratis,#finalizado').css("display","none");
-	$('#contentStepSincro').fadeIn();
+	$('#contentStepSincro,#cuentaactiva,#mensajeperso').fadeIn();
 	DatosRecurrentes(0);
 }
 
@@ -355,22 +355,28 @@ function DatosRecurrentes(cual){
 		deviceid:$("#deviceid").html()
 		}).done(function(response){
 			if(response!='block'){
+				//console.log(response);
 				jsonSync=JSON.parse(response);
 				recurrenteJsonEmpresa=jsonSync.BigJson[0].Empresa;
+				console.log(response);
 				$('#JSONproductosNube').html(JSON.stringify(jsonSync.BigJson[1].Productos));
 				$('#JSONclientesNube').html(JSON.stringify(jsonSync.BigJson[2].Clientes));
 				$('#JSONCategoriasNube').html(JSON.stringify(jsonSync.BigJson[3].Categorias));
 				$('#JSONpresupuestoNube').html(JSON.stringify(jsonSync.BigJson[4].Presupuesto));
 				$('#JSONEmpresaNube').html(JSON.stringify(jsonSync.BigJson[0].Empresa));
+				localStorage.setItem("dias",jsonSync.BigJson[5].Extra[0].dias);
+				localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].msj);
+				$('#dias').html(localStorage.getItem('dias'));
+				$('#mensajeperso').html(localStorage.getItem('msj'));
 				console.log( ">>>>>>recurrente");
 				DatosRecurrentes(1);
 				updateOnlineStatus("ONLINE");
 			}else{
 				envia('cloud');
 				setTimeout(function(){
-					$('#linklogin').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 					$('.navbar').slideUp();
-					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro").css("display","none");
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#bloqueo').fadeIn();
 				},100);
 				
@@ -555,7 +561,7 @@ function DatosRecurrentes(cual){
 	}else if(cual==5){
 		console.log("recurrentes 5: Empresa");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Presupuesto...");
+		$("#txtSincro").html("Sincronizando datos Empresa...");
 		if($('#JSONEmpresaNube').html().length>0){
 			var jsonpresup=JSON.parse($('#JSONEmpresaNube').html());
 			console.log(jsonpresup);
@@ -584,9 +590,12 @@ function DatosRecurrentes(cual){
 						localStorage.setItem("dataupdate","");
 						SubirDatosaNube(0);
 						
-						$("#theProgress").css("width" , "0%");
-						$("#finalizado").fadeIn();
-						$("#contentStepSincro").css("display","none");
+						setTimeout(function(){
+							$("#theProgress").css("width" , "0%");
+							$("#finalizado").fadeIn();
+							$("#contentStepSincro").css("display","none");
+							$("#txtSincro").html("Sincronizando..");
+						},1500);
 						updateOnlineStatus('ONLINE');
 					}).fail(function(){
 						updateOnlineStatus("OFFLINE");

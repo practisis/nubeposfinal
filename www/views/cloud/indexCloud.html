@@ -136,11 +136,11 @@
 			 <div id="divdatoslogin" style="overflow:auto;">
 			  <h4 style="text-align:left; margin-top:40px; margin-bottom:30px;">Regístrate! Ingresa tus datos y crea tu cuenta PractiPOS.</h4>
             <div class="form-group">
-              <input onkeypress="isalphanumeric(event);" type="form-control input-lg" name="empresa"  class="form-control input-lg" id="newEmpresa" placeholder="Nombre de tu Negocio" tabindex="1" required="" autocomplete="off">
+              <input onkeydown="isalphanumeric(event);" type="form-control input-lg" name="empresa"  class="form-control input-lg" id="newEmpresa" placeholder="Nombre de tu Negocio" tabindex="1" required="" autocomplete="off">
             </div>
 
             <div class="form-group">
-              <input class="form-control input-lg" type="email" tabindex="2" name="email" id="newEmail" placeholder="E-mail" required="" autocomplete="off">
+              <input class="form-control input-lg" type="email" tabindex="2" name="email" id="newEmail" placeholder="E-mail" required="" onkeydown="isalphanumeric(event);" autocomplete="off">
             </div>
          <div class="form-group">
               <input type="password" name="pass" id="newPass" tabindex="3"  class="form-control input-lg" placeholder="Ingresa una contraseña" required="" autocomplete="off">
@@ -456,7 +456,4 @@ $(document).ready(function(){
                 }
 			}
 			$(".putHeightRows").css("height" , $(window).height() + "px");*/
-			$('#newEmail').on("keypress",function(event){
-				isalphanumeric(event);
-			});
 </script>

@@ -131,7 +131,8 @@ var app = {
 			//showalert(error_message);
 			console.log(error_message);
 		};
-
+		
+	
 		/**
 		 * Checks the status of the bluetooth printer and returns the string "OK" if the printer is online
 		 */
@@ -721,8 +722,9 @@ function getTimeSpan(){
 function isalphanumeric(e){
 	console.log(e.keyCode);
 	alert(e.keyCode);
-	if ((e.keyCode >= 48 && e.keyCode <= 60)||(e.keyCode >= 64 && e.keyCode <= 90) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode == 8 || e.keyCode == 9 || e.keyCode == 13 || e.keyCode == 46 || e.which == 0 || e.keyCode == 32 ||((e.keyCode >= 106 && e.keyCode <= 122))) 
+	​if(e.keyCode==8||(e.keyCode>=96&&e.keyCode<=105)||(e.keyCode>=65&&e.keyCode<=90)||e.keyCode==20||e.keyCode==110)
 	{
+		console.log("correcto");
 		return;
 	} 
 	else 

@@ -11,7 +11,7 @@
 			resize:none;
 		}
 	</style>
-	<div class='panel' id='sihayEmp'>
+	<div class='panel' id='sihayEmp' style='height:150%;'>
 		<div  class="row" >
 			<div class="col-sm-12">
 				<h2 style="margin-left:15px;">Informacion de tu Empresa</h2>
@@ -118,6 +118,7 @@
 	</div>
 <script type="text/javascript">
 	$( document ).ready(function() {
+		$('#sihayEmp').css('height',parseInt($(window).height())*150/100);
 		saberDatosEmpresa();
 	});
 	function actualizar(){

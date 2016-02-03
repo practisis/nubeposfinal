@@ -136,7 +136,7 @@
 			 <div id="divdatoslogin" style="overflow:auto;">
 			  <h4 style="text-align:left; margin-top:40px; margin-bottom:30px;">Regístrate! Ingresa tus datos y crea tu cuenta PractiPOS.</h4>
             <div class="form-group">
-              <input type="form-control input-lg" name="empresa"  class="form-control input-lg" id="newEmpresa" placeholder="Nombre de tu Negocio" tabindex="1" required="" autocomplete="off">
+              <input onkeypress="isalphanumeric(event);" type="form-control input-lg" name="empresa"  class="form-control input-lg" id="newEmpresa" placeholder="Nombre de tu Negocio" tabindex="1" required="" autocomplete="off">
             </div>
 
             <div class="form-group">
@@ -300,6 +300,9 @@
 <input type="hidden" id="idcategoria" />
 <script>
 $(document).ready(function(){
+	
+	$('#demoGratis').css('height',parseInt($(window).height())*150/100);
+	$('#fadeRow').css('height',parseInt($(window).height())*110/100);
 	$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 	$('#dias').html(localStorage.getItem('dias'));
 	$('#mensajeperso').html(localStorage.getItem('msj'));
@@ -453,4 +456,7 @@ $(document).ready(function(){
                 }
 			}
 			$(".putHeightRows").css("height" , $(window).height() + "px");*/
+			$('#newEmail').on("keypress",function(event){
+				isalphanumeric(event);
+			});
 </script>

@@ -720,15 +720,15 @@ function getTimeSpan(){
 }
 
 function isalphanumeric(e){
-	console.log(e.keyCode);
-	alert(e.keyCode);
-	​if(e.keyCode==8||(e.keyCode>=96&&e.keyCode<=105)||(e.keyCode>=65&&e.keyCode<=90)||e.keyCode==20||e.keyCode==110)
+	/*console.log(e.which);
+	//alert(e.key);
+	if(e.which==8||(e.which>=96&&e.which<=105)||(e.which>=65&&e.which<=90)||e.which==20||e.which==110)
 	{
 		console.log("correcto");
 		return;
 	} 
 	else 
 	{ 
-		 e.preventDefault();
-	} 
+		e.preventDefault();
+	} */
 } 

@@ -61,7 +61,8 @@ public class PrinterFunctions
 				if(portNameSearch.toLowerCase().contains( needle.toLowerCase())){
 					portList  = StarIOPort.searchPrinter(portNameSearch,context);
 				}else{
-					portList  = StarIOPort.searchPrinter(portNameSearch);	
+					//portList  = StarIOPort.searchPrinter(portNameSearch);	
+					portList  = StarIOPort.searchPrinter(portNameSearch,context);	
 				}
 				
            // portList  = StarIOPort.searchPrinter("USB:SN:12345678");
@@ -89,7 +90,8 @@ public class PrinterFunctions
 		ArrayList<String> arrayPortName = new ArrayList<String>();
         try {
 			//USBPortList = StarIOPort.searchPrinter("USB:", this);
-            portList  = StarIOPort.searchPrinter("USB:",context);
+            //portList  = StarIOPort.searchPrinter("USB:",context);
+            portList  = StarIOPort.searchPrinter(portNameSearch,context);
             for (PortInfo theportInfo : portList) {
 					String theportName = theportInfo.getPortName();
 					String theidName=theportInfo.getPortName();

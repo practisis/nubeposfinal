@@ -1582,17 +1582,13 @@ $(document).ready(function(){
 });
 function Ready(){
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-	db.transaction(
-	function (tx){
-		tx.executeSql('SELECT id FROM CAJA WHERE activo=1;',[],
-		function(tx,res){
-			if(res.rows.length==0){
-				//$('#contentCaja2').modal('show');
-			}
-		});				
-	},errorCB,successCB);
 	ColocarFormasPago();
-	formarCategorias();
+	if(localStorage.getItem("diseno")==0){
+		formarCategorias();
+	}else{
+		formarCategoriasMenu();
+	}
+	
 	
 	
 	/*Josue*/
@@ -2390,4 +2386,118 @@ function VerificarNumero(valor){
 				}
 			});
 	});
+}
+
+function formarCategoriasMenu(){
+	var selected = '';
+	var categoriaSelected = 0;
+	var objcategoria='';
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function (tx){
+		tx.executeSql('SELECT * from MENU_CATEGORIAS where activo="true" order by nombre',[],
+		function(tx,res){
+			if(res.rows.length>0){
+				for(m=0;m<res.rows.length;m++){
+					selected = 'categoria';
+					var row=res.rows.item(m);
+					if(m==0){
+						selected = 'categoriaActiva';
+						categoriaSelected = row.timespan;
+					}
+					console.log("idcmenu:"+row.timespan);
+					$('#listacat').append('<li id="categoria_'+ row.timespan +'" class="esCategoria '+ selected +'" onclick="ActivarCategoriaMenu(this,'+"'"+ row.timespan +"'"+'); PlaySound(5);"><a>'+ (row.nombre).substring(0,20) +'</a></li>');
+				}
+				objcategoria=$('#categoria_'+categoriaSelected)[0];
+				console.log(objcategoria);
+				ActivarCategoriaMenu(objcategoria,categoriaSelected);
+			}else{
+				$("#menuproductos").html("<b>No se ha diseñado el menú todavía.</b>");
+			}
+		});
+	});
+}
+
+function ActivarCategoriaMenu(cual,categoria){
+	console.log(categoria);
+	$('#category').val(categoria);
+	$('#controller').val(1);
+	$('.directionProducts').css('display','none');
+	$('#listaProductos').html('');
+	$('#pager').val('1');
+	var fila=cual.parentNode.parentNode;
+	var miscateg=fila.getElementsByTagName('li');
+	//var tam='btn-lg';
+	for(k=0;k<miscateg.length;k++){
+		/*tam='btn-lg';
+		if($(miscateg[k].hasClass( "btn-xs" )))
+			tam='btn-xs';*/
+		if(miscateg[k].id!='listaCategorias' && miscateg[k].id!='contenidoCategorias')
+			miscateg[k].className="categoria esCategoria ";
+	}
+	cual.className="categoriaActiva esCategoria active";
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(
+	function (tx){
+		tx.executeSql("SELECT MAX(fila) as max from menu where activo='true'",[],function(tx,res1){
+			var maxfilas=0;
+			if(res1.rows.length>0){
+				if(res1.rows.item(0).max!=null&&res1.rows.item(0).max>0){
+					maxfilas=res1.rows.item(0).max;
+					for(var r=1;r<=maxfilas;r++){
+						console.log('SELECT p.*, m.idcatmenu as idc,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" and fila='+m+' ORDER BY m.columna asc');
+						tx.executeSql('SELECT p.*, m.idcatmenu as idc,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" and fila='+r+' ORDER BY m.columna asc',[],function(tx,res){
+							console.log(res);
+							if(res.rows.length>0){
+								//alert('prods');
+								var t=1;
+								for(m=0;m<res.rows.length;m++){
+									
+									var row=res.rows.item(m);
+									if(isNaN(row.precio)){row.precio = 0;}
+									var impuestos='';
+									var impuestosid='';
+									if(row.cargaiva==1){
+										impuestos+='0.12';
+										impuestosid+='1';
+									}
+									if(row.servicio==1){
+										if(row.cargaiva==1){
+											impuestos+='@';
+											impuestosid+='@';
+										}
+										impuestos+='0.10';
+										impuestosid+='2';
+									}
+									var lineHeight='';
+									if(row.formulado.length>12)
+										lineHeight='line-height:18px;';
+									var resto=parseInt(row.col)-t;
+									var agregar='';
+									if(resto>0){
+										for(var s=1;s<=resto;s++){
+											agregar+='<div style="background-color:white; border:1px solid #CCC; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'"></div>';
+										}
+									}
+									$('#listaProductos').append(agregar);
+									$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>');
+									t++;
+								}
+								//$('.producto').hide();
+								//init2(categoria);
+								Init3();
+								//$('#listaProductos').fadeIn();
+								$('#listaProductos').css("display","");
+								//para mostrar productos por pagina
+								showProducts(categoria);
+							}
+						});	
+					}
+				}
+			}
+		});			
+	},errorCB,successCB);
+	$('.producto').hide();
+	//$('.categoria_producto_'+ categoria).show();
+	Init3();
+	showProducts(categoria);
 }

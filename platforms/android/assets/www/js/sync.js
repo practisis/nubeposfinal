@@ -31,7 +31,7 @@ function SyncStart(){
 				$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+dataemp.nombre+'","direccion":"'+dataemp.direccion+'"},');
 			});
 		});
-		setTimeout(function(){SincronizadorNormal();},30000);
+		setTimeout(function(){SincronizadorNormal();},1000);
 		//setInterval(function(){SincronizadorNormal();},3000);
 	}else if(clientesya){
 		ExtraeDatosApi(4);
@@ -366,6 +366,8 @@ function DatosRecurrentes(cual){
 				$('#JSONEmpresaNube').html(JSON.stringify(jsonSync.BigJson[0].Empresa));
 				localStorage.setItem("dias",jsonSync.BigJson[5].Extra[0].dias);
 				localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].msj);
+				//localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].diseno);
+				localStorage.setItem("diseno",1);
 				$('#dias').html(localStorage.getItem('dias'));
 				$('#mensajeperso').html(localStorage.getItem('msj'));
 				console.log( ">>>>>>recurrente");

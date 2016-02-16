@@ -56,7 +56,8 @@
 			});				
 		},errorCB,successCB);
 		
-		StarIOAdapter.searchall("", function(dataprint){
+		//StarIOAdapter.searchall("USB:SN:00123456",function(dataprint){
+		StarIOAdapter.searchall("",function(dataprint){
 			var linea1="<tr><td>No print</td><td><input class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
 			$('#listaimpresoras tbody').append(linea1);
 			//alert(res);

@@ -1,5 +1,5 @@
 var qz;   // Our main applet
-
+var pagonormal=true;
 function receiveJson(){
 	if($('#json').html() != ''){
 		var fetchJsonStrng = $('#json').html();
@@ -45,20 +45,69 @@ function receiveJson(){
 changePaymentCategory(0);
 	
 function changePaymentCategory(index,nombre){
+	
+	if(pagonormal){
+		$('.paymentMethods').each(function(){
+			if($(this).attr('idpaymentmethod')!=index){
+				$(this).val('0.00');
+				if(index==3)$('#valorcxc').val('0.00');
+				if(index==4)$('#valorcheque1').val('0.00');
+				
+				//$('#simple_'+index).html('0.00');
+			}
+				
+		});
+	}
+		
+	
 	$('.paymentMethods').each(function(){
 		if($(this).attr('idPaymentMethod')==index){
 			$(this).click();
 		}
 	});
 	
+	//$('.buttonsPayment').click();
+	
+	/*if(pagonormal){
+		$('.tipopago,#touchtarjetas').css('display','none');
+		$('.simple').each(function(){
+			if($(this).attr('id')!='simple_'+index)
+				$(this).html('0.00');
+		});
+		
+		if(index==2){
+			$('.tipopago,#touchtarjetas').fadeIn();
+			//$('#card_1').click();
+		}
+		
+		if(index!=2)
+			$('#simple_'+index).html($('#total').html());
+		
+		$('.paymentMethods').val('0.00');
+		$('.paymentMethods').each(function(){
+			if($(this).attr('idpaymentmethod')==index){
+				if(index!=2){
+					$(this).val($('#total').html().substring(1));
+				}else{
+					var suma=0;
+					$('.card').each(function(){
+						if($(this).attr('id')!='card_'+id)
+							suma+=parseFloat($(this).attr('data-value'));
+					});
+					$(this).val(suma.toFixed(2));
+				}
+					
+			}
+		});	
+	}*/
+	
 	var value = 0;
 	$('.paymentMethods').each(function(){
 		if($(this).val() != 0 && $(this).val() != '' && $(this).val() != null){
 			value += parseFloat($(this).val());
 			}
-		});
+	});
 	updateForm(value);
-	//$('.buttonsPayment').click();
 }
 
 $('.resetPayment').click(function(){
@@ -132,9 +181,9 @@ $('.buttonsPayment').click(function(){
 	
 function updateForm(value){
 	value = parseFloat(value);
-	var total = parseFloat($('#invoiceTotal').html());
+	var total = parseFloat($('#total').html().substring(1));
 	var change = (value - total);
-	
+	//alert(value+'/'+total+'/'+change);
 	if(value < total){
 		$('#invoiceDebt').html('FALTANTE');
 		change = Math.abs(change);
@@ -142,25 +191,24 @@ function updateForm(value){
 		$('#cardValue').val(change.toFixed(2));
 		$('#chequeValue').val(change.toFixed(2));
 		$('#valueCxX').val(change.toFixed(2));
-		}
+	}
 	else if(value > total){
 		$('#invoiceDebt').html('VUELTO');
 		change = Math.abs(change);
 		$('#invoicePaid').html(value.toFixed(2));
 		$('#cardValue').val(0);
 		$('#chequeValue').val(0);
-		}
-	else{
-		if(value == total){
+	}
+	else if(value == total){
 			$('#invoiceDebt').html('VUELTO');
 			change = Math.abs(change);
 			$('#invoicePaid').html(value.toFixed(2));
 			$('#cardValue').val(0);
 			$('#chequeValue').val(0);
-			}
-		}
-	$('#changeFromPurchase').html(change.toFixed(2));
 	}
+	    
+	$('#changeFromPurchase').html(change.toFixed(2));
+}
 	
 function chooseCard(card,id){
 	var cardValue = $('#cardValue').val();
@@ -1914,37 +1962,94 @@ function BuscarCliente(e){
 }
 
 function CambiarMetodo(cual){
+	//console.log('viene aqui');
 	var nombre=$('#payment'+cual).attr('paymentMethod');
 	var index=$('#payment'+cual).attr('idPaymentMethod');
+	if(pagonormal) $('.touchpago').hide();
+	
+	if(pagonormal&&cual!='Tarjetas'){
+		$('.cardv').html('');
+		$('#valortarjeta').val('0.00');
+		$('.card').attr('data-value','0');
+		$('#simple_2').html('0.00');
+	}
+	
+	
 	//console.log(cual);
 	//$('.textoformapago').css('color','#58595B');
 	//$('#forma_'+index).css('color','#FFF');
-	if(cual=='Efectivo'&&$('#touchefectivo').css('display')=='none'){
-		$('.touchpago').hide();$('#touchefectivo').slideDown();}
-	if(cual=='Tarjetas'&&$('#touchtarjetas').css('display')=='none'){$('.touchpago').hide();$('#touchtarjetas').slideDown();}
-	if(cual=='Cheques'&&$('#touchcheques').css('display')=='none'){
-		$('.touchpago').hide();$('#touchcheques').slideDown();
-		if(parseFloat($('#valorcheque1').val())==0){
-			if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
-				$('#valorcheque1').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
-			valorchequechange();
+	if(cual=='Efectivo'){
+		if(pagonormal){
+			$('#simple_2,#simple_3,#simple_4').html('0.00');
+			//$('#paymentEfectivo').val(parseFloat($('#total').html().substring(1)).toFixed(2));
+			//$('#simple_1').html(parseFloat($('#total').html().substring(1)).toFixed(2));
+			$('#touchefectivo').slideDown();
+		}else{
+			if($('#touchefectivo').css('display')=='none')
+				$('.touchpago').hide();
+			$('#touchefectivo').slideDown();
+		}
+		
+	}
+	if(cual=='Tarjetas'){
+	
+		if(pagonormal){
+			$('#simple_1,#simple_3,#simple_4').html('0.00');
+			$('.touchpago').hide();
+			$('#touchtarjetas').slideDown();
+		}else if($('#touchtarjetas').css('display')=='none'){
+				$('.touchpago').hide();
+			$('#touchtarjetas').slideDown();
 		}
 	}
-	if(cual=='CxC'&&$('#touchcxc').css('display')=='none'){
-		$('.touchpago').hide();$('#touchcxc').slideDown();
-		if(parseFloat($('#valorcxc').val())==0){
-			if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
-				$('#valorcxc').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
-			valorcxcchange();
+	if(cual=='Cheques'){
+		if(pagonormal){
+			$('#simple_1,#simple_2,#simple_4').html('0.00');
+			$('#valorcheque1,#paymentCheques').val(parseFloat($('#total').html().substring(1)).toFixed(2));
+			$('#simple_3').html(parseFloat($('#total').html().substring(1)).toFixed(2));
+			$('#touchcheques').slideDown();
+			//valorchequechange();
+		}else{
+			    $('.touchpago').hide();
+				$('#touchcheques').slideDown();
+				if(parseFloat($('#valorcheque1').val())==0||$('#valorcheque1').val()==""){
+					if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
+					$('#valorcheque1,#paymentCheques').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
+					/*var falta=parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html());
+					if(falta<0)
+						$('#valorcheque1,#paymentCheques').val(parseFloat(falta*-1).toFixed(2));*/
+				//valorchequechange();
+			}
+		}
+		
+	}
+	if(cual=='CxC'){
+		if(pagonormal){
+			$('#simple_1,#simple_2,#simple_3').html('0.00');
+			$('#valorcxc,#paymentCxC').val(parseFloat($('#total').html().substring(1)).toFixed(2));
+			$('#simple_4').html(parseFloat($('#total').html().substring(1)).toFixed(2));
+			$('#touchcxc').slideDown();
+			//changePaymentCategory('4','Cheques');
+			//valorcxcchange();
+		}else{
+				if($('#touchcxc').css('display')=='none')
+					{$('.touchpago').hide();$('#touchcxc').slideDown();}
+				if(parseFloat($('#valorcxc').val())==0){
+				if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
+					$('#valorcxc,#paymentCxC').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
+				//valorcxcchange();
+			}
 		}
 	}
 	$('.columna1 div').each(function(){
 		$(this).attr('class','paymentCategories');
 		$(this).css('backgroundColor','');
 	});
+	
+	
 	$('#paymentCategory-'+ index).attr('class','categoryChosen');
 	//alert($('#invoiceTotal').html());
-	var faltante=parseFloat($('#invoiceTotal').html());
+	var faltante=parseFloat($('#total').html().substring(1));
 	var pagado=0;
 	$('.paymentMethods').each(function(){
 		var partepago=0;
@@ -1956,6 +2061,22 @@ function CambiarMetodo(cual){
 		faltante-=partepago;
 		pagado+=partepago;
 	});
+	
+	updateForm(pagado);
+	
+	//alert('falt'+faltante);
+	if(faltante==0){
+		//alert(faltante);
+		$('#invoiceDebt').html('VUELTO');
+		$('#changeFromPurchase').html('0.00');
+	}else if(faltante<0){
+		$('#invoiceDebt').html('VUELTO');
+		$('#changeFromPurchase').html((-1*faltante).toFixed(2));
+	}else{
+		$('#invoiceDebt').html('FALTANTE');
+		$('#changeFromPurchase').html(faltante.toFixed(2));
+	}
+	
 	
 	/*if(faltante>0){
 		if($('#payment'+nombre).val()=='')

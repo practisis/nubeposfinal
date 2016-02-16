@@ -5,7 +5,8 @@ var altolistaprod=0;
 var pantAlto=$('#content').height();
 var pantAncho=$('#content').width();
 var vertical=false;
-var misdenominaciones=[0.01,0.05,0.10,0.25,0.50,1,5,10,20,100];
+var misdenominaciones=[0.01,0.05,0.10,0.25,0.50,1,5,10,20,100]; 
+var cobronormal=true;
 
 
 function ActivarCategoria(cual,categoria){
@@ -329,8 +330,6 @@ function agregarCompra(item,origen){
 	
 	//init2();
 }
-
-
 
 function agregarCompra2(item,origen){
 	var i = 1;
@@ -770,7 +769,7 @@ function slider(direccion){
 	}
 	
 function pagar(){
-	
+	//lert('viene a pagar');
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	var serie='001';
 	var establecimiento='001';
@@ -829,6 +828,13 @@ function pagar(){
 	var descuento = $('#descuentoFactura').val();
     var total = $('#totalmiFactura').val();
     var nofactura = $('#invoiceNrComplete').val();
+	
+	var pagado=0;
+	$('.paymentMethods').each(function(){
+		if($(this).val()!='')
+			pagado+=parseFloat($(this).val());
+	})
+	
 	//if($('#timespanFactura').val()=='')
 	$('#timespanFactura').val(getTimeSpan());
     var timefactura = $('#timespanFactura').val();
@@ -840,12 +846,15 @@ function pagar(){
 	var discount = parseFloat($('#descuentoFactura').val());
 	console.log(discount);
 	if(discount == 0){
-		$('#changeFromPurchase').html((total).toFixed(2));
+		$('#changeFromPurchase').html((total-pagado).toFixed(2));
 	}else{
-		$('#changeFromPurchase').html((total-discount).toFixed(2));
+		$('#changeFromPurchase').html((total-discount-pagado).toFixed(2));
 	}
-	$('#changeFromPurchase').html((total-discount).toFixed(2));
-	$('#invoiceDebt').html('FALTANTE');
+	//$('#changeFromPurchase').html((total-discount).toFixed(2));
+	if((total-pagado)<=0)
+		$('#invoiceDebt').html('VUELTO');
+	else
+		$('#invoiceDebt').html('FALTANTE');
 
 	var idimpuestos = '';
 	var ivavalor=0;
@@ -1274,9 +1283,12 @@ function DetalleAbajo(){
 	
 	//setTimeout(function(){DetalleAbajo()},200);
 }
+
 function AntesDePagar(){
 	//$('#paymentModule').modal('show');
 	if(parseFloat($('#total').html().substring(1))>0){
+		$('#paymentEfectivo').val($('#total').html().substring(1));
+		$('#simple_1').html($('#total').html().substring(1));
 		changePaymentCategory('1','Efectivo');
 		$('#paymentModule').slideDown();
 		$('#cedulaP').val('9999999999999');
@@ -1320,18 +1332,18 @@ function ColocarFormasPago(){
 			//alert(evalJson[k][j]+id);
 				mihtml+= '<tr>';
 				mihtml+= '<td class="columna1">';
-				mihtml+= '<div id="paymentCategory-'+evalJson[k][j].id+'" class="paymentCategories" onclick="changePaymentCategory(\''+evalJson[k][j].id+'\',\''+evalJson[k][j].imagen+'\'); return false;" style="height:100%; background-color: #D2D2D2; border-top-left-radius: 10px; border-bottom-left-radius: 10px; border: 1px solid #cccccc;">';
+				mihtml+= '<div id="paymentCategory-'+evalJson[k][j].id+'" class="paymentCategories" onclick="changePaymentCategory(\''+evalJson[k][j].id+'\',\''+evalJson[k][j].imagen+'\'); return false;" style="height:100%; background-color: #D2D2D2; border-radius:5px; border: 1px solid #cccccc;">';
 				mihtml+= '<table style="width: 100%; height: 100%;" cellspacing="0px" cellpadding="0px">';
 			    mihtml+= '<tr style="cursor:pointer;">';
 				mihtml+= '<td style="width:10%; height:100% text-align: right; font-size: 12px; font-weight:400; padding-left:10px;"><span class="glyphicon glyphicon-ok-circle"></span></td>';
 				mihtml+= '<td class="textoformapago" id="forma_'+evalJson[k][j].id+'">';
 				mihtml+=evalJson[k][j].nombre;
-				mihtml+= '</td>';
+				mihtml+= '</td><td class="simple" id="simple_'+evalJson[k][j].id+'" style="text-align:right; padding-right:10px; display:none;">0.00</td>';
 				mihtml+= '</tr>';
 				mihtml+= '</table>';
 				mihtml+= '</div>';
 				mihtml+= '</td>';
-				mihtml+= '<td class="columna2">';
+				mihtml+= '<td class="columna2" style="display:none;">';
 				var read='';
 				var fondo='transparent';
 				var inputfondo='#F7F7F7';
@@ -1341,10 +1353,10 @@ function ColocarFormasPago(){
 					inputfondo='#DDD;'
 				}
 					
-				mihtml+= '<div style="height:100%; background-color:'+inputfondo+'; border-top-right-radius: 10px; border-bottom-right-radius:10px; border:1px solid #CCCCCC; text-align:center; padding-right:10px;">';
+				mihtml+= '<div style="height:100%; background-color:'+inputfondo+'; border:1px solid #CCCCCC; text-align:center; padding-right:10px;">';
 				mihtml+= '<input class="paymentMethods" paymentMethod="'+evalJson[k][j].nombre+'" idPaymentMethod="'+evalJson[k][j].id+'" id="payment'+evalJson[k][j].nombre.replace(" ","")+'" style="height:100%; width:100%; background:'+fondo+'; border:0px; text-align:right;" placeholder="0.00" value="" onclick="CambiarMetodo('+"'"+evalJson[k][j].nombre.replace(" ","")+"'"+');" type="number" min="0.00" step="0.10" onfocus="this+select();" onchange="CambiarMetodo('+"'"+evalJson[k][j].nombre.replace(" ","")+"'"+');" onkeypress="isalphanumeric(event);" '+read+' />';
 				mihtml+= '</div>';
-				mihtml+= '</td><td width="5%"><button class="btn" type="button" onclick="ResetPagos('+evalJson[k][j].id+');"><span class="glyphicon glyphicon-trash"></span></button></td>';
+				mihtml+= '</td><td width="5%" class="basurero" style="display:none; "><button class="btn" type="button" onclick="ResetPagos('+evalJson[k][j].id+');"><span class="glyphicon glyphicon-trash"></span></button></td>';
 				mihtml+= '</tr>';
 				x++;
 		}
@@ -1547,6 +1559,7 @@ function Init3(){
 	//$('#listaCategorias').css('height',(parseInt($('.categoria').css('height')))+'px');
 	$('#listaProductos').css('height',(parseInt($('.productos').css('height'))-80-parseInt($('#listaCategorias').css('height')))+'px');
 	$('.direccionales').css('height',(parseInt($('.categoria').css('height')))+'px');
+	$('.direccionales').css('width',(parseInt($('.direccionales').css('height')))+'px');
 	var anchoCategorias=0;
 	var cuantas=0;
 	$('.esCategoria').each(function(){
@@ -1583,7 +1596,7 @@ $(document).ready(function(){
 function Ready(){
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	ColocarFormasPago();
-	if(localStorage.getItem("diseno")==0){
+	if(localStorage.getItem("diseno")==0||localStorage.getItem("diseno")==null||localStorage.getItem("diseno")==""){
 		formarCategorias();
 	}else{
 		formarCategoriasMenu();
@@ -2166,6 +2179,8 @@ function Ready(){
 	
 
 function subirefectivo(boton){
+	
+	$('#paymentEfectivo').val('0.00');
 	var valor=$(boton).attr('data-value');
 	//console.log(valor);
 	valor=parseFloat(valor);
@@ -2205,6 +2220,13 @@ function vertarjetas(){
 }
 
 function elegirTarjeta(id){
+	
+	if(pagonormal){
+		$('.cardv').html('');
+		$('.card').attr("data-value","0");
+		$('#paymentTarjetas').val("0");
+	}
+	
 	var clase=$('.card').attr('class');
 	clase=clase.replace('btn-success','btn-primary');
 	$('.card').attr('class',clase);
@@ -2229,9 +2251,15 @@ function elegirTarjeta(id){
 	
 	console.log('antes'+suma);
 	var valorfalta=0;
-	var pagado=parseFloat($('#invoicePaid').html());
+	//var pagado=parseFloat($('#invoicePaid').html());
+	var pagado=0;
+	$('.paymentMethods').each(function(){
+		if($(this).val()!='')
+			pagado+=parseFloat($(this).val());
+	});
+	
 	var mitot=parseFloat($('#invoiceTotal').html());
-	console.log("falta:"+(mitot-pagado-suma));
+	console.log("falta:"+(mitot-pagado));
 	if((mitot-pagado)<0)
 		valorfalta=0;
 	else
@@ -2241,9 +2269,14 @@ function elegirTarjeta(id){
 	if(valorfalta>0){
 		$('#valortarjeta').val(valorfalta.toFixed(2));
 		$('#card_'+id).attr('data-value',valorfalta.toFixed(2));
+	}else{
+		$('#valortarjeta').val("0.00");
+		$('#card_'+id).attr('data-value',"0");
 	}
 	
-	$('#valortarjeta').val(parseFloat($('#card_'+id).attr('data-value')).toFixed(2));
+	//alert("hola");
+	/*$('#valortarjeta').val(parseFloat($('#card_'+id).attr('data-value')).toFixed(2));*/
+	
 	if($('#cardv_'+id).html()==''){
 		if(parseFloat($('#valortarjeta').val())>0){
 			$('#cardv_'+id).html(' ('+$('#valortarjeta').val()+')');
@@ -2260,7 +2293,9 @@ function elegirTarjeta(id){
 	});
 	
 	$('#paymentTarjetas').val((suma).toFixed(2));
+	$('#simple_2').html((suma).toFixed(2));
 	changePaymentCategory('2','Tarjetas');
+	
 }
 
 function valorcardchange(){
@@ -2316,20 +2351,40 @@ function toogleCalc(){
 function ResetPagos(cual){
 	if(cual==1){
 		$('#paymentEfectivo').val('0.00');
-		$('#paymentEfectivo').change();
+		//$('#paymentEfectivo').change();
 		//CambiarMetodo('Efectivo');
 	}else if(cual==2){
 		console.log('anacard');
 		$('.cardv').html('');
 		$('.card').attr('data-value','0');
-		$('#valortarjeta').val('0.00');
-		valorcardchange();
+		$('#valortarjeta,#paymentTarjetas').val('0.00');
+		//valorcardchange();
 	}else if(cual==3){
-		$('#valorcheque1').val('0.00');
-		valorchequechange();
+		$('#valorcheque1,#paymentCheques').val('0.00');
+		//valorchequechange();
 	}else if(cual==4){
-		$('#valorcxc').val('0.00');
-		valorcxcchange();
+		$('#valorcxc,#paymentCxC').val('0.00');
+		//valorcxcchange();
+	}
+	
+	var pagado=0;
+	$('.paymentMethods').each(function(){
+		if($(this).val()!='')
+			pagado+=parseFloat($(this).val());
+	});
+	
+	var mitot=parseFloat($('#invoiceTotal').html());
+	$('#invoicePaid').html(pagado.toFixed(2));
+	
+	if((mitot-pagado)>0){
+		$('#invoiceDebt').html("FALTANTE");
+		$('#changeFromPurchase').html(mitot.toFixed(2));
+	}else if((mitot-pagado)==0){
+		$('#invoiceDebt').html("VUELTO");
+		$('#changeFromPurchase').html("0.00");
+	}else{
+		$('#invoiceDebt').html("VUELTO");
+		$('#changeFromPurchase').html(mitot.toFixed(2));
 	}
 }
 
@@ -2500,4 +2555,36 @@ function ActivarCategoriaMenu(cual,categoria){
 	//$('.categoria_producto_'+ categoria).show();
 	Init3();
 	showProducts(categoria);
+}
+
+function PagoAvanzado(){
+	pagonormal=false;
+	$('.simple').css('display','none');
+	$('.columna2').fadeIn();
+	$('.tipopago,.basurero').fadeIn();
+	$('.categoryChosen').click();
+	$('#pagoavan').css('display','none');
+	$('.paymentMethods').val('0.00');
+	$('#valortarjeta,#valorcheque1,#valorcxc').val('0.00');
+	$('.card').attr("data-value","0");
+	$('.cardv').html("");
+	var pagado=0;
+	$('.paymentMethods').each(function(){
+		if($(this).val()!='')
+			pagado+=parseFloat($(this).val());
+	});
+	
+	var mitot=parseFloat($('#invoiceTotal').html());
+	$('#invoicePaid').html(pagado.toFixed(2));
+	
+	if((mitot-pagado)>0){
+		$('#invoiceDebt').html("FALTANTE");
+		$('#changeFromPurchase').html(mitot.toFixed(2));
+	}else if((mitot-pagado)==0){
+		$('#invoiceDebt').html("VUELTO");
+		$('#changeFromPurchase').html("0.00");
+	}else{
+		$('#invoiceDebt').html("VUELTO");
+		$('#changeFromPurchase').html(mitot.toFixed(2));
+	}
 }

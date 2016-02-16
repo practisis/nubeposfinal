@@ -11,7 +11,7 @@
 					min-height: 16.42857143px;">
 			  		NubePOS Conectado <br/> <label class="putEmp"></label>
 			  		<small><br/>Sincronizando...</small>
-			  		<center><a href="https://www.practisis.net/login.php" target="_blank" ><input class="btn btn-md btn-primary btn-center" type="button"  value="Abrir punto de venta en la nube" /></a></center>
+			  		<center><button onclick='IraNube(this);' link="" class="btn btn-md btn-primary btn-center" type="button"  value="Abrir punto de venta en la nube"></button></center>
 				</div>
 			</div>
 		</div>
@@ -89,7 +89,7 @@
 	  <div class='row' id='cuentaactiva' style='display:none;'>
 		<div class='col-lg-12'>
 			<div style='margin-top:10px; margin-bottom:10px;'>Ingresa a tu cuenta PractiPOS en la nube</div>
-			<center><a id="linklogin" href="" target="_blank" ><input class="btn btn-md btn-primary btn-center" type="button"  value="Ir a la nube" /></a></center>
+			<center><button onclick='IraNube(this);' class="btn btn-md btn-primary btn-center" type="button" id="linklogin">Ir a la nube</button></center>
 			<div class='alert alert-success' style='margin-top:20px; margin-bottom:20px;'>Su cuenta se encuentra activa por <b><span id='dias'>x</span></b> dias.</div>
 		</div>
 	  </div>
@@ -97,7 +97,7 @@
 			<div class="col-lg-12">
 				<h1>Licencia Caducada!</h1>
 				<div class='alert alert-danger' style='margin-top:30px;'>Su cuenta PractiPOS se encuentra bloqueada, ya que se ha terminado la validez de la licencia.</div>
-				<center style='margin-top:20px; margin-bottom:20px;'><a id="linkloginb" href="" target="_blank" ><input class="btn btn-md btn-primary btn-center" type="button"  value="Abrir PractiPOS en la nube" /></a></center>
+				<center style='margin-top:20px; margin-bottom:20px;'><button link="" onclick='IraNube(this);'  id="linkloginb" class="btn btn-primary" type="button">Abrir PractiPOS en la nube</button></center>
 			</div>
 	  </div>
 	  <div class='row'>
@@ -303,7 +303,7 @@ $(document).ready(function(){
 	
 	$('#demoGratis').css('height',parseInt($(window).height())*150/100);
 	$('#fadeRow').css('height',parseInt($(window).height())*110/100);
-	$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+	$('#linklogin,#linkloginb').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 	$('#dias').html(localStorage.getItem('dias'));
 	$('#mensajeperso').html(localStorage.getItem('msj'));
 	
@@ -322,6 +322,11 @@ $(document).ready(function(){
 		$('#contentStepSincro,#cuentaactiva,#mensajeperso').fadeIn();
 	}
 });
+
+function IraNube(elem){
+	var url=$(elem).attr('link');
+	window.open(url);
+}
 		//SyncStart();
 		/*var loopSicnronizador;
 		var yaConectado=false;

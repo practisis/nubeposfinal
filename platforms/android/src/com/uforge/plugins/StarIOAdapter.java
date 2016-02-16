@@ -396,18 +396,28 @@ public class StarIOAdapter extends CordovaPlugin {
 								servicio=" "+servicio;
 							}
 						}
+						
+						if(descuento.length()<6){
+							int tam=6-descuento.length();
+							for(int n=0;n<tam;n++){
+								descuento=" "+descuento;
+							}
+						}
 
 				list.add(createCp1252("                 SUBTOTAL:"+String.valueOf(subconiva)+"\r\n"));
 				list.add(createCp1252("                SUBCONIVA:"+String.valueOf(subconiva)+"\r\n"));
 				list.add(createCp1252("                SUBSINIVA:"+String.valueOf(subsiniva)+"\r\n"));
 				list.add(createCp1252("                      IVA:"+String.valueOf(iva)+"\r\n"));
 				list.add(createCp1252("                 SERVICIO:"+String.valueOf(servicio)+"\r\n"));
-				if(descuento!="0.00")
 				list.add(createCp1252("                DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
 				
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
 				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x02 });
-				list.add(createCp1252("                    TOTAL:"+String.valueOf(totalfact)+"\r\n"));	
+
+				// Character expansion
+				list.add(new byte[] { 0x06, 0x09, 0x1b, 0x69, 0x01, 0x01 });
+				list.add(createCp1252("                TOTAL:"+String.valueOf(totalfact)+"\r\n"));
+				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 			}else if(tipo.equals("cierre")){
 				
 				if(subtotalCierre.length()<9){
@@ -521,12 +531,13 @@ public class StarIOAdapter extends CordovaPlugin {
 			}
 				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x00, 0x00 });
+				
 
 				//list.add(createCp1252("NO: 000018851     IVA IXNCLUIDO\r\n"));
 				list.add(createCp1252("--------------------------------\r\n"));
 
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });
-				list.add(createCp1252("**** NUBE POS 2.0 ****\r\n"));
+				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
 
 				// 1D barcode example
@@ -893,16 +904,21 @@ public class StarIOAdapter extends CordovaPlugin {
 			//portNames = PrinterFunctions.getFirstPrinter(portNameSearch);
 			if(portNames.size()>0){
 				for(int x=0;x<portNames.size();x++) {
-				  StarPrinterStatus status = PrinterFunctions.GetStatus(context,portNames.get(x), portSettings, true);
-				   //StarPrinterStatus status = PrinterFunctions.GetStatus(context, portNames, portSettings, true);
-					if (status == null) {
-						callbackContext.error("Cannot get the printer status.");
-					} else if (status.offline) {
-						callbackContext.error("The printer is offline.");
-					} else {
+					String needle="BT:";
+					if(portNames.get(x).toLowerCase().contains(needle.toLowerCase())){
 						callbackContext.success(portNames.get(x));
-						//callbackContext.success(portNames);
-					} 
+					}else{
+						StarPrinterStatus status = PrinterFunctions.GetStatus(context,portNames.get(x), portSettings, true);
+					   //StarPrinterStatus status = PrinterFunctions.GetStatus(context, portNames, portSettings, true);
+						if (status == null) {
+							callbackContext.error("Cannot get the printer status.");
+						} else if (status.offline) {
+							callbackContext.error("The printer is offline.");
+						} else {
+							callbackContext.success(portNames.get(x));
+							//callbackContext.success(portNames);
+						} 
+					}
 				}	
 			}else{
 				callbackContext.error("No se han detectado impresoras.");

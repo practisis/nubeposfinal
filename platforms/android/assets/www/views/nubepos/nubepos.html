@@ -118,12 +118,12 @@
 							</td>
 			</tr>
 			<tr>
-				<td>
-				<div id='nav_izq' data-dir="left" class="directionProducts btn btn-primary" style='margin:5px; display:none;'><span class='glyphicon glyphicon-menu-left'></span></div></td>
-				<td class='contentListaProductos ' id='contentListaProductos'>
+				<!--<td>
+				<div id='nav_izq' data-dir="left" class="directionProducts btn btn-primary" style='margin:5px; display:none;'><span class='glyphicon glyphicon-menu-left'></span></div></td>-->
+				<td class='contentListaProductos ' id='contentListaProductos' colspan='3'>
 					<div id='listaProductos' class='' style='height:520px;display:block;overflow-y:visible;'></div>
 				</td>
-				<td><div data-dir="right" class="directionProducts btn btn-primary" style='cursor:pointer; margin:5px; display:none;' id='nav_der'><span class='glyphicon glyphicon-menu-right'></span></div></td>
+				<!--<td><div data-dir="right" class="directionProducts btn btn-primary" style='cursor:pointer; margin:5px; display:none;' id='nav_der'><span class='glyphicon glyphicon-menu-right'></span></div></td>-->
 					<div id='navegadoresh'>
 						<table cellspacing='0px' cellpadding='0px' width='99%' align='center'>
 							<tr>
@@ -650,12 +650,16 @@
 				</div>
 				<div class=''>
 				<div class='col-xs-5'>
-					<td style="vertical-align:top; width:120px; height:150px;" colspan='2'>
-						<div class="ventanaformapago" style='overflow-y:auto; overflow-x:hidden;'>
+					<div style="vertical-align:top; width:100%;" colspan='2'>
+						<div class="ventanaformapago" style='overflow-y:auto; overflow-x:hidden; width=100%;'>
 							<table style="width:100%;" cellspacing="0" cellpadding="0" id='tablaformaspago'>
 							</table>
 						</div>
-					</td>
+						<div style='text-align:left; font-size:12px;'>
+						<div onclick='PagoAvanzado();' id='pagoavan' style='padding-left:10px;'>Pago Avanzado</div>
+						</div>
+						<!--<div style='padding-top:10px; text-align:right; margin-bottom:10px;'><button class='btn btn-xs btn-success'>Pago Avanzado</button></div>-->
+					</div>
 				</div>
 				<div class='col-xs-7'>
 						<div class='tipopago panel'>
@@ -748,15 +752,17 @@
 							</div>
 							<div class="touchpago" id='touchcxc'  style='display:none;'>
 								<span>Ingresa el monto que se va a cancelar</span>
-								<table width='100%' style='margin-top:15px;'><tr><td>
-								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon" id="basic-addon1" style='width:20%;' >Valor US</span>
-								<input type='number' onchange='valorcxcchange();' class='form-control input input-lg' id='valorcxc' name='valorcxc' value='0.00' onclick='this.select();' onkeypress="isalphanumeric(event);"/>
-								</div>
-								</td></tr><tr><td>
+								<table width='100%' style='margin-top:15px;'>
+								<tr><td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
 								<span class="input-group-addon" id="basic-addon1" style='width:20%;' >Justificación</span>
 								<input type='text' class='form-control input input-lg' id='justcxc' name='justcxc' onclick='this.select();'/>
+								</div>
+								</td></tr>
+								<tr><td>
+								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
+								<span class="input-group-addon" id="basic-addon1" style='width:20%;' >Valor US</span>
+								<input type='number' onchange='valorcxcchange();' class='form-control input input-lg' id='valorcxc' name='valorcxc' value='0.00' onclick='this.select();' onkeypress="isalphanumeric(event);"/>
 								</div>
 								</td></tr></table>
 							</div>

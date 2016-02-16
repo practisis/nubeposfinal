@@ -367,7 +367,8 @@ function DatosRecurrentes(cual){
 				localStorage.setItem("dias",jsonSync.BigJson[5].Extra[0].dias);
 				localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].msj);
 				//localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].diseno);
-				localStorage.setItem("diseno",1);
+				//localStorage.setItem("diseno",1);
+				localStorage.setItem("diseno",0);
 				$('#dias').html(localStorage.getItem('dias'));
 				$('#mensajeperso').html(localStorage.getItem('msj'));
 				console.log( ">>>>>>recurrente");

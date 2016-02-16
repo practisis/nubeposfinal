@@ -24,8 +24,14 @@ public class PrinterFunctions
         StarIOPort port = null;
         StarPrinterStatus status = null;
         try {
-            port = StarIOPort.getPort(portName, portSettings, 10000, context);
-
+			
+			String needle="BT:";
+			if(portName.toLowerCase().contains( needle.toLowerCase()))
+			   portSettings  = "portable";
+				 //port = StarIOPort.getPort(portName, portSettings, 10000);
+				
+			port = StarIOPort.getPort(portName, portSettings, 10000, context);
+			//port = StarIOPort.getPort(portName, "portable;u;l", 10000, context);
             try {
                 Thread.sleep(500);
             }
@@ -61,8 +67,8 @@ public class PrinterFunctions
 				if(portNameSearch.toLowerCase().contains( needle.toLowerCase())){
 					portList  = StarIOPort.searchPrinter(portNameSearch,context);
 				}else{
-					//portList  = StarIOPort.searchPrinter(portNameSearch);	
-					portList  = StarIOPort.searchPrinter(portNameSearch,context);	
+					portList  = StarIOPort.searchPrinter(portNameSearch);	
+					//portList  = StarIOPort.searchPrinter(portNameSearch,context);	
 				}
 				
            // portList  = StarIOPort.searchPrinter("USB:SN:12345678");
@@ -86,42 +92,84 @@ public class PrinterFunctions
      */
     public static ArrayList<String> getPrinters(String portNameSearch,Context context) throws StarIOPortException{
         //String portName = "";
-        List<PortInfo> portList;
 		ArrayList<String> arrayPortName = new ArrayList<String>();
-        try {
-			//USBPortList = StarIOPort.searchPrinter("USB:", this);
-            //portList  = StarIOPort.searchPrinter("USB:",context);
-            portList  = StarIOPort.searchPrinter(portNameSearch,context);
-            for (PortInfo theportInfo : portList) {
-					String theportName = theportInfo.getPortName();
-					String theidName=theportInfo.getPortName();
-
-				if (theportInfo.getMacAddress().equals("") == false) {
-					theportName += "\n - " + theportInfo.getMacAddress();
-					if (theportInfo.getModelName().equals("") == false) {
-						theportName += "\n - " + theportInfo.getModelName();
-					}
-				} else {
-					if (!theportInfo.getModelName().equals("")) {
-						theportName += "\n - " + theportInfo.getModelName();
-					}
-					if (!theportInfo.getUSBSerialNumber().equals(" SN:")) {
-						theportName += "\n - " + theportInfo.getUSBSerialNumber();
-					}
-				}
-
-				/*arrayPortName.add(portName);
-					String theportName = theportInfo.getPortName();*/
-				arrayPortName.add(theidName+"@"+theportName);
-		
-               //break;
-            }
-			
-        } catch (StarIOPortException e) {
-            throw e;
-        }
+		ArrayList<String> arraybt=BuscarBluetooth();
+		ArrayList<String> arrayusb=BuscarUSB(context);
+        if(arraybt.size()>0){
+			arrayPortName.addAll(arraybt);
+		}
+		if(arrayusb.size()>0){
+			arrayPortName.addAll(arrayusb);
+		}
         return arrayPortName;
     }
+	
+	private static ArrayList<String> BuscarBluetooth(){
+		List<PortInfo> portListBT;
+		ArrayList<String> arrayPortName=new ArrayList<String>();
+		try{
+		portListBT  = StarIOPort.searchPrinter("BT:");
+		if(portListBT.size()>0){
+				for (PortInfo theportInfoBT : portListBT) {
+						String theportNameBT = theportInfoBT.getPortName();
+						String theidNameBT=theportInfoBT.getPortName();
+
+					if (theportInfoBT.getMacAddress().equals("") == false) {
+						theportNameBT += "\n - " + theportInfoBT.getMacAddress();
+						if (theportInfoBT.getModelName().equals("") == false) {
+							theportNameBT += "\n - " + theportInfoBT.getModelName();
+						}
+					}
+
+					/*arrayPortName.add(portNameBT);
+					String theportNameBT = theportInfoBT.getPortName();*/
+					arrayPortName.add(theidNameBT+"@"+theportNameBT);
+			
+				   //break;
+				}
+			}
+		}catch (StarIOPortException e) {
+            e.printStackTrace();
+        }
+        return arrayPortName;
+	}
+	
+	private static ArrayList<String> BuscarUSB(Context context){
+		List<PortInfo> portList;
+		ArrayList<String> arrayPortName=new ArrayList<String>();
+		try{
+			portList  = StarIOPort.searchPrinter("USB:",context);
+			for (PortInfo theportInfo : portList) {
+				String theportName = theportInfo.getPortName();
+				String theidName=theportInfo.getPortName();
+
+				if (theportInfo.getMacAddress().equals("") == false) {
+							theportName += "\n - " + theportInfo.getMacAddress();
+							if (theportInfo.getModelName().equals("") == false) {
+								theportName += "\n - " + theportInfo.getModelName();
+							}
+				} else {
+							if (!theportInfo.getModelName().equals("")) {
+								theportName += "\n - " + theportInfo.getModelName();
+							}
+							if (!theportInfo.getUSBSerialNumber().equals(" SN:")) {
+								theportName += "\n - " + theportInfo.getUSBSerialNumber();
+							}
+				}
+
+						/*arrayPortName.add(portName);
+							String theportName = theportInfo.getPortName();*/
+						
+						arrayPortName.add(theidName+"@"+theportName);
+				
+					   //break;
+			}
+			
+		}catch (StarIOPortException e) {
+            e.printStackTrace();
+        }
+        return arrayPortName;
+	}
 
     /*private static byte[] convertFromListByteArrayTobyteArray(List<Byte> ByteArray) {
         byte[] byteArray = new byte[ByteArray.size()];

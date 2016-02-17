@@ -1,11 +1,3 @@
-<script>
-	var dispositivo = navigator.userAgent.toLowerCase();
-	/*var esMovil=true;*/
-	var esMovil=false;
-	if( dispositivo.search(/iphone|ipod|ipad|android/) > -1 ){
-	esMovil=true;
-	}
-</script>
 <style>
 	.numero table{
 		font-size:25px;font-weight:bolder;
@@ -18,84 +10,11 @@
 <!--link-->
 <!--<div class="page page-default" style='background-color:white;'>--->
 <div class="row">
-    <div class="col-sm-12">
-    <audio id="beep1" src="views/nubepos/sonidos/blip7.wav" preload="auto"></audio>
-	<div style='display:none;' id='jsonclientes'></div>
-	<section id="content2">
-	<div  id='central' class='col-lg-12'>
-	<div class="modal fade" id="contentCaja2" data-backdrop='static'>
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header"><h2>Apertura de Caja</h2></div>
-			<div class='modal-body' id="loadCaja">
-			<div id="contentCampos" align="center">
-				<table class='table'>
-					<tr>
-						<td align="left" valign='middle'> 
-							<label class="textosApertura" type="1"> Número de establecimiento </label>
-						</td>
-						<td  align="left">
-							<table width='100%'>
-								<tr>
-								<td>
-								   <label class="textosApertura" type="1">(# estab) </label>
-								   <input id="inpEstablecimiento1" placeHolder="001" value='001' pattern="[0-9]*" class='form-control'/>
-									
-								</td>
-								<td>
-									<label class="textosApertura" type="1">(pto venta) </label>	
-									<input id="inpEstablecimiento2" placeHolder="000" value='001' pattern="[0-9]*" class='form-control' step='any'/>
-																							
-								</td>
-								<td>					
-										<label class="textosApertura" type="1">(# factura) </label>
-										<input step='any' id="inpEstablecimiento3" placeHolder="200" value='001' pattern="[0-9]*" class='form-control' />
-								</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<tr>
-						<td align="left">
-						<label class="textosApertura" type="2"> Número de autrorización </label>
-						</td>
-						<td  align="left">
-						<input id="inpAutorizacion"  placeHolder="exp. 231"  class='form-control'/>
-						</td>
-					</tr>
-					<tr>
-						<td  align="left">
-						<label class="textosApertura" type="3"> Valor de apertura </label>
-						</td>
-						<td  align="left">
-						<input id="inpValor" placeHolder="0" type='number' class='form-control' value='0' />
-						</td>
-					</tr>
-					
-					<tr>
-						<td colspan="2" align="center">
-						<button id="btnSaveInclude" class='btn btn-danger btn-lg' onclick='AbrirCaja();'>
-							Abrir Caja
-						</button>
-						</td>
-					</tr>
-				</table>
-				</div>
-			</div>
-		</div>
-		</div>
-   </div>
-	<!--<div class='scan' id='scan' onclick='dale()'>
-		<div id='divInScan' style='margin:10px; width:100%; height:100%;'>
-		<div class='boton' id='btn_scan'><img src='images/simboloscan.png' style='height:30px; margin-right:5px;'/>SCAN</div>
-	<img src='images/btnscan.png' style='cursor:pointer; width:100%;'/>
-		</div>
-	</div>-->
-	<!--<div class="scan" id="scancodebar" onclick="dale()">
-		<div id='divInScan' style='margin:10px; width:100%; height:100%;'>
-			<div class='boton' id='barcodescanner'><img src='images/simboloscan.png' style='height:30px; margin-right:5px;'/>SCAN</div>
-		</div>
-	</div>-->
+<div class="col-sm-12">
+<audio id="beep1" src="views/nubepos/sonidos/blip7.wav" preload="auto"></audio>
+<div style='display:none;' id='jsonclientes'></div>
+<section id="content2">
+<div  id='central' class='col-lg-12'>
 <div class='row' id='row1'>
 	<div class='productos col-lg-8 col-md-8 col-xs-12' id='productos' align='center'>
 		<div class='row'>
@@ -1027,17 +946,3 @@
 </div>
 </div>
 <!--</div>-->
-<script>
-    Init3();
-    botonesCalculadora();
-    $(window).resize(function(){
-        botonesCalculadora();
-    });
-    function botonesCalculadora(){
-        height=($(window).height() * 0.70) / 4 ;
-        heightc=($(window).height() * 0.45) / 4 ;
-        $(".numero").css("height", height +"px");
-        $(".numeroc").css("height", heightc +"px");
-    }
-    
-</script>

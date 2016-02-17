@@ -1,5 +1,21 @@
-var intervalProcesoRepetir;
-var loopSicnronizador;
+function updateOnlineStatus(condition) {
+					var status = document.getElementById("status");
+					//var condition = navigator.onLine ? "ONLINE" : "OFFLINE";
+					var state = document.getElementById("state");
+					var log = document.getElementById("log");
+					$('#conexion').val(condition);
+					
+					var conexionInternet = $('#conexion').val();
+					console.log(conexionInternet)
+					if(conexionInternet == 'ONLINE' ){
+						$('#cloudIndex').css('display','block');
+						$('#cloudIndexOff').css('display','none');
+					}else if(conexionInternet == 'OFFLINE' ){
+						$('#cloudIndex').css('display','none');
+						$('#cloudIndexOff').css('display','block');
+					}
+	}
+
 function envia(donde){
 			//if(loopSicnronizador) clearInterval(loopSicnronizador);
             //clearInterval(intervalProcesoRepetir);
@@ -34,12 +50,15 @@ function envia(donde){
 					if(!lugar) lugar="404.html";
 					$('#cargandoTabs').css('display','none');
 					$('#correoMal').fadeOut('slow');
-					$('#main').load(lugar,function(){
+					$.get(lugar,function(data){
+						$('#main').html(data);
+					});
+					/*$('#main').load(lugar,function(){
 						$("#simple-menu").click();
 					});						
 						//DOMOnTap();
 						//loaded();
-					/*setTimeout(function(){
+					setTimeout(function(){
 						$('#cargandoTabs').css('display','none');
 						$('#correoMal').fadeOut('slow');
 						$('#main').load(lugar,function(){
@@ -211,36 +230,7 @@ var app = {
         //tx.executeSql('DROP TABLE IF EXISTS PRODUCTOS');
         //tx.executeSql('CREATE TABLE IF NOT EXISTS empresa (id integer primary key AUTOINCREMENT, nombre integer )');
          tx.executeSql('CREATE TABLE IF NOT EXISTS empresa (id integer primary key AUTOINCREMENT, nombre integer, nombreempresa text, id_barra text, barra_arriba text )');
-        
-        /*var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-        //tx.executeSql('DROP TABLE IF EXISTS PRODUCTOS');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS logActualizar (id integer primary key AUTOINCREMENT, tabla text , incicial integer , final integer)');
-        tx.executeSql('select count(id) as cuantos from logActualizar',[],function(tx,res){
-        var existenD=res.rows.item(0).cuantos;
-            if(existenD==0){
-                for(var i = 1 ; i <= 5 ; i++){
-                    var tabla ='';
-                    if(i == 1){
-                        tabla ='CAJA_APERTURA_CIERRE';
-                    }
-                    if(i == 2){
-                        tabla ='CATEGORIAS';
-                    }
-                    if(i == 3){
-                        tabla ='CLIENTES';
-                    }
-                    if(i == 4){
-                        tabla ='FACTURAS';
-                    }
-                    if(i == 5){
-                        tabla ='PRODUCTOS';
-                    }
-                    //insertaTablas(tabla);
-                }
-            }
-        });   */ 
-        
-        
+       
         
         function insertaTablas(tabla){
             console.log(tabla);
@@ -284,12 +274,7 @@ var app = {
 		tx.executeSql('CREATE TABLE IF NOT EXISTS PRESUPUESTO (id integer primary key AUTOINCREMENT,timespan text,valor real,fecha integer UNIQUE,transacciones integer);');
     }
 
-    function populateDB(tx){
-        //tx.executeSql('DROP TABLE IF EXISTS DEMO');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id unique, data)');
-        tx.executeSql('INSERT INTO DEMO (id, data) VALUES (1, "First row")');
-        tx.executeSql('INSERT INTO DEMO (id, data) VALUES (2, "Second row")');
-    }
+   
 
     // Transaction error callback
     //
@@ -302,19 +287,7 @@ var app = {
     function successCB() {
         console.log("success!");
     }
-
-    function selector(){
-         var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-         db.transaction(sacadatos, errorCB, successCB);
-    }
-    
-    function sacadatos(tx){
-         tx.executeSql('SELECT COUNT(ID) as cnt FROM DEMO;',[], function (tx,res){
-            //console.log("vamos:"+res.rows.item(0).cnt);
-         });
-         
-    }
-    
+  
     /*Funciones Ana:*/
     function Ingresaproductos(){
          var json = $('#jsonProductos').html();
@@ -645,33 +618,7 @@ var app = {
             },errorCB,successCB);
         });
     }
-    
-    /**/
-    function metedatos(tx,item){
-        //console.log(item);
-        tx.executeSql('INSERT INTO PRODUCTOS (id,formulado,codigo,precio,categoriaid,cargaiva, productofinal,materiaprima) VALUES (?,?,?,?,?,?,?,?);',[item.formulado_id,item.formulado_nombre,item.formulado_codigo,item.formulado_precio,item.formulado_tipo,cargaiva,1,item.formulado_matprima],function(tx,res){//console.log("vamos:"+res.insertId);
-        });
-    } 
         
-function ajax(cadena){var xmlhttp=false;
-/*@cc_on @*/
-/*@if (@_jscript_version >= 5)
-try { xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");} catch (e) {try {xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");} 
-
-catch (E) { xmlhttp = false;}}
-@end @*/
-//console.log(cadena);
-if (!xmlhttp && typeof XMLHttpRequest!='undefined') { try {xmlhttp = new XMLHttpRequest(); } catch (e) { xmlhttp=false;}}
-if (!xmlhttp && window.createRequest) {    try { xmlhttp = window.createRequest();} catch (e) { xmlhttp=false;}}
-xmlhttp.open("GET",cadena,true);
-xmlhttp.onreadystatechange=function() {
-if (xmlhttp.readyState==4){
-    if(xmlhttp.status==200){
-        resultDiv = document.querySelector("#results");
-    resultDiv.innerHTML=xmlhttp.responseText;    
-}}} 
-xmlhttp.send(null);
-}
 
 function showalert(msg){
     $('#alert').html(msg);
@@ -701,27 +648,6 @@ function hidealertred(){
     $('#alertred').slideUp('fast');
 }
 
-
-function imprimervprueba(){
-  //alert('entra');
-  var page = '<h1>Hello Document</h1>';
-
-  cordova.plugins.printer.print(page, 'Document.html', function () {
-      alert('printing finished or canceled')
-  });
-
-}
-
-function printDiv(divName) {
-     var printContents = document.getElementById(divName).innerHTML;
-     var originalContents = document.body.innerHTML;
-
-     document.body.innerHTML = printContents;
-
-     window.print();
-
-     document.body.innerHTML = originalContents;
-}
 
 function getTimeSpan(){
 		var rn=Math.floor((Math.random() * 10000) + 1);

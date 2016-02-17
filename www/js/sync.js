@@ -387,7 +387,7 @@ function DatosRecurrentes(cual){
 			
 		}).fail(function(){
 			updateOnlineStatus("OFFLINE");
-			setTimeout(function(){SincronizadorNormal()},60000);
+			setTimeout(function(){SincronizadorNormal()},180000);
 		});
 	}
 	if(cual==1){
@@ -428,7 +428,7 @@ function DatosRecurrentes(cual){
 							updateOnlineStatus("ONLINE");
 					}).fail(function(){
 						updateOnlineStatus("OFFLINE");
-						setTimeout(function(){SincronizadorNormal()},60000);
+						setTimeout(function(){SincronizadorNormal()},180000);
 					});
 					
 				});
@@ -471,7 +471,7 @@ function DatosRecurrentes(cual){
 						updateOnlineStatus('ONLINE');
 					}).fail(function(){
 						updateOnlineStatus("OFFLINE");
-						setTimeout(function(){SincronizadorNormal()},60000);
+						setTimeout(function(){SincronizadorNormal()},180000);
 					});
 				});
 		}	
@@ -513,7 +513,7 @@ function DatosRecurrentes(cual){
 						updateOnlineStatus('ONLINE');
 					}).fail(function(){
 						updateOnlineStatus("OFFLINE");
-						setTimeout(function(){SincronizadorNormal()},60000);
+						setTimeout(function(){SincronizadorNormal()},180000);
 					});
 		});
 		}
@@ -557,7 +557,7 @@ function DatosRecurrentes(cual){
 						
 					}).fail(function(){
 						updateOnlineStatus("OFFLINE");
-						setTimeout(function(){SincronizadorNormal()},60000);
+						setTimeout(function(){SincronizadorNormal()},180000);
 					});
 				});
 		}
@@ -602,7 +602,7 @@ function DatosRecurrentes(cual){
 						updateOnlineStatus('ONLINE');
 					}).fail(function(){
 						updateOnlineStatus("OFFLINE");
-						setTimeout(function(){SincronizadorNormal()},60000);
+						setTimeout(function(){SincronizadorNormal()},180000);
 					});
 				});
 		}
@@ -737,7 +737,7 @@ function PostaLaNube(arraydatos,cual,accion,t){
 		updateOnlineStatus("ONLINE");
 	}).fail(function(){
 			updateOnlineStatus("OFFLINE");
-			setTimeout(function(){SincronizadorNormal()},60000);
+			setTimeout(function(){SincronizadorNormal()},180000);
 	});
 } 
 

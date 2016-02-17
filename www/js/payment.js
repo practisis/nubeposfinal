@@ -251,6 +251,9 @@ function performPurchase(restaurant){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(Ingresafacturas, errorCB, successCB);
 			function Ingresafacturas(tx){
+				var now=new Date().getTime();
+				tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Inserta Factura",fetchJson],function(tx,results){});
+				
 				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true'],function(){
 					console.log("Nueva Factura Ingresada");
 					var mijsonprod=JSON.parse(fetchJson);
@@ -277,6 +280,9 @@ function performPurchase(restaurant){
 				if(listaimpuestos.indexOf('2')>=0)
 					preciomas+=miprecio*(0.10);*/
 				miprecio=miprecio+preciomas;
+				
+				var now=new Date().getTime();
+				tx2.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Inserta Detalles Factura",JSON.stringify(item)+" ,Factura:"+mifactura],function(tx,results){});
 				
 				tx2.executeSql("INSERT INTO FACTURAS_FORMULADOS(timespan_factura,timespan_formulado,cantidad,precio_unitario)VALUES(?,?,?,?)",[mifactura,item.id_producto,item.cant_prod,miprecio],function(){
 					console.log("Nuevo Detalle Factura Ingresado");
@@ -353,12 +359,18 @@ function impresionMovil(mijson){
 	$('#printFactura').hide();
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function (tx){
+		
+		var now=new Date().getTime();
+		tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Envia a Imprimir Factura",mijson],function(tx,results){});
+				
 		tx.executeSql('SELECT printer FROM CONFIG where id=1',[],
 		function(tx,res){
 			if(res.rows.length>0){
 				var miprint=res.rows.item(0);
 				//alert(miprint.printer);
-				StarIOAdapter.rawprint(mijson,miprint.printer, function() {	
+				StarIOAdapter.rawprint(mijson,miprint.printer, function() {
+					var now=new Date().getTime();
+					tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
 					showalert("Imprimiendo Factura");
 				});
 			}else{

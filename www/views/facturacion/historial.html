@@ -127,8 +127,12 @@
 											//alert(results.rows.item(0).printer);
 											var idprinter=results.rows.item(0);
 											if(idprinter.printer!=''){
+												var now=new Date().getTime();
+												tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Envia imprimir Cierre",respuesta]);
 												StarIOAdapter.rawprint(respuesta,idprinter.printer, function() {
 													showalert("Imprimiendo Cierre de Caja");
+													var now=new Date().getTime();
+													tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió el Cierre",""]);
 												});
 											}else{
 												showalert("No se ha configurado una impresora.");

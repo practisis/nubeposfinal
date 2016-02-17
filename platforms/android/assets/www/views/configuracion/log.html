@@ -1,0 +1,44 @@
+<div id='console' class='table-responsive' style='padding:20px; font-size:12px; color:#404041; background-color:white;'>
+	<table id='tableconsole' class='table table-stripped'>
+	<thead><tr><th>Fecha</th><th>Descripcion</th><th>Datos</th></tr></thead>
+	<tbody>
+		
+	</tbody>
+	</table>
+</div>
+<script>
+	$(document).ready(function(){
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx){
+			var today = new Date();
+			var m = today.getMonth()+1; // 0-11
+			var y = today.getFullYear();
+			var d = today.getDate();
+			var diahoy=y+"-"+m+"-"+d+" 00:00:00";
+			var timehoy=new Date(diahoy).getTime();
+			/*tx.executeSql("DELETE FROM LOGACTIONS WHERE time <'"+timehoy+"'");*/
+			tx.executeSql("SELECT * FROM LOGACTIONS WHERE time>=? ORDER BY time",[timehoy],function(tx,results){
+				if(results.rows.length>0){
+					var mihtml='';
+					for(var n=0;n<results.rows.length;n++){
+						var item=results.rows.item(n);
+						var fec=FechaNormal(item.time);
+						mihtml+="<tr><td>"+fec+"</td><td>"+item.descripcion+"</td><td>"+item.datos+"</td></tr>";
+					}
+					$('#tableconsole tbody').html(mihtml);
+				}
+		    });	},errorCB,function(){console.log("Leyendo Registros de Log")});
+	});
+	
+	function FechaNormal(fecha){
+		var today = new Date(fecha);
+		var m = today.getMonth()+1; // 0-11
+		var y = today.getFullYear();
+		var d = today.getDate();
+		var h = today.getHours();
+		var min = today.getMinutes();
+		var s = today.getSeconds();
+		var ml = today.getMilliseconds();
+		return y+"-"+m+"-"+d+" "+h+":"+min+":"+s+":"+ml;
+	}
+</script>

@@ -22,7 +22,7 @@
     <author email="info@practisis.com" href="http://www.practipos.com">
         Practisis S.A.
     </author>
-    <content src="index.html" />
+    <content src="main.html" />
     <preference name="permissions" value="none" />
     <preference name="orientation" value="landscape" />
     <preference name="target-device" value="universal" />

@@ -19,7 +19,6 @@ function updateOnlineStatus(condition) {
 function envia(donde){
 			//if(loopSicnronizador) clearInterval(loopSicnronizador);
             //clearInterval(intervalProcesoRepetir);
-			
 					var lugar='';
 					$('#cargandoTabs').css('display','block');
 					if(donde=='dashboard')
@@ -222,12 +221,12 @@ var app = {
 		var mitimemenu=getTimeSpan();
 		tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan) values (?,?,?,?,?)',[1,2,mitimecat,'14522044131343980',mitimemenu]);
 		
-        tx.executeSql('CREATE TABLE IF NOT EXISTS CARDEX (id integer primary key AUTOINCREMENT,id_formulado integer, cantidad real, descripcion text, precio_unidad real, fecha integer,ppq_real real,iva numeric,timespan integer,idfactura text)');
-        tx.executeSql('SELECT COUNT(id_local) as cuantos FROM PRODUCTOS',[],function(tx,res){
+        //tx.executeSql('CREATE TABLE IF NOT EXISTS CARDEX (id integer primary key AUTOINCREMENT,id_formulado integer, cantidad real, descripcion text, precio_unidad real, fecha integer,ppq_real real,iva numeric,timespan integer,idfactura text)');
+        /*tx.executeSql('SELECT COUNT(id_local) as cuantos FROM PRODUCTOS',[],function(tx,res){
             var existen=res.rows.item(0).cuantos;
             if(existen==0)
                 db.transaction(Ingresaproductos,errorCB,successCB);
-        });
+        });*/
         
         
         var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -269,7 +268,7 @@ var app = {
                 db.transaction(IngresaClientes,errorCB,successCB);
         });
         //tx.executeSql('DROP TABLE IF EXISTS FACTURAS');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS FACTURAS (id integer primary key AUTOINCREMENT,timespan text ,clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux ,acc,echo real default 0,fecha,anulada integer default 0,sincronizar boolean default "false");');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS FACTURAS (id integer primary key AUTOINCREMENT,timespan text ,clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux ,acc,echo real default 0,fecha,anulada integer default 0,sincronizar boolean default "false",total real,subconiva real,subsiniva real,iva real,servicio real,descuento real,nofact text);');
         tx.executeSql('CREATE TABLE IF NOT EXISTS CAJA (id integer primary key AUTOINCREMENT,hora_ingreso text,hora_salida text,activo integer,sobrante_faltante real,total real,establecimiento text,autorizacion text);');
         tx.executeSql('CREATE TABLE IF NOT EXISTS CAJA_APERTURA_CIERRE (id integer primary key AUTOINCREMENT,id_caja integer,valor_apertura real,movimiento integer);',[],function(tx,result){
             //console.log('Ana');

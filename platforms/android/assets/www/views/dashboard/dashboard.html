@@ -124,7 +124,11 @@
 </div>
 <div id='jsoncats'></div>
 <script>
-$('#desde,#hasta').datepicker();
+$(document).ready(function(){ 
+  //obtener datos para el dashboard
+  /*"SELECT COUNT(*) AS number_rows FROM facturacion join locales on facturacion.id_locales = locales.id WHERE ".$plazafact." and (fecha >=? AND fecha <=?) AND anulada = FALSE".$localFact." and facturacion.id not in (select f.id from facturacion f,pagos p where p.idfactura=f.idreal and p.idformapago in(7,12) and f.id_locales=p.id_locales)"*/
+  
+  $('#desde,#hasta').datepicker();
  //colocar fechas
   var ahora=new Date();
 			
@@ -149,20 +153,17 @@ $('#desde,#hasta').datepicker();
   var fechamanana=manana.getFullYear()+"-"+mes+'-'+dia;
   $('#desde').val(fechahoy);
   $('#hasta').val(fechamanana);
-$(document).ready(function(){
-  ObtenerDatosDashboard();
-  
-  //obtener datos para el dashboard
-  /*"SELECT COUNT(*) AS number_rows FROM facturacion join locales on facturacion.id_locales = locales.id WHERE ".$plazafact." and (fecha >=? AND fecha <=?) AND anulada = FALSE".$localFact." and facturacion.id not in (select f.id from facturacion f,pagos p where p.idfactura=f.idreal and p.idformapago in(7,12) and f.id_locales=p.id_locales)"*/
   
   $('#desde').change(function(){
 		$('#hasta').val($(this).val());
   });
   
+   ObtenerDatosDashboard();
 });
 
 
 function ObtenerDatosDashboard(){
+	//alert("datos");
 	$('#ventascategoria,#productosten,#mipres').html('');
 	$('#cumplimiento').html('0.00');
 	var fdesde=$('#desde').val();

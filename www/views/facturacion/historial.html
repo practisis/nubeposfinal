@@ -1,17 +1,34 @@
 ﻿<script>
 	function obtenerFechaHoy(){
 	var today = new Date();
-		var m = today.getMonth()+1; // 0-11
+		var m = today.getMonth()+1;		// 0-11
+		if(m.toString().length<2)
+			m="0"+m.toString();
 		var y = today.getFullYear();
 		var d = today.getDate();
-		return y+"-"+m+"-"+d;
+		if(d.toString().length<2)
+			d="0"+d.toString();
+		var h = today.getHours();
+		if(h.toString().length<2)
+			h="0"+h.toString();
+		var min = today.getMinutes();
+		if(min.toString().length<2)
+			min="0"+min.toString();
+		var s = today.getSeconds();
+		if(s.toString().length<2)
+			s="0"+s.toString();
+		return y+"-"+m+"-"+d+" "+h+":"+min+":"+s;
 	}
 
 	function saberFecha(fecha){
 	var today = new Date(fecha);
 		var m = today.getMonth()+1; // 0-11
+		if(m.toString().length<2)
+			m="0"+m.toString();
 		var y = today.getFullYear();
 		var d = today.getDate();
+		if(d.toString().length<2)
+			d="0"+d.toString();
 		return y+"-"+m+"-"+d;
 	}
 
@@ -47,6 +64,7 @@
 				tx.executeSql('SELECT * FROM FACTURAS WHERE anulada!=1 and fecha>=? and fecha<=?',[fechaFiltro,fechaFiltroh],function(tx,results){
 				strDetalle='';
 				intToday=parseInt(today);
+				
 				var contPasa=0;
 					for (var i=0; i <= results.rows.length-1; i++){
 						var rowa = results.rows.item(i);
@@ -95,18 +113,18 @@
 						
 					
 					
-						var Json = rowa.fetchJson;
-						obj=$.parseJSON(Json);
-						currentTotal=parseFloat(obj.Pagar[0].factura.total);
+						/*var Json = rowa.fetchJson;
+						obj=$.parseJSON(Json);*/
+						currentTotal=parseFloat(rowa.total);
 						sumaTotales=sumaTotales+currentTotal;
-						currentSubtotal=parseFloat(obj.Pagar[0].factura.subtotal_iva)+parseFloat(obj.Pagar[0].factura.subtotal_sin_iva);
+						currentSubtotal=parseFloat(rowa.subconiva)+parseFloat(rowa.subsiniva);
 						sumaSubtotales=sumaSubtotales+currentSubtotal;
 										/*expImp=(obj.Pagar[0].factura.impuestos).split("/");
 										iva=parseFloat(expImp[1]);*/
 											//sumaIvas = sumaIvas + iva;
-						sumaIvas = sumaIvas + parseFloat(obj.Pagar[0].factura.iva);
-						sumaDescuentos = sumaDescuentos + parseFloat(obj.Pagar[0].factura.descuento);
-						sumaServicios = sumaServicios + parseFloat(obj.Pagar[0].factura.servicio);
+						sumaIvas = sumaIvas + parseFloat(rowa.iva);
+						sumaDescuentos = sumaDescuentos + parseFloat(rowa.descuento);
+						sumaServicios = sumaServicios + parseFloat(rowa.servicio);
 					}
 					
 					tx.executeSql('SELECT count(*) as c FROM FACTURAS WHERE anulada=1 and fecha>=? and fecha<=?',[fechaFiltro,fechaFiltroh],function(tx,results2){
@@ -148,13 +166,11 @@
 						}
 						}
 					});
-
-
 				});
 			},errorCB,successCB);
 	});
 
-	function SinTildes(word){
+function SinTildes(word){
   word=word.replace("á","a");
   word=word.replace("Á","A");
   word=word.replace("é","e");
@@ -169,6 +185,7 @@
   word=word.replace("Ñ","N");
   return word;
 }
+
 function imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,subtotales,totales,ivas,servicios,descuentos,strDetalle,anuladas){
 		console.log(fechaNow);
 		console.log(fechaRealFiltro);
@@ -307,6 +324,12 @@ valor="0 @0 ";
 					<div id="detailDiv" style="height:100%; padding-top:20px; margin:0px; font-size:15px;"></div>
 				</td>
 			</tr>
+			<tr>
+				<td colspan='2'>
+					<ul class="pagination pagination-lg">
+				  </ul>
+				</td>
+			</tr>
             <tr>
 				<td colspan="2" style="background-color: #FFFFFF;">
                     <div id="detailDiva" style="height:100%;padding-top:20px;font-size:15px;background-color: #FFFFFF;"></div>
@@ -327,7 +350,7 @@ valor="0 @0 ";
 </div>
 
 <script type="text/javascript">
-var page=0;
+var page=1;
 
 $(document).ready(function(){
 
@@ -362,45 +385,31 @@ function getSearch(){
 	//console.log($('#fechadesde').val());
 	var filtrodesde=convertirTime($('#fechadesde').val()+"-00:00:00");
 	var filtrohasta=convertirTime($('#fechadesde').val()+"-23:59:59");
-	/*var filtrohasta= new 
-    var fechahoy=new Date($('#fechadesde').val());
-    fechahoy=parseInt(fechahoy.getTime())+86400000;
-	filtrodesde=filtrodesde.getTime();
-	filtrohasta=fechahoy;
-    console.log(filtrodesde);
-    console.log(filtrohasta);
-	var desde=2000000*page;*/
 	var queryextra=' id is not NULL';
 	if(filtrodesde!='')
 		queryextra+=' and fecha >='+filtrodesde+' and fecha <='+filtrohasta+' ';
 
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function(tx){
-		tx.executeSql('SELECT * FROM FACTURAS WHERE '+queryextra+' ORDER BY id desc',[],function(tx,result){
-			$('#paginacion').html('');
-			var npags=Math.ceil(result.rows.length/2000000);
+	
+	tx.executeSql('SELECT count(*) as c FROM FACTURAS WHERE '+queryextra,[],function(tx,result){
+		$('.pagination').html('');
+			var npags=Math.ceil(parseInt(result.rows.item(0).c)/30);
 			$('#totalpags').val(npags);
-			$('#paginacion').append("<li onclick='CambiarPagina(-1);'><span class='enabled' id='atras'>&laquo;</span></li>");
-			for(var j=0;j<npags;j++){
+			$('.pagination').append("<li onclick='CambiarPagina(-1);'><span class='enabled' id='atras'>&laquo;</span></li>");
+			for(var t=1;t<=npags;t++){
 				var act='';
-				if(page==j)
+				if(page==t)
 					act='active';
-				$('#paginacion').append("<li class='"+act+"' onclick='CambiarPagina("+parseInt(j)+");'><span class='enabled'>"+parseInt(j+1)+"</span></li>");
+				$('.pagination').append("<li class='"+act+"' onclick='CambiarPagina("+parseInt(t)+");'><span class='enabled'>"+parseInt(t)+"</span></li>");
 			}
-			$('#paginacion').append("<li onclick='CambiarPagina(-2);'><span class='enabled' id='adelante'>&raquo;</span></li>");
-		});
-	},errorCB,successCB);
-
-	//var miquery='SELECT * FROM FACTURAS WHERE '+queryextra+' ORDER BY id desc LIMIT '+desde+',15;';
-    var miquery='SELECT * FROM FACTURAS WHERE '+queryextra+' ORDER BY id desc;';
-	//console.log(miquery);
-
-	db.transaction(function(tx){
+			$('.pagination').append("<li onclick='CambiarPagina(-2);'><span class='enabled' id='adelante'>&raquo;</span></li>");
+	});
+	
+	var miquery='SELECT * FROM FACTURAS WHERE '+queryextra+' ORDER BY fecha desc limit 30 offset '+((page-1)*30);
 	tx.executeSql(miquery,[],function(tx,results){
-		//console.log(results);
 		var inhtml='';
-        var inhtmla='';
-        var totalfinal = 0;
+		var totalfinal=0;
 		for (var i=0; i < results.rows.length; i++){
 			var row = results.rows.item(i);
 			//console.log(row.fecha);
@@ -410,76 +419,21 @@ function getSearch(){
 				mes="0"+mes.toString();
 			var fechaformat=("00" + timefecha.getDate()).slice(-2)+"/"+mes+"/"+timefecha.getFullYear()+" "+("00" + timefecha.getHours()).slice(-2)+":"+("00" + timefecha.getMinutes()).slice(-2)+":"+("00" + timefecha.getSeconds()).slice(-2);
 			//console.log(row);
-			var func="EditarFactura("+row.id+");";
-			var datosfact=JSON.parse(row.fetchJson);
-			var totalf=(parseFloat(datosfact.Pagar[0].factura.total)).toFixed(2);
+			var mifunc="EditarFactura("+row.id+");";
+			/*var datosfact=JSON.parse(row.fetchJson);*/
+			var totalf=(parseFloat(row.total)).toFixed(2);
 			var anulada='No';
 			if(row.anulada==1){
 				anulada='Si';
             }else{
                 totalfinal += parseFloat(totalf);
             }
-			inhtml+='<tr onclick="" ><td>'+fechaformat+'</td><td>'+row.clientName+'</td><td>'+row.RUC+'</td><td>'+datosfact.Pagar[0].factura.numerofact+'</td><td>'+anulada+'</td><td style="text-align:right;">'+totalf+'</td><td><button class="btn btn-default btn-sm" onclick="'+func+'"><span class="glyphicon glyphicon-pencil"></span></button></td></tr>';
+			inhtml+='<tr><td>'+fechaformat+'</td><td>'+row.clientName+'</td><td>'+row.RUC+'</td><td>'+row.nofact+'</td><td>'+anulada+'</td><td style="text-align:right;">'+totalf+'</td><td><button class="btn btn-default btn-sm" onclick="'+mifunc+'"><span class="glyphicon glyphicon-pencil"></span></button></td></tr>';
 		}
-        inhtml+='<tr><td></td><td></td><td></td><td></td><td style="text-align: left;"><b>TOTAL$</b></td><td style="text-align:right;"><b>'+totalfinal.toFixed(2)+'</b></td></tr>';
-        $('#totalencabezado').html(totalfinal.toFixed(2));
-        var valorformapago = 0;
-        var valortotal = 0;
-        var con = 0;
-        JSON.parse($('#jsonformaspago').html(), function (k, v) {
-          if(v['id'] != undefined){
-            console.log(v['id']+'**'+v['nombre']);
-            //var dba = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-        	//db.transaction(function(txa){
-            var totalfaux = 0;
-        		tx.executeSql('select * from FACTURAS where anulada=0 and '+queryextra+' and paymentsUsed like "%'+v['id']+'%" ORDER BY id desc',[],function(tx,resulta){
-                    for (var k=0; k < resulta.rows.length; k++){
-						var rowa = resulta.rows.item(k);
-						var totalfa=0;
-						if(v['id']==1){
-									totalfa=parseFloat(rowa.cash)-parseFloat(rowa.echo);
-						}
-						if(v['id']==2){
-							var cadena=rowa.cards.split('@');
-							for(var k in cadena){
-								if(cadena[k]!=''){
-									var datocard=cadena[k].split('|');
-									totalfa+=parseFloat(datocard[2]);
-								}
-							}
-						}
-						if(v['id']==3){
-							var cadena=rowa.cheques.split('@');
-							for(var k in cadena){
-								if(cadena[k]!=''){
-									var datocard=cadena[k].split('|');
-									totalfa+=parseFloat(datocard[2]);
-								}
-							}
-						}
-								
-						if(v['id']==4){
-							totalfa=parseFloat(rowa.vauleCxC);
-						}
-						
-						totalfaux += totalfa;
-						console.log(rowa.total);
-                    }
-                    con++;
-                    inhtmla+='<tr><td style="text-align: right;">'+v['nombre']+'$</td><td style="text-align:right;">'+totalfaux.toFixed(2)+'</td></tr>';
-                    valortotal += totalfaux;
-                    if(con==7){
-                        inhtmla += '<tr><td style="text-align: right;"><b>TOTAL$</b></td><td style="text-align:right;"><b>'+valortotal.toFixed(2)+'</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>';
-                    }
-                    LlenarTablaFacturasp(inhtmla);
-        		});
-        	//},errorCB,successCB);
-
-          }
-            return v;                  // return the unchanged property value.
-        });
-        LlenarTablaFacturas(inhtml);
+		LlenarTablaFacturas(inhtml);
+		$('#totalencabezado').html(totalfinal.toFixed(2));
 	});
+	
 	},errorCB,successCB);
 }
 
@@ -498,13 +452,13 @@ function LlenarTablaFacturasau(datosau){
 function CambiarPagina(arg){
 	//console.log($('#totalpags').val());
 	if(arg==-1){
-		if((page-1)>=0){
+		if((page-1)>=1){
 			page--;
 			getSearch();
 		}
 	}else if(arg==-2){
 		//console.log($('#totalpags').val());
-		if((page+1)<parseInt($('#totalpags').val())){
+		if((page)<parseInt($('#totalpags').val())){
 			page++;
 			getSearch();
 		}

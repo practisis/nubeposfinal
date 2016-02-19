@@ -207,6 +207,7 @@ function agregarCompra(item,origen){
 	//alert(subtotalSinIva+'/'+subtotalSinIvaCompra);
 	$('#totalmiFactura').val(sumTotal);
 	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2))
+	$('#payButton').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2))
 	$('#justo').html(sumTotal.toFixed(2));
 	$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
 	$('#redondeado').html(Math.ceil(sumTotal).toFixed(2));
@@ -1039,6 +1040,8 @@ function borrarCompra(item){
 			taxTotal = ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
 			$('#impuestoFactura-'+ productoImpuestosIndexes).val(parseFloat(currentTax) - parseFloat(taxTotal));
 			}
+		}else{
+			subtotalSinIvaCompra = (parseFloat(productoCantidad) * parseFloat(productoPrecio));
 		}
 	//impuestos end
 	
@@ -1057,7 +1060,8 @@ function borrarCompra(item){
 	$('#itemsVendidos').css('background-color','red');*/
 	
 	$('#totalmiFactura').val(sumTotal);
-	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2))
+	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+	$('#payButton').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2));
 	$('#subtotalSinIva').val(parseFloat(subtotalSinIva) - parseFloat(subtotalSinIvaCompra));
 	$('#subtotalIva').val(parseFloat(subtotalIva) - parseFloat(subtotalIvaCompra));
 	$('#justo').html(sumTotal.toFixed(2));
@@ -2036,13 +2040,13 @@ function VerificarNumero(valor){
 	var serie='001';
 	var establecimiento='001';
 	db.transaction(function (tx){
-			tx.executeSql('SELECT id from FACTURAS where aux like ?',[valor],
+			tx.executeSql('SELECT id from FACTURAS where CAST(aux as integer) = CAST(? as integer)',[valor],
 			function(tx,res){
 				if(res.rows.length>0){
 					console.log(res);
 					showalert("Ya existe una factura con ese número.");
 					db.transaction(function (tx2){
-						tx2.executeSql('SELECT MAX(aux)+1 as max FROM FACTURAS',[],
+						tx2.executeSql('SELECT MAX(CAST(aux as integer))+1 as max FROM FACTURAS',[],
 						function(tx2,res2){
 							var ceros='';
 							var coun=0;

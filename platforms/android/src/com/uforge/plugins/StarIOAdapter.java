@@ -158,6 +158,8 @@ public class StarIOAdapter extends CordovaPlugin {
 		/*sacadatos del json*/
 		String cedulaCliente="";
 		String nombreCliente="";
+		String direccionCliente="";
+		String telefonoCliente="";
 		String nombreEmpresa="";
 		String direccionEmpresa="";
 		JSONArray expprod=new JSONArray();
@@ -207,6 +209,8 @@ public class StarIOAdapter extends CordovaPlugin {
 			
 			cedulaCliente=objcliente.getString("cedula");
 			nombreCliente=objcliente.getString("nombre");
+			telefonoCliente=objcliente.getString("telefono");
+			direccionCliente=objcliente.getString("direccion");
 			subconiva=DoubleFormat(objfactura.getDouble("subtotal_iva"));
 			//iva=DoubleFormat(objfactura.getDouble("subtotal_iva")*0.12);
 			iva=DoubleFormat(objfactura.getDouble("iva"));
@@ -276,6 +280,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				//list.add(createCp1252("08029 BARCELONA\r\n\r\n"));
 				
 				list.add(createCp1252(nombreCliente+"-"+cedulaCliente+"\r\n"));
+				list.add(createCp1252(direccionCliente+"/"+telefonoCliente+"\r\n"));
 				if(textoreimpr!=""){
 					list.add(createCp1252(textoreimpr+"\r\n"));
 				}
@@ -588,6 +593,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				}
 				
 				list.add(createCp1252(nombreCliente+"-"+cedulaCliente+"\r\n")); lineasescritas=lineasescritas+1;
+				list.add(createCp1252(direccionCliente+"/"+telefonoCliente+"\r\n")); lineasescritas=lineasescritas+1;
 				if(textoreimpr!=""){
 					list.add(createCp1252(textoreimpr+"\r\n")); lineasescritas=lineasescritas+1;
 				}

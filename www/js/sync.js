@@ -161,7 +161,8 @@ function SincronizadorNormal(){
 
 function registrarUser(){
 	newEmpresa=$("#newEmpresa").val();
-	newEmail=$("#newEmail").val();
+	newPais=$("#newPais").val();
+    newEmail=$("#newEmail").val();
 	newPass=$("#newPass").val();
 	newConfirm=$("#newConfirm").val();
     var expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -169,6 +170,11 @@ function registrarUser(){
         $('.alert-danger').fadeIn('slow');
         $(".alert-danger").html('Debe ingresar el nombre de tu negocio.');
         $("#newEmpresa").val('');
+        setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
+     }else if(newPais=='' || newPais=='0'){
+        $('.alert-danger').fadeIn('slow');
+        $(".alert-danger").html('Debe ingresar su país para tu negocio.');
+        $("#newEmail").val('');
         setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
      }else if(newEmail=='' || !expr.test(newEmail)){
         $('.alert-danger').fadeIn('slow');
@@ -188,7 +194,7 @@ function registrarUser(){
     		var nTerminales=1;
     		var sistema=0;
     		var franquicia=0;
-    		var pais=1;
+    		var pais=newPais;
     		var versiones=7;
 			var plan=0;
 			var iddevice=$('#deviceid').html();

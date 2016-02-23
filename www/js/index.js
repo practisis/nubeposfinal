@@ -220,6 +220,8 @@ var app = {
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU (id integer primary key AUTOINCREMENT, fila integer default 0, columna integer default 0,idcatmenu text,idproducto text, timespan text UNIQUE, activo boolean default true)');
 		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS PERMISOS (id integer primary key AUTOINCREMENT, clave text default "", historial boolean default false,configuracion boolean default false,anular boolean default false, impcierre boolean default false)');
+		
 		/*var mitimemenu=getTimeSpan();
 		tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan) values (?,?,?,?,?)',[1,2,mitimecat,'14522044131343980',mitimemenu]);*/
 		
@@ -673,4 +675,44 @@ function isalphanumeric(e){
 	{ 
 		e.preventDefault();
 	} */
-} 
+}
+
+function VerificarClave(){
+	var ing=$('#miclave').val();
+	var donde=$('#accesodonde').val();
+	if(ing!=''){
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx1){
+		tx1.executeSql("SELECT * from permisos where clave like ?",[ing],
+			function(tx1,results1){
+				if(results1.rows.length>0){
+					localStorage.setItem("claveuser",ing);
+					var item=results1.rows.item(0);
+					if(item.historial&&donde=='historial'){
+						$('#modalpermiso').modal("hide");
+						$('#miclave').val("");
+						envia('historial');
+					}
+				}else{
+					$('#modalpermiso').modal("hide");
+					$('#miclave').val("");
+					showalert("No tiene suficientes privilegios para acceder.")
+				}
+			});}
+		,errorCB,successCB);
+	}
+}
+function VerificarPermiso(donde){
+		if(localStorage.getItem("permisos")){
+			if(localStorage.getItem("claveuser")==""){
+				if(donde=='historial'){
+					$('#modalpermiso').modal("show");
+					$('#accesodonde').val(donde);
+				}
+			}else{
+				envia(donde);
+			}
+		}else{
+			envia(donde);
+		}
+}

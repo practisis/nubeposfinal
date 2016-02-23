@@ -213,15 +213,15 @@ var app = {
 		tx.executeSql('CREATE TABLE IF NOT EXISTS FACTURAS_FORMULADOS (id integer primary key AUTOINCREMENT, timespan_factura text, timespan_formulado text , cantidad real, precio_unitario real)');
         tx.executeSql('INSERT INTO PRODUCTOS(id_local,id,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,formulado,estado) VALUES(-1,-1,"-1",0,-1,0,0,0,"-1","Producto NubePOS",0)');
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU_CATEGORIAS (id integer primary key AUTOINCREMENT, orden integer default 1,nombre text, timespan text, activo boolean default true)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU_CATEGORIAS (id integer primary key AUTOINCREMENT, orden integer default 1,nombre text UNIQUE, timespan text, activo boolean default true)');
 		
-		var mitimecat=getTimeSpan();
-		tx.executeSql('INSERT INTO MENU_CATEGORIAS (orden,nombre,timespan) values (?,?,?)',[1,'Productos',mitimecat]);
+		/*var mitimecat=getTimeSpan();
+		tx.executeSql('INSERT INTO MENU_CATEGORIAS (orden,nombre,timespan) values (?,?,?)',[1,'Productos',mitimecat]);*/
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU (id integer primary key AUTOINCREMENT, fila integer default 0, columna integer default 0,idcatmenu text,idproducto text, timespan text, activo boolean default true)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU (id integer primary key AUTOINCREMENT, fila integer default 0, columna integer default 0,idcatmenu text,idproducto text, timespan text UNIQUE, activo boolean default true)');
 		
-		var mitimemenu=getTimeSpan();
-		tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan) values (?,?,?,?,?)',[1,2,mitimecat,'14522044131343980',mitimemenu]);
+		/*var mitimemenu=getTimeSpan();
+		tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan) values (?,?,?,?,?)',[1,2,mitimecat,'14522044131343980',mitimemenu]);*/
 		
         //tx.executeSql('CREATE TABLE IF NOT EXISTS CARDEX (id integer primary key AUTOINCREMENT,id_formulado integer, cantidad real, descripcion text, precio_unidad real, fecha integer,ppq_real real,iva numeric,timespan integer,idfactura text)');
         /*tx.executeSql('SELECT COUNT(id_local) as cuantos FROM PRODUCTOS',[],function(tx,res){

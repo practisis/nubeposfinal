@@ -366,11 +366,15 @@ function DatosRecurrentes(cual){
 				$('#JSONCategoriasNube').html(JSON.stringify(jsonSync.BigJson[3].Categorias));
 				$('#JSONpresupuestoNube').html(JSON.stringify(jsonSync.BigJson[4].Presupuesto));
 				$('#JSONEmpresaNube').html(JSON.stringify(jsonSync.BigJson[0].Empresa));
+				//$('#JSONMenuNube').html(JSON.stringify(jsonSync.BigJson[0].Menu));
+				$('#JSONMenuNube').html('[{"fila":"1","columna":"1","timespan":"1111","activo":"true","idproducto":"14561567453299778","idcatmenu":"1112"}]');
+				//$('#JSONCatMenuNube').html(JSON.stringify(jsonSync.BigJson[0].Menucategorias));
+				$('#JSONCatMenuNube').html('[{"orden": "1","nombre": "Categoria 1","timespan": "1112","activo": "true"}]');
 				localStorage.setItem("dias",jsonSync.BigJson[5].Extra[0].dias);
 				localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].msj);
 				//localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].diseno);
 				//localStorage.setItem("diseno",1);
-				localStorage.setItem("diseno",0);
+				//localStorage.setItem("diseno",0);
 				$('#dias').html(localStorage.getItem('dias'));
 				$('#mensajeperso').html(localStorage.getItem('msj'));
 				console.log( ">>>>>>recurrente");
@@ -416,7 +420,7 @@ function DatosRecurrentes(cual){
 					
 				}
 				},errorCB,function(){
-					$("#theProgress").css("width" , "25%");
+					$("#theProgress").css("width" , "15%");
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -458,7 +462,7 @@ function DatosRecurrentes(cual){
 					});
 				}
 				},errorCB,function(){
-					$("#theProgress").css("width" , "50%");
+					$("#theProgress").css("width" , "30%");
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -500,7 +504,7 @@ function DatosRecurrentes(cual){
 					});
 				}
 				},errorCB,function(){
-					$("#theProgress").css("width" , "75%");
+					$("#theProgress").css("width" , "45%");
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -542,7 +546,7 @@ function DatosRecurrentes(cual){
 					});
 				}
 				},errorCB,function(){
-					$("#theProgress").css("width" , "80%");
+					$("#theProgress").css("width" , "60%");
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -582,7 +586,7 @@ function DatosRecurrentes(cual){
 					});
 				}
 				},errorCB,function(){
-					$("#theProgress").css("width" , "100%");
+					$("#theProgress").css("width" , "75%");
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -593,8 +597,91 @@ function DatosRecurrentes(cual){
 					}).done(function(response){
 						console.log(response);
 						localStorage.setItem("dataupdate","");
-						SubirDatosaNube(0);
+						DatosRecurrentes(6);
+						updateOnlineStatus('ONLINE');
+					}).fail(function(){
+						updateOnlineStatus("OFFLINE");
+						setTimeout(function(){SincronizadorNormal()},180000);
+					});
+				});
+		}
+	}else if(cual==6){
+		console.log("recurrentes 6: Categorias Diseño Menu");
+		$("#contentStepSincro").fadeIn();
+		$("#txtSincro").html("Sincronizando Categorías de Menu...");
+		if($('#JSONCatMenuNube').html().length>0){
+			var jsoncatmenu=JSON.parse($('#JSONCatMenuNube').html());
+			console.log(jsoncatmenu);
+			localStorage.setItem('dataupdate','');
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){
+				for(var n=0;n<jsoncatmenu.length;n++){
+					var item=jsoncatmenu[n];
+					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
+					
+					tx.executeSql('INSERT OR IGNORE INTO MENU_CATEGORIAS(orden,nombre,timespan,activo)VALUES('+item.orden+',"'+item.nombre+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
+						console.log("insertada categoria menu:"+results.insertId);
+					});
+					
+					tx.executeSql('UPDATE MENU_CATEGORIAS SET orden='+item.orden+' , nombre = "'+item.nombre+'", activo = "'+item.activo+'" WHERE timespan like "'+item.timespan+'"',[],function(tx,results){
+						console.log("actualizada categoria menu.");
+					});
+				}
+				},errorCB,function(){
+					$("#theProgress").css("width" , "90%");
+					$.post(apiURL,{
+							id_emp: localStorage.getItem("empresa"),
+							action: 'DeleteSinc',
+							id_barra: localStorage.getItem("idbarra"),
+							tabla: "('menu_categorias')",
+							idreal:localStorage.getItem("dataupdate"),
+							deviceid:$("#deviceid").html()
+					}).done(function(response){
+						console.log(response);
+						localStorage.setItem("dataupdate","");
+						DatosRecurrentes(7);
+						updateOnlineStatus('ONLINE');
+					}).fail(function(){
+						updateOnlineStatus("OFFLINE");
+						setTimeout(function(){SincronizadorNormal()},180000);
+					});
+				});
+		}
+	}else if(cual==7){
+		console.log("recurrentes 7: Productos Diseño de Menu");
+		$("#contentStepSincro").fadeIn();
+		$("#txtSincro").html("Sincronizando productos Diseño de Menú...");
+		if($('#JSONMenuNube').html().length>0){
+			var jsonmenu=JSON.parse($('#JSONMenuNube').html());
+			console.log(jsonmenu);
+			localStorage.setItem('dataupdate','');
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){
+					for(var n=0;n<jsonmenu.length;n++){
+						var item=jsonmenu[n];
+						localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
 						
+						tx.executeSql('INSERT OR IGNORE INTO MENU(fila,columna,idcatmenu,idproducto,timespan,activo)VALUES('+item.fila+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
+						console.log("insertado producto menu:"+results.insertId);
+						});
+						
+						tx.executeSql('UPDATE MENU SET fila='+item.fila+' , columna = '+item.columna+', activo = "'+item.activo+'" ,idproducto="'+item.idproducto+'",idcatmenu="'+item.idcatmenu+'",timespan="'+item.timespan+'" WHERE timespan like "'+item.timespan+'"',[],function(tx,results){
+							console.log("actualizado producto menu.");
+						});
+					}
+				},errorCB,function(){
+					$("#theProgress").css("width" , "100%");
+					$.post(apiURL,{
+							id_emp: localStorage.getItem("empresa"),
+							action: 'DeleteSinc',
+							id_barra: localStorage.getItem("idbarra"),
+							tabla: "('menu_diseno')",
+							idreal:localStorage.getItem("dataupdate"),
+							deviceid:$("#deviceid").html()
+					}).done(function(response){
+						console.log(response);
+						localStorage.setItem("dataupdate","");
+						SubirDatosaNube(0);
 						setTimeout(function(){
 							$("#theProgress").css("width" , "0%");
 							$("#finalizado").fadeIn();

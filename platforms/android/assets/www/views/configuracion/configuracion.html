@@ -1,15 +1,16 @@
 <div id='console' class='table-responsive' style='padding:20px; font-size:12px; color:#404041; background-color:white;'>
 <h2>Datos Generales</h2>
-<div style='margin-top:25px; font-size:20px;'>
+<div style='margin-top:25px; font-size:16px;'>
 	<table class='table'>
-		<tr><td  style='text-align:right;'>Nombre Dispositivo:</td><td><input id='tablet_name' class='form-control input-lg' /></td></tr>
-		<tr><td  style='text-align:right;'>Version:</td><td><input id='tablet_version' class='form-control input-lg' readonly /></td></tr>
-		<tr><td  style='text-align:right;'>Numero Empresa:</td><td><input id='tablet_emp' class='form-control input-lg' readonly /></td></tr>
+		<tr><td  style='text-align:right;'>Nombre Dispositivo:</td><td><input id='tablet_name' class='form-control' /></td></tr>
+		<tr><td  style='text-align:right;'>Ver Diseño Menú:</td><td align='left'><input data-size='small' type='checkbox' id='tablet_menu' class='switch' /></td></tr>
+		<tr><td  style='text-align:right;'>Version:</td><td><input id='tablet_version' class='form-control' readonly /></td></tr>
+		<tr><td  style='text-align:right;'>Numero Empresa:</td><td><input id='tablet_emp' class='form-control' readonly /></td></tr>
 	</table>
 </div>
 <div class='row'>
 	<div class='col-lg-12'>
-		<button type='button' class='btn btn-lg btn-success' onclick='GuardarNombre();'>Guardar</button>
+		<button type='button' class='btn btn-success' onclick='GuardarNombre();'>Guardar</button>
 	</div>
 </div>
 </div>
@@ -27,10 +28,25 @@
 					}
 				});}
 			,errorCB,successCB);
+			
+		$('#tablet_menu').bootstrapSwitch();
+		if(localStorage.getItem("diseno")==1){
+			$('#tablet_menu').bootstrapSwitch('state', true, true);
+		}else{
+			$('#tablet_menu').bootstrapSwitch('state', false, true);
+		}
 		
-		cordova.getAppVersion.getVersionNumber().then(function (version) {
-			$('#tablet_version').val(version);
+		$('#tablet_menu').on('switchChange.bootstrapSwitch', function(event, state) {
+		  if(state){
+			localStorage.setItem("diseno",1);
+		  }else{
+			localStorage.setItem("diseno",0);
+		  }
 		});
+		
+		/*cordova.getAppVersion.getVersionNumber().then(function (version) {
+			$('#tablet_version').val(version);
+		});*/
 	});
 	
 	

@@ -490,6 +490,7 @@ function CambiarMetodo(cual){
 			//$('#simple_1').html(parseFloat($('#total').html().substring(1)).toFixed(2));
 			$('#touchefectivo').slideDown();
 		}else{
+			$('#paymentEfectivo').select();
 			if($('#touchefectivo').css('display')=='none')
 				$('.touchpago').hide();
 			$('#touchefectivo').slideDown();

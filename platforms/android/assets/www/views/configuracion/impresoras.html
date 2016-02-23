@@ -76,7 +76,15 @@
 								var idprinter=results.rows.item(0);
 								if(idprinter.printer!=null){
 									//alert(idprinter.printer);
-									$('#print_'+idprinter.printer).prop('checked','checked');
+									//$('#print_'+idprinter.printer).prop('checked','checked');
+									$('#print_'+idprinter.printer).prop('checked','true');
+									$('.printerradio').each(function(){
+										//alert($(this).attr("id"));
+										if($(this).attr("id")=="print_"+idprinter.printer)
+											$(this).prop("checked",true);
+											$(this).prop("checked","true");
+											$(this).prop("checked","checked");
+									});
 								}
 							}
 						});},errorCB,successCB);

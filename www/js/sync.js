@@ -26,9 +26,9 @@ function SyncStart(){
 				}
 			});
 			
-			tx.executeSql('SELECT nombre,direccion from config WHERE id=1',[],function(tx,results){
+			tx.executeSql('SELECT nombre,direccion,telefono from config WHERE id=1',[],function(tx,results){
 				var dataemp=results.rows.item(0);
-				$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+dataemp.nombre+'","direccion":"'+dataemp.direccion+'"},');
+				$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+dataemp.nombre+'","direccion":"'+dataemp.direccion+"-"+dataemp.telefono+'"},');
 			});
 		});
 		setTimeout(function(){SincronizadorNormal();},1000);
@@ -229,7 +229,7 @@ function registrarUser(){
 						localStorage.setItem("presupuestoya",true);
 						
 						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','',false);});
+						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','','',false);});
 						
                 }
     		});
@@ -253,12 +253,14 @@ function LaunchBoarding(){
     });
 }
 
-function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direccion,desde_login){
-	
+function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direccion,tablet,desde_login){
+	if(tablet==''){
+		tablet='Tablet '+$('#devicemodel').html();
+	}
 	var db2 = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db2.transaction(
 		function (tx){
-			tx.executeSql('INSERT INTO CONFIG (nombre,razon,telefono,email,ruc,direccion) VALUES(?,?,?,?,?,?)',[nombre,nombre,celular,email,ruc,direccion],function(tx,res){
+			tx.executeSql('INSERT INTO CONFIG (nombre,razon,telefono,email,ruc,direccion,nombreterminal) VALUES(?,?,?,?,?,?,?)',[nombre,nombre,celular,email,ruc,direccion,tablet],function(tx,res){
 				$('#msjOk').html('Informacion Ingresada con Éxito');
 				$('#msjOk').fadeIn('slow');
 				$('#campos').css('display','none');
@@ -267,7 +269,7 @@ function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direcc
 				}, 3000);
 				});
 				
-		},errorCB,function(){$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+nombre+'","direccion":"'+direccion+'"},');});
+		},errorCB,function(){$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+nombre+'","direccion":"'+direccion+"-"+celular+'"},');});
 		
 	
 	db2.transaction(
@@ -313,7 +315,7 @@ function UserLogin(){
 			localStorage.setItem("empresa",datosaux[0]);
 			localStorage.setItem("idbarra",datosaux[2]);
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-			db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],true)});
+			db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],'',true)});
 			$('.navbar').slideDown();
 			//function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direccion,desde_login)
 			//SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],true);
@@ -575,7 +577,7 @@ function DatosRecurrentes(cual){
 					var item=jsonpresup[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+'1,');
 						
-					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'" WHERE id=1',[],function(tx,results){
+					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'" WHERE id=1',[],function(tx,results){
 						console.log("actualizada empresa");
 					});
 				}

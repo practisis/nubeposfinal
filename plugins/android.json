@@ -18,6 +18,12 @@
         },
         "com.ionic.keyboard": {
             "PACKAGE_NAME": "com.practisis.practipos"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "com.practisis.practipos"
+        },
+        "cordova-plugin-app-version": {
+            "PACKAGE_NAME": "com.practisis.practipos"
         }
     },
     "dependent_plugins": {}

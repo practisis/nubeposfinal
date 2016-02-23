@@ -2017,18 +2017,22 @@ function ResetPagos(cual){
 			pagado+=parseFloat($(this).val());
 	});
 	
+	console.log(pagado);
+	
 	var mitot=parseFloat($('#invoiceTotal').html());
 	$('#invoicePaid').html(pagado.toFixed(2));
 	
+	var falta=mitot-pagado;
+	
 	if((mitot-pagado)>0){
 		$('#invoiceDebt').html("FALTANTE");
-		$('#changeFromPurchase').html(mitot.toFixed(2));
+		$('#changeFromPurchase').html(falta.toFixed(2));
 	}else if((mitot-pagado)==0){
 		$('#invoiceDebt').html("VUELTO");
 		$('#changeFromPurchase').html("0.00");
 	}else{
 		$('#invoiceDebt').html("VUELTO");
-		$('#changeFromPurchase').html(mitot.toFixed(2));
+		$('#changeFromPurchase').html(falta.toFixed(2));
 	}
 }
 

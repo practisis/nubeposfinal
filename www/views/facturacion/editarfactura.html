@@ -83,7 +83,7 @@
 		<tr>
 			<td colspan='2' style='text-align:center;'>
 			<button class='btn btn-default btn-sm' id='btnanularf' onclick='AnularFactura();'>Anular Factura</button>
-			<button class='btn btn-success btn-sm' onclick='ReimprimirFactura();'>Reimprimir Factura</button>
+			<button class='btn btn-success btn-sm' id='reimprimir' onclick='ReimprimirFactura();'>Reimprimir Factura</button>
 			</td>
 		</tr>
 	</table>
@@ -301,7 +301,7 @@ function AnularFactura(){
 						console.log(results3);
 						showalert("Factura anulada con éxito.");
 						$('#factanulada').fadeIn('slow');
-						$('#btnanularf').fadeOut('slow');
+						$('#btnanularf,#reimprimir').fadeOut('slow');
 						//location.reload(true);
 					});
 				});

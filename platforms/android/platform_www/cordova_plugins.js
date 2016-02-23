@@ -21,6 +21,23 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.Keyboard"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+        "id": "cordova-plugin-inappbrowser.inappbrowser",
+        "pluginId": "cordova-plugin-inappbrowser",
+        "clobbers": [
+            "cordova.InAppBrowser.open",
+            "window.open"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-app-version/www/AppVersionPlugin.js",
+        "id": "cordova-plugin-app-version.AppVersionPlugin",
+        "pluginId": "cordova-plugin-app-version",
+        "clobbers": [
+            "cordova.getAppVersion"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -29,7 +46,9 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.2.0",
     "com.uforge.plugins.StarIOAdapter": "1.0.1",
     "cordova-plugin-device": "1.1.0",
-    "com.ionic.keyboard": "1.0.4"
+    "com.ionic.keyboard": "1.0.4",
+    "cordova-plugin-inappbrowser": "1.2.1",
+    "cordova-plugin-app-version": "0.1.8"
 }
 // BOTTOM OF METADATA
 });

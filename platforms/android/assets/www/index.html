@@ -100,8 +100,9 @@
 					  <ul class="dropdown-menu">
 					   <!--<li><a href="centvia://?udn=Impresion&utt=NubePOS&cru=nubeposv%3a%2f%2f&cruf=nubeposv%3a%2f%2f&c_=!+0+200+200+540+1%0d%0aTEXT+4+0+20+10+Prueba+de+Impresion%0d%0aTEXT+7+0+20+60+NubePOS%0d%0aENDML%0d%0aCONCAT+250+300%0d%0aENDCONCAT%0d%0a%0d%0aPRINT%0d%0a" target="_blank"><span style='display:inline;' class='glyphicon glyphicon-print'></span>&nbsp;Config</a></li>-->
 					   <li onclick="envia('printconfig');"><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-print'></span>&nbsp;Impresoras</a></li>
+					   <li onclick='envia("config");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-wrench'></span>&nbsp;Configuración</a></li>
 					   <li onclick='envia("empresa");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-user'></span>&nbsp;Mi Perfil</a></li>
-					   <li onclick='envia("log");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-user'></span>&nbsp;LOG</a></li>
+					   <li onclick='envia("log");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-book'></span>&nbsp;Log</a></li>
 					   <!--<li onclick="envia('imprimeotro');" ><a href="javascript:void(0);"><span style='display:inline;' class='glyphicon glyphicon-user'></span>&nbsp;V</a></li>-->
 					  </ul>
 					</li>
@@ -112,6 +113,7 @@
 			<div id='mybodycontent' style='position:relative;'>
 			<div class='container-fluid'>
 				<div id='deviceid' style='display:none;'>a383bc4552bfb701f96a17a4541b5565</div>
+				<div id='devicemodel' style='display:none;'></div>
 				<div class="alert alert-success" role="alert" id='alert' style='display:none;'></div>
 				<div class="alert alert-danger" role="alert" id='alertred' style='display:none;'></div>
 				<div class='row'>
@@ -431,7 +433,9 @@
 			document.addEventListener("deviceready", function(){
 				var uuid = device.uuid;
 				id_barra=uuid;
+				var model=device.model;
 				$('#deviceid').html(uuid);
+				$('#devicemodel').html(model);
 			});
 			$( document ).ready(function(){
 				$('html').addClass('android-scroll-bar');

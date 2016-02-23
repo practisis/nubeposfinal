@@ -41,7 +41,7 @@
 			var diahoy=y+"-"+m+"-"+d+" 00:00:00";
 			var timehoy=new Date(diahoy).getTime();
 			/*tx.executeSql("DELETE FROM LOGACTIONS WHERE time <'"+timehoy+"'");*/
-			tx.executeSql("SELECT * FROM LOGACTIONS WHERE time>=? ORDER BY time",[timehoy],function(tx,results){
+			tx.executeSql("SELECT * FROM LOGACTIONS WHERE time>=? ORDER BY time desc",[timehoy],function(tx,results){
 				if(results.rows.length>0){
 					var mihtml='';
 					for(var n=0;n<results.rows.length;n++){

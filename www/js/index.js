@@ -48,6 +48,8 @@ function envia(donde){
 					lugar="views/configuracion/impresoras.html";
 					if(donde=='log')
 					lugar="views/configuracion/log.html";
+					if(donde=='config')
+					lugar="views/configuracion/configuracion.html";
 					if(!lugar) lugar="404.html";
 					$('#cargandoTabs').css('display','none');
 					$('#correoMal').fadeOut('slow');
@@ -204,7 +206,7 @@ var app = {
         //tx.executeSql('DROP TABLE IF EXISTS PRODUCTOS');
         tx.executeSql('CREATE TABLE IF NOT EXISTS PRODUCTOS (id_local integer primary key AUTOINCREMENT,id integer, formulado text, codigo text, precio real, categoriaid text,cargaiva integer,productofinal integer,materiaprima integer,timespan text UNIQUE,ppq real default 0,color text,servicio integer default 0,estado integer default 1, sincronizar boolean default "true")');
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS CONFIG (id integer primary key AUTOINCREMENT, nombre text, razon text , ruc integer, telefono integer , email text , direccion text, printer text,serie text default "001",establecimiento text default "001",sincronizar boolean default "false",encabezado integer default 3,largo integer default 18)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS CONFIG (id integer primary key AUTOINCREMENT, nombre text, razon text , ruc integer, telefono integer , email text , direccion text, printer text,serie text default "001",establecimiento text default "001",sincronizar boolean default "false",encabezado integer default 3,largo integer default 18, nombreterminal text default "Tablet 1")');
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS LOGACTIONS (id integer primary key AUTOINCREMENT, time numeric, descripcion text, datos text)');
 		
@@ -454,7 +456,7 @@ var app = {
                 $('#idfactura').val(row.id);
                 $('#cliente').val(row.clientName);
 				if(row.anulada=='1'||row.anulada==1){
-					$('#btnanularf').css('display','none');
+					$('#btnanularf,#reimprimir').css('display','none');
 				}
                 var timefecha=new Date(row.fecha);
                 var mes=timefecha.getMonth()+1;
@@ -482,7 +484,7 @@ var app = {
                 var variosprods=(datosfact.Pagar[0].producto);
 				var itemsfact=0;
                 for(var n=0;n<variosprods.length;n++){
-                    intabla+="<tr><td style='text-align:left;'>"+variosprods[n].nombre_producto+"</td><td style='text-align:right;'>"+parseInt(variosprods[n].cant_prod)+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].precio_prod).toFixed(2)+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].precio_total).toFixed(2)+"</td></tr>";
+                    intabla+="<tr><td style='text-align:left;'>"+variosprods[n].nombre_producto+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].cant_prod)+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].precio_prod).toFixed(2)+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].precio_total).toFixed(2)+"</td></tr>";
 					itemsfact+=parseInt(parseInt(variosprods[n].cant_prod));
                 }
 				$('#itemsfacturados').html("<b>Items Facturados:</b> "+itemsfact);

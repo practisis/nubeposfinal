@@ -162,7 +162,9 @@ public class StarIOAdapter extends CordovaPlugin {
 		String telefonoCliente="";
 		String nombreEmpresa="";
 		String direccionEmpresa="";
+		String telefonoEmpresa="";
 		JSONArray expprod=new JSONArray();
+		JSONArray expago=new JSONArray();
 		String subconiva="0.00";
 		String subsiniva="0.00";
 		String totalfact="0.00";
@@ -171,7 +173,7 @@ public class StarIOAdapter extends CordovaPlugin {
 		String servicio="0.00";
 		String descuento="0.00";
 		String nofact="";
-		SimpleDateFormat hoyformat=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat hoyformat=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 		String hoy= hoyformat.format(new Date());
 		String tipo="";
 		String fechaCierre="";
@@ -204,6 +206,7 @@ public class StarIOAdapter extends CordovaPlugin {
 			JSONObject objcliente=expjson.getJSONObject("cliente");
 			JSONObject objfactura=expjson.getJSONObject("factura");
 			JSONObject objempresa=expjson.getJSONObject("empresa");
+			expago=expjson.getJSONArray("pagos");
 			expprod=expjson.getJSONArray("producto");
 			//expprod=objproducto.getJSONArray("0");
 			
@@ -276,7 +279,7 @@ public class StarIOAdapter extends CordovaPlugin {
 					
 				list.add(createCp1252(nombreEmpresa+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
-				list.add(createCp1252(direccionEmpresa+"\r\n"));
+				list.add(createCp1252(direccionEmpresa+"-"+telefonoEmpresa+"\r\n"));
 				//list.add(createCp1252("08029 BARCELONA\r\n\r\n"));
 				
 				list.add(createCp1252(nombreCliente+"-"+cedulaCliente+"\r\n"));
@@ -298,7 +301,8 @@ public class StarIOAdapter extends CordovaPlugin {
 				//list.add(createCp1252("MESA: 100 P: - FECHA: YYYY-MM-DD\r\n"));
 			
 				Date fechafact=new Date(fechanumber);
-				String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
+				//String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
+				String fechaf=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(fechafact);
 				
 				list.add(createCp1252("NO:"+nofact+"                   \r\n"));
 				list.add(createCp1252("FECHA:"+fechaf+"                   \r\n"));
@@ -321,7 +325,7 @@ public class StarIOAdapter extends CordovaPlugin {
 							}
 						}
 						
-						String totc=DoubleFormat(linea.getDouble("precio_orig")*linea.getInt("cant_prod"));
+						String totc=DoubleFormat(linea.getDouble("precio_orig")*linea.getDouble("cant_prod"));
 						//String totc=String.valueOf(total);
 						if(totc.length()<6){
 							int tam=6-totc.length();
@@ -423,6 +427,33 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(new byte[] { 0x06, 0x09, 0x1b, 0x69, 0x01, 0x01 });
 				list.add(createCp1252("                TOTAL:"+String.valueOf(totalfact)+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
+				
+				//formas de pago
+				if(expago.length()>0){
+					
+					list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
+					list.add(createCp1252("Pagado:\r\n"));
+					String forma="";
+					String elvuelto="0.00";
+					for(int i=0;i<expago.length();i++){
+						try{
+						JSONObject linea=expago.getJSONObject(i);
+						Double valor=linea.getDouble("valor");
+						Double vuelto=0.00;
+						if(valor<0)
+							vuelto=-1*valor;
+						else
+							forma=linea.getString("forma")+":"+DoubleFormat(valor);
+
+						elvuelto=DoubleFormat(vuelto);
+						list.add(createCp1252(forma+"\r\n"));
+						}catch(JSONException ex){
+							ex.printStackTrace();
+						}
+					}
+					list.add(createCp1252("Vuelto:"+String.valueOf(elvuelto)+"\r\n"));
+				}
+				
 			}else if(tipo.equals("cierre")){
 				
 				if(subtotalCierre.length()<9){
@@ -619,7 +650,7 @@ public class StarIOAdapter extends CordovaPlugin {
 							}
 						}
 						
-						String totc=DoubleFormat(linea.getDouble("precio_orig")*linea.getInt("cant_prod"));
+						String totc=DoubleFormat(linea.getDouble("precio_orig")*linea.getDouble("cant_prod"));
 						//String totc=String.valueOf(total);
 						if(totc.length()<7){
 							int tam=7-totc.length();

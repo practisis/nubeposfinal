@@ -175,10 +175,7 @@
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
 			tx.executeSql('\
-				SELECT p.*,sum(c.cantidad) as cantidad FROM PRODUCTOS p\
-				LEFT JOIN CARDEX c \
-				ON c.id_formulado = p.timespan\
-				WHERE p.timespan="'+editarProductoID+'"',[],function(tx,results){
+				SELECT p.* FROM PRODUCTOS p	WHERE p.timespan="'+editarProductoID+'"',[],function(tx,results){
 				console.log(results);
 				for (var i=0; i < results.rows.length; i++){
 					console.log(results);
@@ -207,10 +204,6 @@
 					$("#search-renderitem").val( saberNombreCategoria(row.categoriaid) );
 					//console.log("Ana");
 					$("#idcategoria").val(row.categoriaid);
-					$("#costo").val(row.ppq);
-					$("#cantidad").val(row.cantidad);
-					$("#costoreal").val(row.ppq);
-					$("#cantidadreal").val(row.cantidad);
 					$("#colorproducto").val(row.color);
 					if(row.cargaiva==1) 
 						$('#coniva').bootstrapSwitch('state', true, true);
@@ -255,7 +248,7 @@
 	function DataAutocomplete(){
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
-		tx.executeSql('SELECT * FROM CATEGORIAS ORDER BY id asc;',[],function(tx,results){
+		tx.executeSql('SELECT * FROM CATEGORIAS WHERE TIMESPAN!="" AND TIMESPAN!="0" ORDER BY id asc;',[],function(tx,results){
 			console.log(results);
 			var datac='';
 			for (var i=0; i < results.rows.length; i++){
@@ -371,11 +364,13 @@
                   codigop=rnd;
 				}
 			
+			//alert(codigop);
+			
 			if(nombrep!=''&&codigop!=''&&preciop!=''&&categoria!=''){
 				
 				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 				db.transaction(function(tx){
-					tx.executeSql('SELECT COUNT(codigo) as cuantos FROM PRODUCTOS WHERE codigo='+codigop+';',[],function(tx,res){
+					tx.executeSql('SELECT COUNT(codigo) as cuantos FROM PRODUCTOS WHERE codigo like "'+codigop+'";',[],function(tx,res){
 						var existen=res.rows.item(0).cuantos;
 						if(existen > 0){
 							showalertred('El codigo de producto : '+ codigop +' ya existe no puede ser el mismo');

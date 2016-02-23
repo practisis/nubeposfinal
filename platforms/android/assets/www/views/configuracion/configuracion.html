@@ -1,0 +1,50 @@
+<div id='console' class='table-responsive' style='padding:20px; font-size:12px; color:#404041; background-color:white;'>
+<h2>Datos Generales</h2>
+<div style='margin-top:25px; font-size:20px;'>
+	<table class='table'>
+		<tr><td  style='text-align:right;'>Nombre Dispositivo:</td><td><input id='tablet_name' class='form-control input-lg' /></td></tr>
+		<tr><td  style='text-align:right;'>Version:</td><td><input id='tablet_version' class='form-control input-lg' readonly /></td></tr>
+		<tr><td  style='text-align:right;'>Numero Empresa:</td><td><input id='tablet_emp' class='form-control input-lg' readonly /></td></tr>
+	</table>
+</div>
+<div class='row'>
+	<div class='col-lg-12'>
+		<button type='button' class='btn btn-lg btn-success' onclick='GuardarNombre();'>Guardar</button>
+	</div>
+</div>
+</div>
+<script>
+	$(document).ready(function(){
+		$('#tablet_emp').val(localStorage.getItem("empresa"));
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx1){
+				tx1.executeSql("SELECT nombreterminal as c from CONFIG where id=1",[],
+				function(tx1,results1){
+					if(results1.rows.length>0){
+						if(results1.rows.item(0).c!=''){
+							$('#tablet_name').val(results1.rows.item(0).c);
+						}
+					}
+				});}
+			,errorCB,successCB);
+		
+		cordova.getAppVersion.getVersionNumber().then(function (version) {
+			$('#tablet_version').val(version);
+		});
+	});
+	
+	
+	function GuardarNombre(){
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx1){
+				var tabname=$('#tablet_name').val();
+				if(tabname=='')
+					tabname="Tablet "+$('#devicemodel').html();
+					
+				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=? where id=1",[tabname,true],
+				function(tx1,results1){
+					showalert("Datos Guardados con exito.");
+				});}
+			,errorCB,successCB);
+	}
+</script>

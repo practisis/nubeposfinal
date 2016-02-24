@@ -161,8 +161,7 @@ function SincronizadorNormal(){
 
 function registrarUser(){
 	newEmpresa=$("#newEmpresa").val();
-	newPais=$("#newPais").val();
-    newEmail=$("#newEmail").val();
+	newEmail=$("#newEmail").val();
 	newPass=$("#newPass").val();
 	newConfirm=$("#newConfirm").val();
     var expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -170,11 +169,6 @@ function registrarUser(){
         $('.alert-danger').fadeIn('slow');
         $(".alert-danger").html('Debe ingresar el nombre de tu negocio.');
         $("#newEmpresa").val('');
-        setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
-     }else if(newPais=='' || newPais=='0'){
-        $('.alert-danger').fadeIn('slow');
-        $(".alert-danger").html('Debe ingresar su país para tu negocio.');
-        $("#newEmail").val('');
         setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
      }else if(newEmail=='' || !expr.test(newEmail)){
         $('.alert-danger').fadeIn('slow');
@@ -194,7 +188,7 @@ function registrarUser(){
     		var nTerminales=1;
     		var sistema=0;
     		var franquicia=0;
-    		var pais=newPais;
+    		var pais=1;
     		var versiones=7;
 			var plan=0;
 			var iddevice=$('#deviceid').html();
@@ -376,12 +370,13 @@ function DatosRecurrentes(cual){
 				//$('#JSONMenuNube').html('[{"fila":"1","columna":"1","timespan":"1111","activo":"true","idproducto":"14561567453299778","idcatmenu":"1112"}]');
 				$('#JSONCatMenuNube').html(JSON.stringify(jsonSync.BigJson[5].Menucategorias));
 				//$('#JSONCatMenuNube').html('[{"orden": "1","nombre": "Categoria 1","timespan": "1112","activo": "true"}]');
-				$('#JSONPermisosNube').html('[{"id":"1","clave": "1111","configuracion": "true","historial": "true","anular": "true","imprimircierre":"true"}]');
+				//$('#JSONPermisosNube').html('[{"id":"1","clave": "1111","configuracion": "true","historial": "true","anular": "true","imprimircierre":"true","productos":"false"}]');
+				$('#JSONPermisosNube').html(JSON.stringify(jsonSync.BigJson[8].Permisos));
 				localStorage.setItem("dias",jsonSync.BigJson[7].Extra[0].dias);
 				localStorage.setItem("msj",jsonSync.BigJson[7].Extra[0].msj);
 				//localStorage.setItem("permisos",jsonSync.BigJson[5].Extra[0].constrasenia);
-				localStorage.setItem("permisos","true");
-				localStorage.setItem("claveuser","");
+				localStorage.setItem("permisos",jsonSync.BigJson[7].Extra[0].contrasenia);
+				//localStorage.setItem("claveuser","");
 				//localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].diseno);
 				//localStorage.setItem("diseno",1);
 				//localStorage.setItem("diseno",0);
@@ -672,7 +667,7 @@ function DatosRecurrentes(cual){
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
 					tx.executeSql('delete from PERMISOS',[],function(tx,results){});
 					tx.executeSql("delete from sqlite_sequence where name='PERMISOS'",[],function(tx,results){});
-					tx.executeSql('INSERT OR IGNORE INTO PERMISOS(clave,historial,configuracion,anular,impcierre)VALUES("'+item.clave+'","'+item.historial+'","'+item.configuracion+'","'+item.anular+'","'+item.imprimircierre+'")',[],function(tx,results){
+					tx.executeSql('INSERT OR IGNORE INTO PERMISOS(clave,historial,configuracion,anular,impcierre,productos)VALUES("'+item.clave+'","'+item.historial+'","'+item.configuracion+'","'+item.anular+'","'+item.imprimircierre+'","'+item.productos+'")',[],function(tx,results){
 						console.log("insertado permiso :"+results.insertId);
 					});
 				}

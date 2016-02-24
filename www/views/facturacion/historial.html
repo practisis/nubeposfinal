@@ -378,6 +378,25 @@ var fechaantformat=fechaanterior.getFullYear()+"-"+mesant+"-"+fechaanterior.getD
 $('#fechadesde').val(fechahoyformataux);
 //$('#fechahasta').val(fechahoyformat);
 
+//si no tiene permisos
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function(tx){
+	if(localStorage.getItem("permisos")){
+		tx.executeSql("SELECT id from permisos where clave like ? and impcierre=?",[localStorage.getItem("claveuser"),"true"],function(tx,results2){
+			if(results2.rows.length>0){
+				if(results2.rows.item(0).id!=null){
+					$('#imprimirDetalle').fadeIn();
+				}else{
+					$('#imprimirDetalle').fadeOut();
+				}
+			}else{
+					$('#imprimirDetalle').fadeOut();
+			}
+		});
+	}
+	});
+//permisos
+
 getSearch();
 });
 

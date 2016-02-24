@@ -88,8 +88,8 @@
 					<ul class="nav navbar-nav">
 						<li onclick="envia('dashboard')"><a id='menu_1' href="javascript:void(0);"><span style='display:inline;' class='fa fa-line-chart'></span>&nbsp;Resúmen<span class="sr-only">(current)</span></a></li>
 						<li onclick="envia('puntodeventa')"><a id='menu_2'  href="javascript:void(0);"><span style='display:inline;' class='fa fa-shopping-cart'></span>&nbsp;Ventas<span class="sr-only">(current)</span></a></li>
-						<li onclick="envia('historial')" role="presentation"><a id='menu_3' href="javascript:void(0);"><span style='display:inline;' class='fa fa-money'></span>&nbsp;Historial</a></li>
-						<li onclick="envia('listaproductos')" id='productosIndex'><a id='menu_4' href="javascript:void(0);"><span style='display:inline;' class='fa fa-list-alt'></span>&nbsp;Productos</a></li>
+						<li onclick="VerificarPermiso('historial');" role="presentation"><a id='menu_3' href="javascript:void(0);"><span style='display:inline;' class='fa fa-money'></span>&nbsp;Historial</a></li>
+						<li onclick="VerificarPermiso('productos');" id='productosIndex'><a id='menu_4' href="javascript:void(0);"><span style='display:inline;' class='fa fa-list-alt'></span>&nbsp;Productos</a></li>
 						<li onclick="envia('cloud')" id='cloudIndex'><a id='menu_5' href="javascript:void(0);"><span style='display:inline;' class='fa fa-cloud'></span>&nbsp;Cloud</a></li>
 						<!--<li onclick="envia('listadeclientes')" id='cloudIndex'><a href="javascript:void(0);"><span style='display:inline;' class='fa fa-cloud'></span>&nbsp;pruebas</a></li>-->
 						<li id='cloudIndexOff' style='display:none;'><a href="javascript:void(0);" style='color:#2EC1CC;'><span style='display:inline;color:#2EC1CC;' class='fa fa-times'></span>&nbsp;Cloud<br></a></li>
@@ -100,7 +100,7 @@
 					  <ul class="dropdown-menu">
 					   <!--<li><a href="centvia://?udn=Impresion&utt=NubePOS&cru=nubeposv%3a%2f%2f&cruf=nubeposv%3a%2f%2f&c_=!+0+200+200+540+1%0d%0aTEXT+4+0+20+10+Prueba+de+Impresion%0d%0aTEXT+7+0+20+60+NubePOS%0d%0aENDML%0d%0aCONCAT+250+300%0d%0aENDCONCAT%0d%0a%0d%0aPRINT%0d%0a" target="_blank"><span style='display:inline;' class='glyphicon glyphicon-print'></span>&nbsp;Config</a></li>-->
 					   <li onclick="envia('printconfig');"><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-print'></span>&nbsp;Impresoras</a></li>
-					   <li onclick='envia("config");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-wrench'></span>&nbsp;Configuración</a></li>
+					   <li onclick='VerificarPermiso("configuracion");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-wrench'></span>&nbsp;Configuración</a></li>
 					   <li onclick='envia("empresa");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-user'></span>&nbsp;Mi Perfil</a></li>
 					   <li onclick='envia("log");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-book'></span>&nbsp;Log</a></li>
 					   <!--<li onclick="envia('imprimeotro');" ><a href="javascript:void(0);"><span style='display:inline;' class='glyphicon glyphicon-user'></span>&nbsp;V</a></li>-->
@@ -325,6 +325,7 @@
 		<div id="JSONEmpresaNube"  style="color:gray;display:none;"></div>
 		<div id="JSONMenuNube"  style="color:gray;display:none;"></div>
 		<div id="JSONCatMenuNube"  style="color:gray;display:none;"></div>
+		<div id="JSONPermisosNube"  style="color:gray;display:none;"></div>
 		<div id="JSONpresupuestoNube"  style="color:gray;display:none;"></div>
 		<div id="JSONfacturas" style="color:red;display:none;"></div>
 		<div id="JSONclientesNube" style="color:red;display:none;"></div>
@@ -346,14 +347,32 @@
 				</tr>
 			</table>
 		</div>
+		<!---modal permiso--->
+		<div class="modal fade" tabindex="-1" role="dialog" id='modalpermiso'>
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Permiso de Usuario</h4>
+			  </div>
+			  <div class="modal-body">
+			  <input style='display:none;' id="accesodonde"/>
+				<div class="input-group">
+				  <span class="input-group-addon" id="basic-addon1">Clave</span>
+				  <input type="text" onclick='this.select();' id='miclave' class="form-control" placeholder="ingrese su clave" aria-describedby="basic-addon1">
+				</div>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="VerificarClave();">Entrar</button>
+			  </div>
+			</div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+		<!---fin modal--->
 		</body>
-		<!--<script type="text/javascript" src="barcodescanner.js"></script>
-		<script type="text/javascript" src="js/jsscan.js"></script>
-		<script type="text/javascript" src="js/jsscanprod.js"></script>
-		<script src="js/hammer.js" ></script>--->
-		<link href="slide/bootstrap-switch.css" rel="stylesheet">
+		<link href="slide/bootstrap-switch.css" rel="stylesheet"/>
 		<script src="slide/bootstrap-switch.js"></script>
-		<link href="slide/bootstrap-switch.css" rel="stylesheet">
+		<link href="slide/bootstrap-switch.css" rel="stylesheet"/>
 		<script src="slide/highlight.js"></script>
 		<script>
 			//app.initialize();
@@ -401,7 +420,8 @@
 					$('#myDash').fadeOut('slow');
 					setTimeout(function() {
 						$('.arrow').animate({left:"8%"},500);
-						envia('listaproductos');
+						//envia('listaproductos');
+						$('#menu_4').click();
 					}, 1500);
 				}
 			}
@@ -411,7 +431,8 @@
 					//alert("Está activado");  
 					$('#myDash').fadeOut('slow');
 					setTimeout(function() {
-						envia('listaproductos')
+						//envia('listaproductos');
+						$('#menu_4').click();
 					}, 1500);
 				} else {  
 					alert('debes leer todas las instrucciones y marcar su check correspondiente');
@@ -443,41 +464,6 @@
 				$('html').addClass('android-scroll-bar');
 				startAnimation();
 				SyncStart();
-				/*var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-				db.transaction(function(tx){
-					tx.executeSql('SELECT * FROM PRODUCTOS WHERE id_local !=-1 and estado=1;',[],function(tx,resulta){
-						if(resulta.rows.length==0){
-
-                
-        					db.transaction(function(tx){
-        					tx.executeSql('SELECT nombreempresa FROM empresa',[],function(tx,results){
-
-        								for (var i=0; i <= results.rows.length-1; i++){
-        									var row = results.rows.item(i);
-        									var nombreempresa = row.nombreempresa;
-        								}
-        									if(nombreempresa){
-
-                                                setTimeout(function() {
-                    								$('#myDash').fadeIn('slow',function(){
-                    									setTimeout(function() {$("#menu_1").effect('highlight',{},1500);},1000);
-                    								});
-                    							}, 3300);
-
-        									}else{
-                                                envia('cloud');
-                                                $('.navbar').fadeOut('fast');
-        									}
-
-                    			},errorCB ,successCB);
-                    		});
-
-						}else{
-							$('#myDash').css('display','none');
-						}
-					},errorCB,successCB);
-				});*/
-
 				var alto = $( window ).height();
 				$('#contieneMensajes').css('height',(alto)*90/100);
 

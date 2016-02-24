@@ -120,7 +120,9 @@ var app = {
 		//$('#deviceid').html(device.uuid);
 		//setInterval(function(){updateOnlineStatus()},60000);
 		window.addEventListener('native.keyboardshow', keyboardShowHandler);
-
+		document.addEventListener("pause", function(){localStorage.setItem("claveuser","");}, false);
+		//document.addEventListener("backbutton", function(){localStorage.setItem("claveuser","");}, false);
+		
 		function keyboardShowHandler(e){
 			//alert("show");
 			var inp=$(":focus");
@@ -220,7 +222,7 @@ var app = {
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU (id integer primary key AUTOINCREMENT, fila integer default 0, columna integer default 0,idcatmenu text,idproducto text, timespan text UNIQUE, activo boolean default true)');
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS PERMISOS (id integer primary key AUTOINCREMENT, clave text default "", historial boolean default false,configuracion boolean default false,anular boolean default false, impcierre boolean default false)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS PERMISOS (id integer primary key AUTOINCREMENT, clave text default "", historial boolean default false,configuracion boolean default false,anular boolean default false, impcierre boolean default false,productos boolean default false)');
 		
 		/*var mitimemenu=getTimeSpan();
 		tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan) values (?,?,?,?,?)',[1,2,mitimecat,'14522044131343980',mitimemenu]);*/
@@ -457,9 +459,27 @@ var app = {
                 //console.log(row);
                 $('#idfactura').val(row.id);
                 $('#cliente').val(row.clientName);
+				
+				//si no tiene permisos
+				if(localStorage.getItem("permisos")){
+					tx.executeSql("SELECT id from permisos where clave like ? and anular=?",[localStorage.getItem("claveuser"),"true"],function(tx,results2){
+						if(results2.rows.length>0){
+							if(results2.rows.item(0).id!=null){
+								$('#btnanularf').fadeIn();
+							}else{
+								$('#btnanularf').fadeOut();
+							}
+						}else{
+							$('#btnanularf').fadeOut();
+						}
+					});
+				}
+				//permisos
+				
 				if(row.anulada=='1'||row.anulada==1){
 					$('#btnanularf,#reimprimir').css('display','none');
 				}
+				
                 var timefecha=new Date(row.fecha);
                 var mes=timefecha.getMonth()+1;
 				var dia=timefecha.getDate();
@@ -692,11 +712,19 @@ function VerificarClave(){
 						$('#modalpermiso').modal("hide");
 						$('#miclave').val("");
 						envia('historial');
+					}else if(item.configuracion&&donde=='configuracion'){
+						$('#modalpermiso').modal("hide");
+						$('#miclave').val("");
+						envia('config');
+					}else if(item.productos&&donde=='productos'){
+						$('#modalpermiso').modal("hide");
+						$('#miclave').val("");
+						envia('listaproductos');
 					}
 				}else{
 					$('#modalpermiso').modal("hide");
 					$('#miclave').val("");
-					showalert("No tiene suficientes privilegios para acceder.")
+					showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
 				}
 			});}
 		,errorCB,successCB);
@@ -704,13 +732,32 @@ function VerificarClave(){
 }
 function VerificarPermiso(donde){
 		if(localStorage.getItem("permisos")){
-			if(localStorage.getItem("claveuser")==""){
-				if(donde=='historial'){
+			if(localStorage.getItem("claveuser")==""||localStorage.getItem("claveuser")==null){
+				if(donde!=''){
 					$('#modalpermiso').modal("show");
 					$('#accesodonde').val(donde);
 				}
 			}else{
-				envia(donde);
+				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				var miclave=localStorage.getItem("claveuser");
+				db.transaction(function(tx1){
+				tx1.executeSql("SELECT * from permisos where clave like ?",[miclave],
+					function(tx1,results1){
+						if(results1.rows.length>0){
+							var it=results1.rows.item(0);
+							if(donde=='historial'&&it.historial){
+								envia('historial');
+							}else if(donde=='configuracion'&&it.configuracion){
+								envia('config');
+							}else if(donde=='productos'&&it.productos){
+								envia('listaproductos');
+							}
+						}else{
+							showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+						}
+					}
+				);
+				});
 			}
 		}else{
 			envia(donde);

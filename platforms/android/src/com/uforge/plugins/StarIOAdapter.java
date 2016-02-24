@@ -412,13 +412,25 @@ public class StarIOAdapter extends CordovaPlugin {
 								descuento=" "+descuento;
 							}
 						}
-
-				list.add(createCp1252("                 SUBTOTAL:"+String.valueOf(subconiva)+"\r\n"));
-				list.add(createCp1252("                SUBCONIVA:"+String.valueOf(subconiva)+"\r\n"));
-				list.add(createCp1252("                SUBSINIVA:"+String.valueOf(subsiniva)+"\r\n"));
-				list.add(createCp1252("                      IVA:"+String.valueOf(iva)+"\r\n"));
-				list.add(createCp1252("                 SERVICIO:"+String.valueOf(servicio)+"\r\n"));
-				list.add(createCp1252("                DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
+						
+				if(Double.parseDouble(subtotal)>0){
+					list.add(createCp1252("                 SUBTOTAL:"+String.valueOf(subtotal)+"\r\n"));
+				}
+				if(Double.parseDouble(subconiva)>0){
+					list.add(createCp1252("                SUBCONIVA:"+String.valueOf(subconiva)+"\r\n"));
+				}
+				if(Double.parseDouble(subsiniva)>0){
+					list.add(createCp1252("                SUBSINIVA:"+String.valueOf(subsiniva)+"\r\n"));
+				}
+				if(Double.parseDouble(iva)>0){
+					list.add(createCp1252("                      IVA:"+String.valueOf(iva)+"\r\n"));
+				}
+				if(Double.parseDouble(servicio)>0){
+					list.add(createCp1252("                 SERVICIO:"+String.valueOf(servicio)+"\r\n"));
+				}
+				if(Double.parseDouble(descuento)>0){
+					list.add(createCp1252("                DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
+				}
 				
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
 				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x02 });
@@ -731,13 +743,30 @@ public class StarIOAdapter extends CordovaPlugin {
 							}
 						}
 
-				list.add(createCp1252("                           SUBTOTAL:"+String.valueOf(subtotal)+"\r\n"));lineasescritas=lineasescritas+1;
-				list.add(createCp1252("                          SUBCONIVA:"+String.valueOf(subconiva)+"\r\n"));lineasescritas=lineasescritas+1;
-				list.add(createCp1252("                          SUBSINIVA:"+String.valueOf(subsiniva)+"\r\n"));lineasescritas=lineasescritas+1;
-				list.add(createCp1252("                                IVA:"+String.valueOf(iva)+"\r\n"));
-				list.add(createCp1252("                           SERVICIO:"+String.valueOf(servicio)+"\r\n"));lineasescritas=lineasescritas+1;
-				
-				list.add(createCp1252("                          DESCUENTO:"+String.valueOf(descuento)+"\r\n"));lineasescritas=lineasescritas+1;
+				if(Double.parseDouble(subtotal)>0){
+					list.add(createCp1252("                           SUBTOTAL:"+String.valueOf(subtotal)+"\r\n"));
+					lineasescritas=lineasescritas+1;
+				}
+				if(Double.parseDouble(subconiva)>0){
+					list.add(createCp1252("                          SUBCONIVA:"+String.valueOf(subconiva)+"\r\n"));
+					lineasescritas=lineasescritas+1;
+				}
+				if(Double.parseDouble(subsiniva)>0){
+					list.add(createCp1252("                          SUBSINIVA:"+String.valueOf(subsiniva)+"\r\n"));
+					lineasescritas=lineasescritas+1;
+				}
+				if(Double.parseDouble(iva)>0){
+					list.add(createCp1252("                                IVA:"+String.valueOf(iva)+"\r\n"));
+					lineasescritas=lineasescritas+1;
+				}
+				if(Double.parseDouble(servicio)>0){
+					list.add(createCp1252("                           SERVICIO:"+String.valueOf(servicio)+"\r\n"));
+					lineasescritas=lineasescritas+1;
+				}
+				if(Double.parseDouble(descuento)>0){
+					list.add(createCp1252("                          DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
+					lineasescritas=lineasescritas+1;
+				}
 				
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
 				list.add(new byte[] { 0x1b, 0x57, 0x01});

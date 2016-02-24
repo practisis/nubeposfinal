@@ -366,12 +366,17 @@ function DatosRecurrentes(cual){
 				$('#JSONCategoriasNube').html(JSON.stringify(jsonSync.BigJson[3].Categorias));
 				$('#JSONpresupuestoNube').html(JSON.stringify(jsonSync.BigJson[4].Presupuesto));
 				$('#JSONEmpresaNube').html(JSON.stringify(jsonSync.BigJson[0].Empresa));
-				//$('#JSONMenuNube').html(JSON.stringify(jsonSync.BigJson[0].Menu));
-				$('#JSONMenuNube').html('[{"fila":"1","columna":"1","timespan":"1111","activo":"true","idproducto":"14561567453299778","idcatmenu":"1112"}]');
-				//$('#JSONCatMenuNube').html(JSON.stringify(jsonSync.BigJson[0].Menucategorias));
-				$('#JSONCatMenuNube').html('[{"orden": "1","nombre": "Categoria 1","timespan": "1112","activo": "true"}]');
-				localStorage.setItem("dias",jsonSync.BigJson[5].Extra[0].dias);
-				localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].msj);
+				$('#JSONMenuNube').html(JSON.stringify(jsonSync.BigJson[6].Menu));
+				//$('#JSONMenuNube').html('[{"fila":"1","columna":"1","timespan":"1111","activo":"true","idproducto":"14561567453299778","idcatmenu":"1112"}]');
+				$('#JSONCatMenuNube').html(JSON.stringify(jsonSync.BigJson[5].Menucategorias));
+				//$('#JSONCatMenuNube').html('[{"orden": "1","nombre": "Categoria 1","timespan": "1112","activo": "true"}]');
+				//$('#JSONPermisosNube').html('[{"id":"1","clave": "1111","configuracion": "true","historial": "true","anular": "true","imprimircierre":"true","productos":"false"}]');
+				$('#JSONPermisosNube').html(JSON.stringify(jsonSync.BigJson[8].Permisos));
+				localStorage.setItem("dias",jsonSync.BigJson[7].Extra[0].dias);
+				localStorage.setItem("msj",jsonSync.BigJson[7].Extra[0].msj);
+				//localStorage.setItem("permisos",jsonSync.BigJson[5].Extra[0].constrasenia);
+				localStorage.setItem("permisos",jsonSync.BigJson[7].Extra[0].contrasenia);
+				//localStorage.setItem("claveuser","");
 				//localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].diseno);
 				//localStorage.setItem("diseno",1);
 				//localStorage.setItem("diseno",0);
@@ -648,7 +653,47 @@ function DatosRecurrentes(cual){
 				});
 		}
 	}else if(cual==7){
-		console.log("recurrentes 7: Productos Diseño de Menu");
+		console.log("recurrentes 7: Permisos Usuario");
+		$("#contentStepSincro").fadeIn();
+		$("#txtSincro").html("Sincronizando Permisos de Usuario...");
+		if($('#JSONPermisosNube').html().length>0){
+			var jsonpermisos=JSON.parse($('#JSONPermisosNube').html());
+			console.log(jsonpermisos);
+			localStorage.setItem('dataupdate','');
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){
+				for(var n=0;n<jsonpermisos.length;n++){
+					var item=jsonpermisos[n];
+					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
+					tx.executeSql('delete from PERMISOS',[],function(tx,results){});
+					tx.executeSql("delete from sqlite_sequence where name='PERMISOS'",[],function(tx,results){});
+					tx.executeSql('INSERT OR IGNORE INTO PERMISOS(clave,historial,configuracion,anular,impcierre,productos)VALUES("'+item.clave+'","'+item.historial+'","'+item.configuracion+'","'+item.anular+'","'+item.imprimircierre+'","'+item.productos+'")',[],function(tx,results){
+						console.log("insertado permiso :"+results.insertId);
+					});
+				}
+				},errorCB,function(){
+					$("#theProgress").css("width" , "95%");
+					$.post(apiURL,{
+							id_emp: localStorage.getItem("empresa"),
+							action: 'DeleteSinc',
+							id_barra: localStorage.getItem("idbarra"),
+							tabla: "('menu_categorias')",
+							idreal:localStorage.getItem("dataupdate"),
+							deviceid:$("#deviceid").html()
+					}).done(function(response){
+						console.log(response);
+						localStorage.setItem("dataupdate","");
+						DatosRecurrentes(8);
+						updateOnlineStatus('ONLINE');
+					}).fail(function(){
+						updateOnlineStatus("OFFLINE");
+						setTimeout(function(){SincronizadorNormal()},180000);
+					});
+				});
+		}
+	}
+	else if(cual==8){
+		console.log("recurrentes 8: Productos Diseño de Menu");
 		$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("Sincronizando productos Diseño de Menú...");
 		if($('#JSONMenuNube').html().length>0){
@@ -661,11 +706,11 @@ function DatosRecurrentes(cual){
 						var item=jsonmenu[n];
 						localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
 						
-						tx.executeSql('INSERT OR IGNORE INTO MENU(fila,columna,idcatmenu,idproducto,timespan,activo)VALUES('+item.fila+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
+						tx.executeSql('INSERT OR IGNORE INTO MENU(fila,columna,idcatmenu,idproducto,timespan,activo)VALUES('+(parseInt(item.fila)+1)+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
 						console.log("insertado producto menu:"+results.insertId);
 						});
 						
-						tx.executeSql('UPDATE MENU SET fila='+item.fila+' , columna = '+item.columna+', activo = "'+item.activo+'" ,idproducto="'+item.idproducto+'",idcatmenu="'+item.idcatmenu+'",timespan="'+item.timespan+'" WHERE timespan like "'+item.timespan+'"',[],function(tx,results){
+						tx.executeSql('UPDATE MENU SET fila='+(parseInt(item.fila)+1)+' , columna = '+item.columna+', activo = "'+item.activo+'" ,idproducto="'+item.idproducto+'",idcatmenu="'+item.idcatmenu+'",timespan="'+item.timespan+'" WHERE timespan like "'+item.timespan+'"',[],function(tx,results){
 							console.log("actualizado producto menu.");
 						});
 					}
@@ -781,7 +826,7 @@ function PostaLaNube(arraydatos,cual,accion,t){
 	}else if(accion=='Facturas'){
 		jsonc=item.fetchJson;
 	}else if(accion=='Config'){
-		jsonc='{"nombreempresa":"'+item.nombre+'","razon":"'+item.razon+'","telefono":"'+item.telefono+'","ruc":"'+item.ruc+'","direccion":"'+item.direccion+'","email":"'+item.email+'","serie":"'+item.serie+'","establecimiento":"'+item.establecimiento+'"}';
+		jsonc='{"nombreempresa":"'+item.nombre+'","razon":"'+item.razon+'","telefono":"'+item.telefono+'","ruc":"'+item.ruc+'","direccion":"'+item.direccion+'","email":"'+item.email+'","serie":"'+item.serie+'","establecimiento":"'+item.establecimiento+'","nombreterminal":"'+item.nombreterminal+'"}';
 	}
 	
 	console.log(jsonc);

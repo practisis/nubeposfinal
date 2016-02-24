@@ -2097,7 +2097,7 @@ function formarCategoriasMenu(){
 	var objcategoria='';
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function (tx){
-		tx.executeSql('SELECT * from MENU_CATEGORIAS where activo="true" order by nombre',[],
+		tx.executeSql('SELECT * from MENU_CATEGORIAS where activo="true" order by orden',[],
 		function(tx,res){
 			if(res.rows.length>0){
 				for(m=0;m<res.rows.length;m++){
@@ -2117,7 +2117,7 @@ function formarCategoriasMenu(){
 				$("#menuproductos").html("<b>No se ha diseñado el menú todavía.</b>");
 			}
 		});
-	});
+	},errorCB,successCB);
 }
 
 function ActivarCategoriaMenu(cual,categoria){

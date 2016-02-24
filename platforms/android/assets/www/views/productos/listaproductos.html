@@ -37,7 +37,7 @@
 							</div><!-- /input-group -->
 						</div>
 						<div class='col-md-8 col-lg-8 col-xs-8' style='text-align:right;'>
-							<button type='button' class='btn btn-success' id='nuevoProducto' onclick="envia('nuevoproducto');">Nuevo Producto</button>
+							<button type='button' class='btn btn-success' id='nuevoProducto'  style="display:none;" onclick="envia('nuevoproducto');">Nuevo Producto</button>
 						</div>
 						
 						
@@ -270,7 +270,9 @@ var startForma=0;
 ListarCategorias();
 getSearch();
 
-$(document).ready(function(){$('#recibeTodosLosProductos').css("height",parseFloat($(window).height())*60/100);});
+$(document).ready(function(){
+	$('#recibeTodosLosProductos').css("height",parseFloat($(window).height())*60/100);
+});
 	
 
 
@@ -418,7 +420,7 @@ function getSearch(){
 							inhtml+='<td>'+categoria+'</td>\
 								<td style="text-align:right;">'+parseFloat(precioConImpuestos).toFixed(2)+'</td><td style="text-align:center;">'+checkiva2+'\
 								</td><td style="text-align:center;">'+checkServ2+'</td><td style="text-align:right;">';
-							inhtml+='<button class="btn btn-default btn-sm" onclick="VerificarEliminar('+row.id_local+",'"+row.formulado+"'"+');"><span class="glyphicon glyphicon-trash"></span></button>&nbsp;<button class="btn btn-default btn-sm" onclick="editProduct(\''+row.timespan+'\')" ><span class="glyphicon glyphicon-pencil"></span></button></td>\
+							inhtml+='<button class="btn btn-default btn-sm" style="display:none;" onclick="VerificarEliminar('+row.id_local+",'"+row.formulado+"'"+');"><span class="glyphicon glyphicon-trash"></span></button>&nbsp;<button class="btn btn-default btn-sm" style="display:none;" onclick="editProduct(\''+row.timespan+'\')" ><span class="glyphicon glyphicon-pencil"></span></button></td>\
 						\
 					</tr>\
 					';
@@ -437,6 +439,29 @@ function LlenarTablaProd(datos){
 		//$('#recibeTodosLosProductos').html('');
 		$('#recibeTodosLosProductos').append(datos);
 		$("[name='my-checkbox']").bootstrapSwitch();
+		//consulta permisos
+		//si no tiene permisos
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx){
+		if(localStorage.getItem("permisos")){
+			tx.executeSql("SELECT id from permisos where clave like ? and productos=?",[localStorage.getItem("claveuser"),"true"],function(tx,results2){
+				if(results2.rows.length>0){
+					console.log($('.btn-default'));
+					if(results2.rows.item(0).id!=null){
+						$('#nuevoProducto,#recibeTodosLosProductos .btn-default').fadeIn();
+					}else{
+						$('#nuevoProducto,#recibeTodosLosProductos .btn-default').fadeOut();
+					}
+				}else{
+						$('#nuevoProducto,#recibeTodosLosProductos .btn-default').fadeOut();
+				}
+			});
+		}else{
+			$('#nuevoProducto,#recibeTodosLosProductos .btn-default').fadeIn();
+		}
+		});
+	//permisos
+		///
 }
 
 

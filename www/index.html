@@ -89,7 +89,7 @@
 						<li onclick="envia('dashboard')"><a id='menu_1' href="javascript:void(0);"><span style='display:inline;' class='fa fa-line-chart'></span>&nbsp;Resúmen<span class="sr-only">(current)</span></a></li>
 						<li onclick="envia('puntodeventa')"><a id='menu_2'  href="javascript:void(0);"><span style='display:inline;' class='fa fa-shopping-cart'></span>&nbsp;Ventas<span class="sr-only">(current)</span></a></li>
 						<li onclick="VerificarPermiso('historial');" role="presentation"><a id='menu_3' href="javascript:void(0);"><span style='display:inline;' class='fa fa-money'></span>&nbsp;Historial</a></li>
-						<li onclick="envia('listaproductos')" id='productosIndex'><a id='menu_4' href="javascript:void(0);"><span style='display:inline;' class='fa fa-list-alt'></span>&nbsp;Productos</a></li>
+						<li onclick="VerificarPermiso('productos');" id='productosIndex'><a id='menu_4' href="javascript:void(0);"><span style='display:inline;' class='fa fa-list-alt'></span>&nbsp;Productos</a></li>
 						<li onclick="envia('cloud')" id='cloudIndex'><a id='menu_5' href="javascript:void(0);"><span style='display:inline;' class='fa fa-cloud'></span>&nbsp;Cloud</a></li>
 						<!--<li onclick="envia('listadeclientes')" id='cloudIndex'><a href="javascript:void(0);"><span style='display:inline;' class='fa fa-cloud'></span>&nbsp;pruebas</a></li>-->
 						<li id='cloudIndexOff' style='display:none;'><a href="javascript:void(0);" style='color:#2EC1CC;'><span style='display:inline;color:#2EC1CC;' class='fa fa-times'></span>&nbsp;Cloud<br></a></li>
@@ -100,7 +100,7 @@
 					  <ul class="dropdown-menu">
 					   <!--<li><a href="centvia://?udn=Impresion&utt=NubePOS&cru=nubeposv%3a%2f%2f&cruf=nubeposv%3a%2f%2f&c_=!+0+200+200+540+1%0d%0aTEXT+4+0+20+10+Prueba+de+Impresion%0d%0aTEXT+7+0+20+60+NubePOS%0d%0aENDML%0d%0aCONCAT+250+300%0d%0aENDCONCAT%0d%0a%0d%0aPRINT%0d%0a" target="_blank"><span style='display:inline;' class='glyphicon glyphicon-print'></span>&nbsp;Config</a></li>-->
 					   <li onclick="envia('printconfig');"><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-print'></span>&nbsp;Impresoras</a></li>
-					   <li onclick='envia("config");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-wrench'></span>&nbsp;Configuración</a></li>
+					   <li onclick='VerificarPermiso("configuracion");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-wrench'></span>&nbsp;Configuración</a></li>
 					   <li onclick='envia("empresa");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-user'></span>&nbsp;Mi Perfil</a></li>
 					   <li onclick='envia("log");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-book'></span>&nbsp;Log</a></li>
 					   <!--<li onclick="envia('imprimeotro');" ><a href="javascript:void(0);"><span style='display:inline;' class='glyphicon glyphicon-user'></span>&nbsp;V</a></li>-->
@@ -420,7 +420,8 @@
 					$('#myDash').fadeOut('slow');
 					setTimeout(function() {
 						$('.arrow').animate({left:"8%"},500);
-						envia('listaproductos');
+						//envia('listaproductos');
+						$('#menu_4').click();
 					}, 1500);
 				}
 			}
@@ -430,7 +431,8 @@
 					//alert("Está activado");  
 					$('#myDash').fadeOut('slow');
 					setTimeout(function() {
-						envia('listaproductos')
+						//envia('listaproductos');
+						$('#menu_4').click();
 					}, 1500);
 				} else {  
 					alert('debes leer todas las instrucciones y marcar su check correspondiente');

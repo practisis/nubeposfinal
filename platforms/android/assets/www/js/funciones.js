@@ -2154,7 +2154,6 @@ function ActivarCategoriaMenu(cual,categoria){
 								//alert('prods');
 								var t=1;
 								for(m=0;m<res.rows.length;m++){
-									
 									var row=res.rows.item(m);
 									if(isNaN(row.precio)){row.precio = 0;}
 									var impuestos='';
@@ -2176,9 +2175,16 @@ function ActivarCategoriaMenu(cual,categoria){
 										lineHeight='line-height:18px;';
 									var resto=parseInt(row.col)-t;
 									var agregar='';
+									
+									if($('.producto').length<((parseInt(row.fila)-1)*3)+(parseInt(row.col)-1)){
+										//alert('falta');
+										agregar+='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'"></div>';
+									}
+									
+									//alert(resto);
 									if(resto>0){
 										for(var s=1;s<=resto;s++){
-											agregar+='<div style="background-color:white; border:1px solid #CCC; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'"></div>';
+											agregar+='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'"></div>';
 										}
 									}
 									$('#listaProductos').append(agregar);

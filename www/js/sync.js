@@ -8,12 +8,15 @@ function SyncStart(){
 	var productosya = localStorage.getItem('productosya');
 	var clientesya = localStorage.getItem('clientesya');
 	var presupuestoya = localStorage.getItem('presupuestoya');
-	console.log(idbarra+'*'+categoriasya+'*'+productosya+'*'+clientesya);
-	if((clientesya||productosya||categoriasya||idbarra)&&presupuestoya==false){
+	var menucategoriasya = localStorage.getItem('menucategoriasya');
+	var menuya = localStorage.getItem('menuya');
+	var permisosya = localStorage.getItem('permisosya');
+	//console.log(idbarra+'*'+categoriasya+'*'+productosya+'*'+clientesya);
+	if((clientesya||productosya||categoriasya||presupuestoya||menucategoriasya||menuya||idbarra)&&permisosya==false){
 		envia('cloud');
 		$('.navbar').slideDown();
 	}
-	if(presupuestoya){
+	if(permisosya){
 		$('#fadeRow,#demoGratis').css("display","none");
 		yaesta=true;
 		$('.navbar').slideDown();
@@ -31,8 +34,14 @@ function SyncStart(){
 				$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+dataemp.nombre+'","direccion":"'+dataemp.direccion+"-"+dataemp.telefono+'"},');
 			});
 		});
-		setTimeout(function(){SincronizadorNormal();},1000);
+		setTimeout(function(){SincronizadorNormal();},60000);
 		//setInterval(function(){SincronizadorNormal();},3000);
+	}else if(menuya){
+		ExtraeDatosApi(7);
+	}else if(menucategoriasya){
+		ExtraeDatosApi(6);
+	}else if(presupuestoya){
+		ExtraeDatosApi(5);
 	}else if(clientesya){
 		ExtraeDatosApi(4);
 	}else if(productosya){
@@ -41,8 +50,7 @@ function SyncStart(){
 		ExtraeDatosApi(2);
 	}else if(idbarra){
 		DatosIniciales(1);
-	}
-	else{
+	}else{
 		ExtraeDatosApi(0);
 	}
 }
@@ -67,13 +75,13 @@ function ExtraeDatosApi(donde){
 			for(var n=0;n<jsoncategorias.length;n++){
 				var item=jsoncategorias[n];
 				var timeSpanCat=getTimeSpan();
-				tx.executeSql("INSERT INTO CATEGORIAS(categoria,activo,existe,timespan,sincronizar)values('"+item.categoria_nombre+"','1','1','"+item.categoria_timespan+"','false');",[],function(tx,results){
+				tx.executeSql("INSERT OR IGNORE INTO CATEGORIAS(categoria,activo,existe,timespan,sincronizar)values('"+item.categoria_nombre+"','1','1','"+item.categoria_timespan+"','false');",[],function(tx,results){
 					console.log("insertada categ:"+results.insertId);
 				});
 			}
 			},errorCB,function(){
 				localStorage.setItem("categoriasya",true);
-				$("#theProgress").css("width" , "25%");
+				$("#theProgress").css("width" , "15%");
 				ExtraeDatosApi(2);
 			});
 			
@@ -91,13 +99,13 @@ function ExtraeDatosApi(donde){
 				tx.executeSql("delete from sqlite_sequence where name='PRODUCTOS'",[],function(tx,results){});
 			for(var n=0;n<jsonproductos.length;n++){
 				var item=jsonproductos[n];
-				tx.executeSql('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado) VALUES("'+item.formulado_nombre+'", "'+item.formulado_codigo+'" ,'+item.formulado_precio+','+item.categoria_timespan+','+item.cargaiva+','+item.formulado_productofinal+','+item.formulado_matprima+',"'+item.formulado_timespan+'",'+item.carga_servicio+',"false","'+item.color+'",'+item.activo+')',[],function(tx,results){
+				tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado) VALUES("'+item.formulado_nombre+'", "'+item.formulado_codigo+'" ,'+item.formulado_precio+','+item.categoria_timespan+','+item.cargaiva+','+item.formulado_productofinal+','+item.formulado_matprima+',"'+item.formulado_timespan+'",'+item.carga_servicio+',"false","'+item.color+'",'+item.activo+')',[],function(tx,results){
 				console.log("insertado producto:"+results.insertId);
 				});
 			}
 			},errorCB,function(){
 				localStorage.setItem("productosya",true);
-				$("#theProgress").css("width" , "50%");
+				$("#theProgress").css("width" , "30%");
 				ExtraeDatosApi(3);
 			});
 		
@@ -116,13 +124,13 @@ function ExtraeDatosApi(donde){
 			tx.executeSql("delete from sqlite_sequence where name='CLIENTES'",[],function(tx,results){});
 			for(var n=0;n<jsonclientes.length;n++){
 				var item=jsonclientes[n];
-				tx.executeSql('INSERT INTO CLIENTES(nombre,cedula,email,direccion,telefono,sincronizar,existe,timespan) VALUES("'+item.nombre+'" , "'+item.cedula+'" , "'+item.email+'" , "'+item.direccion+'" ,  "'+item.telefono+'" ,  "false" , "0" , "0" )',[],function(tx,results){
+				tx.executeSql('INSERT OR IGNORE INTO CLIENTES(nombre,cedula,email,direccion,telefono,sincronizar,existe,timespan) VALUES("'+item.nombre+'" , "'+item.cedula+'" , "'+item.email+'" , "'+item.direccion+'" ,  "'+item.telefono+'" ,  "false" , "0" , "0" )',[],function(tx,results){
 				console.log("insertado cliente:"+results.insertId);
 				});
 			}
 			},errorCB,function(){
 				localStorage.setItem("clientesya",true);
-				$("#theProgress").css("width" , "75%");
+				$("#theProgress").css("width" , "45%");
 				ExtraeDatosApi(4);
 			});
 	}else if(donde==4){
@@ -139,12 +147,86 @@ function ExtraeDatosApi(donde){
 				tx.executeSql("delete from sqlite_sequence where name='PRESUPUESTO'",[],function(tx,results){});
 				for(var n=0;n<jsonpresupuestos.length;n++){
 					var item=jsonpresupuestos[n];
-					tx.executeSql('INSERT INTO PRESUPUESTO(timespan,valor,fecha,transacciones) VALUES("'+item.timespan+'",'+item.valor+','+item.fecha+','+item.transacciones+')',[],function(tx,results){
+					tx.executeSql('INSERT OR IGNORE INTO PRESUPUESTO(timespan,valor,fecha,transacciones) VALUES("'+item.timespan+'",'+item.valor+','+item.fecha+','+item.transacciones+')',[],function(tx,results){
 					console.log("insertado presupuesto:"+results.insertId);
 					});
 				}
 		},errorCB,function(){
 				localStorage.setItem("presupuestoya",true);
+				$("#theProgress").css("width" , "60%");
+				ExtraeDatosApi(5);
+		});
+	}else if(donde==5){
+		console.log("Datos API 5: Categorias Menu");
+		//$(".navbar").slideUp();
+		$("#demoGratis").css("display","none");
+		$("#contentStepSincro").fadeIn();
+		$("#txtSincro").html("Sincronizando Categorias Menu Diseño...");
+		var jsonpres=JSON.parse($('#JSONCatMenuNube').html());
+		var jsonpresupuestos=jsonpres.menucategorias;
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx){
+				tx.executeSql('delete from MENU_CATEGORIAS',[],function(tx,results){});
+				tx.executeSql("delete from sqlite_sequence where name='MENU_CATEGORIAS'",[],function(tx,results){});
+				for(var n=0;n<jsonpresupuestos.length;n++){
+					var item=jsonpresupuestos[n];
+					tx.executeSql('INSERT OR IGNORE INTO MENU_CATEGORIAS(orden,nombre,timespan,activo)VALUES('+item.orden+',"'+item.nombre+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
+					console.log("insertada Categoria Menu:"+results.insertId);
+					});
+				}
+		},errorCB,function(){
+				localStorage.setItem("menucategoriasya",true);
+				$("#theProgress").css("width" , "85%");
+				ExtraeDatosApi(6);
+		});
+	}else if(donde==6){
+		console.log("Datos API 6: Menu");
+		//$(".navbar").slideUp();
+		$("#demoGratis").css("display","none");
+		$("#contentStepSincro").fadeIn();
+		$("#txtSincro").html("Sincronizando Menu...");
+		var jsonpres=JSON.parse($('#JSONMenuNube').html());
+		var jsonpresupuestos=jsonpres.menu;
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx){
+				tx.executeSql('delete from MENU',[],function(tx,results){});
+				tx.executeSql("delete from sqlite_sequence where name='MENU'",[],function(tx,results){});
+				for(var n=0;n<jsonpresupuestos.length;n++){
+					var item=jsonpresupuestos[n];
+					
+					//tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan,activo) VALUES('+(parseInt(item.fila)+1)+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
+					tx.executeSql('INSERT INTO MENU(fila,columna,idcatmenu,idproducto,timespan,activo) SELECT '+(parseInt(item.fila)+1)+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'" WHERE NOT EXISTS(SELECT 1 FROM MENU WHERE timespan like "'+item.timespan+'")',[],function(tx,results){
+							console.log("insertado producto menu inicio:"+results.insertId);
+					});
+					//console.log("insertado producto de menu:"+results.insertId);
+					//});
+				}
+		},errorCB,function(){
+				localStorage.setItem("menuya",true);
+				$("#theProgress").css("width" , "95%");
+				ExtraeDatosApi(7);
+		});
+	}else if(donde==7){
+		console.log("Datos API 7: Permisos");
+		//$(".navbar").slideUp();
+		$("#demoGratis").css("display","none");
+		$("#contentStepSincro").fadeIn();
+		$("#txtSincro").html("Sincronizando Permisos...");
+		//alert($('#JSONPermisosNube').html());
+		var jsonpres=JSON.parse($('#JSONPermisosNube').html());
+		var jsonpresupuestos=jsonpres.permisos;
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx){
+				tx.executeSql('delete from PERMISOS',[],function(tx,results){});
+				tx.executeSql("delete from sqlite_sequence where name='PERMISOS'",[],function(tx,results){});
+				for(var n=0;n<jsonpresupuestos.length;n++){
+					var item=jsonpresupuestos[n];
+					tx.executeSql('INSERT OR IGNORE INTO PERMISOS (clave,historial,configuracion,anular,impcierre,productos,activo) VALUES("'+item.clave+'","'+item.historial+'","'+item.configuracion+'","'+item.anular+'","'+item.imprimircierre+'","'+item.productos+'","'+item.activo+'")',[],function(tx,results){
+					console.log("insertado permiso:"+results.insertId);
+					});
+				}
+		},errorCB,function(){
+				localStorage.setItem("permisosya",true);
 				$("#theProgress").css("width" , "100%");
 				setTimeout(function(){SyncStart()},1500);
 		});
@@ -338,11 +420,17 @@ function DatosIniciales(cual){
 		JSONcategoriasNube=arraydatos.categorias;
 		JSONclientesNube=arraydatos.clientes;
 		JSONpresupuestoNube=arraydatos.presupuestos;
+		JSONcategoriasMenuNube=arraydatos.menucategorias;
+		JSONmenuNube=arraydatos.menu;
+		JSONpermisosNube=arraydatos.permisos;
 		
 		$("#JSONclientesNube").html(JSONclientesNube);
 		$("#JSONCategoriasNube").html(JSONcategoriasNube);
 		$("#JSONproductosNube").html(JSONproductosNube);	
 		$("#JSONpresupuestoNube").html(JSONpresupuestoNube);
+		$('#JSONCatMenuNube').html(JSONcategoriasMenuNube);
+		$('#JSONMenuNube').html(JSONmenuNube);
+		$('#JSONPermisosNube').html(JSONpermisosNube);
 
 		ExtraeDatosApi(cual);
 	});
@@ -621,6 +709,7 @@ function DatosRecurrentes(cual){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 				db.transaction(function(tx){
 				for(var n=0;n<jsoncatmenu.length;n++){
+					//alert(n);
 					var item=jsoncatmenu[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
 					
@@ -652,48 +741,8 @@ function DatosRecurrentes(cual){
 					});
 				});
 		}
-	}else if(cual==7){
-		console.log("recurrentes 7: Permisos Usuario");
-		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Permisos de Usuario...");
-		if($('#JSONPermisosNube').html().length>0){
-			var jsonpermisos=JSON.parse($('#JSONPermisosNube').html());
-			console.log(jsonpermisos);
-			localStorage.setItem('dataupdate','');
-			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-				db.transaction(function(tx){
-				for(var n=0;n<jsonpermisos.length;n++){
-					var item=jsonpermisos[n];
-					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
-					tx.executeSql('delete from PERMISOS',[],function(tx,results){});
-					tx.executeSql("delete from sqlite_sequence where name='PERMISOS'",[],function(tx,results){});
-					tx.executeSql('INSERT OR IGNORE INTO PERMISOS(clave,historial,configuracion,anular,impcierre,productos)VALUES("'+item.clave+'","'+item.historial+'","'+item.configuracion+'","'+item.anular+'","'+item.imprimircierre+'","'+item.productos+'")',[],function(tx,results){
-						console.log("insertado permiso :"+results.insertId);
-					});
-				}
-				},errorCB,function(){
-					$("#theProgress").css("width" , "95%");
-					$.post(apiURL,{
-							id_emp: localStorage.getItem("empresa"),
-							action: 'DeleteSinc',
-							id_barra: localStorage.getItem("idbarra"),
-							tabla: "('menu_categorias')",
-							idreal:localStorage.getItem("dataupdate"),
-							deviceid:$("#deviceid").html()
-					}).done(function(response){
-						console.log(response);
-						localStorage.setItem("dataupdate","");
-						DatosRecurrentes(8);
-						updateOnlineStatus('ONLINE');
-					}).fail(function(){
-						updateOnlineStatus("OFFLINE");
-						setTimeout(function(){SincronizadorNormal()},180000);
-					});
-				});
-		}
-	}
-	else if(cual==8){
-		console.log("recurrentes 8: Productos Diseño de Menu");
+	}	else if(cual==7){
+		console.log("recurrentes 7: Productos Diseño de Menu");
 		$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("Sincronizando productos Diseño de Menú...");
 		if($('#JSONMenuNube').html().length>0){
@@ -706,8 +755,11 @@ function DatosRecurrentes(cual){
 						var item=jsonmenu[n];
 						localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
 						
-						tx.executeSql('INSERT OR IGNORE INTO MENU(fila,columna,idcatmenu,idproducto,timespan,activo)VALUES('+(parseInt(item.fila)+1)+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
+						/*tx.executeSql('INSERT OR IGNORE INTO MENU(fila,columna,idcatmenu,idproducto,timespan,activo)VALUES('+(parseInt(item.fila)+1)+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
 						console.log("insertado producto menu:"+results.insertId);
+						});*/
+						tx.executeSql('INSERT INTO MENU(fila,columna,idcatmenu,idproducto,timespan,activo) SELECT '+(parseInt(item.fila)+1)+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'" WHERE NOT EXISTS(SELECT 1 FROM MENU WHERE timespan like "'+item.timespan+'")',[],function(tx,results){
+							console.log("insertado producto menu:"+results.insertId);
 						});
 						
 						tx.executeSql('UPDATE MENU SET fila='+(parseInt(item.fila)+1)+' , columna = '+item.columna+', activo = "'+item.activo+'" ,idproducto="'+item.idproducto+'",idcatmenu="'+item.idcatmenu+'",timespan="'+item.timespan+'" WHERE timespan like "'+item.timespan+'"',[],function(tx,results){
@@ -715,7 +767,7 @@ function DatosRecurrentes(cual){
 						});
 					}
 				},errorCB,function(){
-					$("#theProgress").css("width" , "100%");
+					$("#theProgress").css("width" , "90%");
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -726,13 +778,58 @@ function DatosRecurrentes(cual){
 					}).done(function(response){
 						console.log(response);
 						localStorage.setItem("dataupdate","");
-						SubirDatosaNube(0);
+						DatosRecurrentes(8);
 						setTimeout(function(){
 							$("#theProgress").css("width" , "0%");
 							$("#finalizado").fadeIn();
 							$("#contentStepSincro").css("display","none");
 							$("#txtSincro").html("Sincronizando..");
 						},1500);
+						updateOnlineStatus('ONLINE');
+					}).fail(function(){
+						updateOnlineStatus("OFFLINE");
+						setTimeout(function(){SincronizadorNormal()},180000);
+					});
+				});
+		}
+	}
+	else if(cual==8){
+		console.log("recurrentes 8: Permisos Usuario");
+		$("#contentStepSincro").fadeIn();
+		$("#txtSincro").html("Sincronizando Permisos de Usuario...");
+		if($('#JSONPermisosNube').html().length>0){
+			var jsonpermisos=JSON.parse($('#JSONPermisosNube').html());
+			console.log(jsonpermisos);
+			localStorage.setItem('dataupdate','');
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){
+				for(var n=0;n<jsonpermisos.length;n++){
+					var item=jsonpermisos[n];
+					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
+					//tx.executeSql('delete from PERMISOS',[],function(tx,results){});
+					//tx.executeSql("delete from sqlite_sequence where name='PERMISOS'",[],function(tx,results){});
+					
+					tx.executeSql('INSERT OR IGNORE INTO PERMISOS(clave,historial,configuracion,anular,impcierre,productos,activo)VALUES("'+item.clave+'","'+item.historial+'","'+item.configuracion+'","'+item.anular+'","'+item.imprimircierre+'","'+item.productos+'","'+item.activo+'")',[],function(tx,results){
+						console.log("insertado permiso :"+results.insertId);
+					});
+					
+					tx.executeSql('UPDATE PERMISOS SET clave="'+item.clave+'" , historial = "'+item.historial+'", configuracion = "'+item.configuracion+'" ,anular="'+item.anular+'",impcierre="'+item.imprimircierre+'",productos="'+item.productos+'",activo="'+item.activo+'" WHERE clave like "'+item.clave+'"',[],function(tx,results){
+							console.log("actualizado permiso.");
+					});
+				}
+				},errorCB,function(){
+					$("#theProgress").css("width" , "95%");
+					$.post(apiURL,{
+							id_emp: localStorage.getItem("empresa"),
+							action: 'DeleteSinc',
+							id_barra: localStorage.getItem("idbarra"),
+							tabla: "('permisos_nube')",
+							idreal:localStorage.getItem("dataupdate"),
+							deviceid:$("#deviceid").html()
+					}).done(function(response){
+						console.log(response);
+						localStorage.setItem("dataupdate","");
+						SubirDatosaNube(0);
 						updateOnlineStatus('ONLINE');
 					}).fail(function(){
 						updateOnlineStatus("OFFLINE");

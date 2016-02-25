@@ -213,16 +213,17 @@ var app = {
 		tx.executeSql('CREATE TABLE IF NOT EXISTS LOGACTIONS (id integer primary key AUTOINCREMENT, time numeric, descripcion text, datos text)');
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS FACTURAS_FORMULADOS (id integer primary key AUTOINCREMENT, timespan_factura text, timespan_formulado text , cantidad real, precio_unitario real)');
+		
         tx.executeSql('INSERT INTO PRODUCTOS(id_local,id,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,formulado,estado) VALUES(-1,-1,"-1",0,-1,0,0,0,"-1","Producto NubePOS",0)');
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU_CATEGORIAS (id integer primary key AUTOINCREMENT, orden integer default 1,nombre text UNIQUE, timespan text, activo boolean default true)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU_CATEGORIAS (id integer primary key AUTOINCREMENT, orden integer default 1,nombre text default "", timespan text UNIQUE, activo boolean default "true")');
 		
 		/*var mitimecat=getTimeSpan();
 		tx.executeSql('INSERT INTO MENU_CATEGORIAS (orden,nombre,timespan) values (?,?,?)',[1,'Productos',mitimecat]);*/
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU (id integer primary key AUTOINCREMENT, fila integer default 0, columna integer default 0,idcatmenu text,idproducto text, timespan text UNIQUE, activo boolean default true)');
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS PERMISOS (id integer primary key AUTOINCREMENT, clave text default "", historial boolean default false,configuracion boolean default false,anular boolean default false, impcierre boolean default false,productos boolean default false)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS PERMISOS (id integer primary key AUTOINCREMENT, clave text default "" UNIQUE, historial boolean default false,configuracion boolean default false,anular boolean default false, impcierre boolean default false,productos boolean default false,activo boolean default false)');
 		
 		/*var mitimemenu=getTimeSpan();
 		tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan) values (?,?,?,?,?)',[1,2,mitimecat,'14522044131343980',mitimemenu]);*/
@@ -462,7 +463,7 @@ var app = {
 				
 				//si no tiene permisos
 				if(localStorage.getItem("permisos")){
-					tx.executeSql("SELECT id from permisos where clave like ? and anular=?",[localStorage.getItem("claveuser"),"true"],function(tx,results2){
+					tx.executeSql("SELECT id from permisos where clave like ? and anular=? and activo=?",[localStorage.getItem("claveuser"),"true","true"],function(tx,results2){
 						if(results2.rows.length>0){
 							if(results2.rows.item(0).id!=null){
 								$('#btnanularf').fadeIn();
@@ -703,7 +704,7 @@ function VerificarClave(){
 	if(ing!=''){
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx1){
-		tx1.executeSql("SELECT * from permisos where clave like ?",[ing],
+		tx1.executeSql("SELECT * from permisos where clave like ? and activo=?",[ing,'true'],
 			function(tx1,results1){
 				if(results1.rows.length>0){
 					localStorage.setItem("claveuser",ing);
@@ -725,13 +726,14 @@ function VerificarClave(){
 					$('#modalpermiso').modal("hide");
 					$('#miclave').val("");
 					showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+					localStorage.setItem("claveuser","");
 				}
 			});}
 		,errorCB,successCB);
 	}
 }
 function VerificarPermiso(donde){
-		if(localStorage.getItem("permisos")){
+		if(localStorage.getItem("permisos")=="true"){
 			if(localStorage.getItem("claveuser")==""||localStorage.getItem("claveuser")==null){
 				if(donde!=''){
 					$('#modalpermiso').modal("show");
@@ -741,7 +743,7 @@ function VerificarPermiso(donde){
 				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 				var miclave=localStorage.getItem("claveuser");
 				db.transaction(function(tx1){
-				tx1.executeSql("SELECT * from permisos where clave like ?",[miclave],
+				tx1.executeSql("SELECT * from permisos where clave like ? and activo=?",[miclave,'true'],
 					function(tx1,results1){
 						if(results1.rows.length>0){
 							var it=results1.rows.item(0);
@@ -754,12 +756,19 @@ function VerificarPermiso(donde){
 							}
 						}else{
 							showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+							localStorage.setItem("claveuser","");
 						}
 					}
 				);
 				});
 			}
 		}else{
-			envia(donde);
+			if(donde=='historial'){
+				envia('historial');
+			}else if(donde=='configuracion'){
+				envia('config');
+			}else if(donde=='productos'){
+				envia('listaproductos');
+			}
 		}
 }

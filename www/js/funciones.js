@@ -2147,12 +2147,14 @@ function ActivarCategoriaMenu(cual,categoria){
 				if(res1.rows.item(0).max!=null&&res1.rows.item(0).max>0){
 					maxfilas=res1.rows.item(0).max;
 					for(var r=1;r<=maxfilas;r++){
+						
 						console.log('SELECT p.*, m.idcatmenu as idc,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" and fila='+m+' ORDER BY m.columna asc');
 						tx.executeSql('SELECT p.*, m.idcatmenu as idc,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" and fila='+r+' ORDER BY m.columna asc',[],function(tx,res){
 							console.log(res);
 							if(res.rows.length>0){
 								//alert('prods');
 								var t=1;
+							var vectorpos=['<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>','<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>','<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria +'"></div>'];
 								for(m=0;m<res.rows.length;m++){
 									var row=res.rows.item(m);
 									if(isNaN(row.precio)){row.precio = 0;}
@@ -2171,7 +2173,8 @@ function ActivarCategoriaMenu(cual,categoria){
 										impuestosid+='2';
 									}
 									var lineHeight='';
-									if(row.formulado.length>12)
+									vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" ontap="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
+									/*if(row.formulado.length>12)
 										lineHeight='line-height:18px;';
 									var resto=parseInt(row.col)-t;
 									var agregar='';
@@ -2183,22 +2186,28 @@ function ActivarCategoriaMenu(cual,categoria){
 									
 									//alert(resto);
 									if(resto>0){
-										for(var s=1;s<=resto;s++){
-											agregar+='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'"></div>';
-										}
-									}
-									$('#listaProductos').append(agregar);
-									$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" ontap="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>');
+										for(var s=1;s<=resto;s++){*/
+											//agregar+='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'"></div>';
+										/*}
+									}*/
+									//$('#listaProductos').append(agregar);
+									//$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" ontap="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>');
 									t++;
+								}
+								for(var s=0;s<=vectorpos.length;s++){
+									$('#listaProductos').append(vectorpos[s]);
 								}
 								//$('.producto').hide();
 								//init2(categoria);
-								Init3();
-								//$('#listaProductos').fadeIn();
-								$('#listaProductos').css("display","");
-								//para mostrar productos por pagina
-								showProducts(categoria);
+							}else{
+								var agregar='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>';
+								$('#listaProductos').append(agregar);
 							}
+							Init3();
+							//$('#listaProductos').fadeIn();
+							$('#listaProductos').css("display","");
+							//para mostrar productos por pagina
+							showProducts(categoria);
 						});	
 					}
 				}

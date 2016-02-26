@@ -249,7 +249,7 @@ function performPurchase(restaurant){
 			echo=parseFloat(invoicePaid-invoiceTotal);
 			
 			/*VALORES PARA LA FACTURA*/
-			var mitotal=$('#totalmiFactura').val();
+			var mitotal=$('#total').html().substring(1);
 			var subconiva=$('#subtotalIva').val();
 			var subsiniva=$('#subtotalSinIva').val();
 			var eliva=0;

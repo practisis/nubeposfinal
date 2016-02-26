@@ -1,5 +1,29 @@
 var campos=new Array();
-campos["PRODUCTOS"]=['id_local','id','formulado','codigo','precio','categoriaid','cargaiva','productofinal','materiaprima','timespan','ppq','color','servicio','estado','sincronizar'];
+campos["PRODUCTOS"]=['id_local|integer primary key AUTOINCREMENT','id|integer','formulado|text','codigo|text','precio|real','categoriaid|text','cargaiva|integer','productofinal|integer','materiaprima|integer','timespan|text UNIQUE','ppq|real default 0','color|text','servicio|integer default 0','estado|integer default 1','sincronizar|boolean default "true"'];
+
+campos["CONFIG"]=['id|integer primary key AUTOINCREMENT','nombre|text, razon|text','ruc|integer','telefono|integer','email|text','direccion|text','printer|text','serie|text default "001"','establecimiento|text default "001"','sincronizar|boolean default "false"','encabezado|integer default 3','largo|integer default 18','nombreterminal|text default "Tablet 1"'];
+
+campos["LOGACTIONS"]=['id|integer primary key AUTOINCREMENT','time|numeric','descripcion|text','datos|text'];
+
+campos["FACTURAS_FORMULADOS"]=['id|integer primary key AUTOINCREMENT','timespan_factura|text','timespan_formulado|text','cantidad|real','precio_unitario|real'];
+
+campos["MENU_CATEGORIAS"]=['id|integer primary key AUTOINCREMENT','orden|integer default 1','nombre|text default ""','timespan|text UNIQUE','activo|boolean default "true"'];
+
+campos["MENU"]=['id|integer primary key AUTOINCREMENT', 'fila|integer default 0', 'columna|integer default 0','idcatmenu|text','idproducto|text','timespan|text UNIQUE','activo|boolean default true'];
+
+campos["PERMISOS"]=['id|integer primary key AUTOINCREMENT',' clave|text default "" UNIQUE','historial|boolean default false','configuracion|boolean default false','anular|boolean default false', 'impcierre|boolean default false','productos|boolean default false','activo|boolean default false'];
+
+campos["empresa"]=['id|integer primary key AUTOINCREMENT','nombre|nteger',' nombreempresa|text','id_barra|text','barra_arriba|text'];
+
+campos["CATEGORIAS"]=['id|integer primary key AUTOINCREMENT', 'categoria|text', 'activo|integer', 'existe|integer' , 'timespan|text UNIQUE', 'sincronizar|boolean default "true"'];
+
+campos["CLIENTES"]=['id|integer primary key AUTOINCREMENT','nombre|text', 'cedula|text UNIQUE', 'email|text', 'direccion|text', 'telefono|text','existe|integer','timespan|TEXT','sincronizar|boolean default "true"'];
+
+campos["FACTURAS"]=['id|integer primary key AUTOINCREMENT','timespan|text','clientName|','RUC|','address|','tele|','fetchJson|','paymentsUsed|','cash|','cards|','cheques|','vauleCxC|','paymentConsumoInterno|','tablita|','aux|' ,'acc|','echo|real default 0','fecha|','anulada|integer default 0','sincronizar|boolean default "false"','total|real','subconiva|real','subsiniva|real','iva|real','servicio|real','descuento|real','nofact|text'];
+
+campos["PRESUPUESTO"]=['id|integer primary key AUTOINCREMENT','timespan|text','valor|real','fecha|integer UNIQUE','transacciones|integer'];
+
+//console.log(campos);
 
 function updateOnlineStatus(condition) {
 					var status = document.getElementById("status");
@@ -221,20 +245,32 @@ var app = {
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS CONFIG (id integer primary key AUTOINCREMENT, nombre text, razon text , ruc integer, telefono integer , email text , direccion text, printer text,serie text default "001",establecimiento text default "001",sincronizar boolean default "false",encabezado integer default 3,largo integer default 18, nombreterminal text default "Tablet 1")');
 		
+		VerificarCampos('CONFIG');
+		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS LOGACTIONS (id integer primary key AUTOINCREMENT, time numeric, descripcion text, datos text)');
 		
+		VerificarCampos('LOGACTIONS');
+		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS FACTURAS_FORMULADOS (id integer primary key AUTOINCREMENT, timespan_factura text, timespan_formulado text , cantidad real, precio_unitario real)');
+		
+		VerificarCampos('FACTURAS_FORMULADOS');
 		
         tx.executeSql('INSERT INTO PRODUCTOS(id_local,id,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,formulado,estado) VALUES(-1,-1,"-1",0,-1,0,0,0,"-1","Producto NubePOS",0)');
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU_CATEGORIAS (id integer primary key AUTOINCREMENT, orden integer default 1,nombre text default "", timespan text UNIQUE, activo boolean default "true")');
+		
+		VerificarCampos('MENU_CATEGORIAS');
 		
 		/*var mitimecat=getTimeSpan();
 		tx.executeSql('INSERT INTO MENU_CATEGORIAS (orden,nombre,timespan) values (?,?,?)',[1,'Productos',mitimecat]);*/
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU (id integer primary key AUTOINCREMENT, fila integer default 0, columna integer default 0,idcatmenu text,idproducto text, timespan text UNIQUE, activo boolean default true)');
 		
+		VerificarCampos('MENU');
+		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS PERMISOS (id integer primary key AUTOINCREMENT, clave text default "" UNIQUE, historial boolean default false,configuracion boolean default false,anular boolean default false, impcierre boolean default false,productos boolean default false,activo boolean default false)');
+		
+		VerificarCampos('PERMISOS');
 		
 		/*var mitimemenu=getTimeSpan();
 		tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan) values (?,?,?,?,?)',[1,2,mitimecat,'14522044131343980',mitimemenu]);*/
@@ -251,6 +287,8 @@ var app = {
         //tx.executeSql('DROP TABLE IF EXISTS PRODUCTOS');
         //tx.executeSql('CREATE TABLE IF NOT EXISTS empresa (id integer primary key AUTOINCREMENT, nombre integer )');
          tx.executeSql('CREATE TABLE IF NOT EXISTS empresa (id integer primary key AUTOINCREMENT, nombre integer, nombreempresa text, id_barra text, barra_arriba text )');
+		 
+		 VerificarCampos('empresa');
        
         
         function insertaTablas(tabla){
@@ -270,6 +308,9 @@ var app = {
             if(existen==0)
                 db.transaction(IngresaCategorias,errorCB,successCB);
         });
+		
+		VerificarCampos('CATEGORIAS');
+		
         //tx.executeSql('DROP TABLE IF EXISTS CLIENTES');
         tx.executeSql('CREATE TABLE IF NOT EXISTS CLIENTES (id integer primary key AUTOINCREMENT,nombre text, cedula text UNIQUE, email text, direccion text, telefono text,existe integer,timespan TEXT, sincronizar boolean default "true")');
         tx.executeSql('SELECT COUNT(id) as cuantos FROM CLIENTES',[],function(tx,res){
@@ -277,14 +318,22 @@ var app = {
             if(existen==0)
                 db.transaction(IngresaClientes,errorCB,successCB);
         });
+		
+		VerificarCampos('CLIENTES');
         //tx.executeSql('DROP TABLE IF EXISTS FACTURAS');
         tx.executeSql('CREATE TABLE IF NOT EXISTS FACTURAS (id integer primary key AUTOINCREMENT,timespan text ,clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux ,acc,echo real default 0,fecha,anulada integer default 0,sincronizar boolean default "false",total real,subconiva real,subsiniva real,iva real,servicio real,descuento real,nofact text);');
+		
+		VerificarCampos('FACTURAS');
+		
+		
         tx.executeSql('CREATE TABLE IF NOT EXISTS CAJA (id integer primary key AUTOINCREMENT,hora_ingreso text,hora_salida text,activo integer,sobrante_faltante real,total real,establecimiento text,autorizacion text);');
         tx.executeSql('CREATE TABLE IF NOT EXISTS CAJA_APERTURA_CIERRE (id integer primary key AUTOINCREMENT,id_caja integer,valor_apertura real,movimiento integer);',[],function(tx,result){
             //console.log('Ana');
             //$('#myModal').modal('hide');
         });
 		tx.executeSql('CREATE TABLE IF NOT EXISTS PRESUPUESTO (id integer primary key AUTOINCREMENT,timespan text,valor real,fecha integer UNIQUE,transacciones integer);');
+		
+		VerificarCampos('PRESUPUESTO');
     }
 
 	function VerificarCampos(tabla){
@@ -297,11 +346,29 @@ var app = {
 					for(var n=0;n<camposvec.length;n++){
 						var cols=$.trim(camposvec[n]).split(" ");
 						var nombrecol=cols[0];
-						/*var campostabla=campos
-						for(var m in campos[tabla]){
-							if(campos[tabla][m])
-						}*/
+						camposvec[n]=nombrecol;
 					}
+					
+					//console.log(camposvec);
+					
+					var campostabla=campos[tabla];
+					for(var n in campostabla){
+						var cols=$.trim(campostabla[n]).split('|');
+						var nombrecol=cols[0];
+						if(camposvec.indexOf(nombrecol)<0){
+							console.log("falta campo: "+campostabla[n]);
+							tx.executeSql("ALTER TABLE "+tabla+" ADD COLUMN "+campostabla[n].replace("|"," "),[],function(tx,res){});
+						}
+					}
+					/*for(var n=0;n<camposvec.length;n++){
+						var cols=$.trim(camposvec[n]).split(" ");
+						var nombrecol=cols[0];
+						var campostabla=campos[tabla];
+						console.log(campostabla.indexOf(nombrecol));
+						if(campostabla.indexOf(nombrecol)<0){
+							console.log("falta campo"+nombrecol);
+						}
+					}*/
 					
 				}
 				

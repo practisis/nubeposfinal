@@ -70,6 +70,11 @@ function envia(donde){
 						//loaded();
 						});
 					}, 1000);*/
+					
+					//collapsa el menu cuando está metido
+					$("#bs-example-navbar-collapse-1").attr('class', 'navbar-collapse collapse');
+					
+					
 				}
 		
 

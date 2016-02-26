@@ -1,3 +1,6 @@
+var campos=new Array();
+campos["PRODUCTOS"]=['id_local','id','formulado','codigo','precio','categoriaid','cargaiva','productofinal','materiaprima','timespan','ppq','color','servicio','estado','sincronizar'];
+
 function updateOnlineStatus(condition) {
 					var status = document.getElementById("status");
 					//var condition = navigator.onLine ? "ONLINE" : "OFFLINE";
@@ -208,6 +211,9 @@ var app = {
         //tx.executeSql('DROP TABLE IF EXISTS PRODUCTOS');
         tx.executeSql('CREATE TABLE IF NOT EXISTS PRODUCTOS (id_local integer primary key AUTOINCREMENT,id integer, formulado text, codigo text, precio real, categoriaid text,cargaiva integer,productofinal integer,materiaprima integer,timespan text UNIQUE,ppq real default 0,color text,servicio integer default 0,estado integer default 1, sincronizar boolean default "true")');
 		
+		VerificarCampos('PRODUCTOS');
+		
+		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS CONFIG (id integer primary key AUTOINCREMENT, nombre text, razon text , ruc integer, telefono integer , email text , direccion text, printer text,serie text default "001",establecimiento text default "001",sincronizar boolean default "false",encabezado integer default 3,largo integer default 18, nombreterminal text default "Tablet 1")');
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS LOGACTIONS (id integer primary key AUTOINCREMENT, time numeric, descripcion text, datos text)');
@@ -251,16 +257,8 @@ var app = {
             });    
             
         }
-        // tx.executeSql('SELECT COUNT(id_local) as cuantos FROM PRODUCTOS',[],function(tx,res){
-            // var existen=res.rows.item(0).cuantos;
-            // if(existen==0)
-                // db.transaction(Ingresaproductos,errorCB,successCB);
-        // });
         
-        
-        
-        
-        //tx.executeSql('DROP TABLE IF EXISTS CATEGORIAS');
+		//tx.executeSql('DROP TABLE IF EXISTS CATEGORIAS');
         tx.executeSql('CREATE TABLE IF NOT EXISTS CATEGORIAS (id integer primary key AUTOINCREMENT, categoria text, activo integer, existe integer , timespan text UNIQUE, sincronizar boolean default "true"  )');
         tx.executeSql('SELECT COUNT(id) as cuantos FROM CATEGORIAS',[],function(tx,res){
             var existen=res.rows.item(0).cuantos;
@@ -284,7 +282,27 @@ var app = {
 		tx.executeSql('CREATE TABLE IF NOT EXISTS PRESUPUESTO (id integer primary key AUTOINCREMENT,timespan text,valor real,fecha integer UNIQUE,transacciones integer);');
     }
 
-   
+	function VerificarCampos(tabla){
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function (tx){
+			tx.executeSql("SELECT sql from sqlite_master WHERE type = 'table' and name like ?",[tabla],function(tx,res){
+				if(res.rows.length>0){
+					var sqlvec=res.rows.item(0).sql.replace(")","").split('(');
+					var camposvec=sqlvec[1].split(',');
+					for(var n=0;n<camposvec.length;n++){
+						var cols=$.trim(camposvec[n]).split(" ");
+						var nombrecol=cols[0];
+						/*var campostabla=campos
+						for(var m in campos[tabla]){
+							if(campos[tabla][m])
+						}*/
+					}
+					
+				}
+				
+			});
+		},errorCB,successCB);
+	}
 
     // Transaction error callback
     //
@@ -733,7 +751,7 @@ function VerificarClave(){
 	}
 }
 function VerificarPermiso(donde){
-		if(localStorage.getItem("permisos")=="true"){
+		if(localStorage.getItem("permisos")==true){
 			if(localStorage.getItem("claveuser")==""||localStorage.getItem("claveuser")==null){
 				if(donde!=''){
 					$('#modalpermiso').modal("show");

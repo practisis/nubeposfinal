@@ -309,6 +309,9 @@ function registrarUser(){
 						localStorage.setItem("clientesya",true);
 						localStorage.setItem("productosya",true);
 						localStorage.setItem("presupuestoya",true);
+						localStorage.setItem("menucategoriasya",true);
+						localStorage.setItem("menuya",true);
+						localStorage.setItem("permisosya",true);
 						
 						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','','',false);});

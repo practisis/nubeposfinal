@@ -1747,7 +1747,7 @@ function Ready(){
 		
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
-			tx.executeSql("SELECT * FROM PRODUCTOS WHERE formulado like '%"+buscar+"%' and productofinal=1",[],function(tx,results){
+			tx.executeSql("SELECT * FROM PRODUCTOS WHERE formulado like '%"+buscar+"%' and productofinal=1 and estado=1",[],function(tx,results){
 				//console.log(results);
 				if(results.rows.length>0){
 					var res1=new Object();

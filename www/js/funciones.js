@@ -1329,7 +1329,7 @@ function Init3(){
 	//$('.producto').css('font-size',(h*2.8/100)+'px');
 	$('.producto,.categoriaActiva,.categoria').each(function(){
 		//console.log($(this));
-		$(this).css('width',w/6);
+		$(this).css('width',w/5.5);
 	});
 	if(vertical){
 		$('.producto').css('height',((h*4.5/100)+15)+'px');
@@ -2173,6 +2173,8 @@ function ActivarCategoriaMenu(cual,categoria){
 										impuestosid+='2';
 									}
 									var lineHeight='';
+									if(row.formulado.length>12)
+										lineHeight='line-height:18px;';
 									vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" ontap="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
 									/*if(row.formulado.length>12)
 										lineHeight='line-height:18px;';

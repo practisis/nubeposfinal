@@ -823,8 +823,11 @@ function VerificarClave(){
 	}
 }
 function VerificarPermiso(donde){
-		if(localStorage.getItem("permisos")==true){
+	
+		if(localStorage.getItem("permisos")=="true"){
+			
 			if(localStorage.getItem("claveuser")==""||localStorage.getItem("claveuser")==null){
+				
 				if(donde!=''){
 					$('#modalpermiso').modal("show");
 					$('#accesodonde').val(donde);

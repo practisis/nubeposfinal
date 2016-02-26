@@ -443,7 +443,7 @@ function LlenarTablaProd(datos){
 		//si no tiene permisos
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
-		if(localStorage.getItem("permisos")==true){
+		if(localStorage.getItem("permisos")=="true"){
 			tx.executeSql("SELECT id from permisos where clave like ? and productos=? and activo=?",[localStorage.getItem("claveuser"),"true","true"],function(tx,results2){
 				if(results2.rows.length>0){
 					console.log($('.btn-default'));

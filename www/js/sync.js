@@ -213,6 +213,14 @@ function ExtraeDatosApi(donde){
 		$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("Sincronizando Permisos...");
 		//alert($('#JSONPermisosNube').html());
+		
+		var extras=JSON.parse($('#JSONExtraNube').html());
+		localStorage.setItem("permisos",extras.extras.contrasenia);
+		localStorage.setItem("msj",extras.extras.msj);
+		localStorage.setItem("dias",extras.extras.dias);
+		
+		
+		
 		var jsonpres=JSON.parse($('#JSONPermisosNube').html());
 		var jsonpresupuestos=jsonpres.permisos;
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -426,8 +434,7 @@ function DatosIniciales(cual){
 		JSONcategoriasMenuNube=arraydatos.menucategorias;
 		JSONmenuNube=arraydatos.menu;
 		JSONpermisosNube=arraydatos.permisos;
-		//JSONextraNube=arraydatos.extras;
-		//console.log(JSONextraNube);
+		JSONextraNube=arraydatos.extras;
 		
 		$("#JSONclientesNube").html(JSONclientesNube);
 		$("#JSONCategoriasNube").html(JSONcategoriasNube);
@@ -435,8 +442,8 @@ function DatosIniciales(cual){
 		$("#JSONpresupuestoNube").html(JSONpresupuestoNube);
 		$('#JSONCatMenuNube').html(JSONcategoriasMenuNube);
 		$('#JSONMenuNube').html(JSONmenuNube);
-		//$('#JSONExtraNube').html(JSONmenuNube);
 		$('#JSONPermisosNube').html(JSONpermisosNube);
+		$('#JSONExtraNube').html(JSONextraNube);
 
 		ExtraeDatosApi(cual);
 	});
@@ -809,7 +816,6 @@ function DatosRecurrentes(cual){
 			localStorage.setItem('dataupdate','');
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 				db.transaction(function(tx){
-					
 				for(var n=0;n<jsonpermisos.length;n++){
 					var item=jsonpermisos[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');

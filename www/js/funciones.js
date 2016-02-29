@@ -57,14 +57,17 @@ function ActivarCategoria(cual,categoria){
 						
 					$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" ontap="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.categoriaid +'">'+ row.formulado +'</div>');
 				}
-				Init3();
+				if($(window).height()>500)
+					Init31();
 				$('#listaProductos').css("display","");
 				showProducts(categoria);
 			}
 		});				
 	},errorCB,successCB);
 	$('.producto').hide();
-	Init3();
+	if($(window).height()>500)
+		Init31();
+
 	showProducts(categoria);
 }
 	
@@ -1304,8 +1307,9 @@ function BuscarCliente(e){
 		},errorCB,successCB);
 	}
 }
+function Init3(){}
 
-function Init3(){
+function Init31(){
 	var h=$(window).height();
 	var w=$(window).width();
 	var hd=$(document).height();
@@ -1349,8 +1353,8 @@ function Init3(){
 	$('.den').css('font-size','14px');
 	$('#productos').css('height',h-parseFloat($('.navbar').css('height'))-parseFloat($('#listaCategorias').css('height'))-20);
 	
-	if(h<600)
-		$('#listaProductos').css("min-height","480px");
+	/*if(h<600)
+		$('#listaProductos').css("min-height","480px");*/
 	
 	//$('#listaCategorias').css('height',(parseInt($('.categoria').css('height')))+'px');
 	$('#listaProductos').css('height',(parseInt($('.productos').css('height'))-parseInt($('#listaCategorias').css('height'))+'px'));
@@ -1687,7 +1691,8 @@ function ClickNumeroD(numd){
 }
 
 function Ready(){
-	Init3();
+	if($(window).height()>500)
+		Init31();
     botonesCalculadora();
 	ColocarFormasPago();
 	if(localStorage.getItem("diseno")==0||localStorage.getItem("diseno")==null||localStorage.getItem("diseno")==""){
@@ -2214,7 +2219,9 @@ function ActivarCategoriaMenu(cual,categoria){
 								var agregar='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>';
 								$('#listaProductos').append(agregar);
 							}
-							Init3();
+							if($(window).height()>500)
+								Init31();
+
 							//$('#listaProductos').fadeIn();
 							$('#listaProductos').css("display","");
 							//para mostrar productos por pagina
@@ -2227,7 +2234,8 @@ function ActivarCategoriaMenu(cual,categoria){
 	},errorCB,successCB);
 	$('.producto').hide();
 	//$('.categoria_producto_'+ categoria).show();
-	Init3();
+	if($(window).height()>500)
+		Init31();
 	showProducts(categoria);
 }
 

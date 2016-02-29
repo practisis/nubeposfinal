@@ -1350,7 +1350,8 @@ function Init3(){
 	//$('#listaCategorias').css('height',(parseInt($('.categoria').css('height')))+'px');
 	$('#listaProductos').css('height',(parseInt($('.productos').css('height'))-62-parseInt($('#listaCategorias').css('height')))+'px');
 	$('.direccionales').css('height',(parseInt($('.categoria').css('height')))+'px');
-	$('.direccionales').css('width',(parseInt($('.direccionales').css('height')))+'px');
+	//$('.direccionales').css('width',(parseInt($('.direccionales').css('width')))+'px');
+	$('.direccionales').css('width','100%');
 	var anchoCategorias=0;
 	var cuantas=0;
 	$('.esCategoria').each(function(){
@@ -1359,7 +1360,7 @@ function Init3(){
 	});
 	var anchodireccionales=parseInt($('.direccionales').css('width'));
 	$('#nav_izq,#nav_der').css('width',anchodireccionales);
-	$('#listaCategorias').css('width',(w-(2*anchodireccionales)-20)+'px');
+	$('#listaCategorias').css('width',(w-(2*anchodireccionales)-30)+'px');
 	//$('#listaCategorias').css('height',$('.producto').css('height'));
 	//$('#contenidoCategorias').css('width',anchoCategorias+20);
 	var wp=parseInt($('.productos').css('width'))-40;

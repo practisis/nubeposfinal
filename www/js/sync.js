@@ -426,6 +426,8 @@ function DatosIniciales(cual){
 		JSONcategoriasMenuNube=arraydatos.menucategorias;
 		JSONmenuNube=arraydatos.menu;
 		JSONpermisosNube=arraydatos.permisos;
+		//JSONextraNube=arraydatos.extras;
+		//console.log(JSONextraNube);
 		
 		$("#JSONclientesNube").html(JSONclientesNube);
 		$("#JSONCategoriasNube").html(JSONcategoriasNube);
@@ -433,6 +435,7 @@ function DatosIniciales(cual){
 		$("#JSONpresupuestoNube").html(JSONpresupuestoNube);
 		$('#JSONCatMenuNube').html(JSONcategoriasMenuNube);
 		$('#JSONMenuNube').html(JSONmenuNube);
+		//$('#JSONExtraNube').html(JSONmenuNube);
 		$('#JSONPermisosNube').html(JSONpermisosNube);
 
 		ExtraeDatosApi(cual);
@@ -806,6 +809,7 @@ function DatosRecurrentes(cual){
 			localStorage.setItem('dataupdate','');
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 				db.transaction(function(tx){
+					
 				for(var n=0;n<jsonpermisos.length;n++){
 					var item=jsonpermisos[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');

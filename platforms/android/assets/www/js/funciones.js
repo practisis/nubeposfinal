@@ -1311,6 +1311,8 @@ function Init3(){
 	var hd=$(document).height();
 	if(h/w>=0.725) vertical=true;
 	else vertical=false;
+	$('#main').height(h-parseFloat($('.navbar').css('height')));
+	$('#main').width(w*98/100);
 	$('#contentdetalle').css("height",(3*h/5));
 	var navh=parseInt($('.navbar').css("height"));
 	$('#pay').css("height",(hd-navh));
@@ -1345,12 +1347,16 @@ function Init3(){
 	$('.den').css('height',2*parseFloat($('.producto').css('height')));
 	$('.den').css('width',2*parseFloat($('.producto').css('height')));
 	$('.den').css('font-size','14px');
-	$('#productos').css('height',h-parseFloat($('.navbar').css('height')));
+	$('#productos').css('height',h-parseFloat($('.navbar').css('height'))-parseFloat($('#listaCategorias').css('height'))-20);
+	
+	if(h<600)
+		$('#listaProductos').css("min-height","480px");
 	
 	//$('#listaCategorias').css('height',(parseInt($('.categoria').css('height')))+'px');
-	$('#listaProductos').css('height',(parseInt($('.productos').css('height'))-62-parseInt($('#listaCategorias').css('height')))+'px');
-	$('.direccionales').css('height',(parseInt($('.categoria').css('height')))+'px');
-	$('.direccionales').css('width',(parseInt($('.direccionales').css('height')))+'px');
+	$('#listaProductos').css('height',(parseInt($('.productos').css('height'))-parseInt($('#listaCategorias').css('height'))+'px'));
+	$('.direccionales').css('height',(parseInt($('#listaCategorias').css('height')))+'px');
+	//$('.direccionales').css('width',(parseInt($('.direccionales').css('width')))+'px');
+	$('.direccionales').css('width','100%');
 	var anchoCategorias=0;
 	var cuantas=0;
 	$('.esCategoria').each(function(){
@@ -1359,7 +1365,7 @@ function Init3(){
 	});
 	var anchodireccionales=parseInt($('.direccionales').css('width'));
 	$('#nav_izq,#nav_der').css('width',anchodireccionales);
-	$('#listaCategorias').css('width',(w-(2*anchodireccionales)-20)+'px');
+	//$('#listaCategorias').css('width',(w-(2*anchodireccionales)-30)+'px');
 	//$('#listaCategorias').css('height',$('.producto').css('height'));
 	//$('#contenidoCategorias').css('width',anchoCategorias+20);
 	var wp=parseInt($('.productos').css('width'))-40;
@@ -1372,7 +1378,8 @@ function Init3(){
 
 	if(anchoCategorias<wp){
 		$('.direccionales').css('display','none');
-		$('#listaCategorias').css('width',wp);
+		//$('#listaCategorias').css('width',wp);
+		$('#listaCategorias').css('width','100%');
 		}
 	else{
 		$('.direccionales').css('display','block');

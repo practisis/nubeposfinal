@@ -22,22 +22,22 @@
 				<img alt="" style="height:20%;" src="images/loading.gif"/>
 		</div>
 		<div class="row" style='margin-top:10px;' >
-			<div class="col-xs-1">
+			<div class="col-xs-1" style='padding-right:0px;'>
 								<button onclick="slider('izquierda'); return false;" class='direccionales btn btn-success btn-xs'><span class='fa fa-chevron-left'></span></button>
 			</div>
-			<div class="col-xs-10">
+			<div class="col-xs-10" style='padding-left:0px;padding-right:0px;'>
 								<div id='listaCategorias'>
 									<div id='contenidoCategorias'><ul role="tablist" id='listacat' class='nav nav-tabs'></ul></div>
 								</div>
 			</div>
-			<div class="col-xs-1">
+			<div class="col-xs-1" style='padding-left:0px;'>
 								<button onclick="slider('derecha'); return false;" class='direccionales btn btn-success btn-xs'><span class='fa fa-chevron-right'></span></button>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
 				<span class='contentListaProductos ' id='contentListaProductos' >
-					<div id='listaProductos' class='' style='min-height:510px;display:block;overflow-y:visible;'></div>
+					<div id='listaProductos' class='' style='display:block;overflow-y:visible;'></div>
 				</span>
 			</div>
 		</div>
@@ -539,7 +539,7 @@
 		
 		<!---<div class='col-lg-12'>-->
 		<div id="opaco" style="width:100%; height:100%; position:absolute; top:0%; left:0%; background-color:rgba(255,255,255,0.7); z-index:3; display:none;">
-		<div id="newCliente" style='height:100%; '></div>
+		<div id="newCliente" style='height:100%;background-color:rgba(255,255,255,1);margin-top:-8px;'></div>
 		</div>
 		<!--<div id="positionClosePreCuenta" style="position: absolute; left: 96%; top: 0%; z-index: 20;"><img onclick="cancelPayment(); return false;" style="cursor: pointer;" src="../images/xcierre.png"/></div>-->
 		<div style="display: none;" id="json"></div>

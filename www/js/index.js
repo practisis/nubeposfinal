@@ -799,11 +799,11 @@ function VerificarClave(){
 				if(results1.rows.length>0){
 					localStorage.setItem("claveuser",ing);
 					var item=results1.rows.item(0);
-					if(item.historial&&donde=='historial'){
+					if(item.historial=="true"&&donde=='historial'){
 						$('#modalpermiso').modal("hide");
 						$('#miclave').val("");
 						envia('historial');
-					}else if(item.configuracion&&donde=='configuracion'){
+					}else if(item.configuracion=="true"&&donde=='configuracion'){
 						$('#modalpermiso').modal("hide");
 						$('#miclave').val("");
 						envia('config');
@@ -811,6 +811,12 @@ function VerificarClave(){
 						$('#modalpermiso').modal("hide");
 						$('#miclave').val("");
 						envia('listaproductos');
+					}
+					else{
+						$('#modalpermiso').modal("hide");
+						$('#miclave').val("");
+						showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+						localStorage.setItem("claveuser","");
 					}
 				}else{
 					$('#modalpermiso').modal("hide");
@@ -840,11 +846,11 @@ function VerificarPermiso(donde){
 					function(tx1,results1){
 						if(results1.rows.length>0){
 							var it=results1.rows.item(0);
-							if(donde=='historial'&&it.historial){
+							if(donde=='historial'&&it.historial=="true"){
 								envia('historial');
-							}else if(donde=='configuracion'&&it.configuracion){
+							}else if(donde=='configuracion'&&it.configuracion=="true"){
 								envia('config');
-							}else if(donde=='productos'&&it.productos){
+							}else if(donde=='productos'&&it.productos=="true"){
 								envia('listaproductos');
 							}
 						}else{

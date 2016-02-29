@@ -21,8 +21,28 @@
 		<div id="loader" style="display:none; position: absolute; width: 100%; height: 100%; top: 0; left: 0; background: rgba(255,255,255,0.8); text-align: center;">
 				<img alt="" style="height:20%;" src="images/loading.gif"/>
 		</div>
+		<div class="row" style='margin-top:10px;' >
+			<div class="col-xs-1">
+								<button onclick="slider('izquierda'); return false;" class='direccionales btn btn-success btn-xs'><span class='fa fa-chevron-left'></span></button>
+			</div>
+			<div class="col-xs-10">
+								<div id='listaCategorias'>
+									<div id='contenidoCategorias'><ul role="tablist" id='listacat' class='nav nav-tabs'></ul></div>
+								</div>
+			</div>
+			<div class="col-xs-1">
+								<button onclick="slider('derecha'); return false;" class='direccionales btn btn-success btn-xs'><span class='fa fa-chevron-right'></span></button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<span class='contentListaProductos ' id='contentListaProductos' >
+					<div id='listaProductos' class='' style='min-height:510px;display:block;overflow-y:visible;'></div>
+				</span>
+			</div>
+		</div>
 		<table cellspacing="0px" cellpadding="0px" width='98%' style='margin-top:10px;' align='center'>
-			<tr>
+			<!--<tr>
 				<td align='right'>
 								<button onclick="slider('izquierda'); return false;" class='direccionales btn btn-success btn-xs'><span class='fa fa-chevron-left'></span></button>
 							</td>
@@ -34,13 +54,13 @@
 							<td align='left'>
 								<button onclick="slider('derecha'); return false;" class='direccionales btn btn-success btn-xs'><span class='fa fa-chevron-right'></span></button>
 							</td>
-			</tr>
+			</tr>--->
 			<tr>
 				<!--<td>
 				<div id='nav_izq' data-dir="left" class="directionProducts btn btn-primary" style='margin:5px; display:none;'><span class='glyphicon glyphicon-menu-left'></span></div></td>-->
-				<td class='contentListaProductos ' id='contentListaProductos' colspan='3'>
-					<div id='listaProductos' class='' style='height:520px;display:block;overflow-y:visible;'></div>
-				</td>
+				<!--<td class='contentListaProductos ' id='contentListaProductos' colspan='3'>
+					<div id='listaProductos' class='' style='min-height:520px;display:block;overflow-y:visible;'></div>
+				</td>-->
 				<!--<td><div data-dir="right" class="directionProducts btn btn-primary" style='cursor:pointer; margin:5px; display:none;' id='nav_der'><span class='glyphicon glyphicon-menu-right'></span></div></td>-->
 					<div id='navegadoresh'>
 						<table cellspacing='0px' cellpadding='0px' width='99%' align='center'>
@@ -53,6 +73,7 @@
 					</div>
 			</tr>
 		</table>
+		
 		</div>
 		
 		<!---div calculadora-->
@@ -302,7 +323,7 @@
 	</div>
 	</div>
 	</div>
-<!--</div>--->
+
 	<!---<div class='descuento' id='descuento'>
 		<div id='divInDesc' style='margin:10px; width:45%; height:100%; float:left;'>
 		<div class='boton' id='btn_descuento' onclick="showPopup(); return false;">DESC.</div>
@@ -324,6 +345,7 @@
 
  </div>
  </div>
+ 
  
  
 <!--pop up discount --->
@@ -511,31 +533,31 @@
 	</div>
 	
 
-<div id="paymentModule" class='' style='display:none; position:absolute; top:0px; left:0%; width:100%; z-index:2;'>
+<div id="paymentModule" class='' style='display:none; position:absolute; top:0px; left:0%; width:100%; z-index:2; height:100%'>
 <div id="pay" class="" style='width:100%;'>
-	<div class="ventanaprincipal" style='height:100%;'>
+	<div class="ventanaprincipal" style='height:200%;'>
 		
 		<!---<div class='col-lg-12'>-->
 		<div id="opaco" style="width:100%; height:100%; position:absolute; top:0%; left:0%; background-color:rgba(255,255,255,0.7); z-index:3; display:none;">
-		<div id="newCliente" style='height:100%;'></div>
+		<div id="newCliente" style='height:100%; '></div>
 		</div>
 		<!--<div id="positionClosePreCuenta" style="position: absolute; left: 96%; top: 0%; z-index: 20;"><img onclick="cancelPayment(); return false;" style="cursor: pointer;" src="../images/xcierre.png"/></div>-->
 		<div style="display: none;" id="json"></div>
-		<div id="referenceToReset">
+		<div id="referenceToReset" style="height:100%; background-color:#DDD;">
 				<input id="acc" name="acc" type="hidden" value="">
 				<input id="echo" name="echo" type="hidden" value=""> 
-				<div class=''>
+				<div class='row'>
 				<div class='col-xs-12'>
-					<div class='row'>
+				<div class='row' style='background-color:#fff;'>
 						<div class='col-xs-12'>
-						<div style='margin-top:20px; margin-bottom:20px;'>
+						<div style='margin-top:10px; margin-bottom:20px;'>
 						<h3 style='margin-top:0px;'>Ingreso de Pagos</h3>
-							<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:0px; right:12px; cursor:pointer;'>
+							<div style='width:100%; text-align:right; padding-right:5px; padding-top:5px;cursor:pointer;color:#1495C0; position:absolute; top:0px; right:12px; cursor:pointer;'>
 								<i class="fa fa-chevron-circle-left fa-3x" title='Volver...' onclick='$("#paymentModule").slideUp();'></i>
 							</div>
 						</div>
 						</div>
-					</div>
+				</div>
 				<div class='row' style='background-color:#DDD; padding-top:20px; padding-bottom:20px;'>
 					
 						<!--<button type='button' class='btn btn-danger bnt-sm' style='position:absolute; top:25px; right:12px; cursor:pointer;' onclick='$("#paymentModule").modal("hide");'><span class='glyphicon glyphicon-remove-circle' ></span></button>-->
@@ -556,24 +578,29 @@
 							</tr>
 						</table>
 					
-				<div class='col-lg-6 col-md-6 col-xs-6'>
-					<div class='col-lg-5 col-md-5 col-xs-5' style='padding-right:0px;'>
-						<div style='margin-top:5px; text-align:left;'><b>Factura No.&nbsp;&nbsp;</b><span id='seriesfact'></span></div>
-					</div>
-					<div class='col-lg-4 col-md-4 col-xs-4' style='padding-left:0px;'>
-						<input id='invoiceNrComplete' type='hidden' style='display:none;'/>
+				<div class='col-xs-6'>
+					<div class="row">
+						<div class='col-md-5' style='padding-right:0px; '>
+							<div style='margin-top:5px; text-align:left;'><b>Factura No.&nbsp;&nbsp;</b><span id='seriesfact'></span></div>
+							<input id='invoiceNrComplete' type='hidden' style='display:none;'/>
+						</div>
+						<div class='col-md-3'>
 						<input id="invoiceNr" class='form-control input' onchange='VerificarNumero(this.value);' type='number' onkeypress="isalphanumeric(event);" maxlength='09'/>
+						</div>
+						<div class='col-md-4'>
+						</div>
 					</div>
 				</div>
-				<div class='col-lg-6 col-md-6 col-xs-6' style='text-align:right;'>
+				<div class='col-xs-6' style='text-align:right;'>
 					<span name='busquedacliente' id='busquedacliente'>9999999999999</span> - 	
 					<span style='color:#404041; font-weight:bold;' id='clientefind'>Consumidor Final</span>
 					<button style='margin-left:5px;' onclick="BuscarCliente(13);" type='button' class='btn btn-default btn'>Cambiar Cliente</button>&nbsp;		
 				</div>
 				</div>
 				</div>
-				<div class=''>
-				<div class='col-xs-5'>
+				</div>
+				<div class='row' style="background-color:#fff;">
+				<div class='col-md-5'>
 					<div style="vertical-align:top; width:100%;" colspan='2'>
 						<div class="ventanaformapago" style='overflow-y:auto; overflow-x:hidden; width=100%;'>
 							<table style="width:100%;" cellspacing="0" cellpadding="0" id='tablaformaspago'>
@@ -585,7 +612,7 @@
 						<!--<div style='padding-top:10px; text-align:right; margin-bottom:10px;'><button class='btn btn-xs btn-success'>Pago Avanzado</button></div>-->
 					</div>
 				</div>
-				<div class='col-xs-7'>
+				<div class='col-md-7'>
 						<div class='tipopago panel'>
 							<div class='touchpago' id='touchefectivo'>
 								<span>Elige tu pago en efectivo</span>
@@ -696,11 +723,11 @@
 						
 				</div>
 				</div>
-				<div>
+				<div class="row">
 					<div class='col-xs-12'>
 						<div class='row' style='background-color:#DDD; padding-top:20px; padding-bottom:20px;'>
-						<div class='col-lg-5 col-md-5 col-xs-5'></div>
-						<div class='col-lg-3 col-md-3 col-xs-3' style="padding-top:10px;">
+						<div class='col-md-5'></div>
+						<div class='col-md-3' style="padding-top:10px;">
 						<table class="cuadrototal" border="0" cellpadding="0px" cellspacing="0px" width='100%'>
 							<tr>
 								<td class="" align='right'>
@@ -719,7 +746,7 @@
 							</tr>
 						</table>
 						</div>
-						<div class="col-lg-4 col-md-4 col-xs-4">
+						<div class="col-md-4">
 						<table align='right'>
                             <tr>
 								<td>
@@ -742,6 +769,7 @@
 				</div>
 		</div>
 	<!--</div>--->
+	</div>
 	</div>
 	</div>
 <div id="printFactura" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none;">
@@ -900,6 +928,7 @@
 	</div>
 </div>
 </div>
+</div>
 <div class="modal fade" id="modalcierre" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="dialog">
     <div class="modal-content">
@@ -948,7 +977,7 @@
 	</div>
 	</div>
 </div>
-</div>
+
 </section>
 
 <!--</div>-->

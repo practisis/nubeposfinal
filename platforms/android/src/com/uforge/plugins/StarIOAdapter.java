@@ -413,22 +413,22 @@ public class StarIOAdapter extends CordovaPlugin {
 							}
 						}
 						
-				if(Double.parseDouble(subtotal)>0){
+				if(Double.parseDouble(subtotal.replace(",","."))>0){
 					list.add(createCp1252("                 SUBTOTAL:"+String.valueOf(subtotal)+"\r\n"));
 				}
-				if(Double.parseDouble(subconiva)>0){
+				if(Double.parseDouble(subconiva.replace(",","."))>0){
 					list.add(createCp1252("                SUBCONIVA:"+String.valueOf(subconiva)+"\r\n"));
 				}
-				if(Double.parseDouble(subsiniva)>0){
+				if(Double.parseDouble(subsiniva.replace(",","."))>0){
 					list.add(createCp1252("                SUBSINIVA:"+String.valueOf(subsiniva)+"\r\n"));
 				}
-				if(Double.parseDouble(iva)>0){
+				if(Double.parseDouble(iva.replace(",","."))>0){
 					list.add(createCp1252("                      IVA:"+String.valueOf(iva)+"\r\n"));
 				}
-				if(Double.parseDouble(servicio)>0){
+				if(Double.parseDouble(servicio.replace(",","."))>0){
 					list.add(createCp1252("                 SERVICIO:"+String.valueOf(servicio)+"\r\n"));
 				}
-				if(Double.parseDouble(descuento)>0){
+				if(Double.parseDouble(descuento.replace(",","."))>0){
 					list.add(createCp1252("                DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
 				}
 				
@@ -507,8 +507,8 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
 				list.add(createCp1252("--------------------------------\r\n"));
-				list.add(createCp1252("FECHA IMPRESION:"+fechaImpresion+"\r\n"));
-				list.add(createCp1252("   FECHA CIERRE:"+fechaCierre+"\r\n"));
+				list.add(createCp1252("  FECHA IMP.:"+fechaImpresion+"\r\n"));
+				list.add(createCp1252("FECHA CIERRE:"+fechaCierre+"\r\n"));
 				list.add(createCp1252("--------------------------------\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
@@ -743,27 +743,27 @@ public class StarIOAdapter extends CordovaPlugin {
 							}
 						}
 
-				if(Double.parseDouble(subtotal)>0){
+				if(Double.parseDouble(subtotal.replace(",","."))>0){
 					list.add(createCp1252("                           SUBTOTAL:"+String.valueOf(subtotal)+"\r\n"));
 					lineasescritas=lineasescritas+1;
 				}
-				if(Double.parseDouble(subconiva)>0){
+				if(Double.parseDouble(subconiva.replace(",","."))>0){
 					list.add(createCp1252("                          SUBCONIVA:"+String.valueOf(subconiva)+"\r\n"));
 					lineasescritas=lineasescritas+1;
 				}
-				if(Double.parseDouble(subsiniva)>0){
+				if(Double.parseDouble(subsiniva.replace(",","."))>0){
 					list.add(createCp1252("                          SUBSINIVA:"+String.valueOf(subsiniva)+"\r\n"));
 					lineasescritas=lineasescritas+1;
 				}
-				if(Double.parseDouble(iva)>0){
+				if(Double.parseDouble(iva.replace(",","."))>0){
 					list.add(createCp1252("                                IVA:"+String.valueOf(iva)+"\r\n"));
 					lineasescritas=lineasescritas+1;
 				}
-				if(Double.parseDouble(servicio)>0){
+				if(Double.parseDouble(servicio.replace(",","."))>0){
 					list.add(createCp1252("                           SERVICIO:"+String.valueOf(servicio)+"\r\n"));
 					lineasescritas=lineasescritas+1;
 				}
-				if(Double.parseDouble(descuento)>0){
+				if(Double.parseDouble(descuento.replace(",","."))>0){
 					list.add(createCp1252("                          DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
 					lineasescritas=lineasescritas+1;
 				}
@@ -778,10 +778,11 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(createCp1252("------------------------------------------\r\n"));lineasescritas=lineasescritas+1;
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });				
 				list.add(new byte[] { 0x1b, 0x68, 0x01 });				
-				list.add(createCp1252("**** PRACTIPOS ****\r\n"));lineasescritas=lineasescritas+1;
+				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
+				lineasescritas=lineasescritas+1;
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });	
 				list.add(new byte[] { 0x1b, 0x68, 0x00 });
-				list.add(new byte[] { 0x1b, 0x68, 0x00 });
+				//list.add(new byte[] { 0x1b, 0x68, 0x00 });
 				//aumentar filas si faltan
 				if(lineasescritas<lineastotales){
 					while(lineasescritas<lineastotales){
@@ -827,8 +828,8 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(new byte[] { 0x1b, 0x68, 0x00 }); // Cancel Character Expansion
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
 				list.add(createCp1252("--------------------------------\r\n"));
-				list.add(createCp1252("FECHA IMPRESION:"+fechaImpresion+"\r\n"));
-				list.add(createCp1252("   FECHA CIERRE:"+fechaCierre+"\r\n"));
+				list.add(createCp1252("FECHA IMP.:"+fechaImpresion+"\r\n"));
+				list.add(createCp1252("FECHA CIERRE:"+fechaCierre+"\r\n"));
 				list.add(createCp1252("--------------------------------\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment

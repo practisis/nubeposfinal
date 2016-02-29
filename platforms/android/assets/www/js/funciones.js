@@ -1195,6 +1195,7 @@ function DetalleAbajo(){
 function AntesDePagar(){
 	//$('#paymentModule').modal('show');
 	if(parseFloat($('#total').html().substring(1))>0){
+		document.body.scrollTop = document.documentElement.scrollTop = 0;
 		$('#paymentEfectivo').val($('#total').html().substring(1));
 		$('#simple_1').html($('#total').html().substring(1));
 		changePaymentCategory('1','Efectivo');
@@ -1209,6 +1210,7 @@ function AntesDePagar(){
 			alert("Por favor elija primero un cliente.");
 		}
 	}
+	
 }
 
 function soloNumerost(e){

@@ -57,16 +57,24 @@ function ActivarCategoria(cual,categoria){
 						
 					$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" ontap="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.categoriaid +'">'+ row.formulado +'</div>');
 				}
-				if($(window).height()>500)
-					Init31();
+				if($(window).height()>500){
+						Init31();
+					}
+					else{
+						Init3();
+					}
 				$('#listaProductos').css("display","");
 				showProducts(categoria);
 			}
 		});				
 	},errorCB,successCB);
 	$('.producto').hide();
-	if($(window).height()>500)
-		Init31();
+	if($(window).height()>500){
+			Init31();
+		}
+		else{
+			Init3();	
+		}
 
 	showProducts(categoria);
 }
@@ -206,6 +214,8 @@ function agregarCompra(item,origen){
 	});
 	console.log('los items facturados son'+sumcantidadComandada);
 	$('#itemsVendidos').html(sumcantidadComandada);
+	$('#espacioavisador').html("Tienes "+sumcantidadComandada+" pedidos. <a onclick='window.scrollTo(0,document.body.scrollHeight);'>Ver Cuenta al final.</a>");
+	
 	
 	//alert(subtotalSinIva+'/'+subtotalSinIvaCompra);
 	$('#totalmiFactura').val(sumTotal);
@@ -1307,7 +1317,53 @@ function BuscarCliente(e){
 		},errorCB,successCB);
 	}
 }
-function Init3(){}
+function Init3(){
+	//console.log("celular pequeno");
+	mialtoboton=0;
+		var w=$(window).width();
+		$('.producto,.categoriaActiva,.categoria').each(function(){
+		//console.log($(this));
+		$(this).css('width',(w/3.7)+'px');
+		if ($(this).height()>mialtoboton){
+			mialtoboton=$(this).height();
+		}
+	});
+
+	//pongo alto uniforme al mas grande.
+	$('.producto').each(function(){
+		$(this).css('height',mialtoboton+'px');
+	});
+	
+	
+	var anchoCategorias=0;
+	var cuantas=0;
+	$('.esCategoria').each(function(){
+		anchoCategorias+=parseFloat($(this).css('width'));
+		cuantas++;
+	});
+	var anchodireccionales=parseInt($('.direccionales').css('width'));
+	$('#nav_izq,#nav_der').css('width',anchodireccionales);
+	var wp=parseInt($('.productos').css('width'))-40;
+	
+	if(anchoCategorias<wp)
+		$('#contenidoCategorias').css('width','100%');
+	else
+		$('#contenidoCategorias').css('width',(anchoCategorias+cuantas));
+
+	if(anchoCategorias<wp){
+		$('.direccionales').css('display','none');
+		$('#listaCategorias').css('width','100%');
+		}
+	else{
+		$('.direccionales').css('display','block');
+		$('#listaCategorias').css('width',((wp)-(2*anchodireccionales)-10)+'px');
+		}
+	$('.direccionales').css('height',(parseInt($('#listaCategorias').css('height')))+'px');
+	$('.direccionales').css('width','100%');
+	
+	$('#avisadorpeque').show();
+	
+}
 
 function Init31(){
 	var h=$(window).height();
@@ -1691,8 +1747,12 @@ function ClickNumeroD(numd){
 }
 
 function Ready(){
-	if($(window).height()>500)
-		Init31();
+	if($(window).height()>500){
+			Init31();
+		}
+		else{
+			Init3();
+		}
     botonesCalculadora();
 	ColocarFormasPago();
 	if(localStorage.getItem("diseno")==0||localStorage.getItem("diseno")==null||localStorage.getItem("diseno")==""){
@@ -2219,8 +2279,12 @@ function ActivarCategoriaMenu(cual,categoria){
 								var agregar='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>';
 								$('#listaProductos').append(agregar);
 							}
-							if($(window).height()>500)
-								Init31();
+							if($(window).height()>500){
+									Init31();
+								}
+								else{
+									Init3();
+								}
 
 							//$('#listaProductos').fadeIn();
 							$('#listaProductos').css("display","");
@@ -2234,8 +2298,12 @@ function ActivarCategoriaMenu(cual,categoria){
 	},errorCB,successCB);
 	$('.producto').hide();
 	//$('.categoria_producto_'+ categoria).show();
-	if($(window).height()>500)
-		Init31();
+	if($(window).height()>500){
+			Init31();
+		}
+		else{
+			Init3();
+		}
 	showProducts(categoria);
 }
 

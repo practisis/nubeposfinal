@@ -25,6 +25,10 @@ campos["PRESUPUESTO"]=['id|integer primary key AUTOINCREMENT','timespan|text','v
 
 campos["IMPUESTOS"]=['id|integer primary key AUTOINCREMENT, nombre|text default "" UNIQUE,porcentaje|numeric default 0.00,activo|boolean default "true",timespan|text default ""'];
 
+campos["MODIFICADORES"]=['id|integer primary key AUTOINCREMENT,no_modificador|integer default 0,id_formulado|text default "",nombre|text default "" UNIQUE,valor|numeric default 0.00,activo|boolean default true,id_formulado_descuento|text default ""'];
+
+
+
 //console.log(campos);
 
 function updateOnlineStatus(condition) {
@@ -279,6 +283,10 @@ var app = {
 		tx.executeSql('CREATE TABLE IF NOT EXISTS IMPUESTOS (id integer primary key AUTOINCREMENT, nombre text default "" UNIQUE,porcentaje numeric default 0.00,activo boolean default true,timespan text default "")');
 		
 		VerificarCampos('IMPUESTOS');
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MODIFICADORES (id integer primary key AUTOINCREMENT,no_modificador integer default 0,id_formulado text default "",nombre text default "" UNIQUE,valor numeric default 0.00,activo boolean default true,id_formulado_descuento text default "")');
+		
+		VerificarCampos('MODIFICADORES');
 		
 		/*var mitimemenu=getTimeSpan();
 		tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan) values (?,?,?,?,?)',[1,2,mitimecat,'14522044131343980',mitimemenu]);*/

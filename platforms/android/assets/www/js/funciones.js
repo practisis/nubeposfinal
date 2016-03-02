@@ -29,17 +29,50 @@ function ActivarCategoria(cual,categoria){
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(
 	function (tx){
-		console.log('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc');
+		//console.log('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc');
+		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? order by id",["true"],function(tx,results3){
+							console.log(results3);
+							var impuestos='';
+							var impuestosid='';
+							if(results3.rows.length>0){
+								console.log("encuentra impuestos");
+								var cuan=0;
+								for(var r=0;r<results3.rows.length;r++){
+									var imp=results3.rows.item(r);
+									if(cuan>0){
+										impuestos+="@";
+										impuestosid+="@";
+									}
+									impuestos+=parseFloat(imp.porcentaje)/100;
+									impuestosid+=imp.id;
+									cuan++;
+								}
+								console.log(impuestos+'/'+impuestosid);
+								$('#impuestosactivos').html(impuestos);
+								$('#impuestosactivosid').html(impuestosid);
+								}
+		});
+								
 		tx.executeSql('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc',[],function(tx,res){
-			console.log(res);
+			//console.log(res);
 			if(res.rows.length>0){
 				//alert('prods');
 				for(m=0;m<res.rows.length;m++){
-					var row=res.rows.item(m);
-					if(isNaN(row.precio)){row.precio = 0;}
 					var impuestos='';
 					var impuestosid='';
-					if(row.cargaiva==1){
+					var row=res.rows.item(m);
+					if(isNaN(row.precio)){row.precio = 0;}
+					if(row.tieneimpuestos=="true"){
+						impuestos=$('#impuestosactivos').html();
+						impuestosid=$('#impuestosactivosid').html();
+					}
+						var lineHeight='';
+						if(row.formulado.length>12)
+							lineHeight='line-height:18px;';
+							
+						$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" ontap="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.categoriaid +'">'+ row.formulado +'</div>');
+					
+					/*if(row.cargaiva==1){
 						impuestos+='0.12';
 						impuestosid+='1';
 					}
@@ -50,12 +83,7 @@ function ActivarCategoria(cual,categoria){
 						}
 						impuestos+='0.10';
 						impuestosid+='2';
-					}
-					var lineHeight='';
-					if(row.formulado.length>12)
-						lineHeight='line-height:18px;';
-						
-					$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" ontap="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.categoriaid +'">'+ row.formulado +'</div>');
+					}*/
 				}
 				if($(window).height()>500){
 						Init31();
@@ -68,6 +96,8 @@ function ActivarCategoria(cual,categoria){
 			}
 		});				
 	},errorCB,successCB);
+	
+	
 	$('.producto').hide();
 	if($(window).height()>500){
 			Init31();
@@ -734,6 +764,12 @@ function pagar(){
 					var max=1;
 					if(res.rows.item(0).max!=null)
 						max=res.rows.item(0).max;
+					else{
+						if(localStorage.getItem("ultimafact")!=null&&localStorage.getItem("ultimafact")!="")
+							max=parseInt(localStorage.getItem("ultimafact"))+1;
+					}
+						
+					
 					coun=max.toString().length;
 					nfact=max.toString();
 				}

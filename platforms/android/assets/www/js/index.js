@@ -1,5 +1,5 @@
 var campos=new Array();
-campos["PRODUCTOS"]=['id_local|integer primary key AUTOINCREMENT','id|integer','formulado|text','codigo|text','precio|real','categoriaid|text','cargaiva|integer','productofinal|integer','materiaprima|integer','timespan|text UNIQUE','ppq|real default 0','color|text','servicio|integer default 0','estado|integer default 1','sincronizar|boolean default "true"'];
+campos["PRODUCTOS"]=['id_local|integer primary key AUTOINCREMENT','id|integer','formulado|text','codigo|text','precio|real','categoriaid|text','cargaiva|integer','productofinal|integer','materiaprima|integer','timespan|text UNIQUE','ppq|real default 0','color|text','servicio|integer default 0','estado|integer default 1','sincronizar|boolean default "true"','tieneimpuestos|boolean default "false"'];
 
 campos["CONFIG"]=['id|integer primary key AUTOINCREMENT','nombre|text, razon|text','ruc|integer','telefono|integer','email|text','direccion|text','printer|text','serie|text default "001"','establecimiento|text default "001"','sincronizar|boolean default "false"','encabezado|integer default 3','largo|integer default 18','nombreterminal|text default "Tablet 1"'];
 
@@ -22,6 +22,12 @@ campos["CLIENTES"]=['id|integer primary key AUTOINCREMENT','nombre|text', 'cedul
 campos["FACTURAS"]=['id|integer primary key AUTOINCREMENT','timespan|text','clientName|','RUC|','address|','tele|','fetchJson|','paymentsUsed|','cash|','cards|','cheques|','vauleCxC|','paymentConsumoInterno|','tablita|','aux|' ,'acc|','echo|real default 0','fecha|','anulada|integer default 0','sincronizar|boolean default "false"','total|real','subconiva|real','subsiniva|real','iva|real','servicio|real','descuento|real','nofact|text'];
 
 campos["PRESUPUESTO"]=['id|integer primary key AUTOINCREMENT','timespan|text','valor|real','fecha|integer UNIQUE','transacciones|integer'];
+
+campos["IMPUESTOS"]=['id|integer primary key AUTOINCREMENT, nombre|text default "" UNIQUE,porcentaje|numeric default 0.00,activo|boolean default "true",timespan|text default ""'];
+
+campos["MODIFICADORES"]=['id|integer primary key AUTOINCREMENT,no_modificador|integer default 0,id_formulado|text default "",nombre|text default "" UNIQUE,valor|numeric default 0.00,activo|boolean default true,id_formulado_descuento|text default ""'];
+
+
 
 //console.log(campos);
 
@@ -151,6 +157,8 @@ var app = {
 		//alert("device Ready>>" + device.uuid);
 		//$('#deviceid').html(device.uuid);
 		//setInterval(function(){updateOnlineStatus()},60000);
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(iniciaDB,errorCB,successCB);
 		window.addEventListener('native.keyboardshow', keyboardShowHandler);
 		document.addEventListener("pause", function(){localStorage.setItem("claveuser","");}, false);
 		//document.addEventListener("backbutton", function(){localStorage.setItem("claveuser","");}, false);
@@ -238,7 +246,7 @@ var app = {
         //console.log("Ana");
         var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
         //tx.executeSql('DROP TABLE IF EXISTS PRODUCTOS');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS PRODUCTOS (id_local integer primary key AUTOINCREMENT,id integer, formulado text, codigo text, precio real, categoriaid text,cargaiva integer,productofinal integer,materiaprima integer,timespan text UNIQUE,ppq real default 0,color text,servicio integer default 0,estado integer default 1, sincronizar boolean default "true")');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS PRODUCTOS (id_local integer primary key AUTOINCREMENT,id integer, formulado text, codigo text, precio real, categoriaid text,cargaiva integer,productofinal integer,materiaprima integer,timespan text UNIQUE,ppq real default 0,color text,servicio integer default 0,estado integer default 1, sincronizar boolean default "true",tieneimpuestos boolean default "false")');
 		
 		VerificarCampos('PRODUCTOS');
 		
@@ -255,7 +263,7 @@ var app = {
 		
 		VerificarCampos('FACTURAS_FORMULADOS');
 		
-        tx.executeSql('INSERT INTO PRODUCTOS(id_local,id,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,formulado,estado) VALUES(-1,-1,"-1",0,-1,0,0,0,"-1","Producto NubePOS",0)');
+       /* tx.executeSql('INSERT INTO PRODUCTOS(id_local,id,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,formulado,estado) VALUES(-1,-1,"-1",0,-1,0,0,0,"-1","Producto NubePOS",0)');*/
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU_CATEGORIAS (id integer primary key AUTOINCREMENT, orden integer default 1,nombre text default "", timespan text UNIQUE, activo boolean default "true")');
 		
@@ -271,6 +279,14 @@ var app = {
 		tx.executeSql('CREATE TABLE IF NOT EXISTS PERMISOS (id integer primary key AUTOINCREMENT, clave text default "" UNIQUE, historial boolean default false,configuracion boolean default false,anular boolean default false, impcierre boolean default false,productos boolean default false,activo boolean default false)');
 		
 		VerificarCampos('PERMISOS');
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS IMPUESTOS (id integer primary key AUTOINCREMENT, nombre text default "" UNIQUE,porcentaje numeric default 0.00,activo boolean default true,timespan text default "")');
+		
+		VerificarCampos('IMPUESTOS');
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MODIFICADORES (id integer primary key AUTOINCREMENT,no_modificador integer default 0,id_formulado text default "",nombre text default "" UNIQUE,valor numeric default 0.00,activo boolean default true,id_formulado_descuento text default "")');
+		
+		VerificarCampos('MODIFICADORES');
 		
 		/*var mitimemenu=getTimeSpan();
 		tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan) values (?,?,?,?,?)',[1,2,mitimecat,'14522044131343980',mitimemenu]);*/
@@ -337,6 +353,8 @@ var app = {
     }
 
 	function VerificarCampos(tabla){
+		
+		console.log(tabla);
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function (tx){
 			tx.executeSql("SELECT sql from sqlite_master WHERE type = 'table' and name like ?",[tabla],function(tx,res){

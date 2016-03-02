@@ -214,12 +214,33 @@ function ExtraeDatosApi(donde){
 		$("#txtSincro").html("Sincronizando Permisos...");
 		//alert($('#JSONPermisosNube').html());
 		
-		var extras=JSON.parse($('#JSONExtraNube').html());
-		localStorage.setItem("permisos",extras.extras.contrasenia);
-		localStorage.setItem("msj",extras.extras.msj);
-		localStorage.setItem("dias",extras.extras.dias);
+		/*json permisos extra*/
+		if($('#JSONExtraNube').html()!=''){
+			var jsonextra=JSON.parse($('#JSONExtraNube').html());
+			var ext=jsonextra.extras;
+			//console.log(ext[0]);
+			localStorage.setItem("permisos",ext[0].contrasenia);
+			localStorage.setItem("msj",ext[0].msj);
+			localStorage.setItem("dias",ext[0].dias);
+			localStorage.setItem("ultimafact",ext[0].num_factura);
+		}
+		/**/
 		
-		
+		if($('#JSONImpuestosNube').html()!=''){
+			var jsonimp=JSON.parse($('#JSONImpuestosNube').html());
+			var imp=jsonimp.impuestos;
+				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){
+					for(var t in imp){
+						var itemi=imp[t];
+						tx.executeSql('INSERT OR IGNORE INTO IMPUESTOS (nombre,porcentaje,activo,timespan) values (?,?,?,?)',[itemi.nombre,itemi.porcentaje,itemi.activo,itemi.timespan],function(tx,results){
+						console.log("Insertado impuesto: "+results.insertId);
+						});
+					}
+				},errorCB,successCB);
+		}
+				
+			
 		
 		var jsonpres=JSON.parse($('#JSONPermisosNube').html());
 		var jsonpresupuestos=jsonpres.permisos;
@@ -435,6 +456,9 @@ function DatosIniciales(cual){
 		JSONmenuNube=arraydatos.menu;
 		JSONpermisosNube=arraydatos.permisos;
 		JSONextraNube=arraydatos.extras;
+		//JSONimpuestosNube=arraydatos.impuestos;
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"1245"},{"id":"2","nombre":"Servicio","porcentaje":"10","activo":"true","timespan":"1246"}]}';
+		//console.log(JSONextraNube);
 		
 		$("#JSONclientesNube").html(JSONclientesNube);
 		$("#JSONCategoriasNube").html(JSONcategoriasNube);
@@ -444,6 +468,7 @@ function DatosIniciales(cual){
 		$('#JSONMenuNube').html(JSONmenuNube);
 		$('#JSONPermisosNube').html(JSONpermisosNube);
 		$('#JSONExtraNube').html(JSONextraNube);
+		$('#JSONImpuestosNube').html(JSONimpuestosNube);
 
 		ExtraeDatosApi(cual);
 	});
@@ -473,6 +498,7 @@ function DatosRecurrentes(cual){
 				//$('#JSONCatMenuNube').html('[{"orden": "1","nombre": "Categoria 1","timespan": "1112","activo": "true"}]');
 				//$('#JSONPermisosNube').html('[{"id":"1","clave": "1111","configuracion": "true","historial": "true","anular": "true","imprimircierre":"true","productos":"false"}]');
 				$('#JSONPermisosNube').html(JSON.stringify(jsonSync.BigJson[8].Permisos));
+				$('#JSONimpuestosNube').html('{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"1245"},{"id":"2","nombre":"Servicio","porcentaje":"10","activo":"true","timespan":"1246"}]}');
 				localStorage.setItem("dias",jsonSync.BigJson[7].Extra[0].dias);
 				localStorage.setItem("msj",jsonSync.BigJson[7].Extra[0].msj);
 				//localStorage.setItem("permisos",jsonSync.BigJson[5].Extra[0].constrasenia);
@@ -771,6 +797,8 @@ function DatosRecurrentes(cual){
 						/*tx.executeSql('INSERT OR IGNORE INTO MENU(fila,columna,idcatmenu,idproducto,timespan,activo)VALUES('+(parseInt(item.fila)+1)+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
 						console.log("insertado producto menu:"+results.insertId);
 						});*/
+						
+						
 						tx.executeSql('INSERT INTO MENU(fila,columna,idcatmenu,idproducto,timespan,activo) SELECT '+(parseInt(item.fila)+1)+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'" WHERE NOT EXISTS(SELECT 1 FROM MENU WHERE timespan like "'+item.timespan+'")',[],function(tx,results){
 							console.log("insertado producto menu:"+results.insertId);
 						});
@@ -810,6 +838,28 @@ function DatosRecurrentes(cual){
 		console.log("recurrentes 8: Permisos Usuario");
 		$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("Sincronizando Permisos de Usuario...");
+		
+		if($('#JSONImpuestosNube').html()!=''){
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){
+			var jsonimp=JSON.parse($('#JSONImpuestosNube').html());
+			var imp=jsonimp.impuestos;
+			for(var t in imp){
+				var itemi=imp[t];
+				
+					tx.executeSql('INSERT OR IGNORE INTO IMPUESTOS (nombre,porcentaje,activo,timespan) values (?,?,?,?)',[itemi.nombre,itemi.porcentaje,itemi.activo,itemi.timespan],function(tx,results){
+						console.log("Insertado impuesto: "+results.insertId);
+					});
+					
+					tx.executeSql('UPDATE IMPUESTOS SET nombre=?,porcentaje=?,activo=? WHERE timespan like ?',[itemi.nombre,itemi.porcentaje,itemi.activo,itemi.timespan],function(tx,results){
+						console.log("Insertado impuesto: "+itemi.nombre);
+					});
+					
+				
+			}
+			},errorCB,successCB);
+		}
+		
 		if($('#JSONPermisosNube').html().length>0){
 			var jsonpermisos=JSON.parse($('#JSONPermisosNube').html());
 			console.log(jsonpermisos);

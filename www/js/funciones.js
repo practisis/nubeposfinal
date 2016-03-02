@@ -734,6 +734,12 @@ function pagar(){
 					var max=1;
 					if(res.rows.item(0).max!=null)
 						max=res.rows.item(0).max;
+					else{
+						if(localStorage.getItem("ultimafact")!=null&&localStorage.getItem("ultimafact")!="")
+							max=parseInt(localStorage.getItem("ultimafact"))+1;
+					}
+						
+					
 					coun=max.toString().length;
 					nfact=max.toString();
 				}

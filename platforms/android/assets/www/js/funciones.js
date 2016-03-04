@@ -70,7 +70,7 @@ function ActivarCategoria(cual,categoria){
 						if(row.formulado.length>12)
 							lineHeight='line-height:18px;';
 							
-						$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" ontap="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.categoriaid +'">'+ row.formulado +'</div>');
+						$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.categoriaid +'">'+ row.formulado +'</div>');
 					
 					/*if(row.cargaiva==1){
 						impuestos+='0.12';
@@ -141,6 +141,7 @@ function showProducts(categoria,direction){
 
 
 function agregarCompra(item,origen){
+	
 	var i = 1;
 	$('#descuentoFactura').val(0);
 	$('#resultBuscador').fadeOut('slow');
@@ -170,8 +171,26 @@ function agregarCompra(item,origen){
 	var productoImpuestos = $(item).data('impuestos');
 	var productoImpuestosIndexes = $(item).data('impuestosindexes');
 	var productoPrecio = $(item).data('precio');
+	var productoAgregados = $(item).data('modificadores');
 	var subtotalSinIvaCompra = 0;
 	var subtotalIvaCompra = 0;
+	
+	//agregados producto
+	
+	var vectoragregados=0;
+	var tablaagregados="";
+	var sumaagregados=0;
+	if(productoAgregados!=''&&productoAgregados!=null){
+		vectoragregados=productoAgregados.split('@');
+		tablaagregados+="<table style='width:100%; font-size:10px; color:#808081;'>";
+		for(var k in vectoragregados){
+			var dataagregados=vectoragregados[k].split('|');
+			tablaagregados+="<tr><td>"+dataagregados[0]+"</td><td style='text-align:right;'>$"+parseFloat(dataagregados[1]).toFixed(2)+"</td></tr>";
+			sumaagregados+=parseFloat(dataagregados[1]);
+		}
+		tablaagregados+="</table>";
+	}
+	
 	
 	//verificar cantidades
 	if(parseInt($.trim($('.cantidad').html())) != 0){
@@ -182,16 +201,16 @@ function agregarCompra(item,origen){
 		if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
 			$.each(productoImpuestosIndexes.split('@'), function(index,value){
 				if(productoImpuestosIndexes.indexOf('1') !== -1){
-					subtotalIvaCompra = (parseFloat(productoCantidad) * parseFloat(productoPrecio));
+					subtotalIvaCompra = ((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados);
 					}
 				else{
-					subtotalSinIvaCompra = (parseFloat(productoCantidad) * parseFloat(productoPrecio));
+					subtotalSinIvaCompra = ((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados);
 					}
 				
 				if($('#impuestoFactura-'+ value).length == 0){
 					
 					var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
-					var currentimp=((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
+					var currentimp=(((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados) * parseFloat(impuestoDetalles[2]));
 					taxTotal+= currentimp;
 					
 					$('#factura').append('<input type="hidden" id="impuestoFactura-'+ value +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ currentimp +'"/>');
@@ -199,7 +218,7 @@ function agregarCompra(item,origen){
 				else{
 					var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
 					var currentTax = $('#impuestoFactura-'+ value).val();
-					var calcimp=((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
+					var calcimp=(((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados) * parseFloat(impuestoDetalles[2]));
 					taxTotal += calcimp;
 
 					$('#impuestoFactura-'+ value).val(parseFloat(currentTax) + parseFloat(calcimp));
@@ -207,30 +226,30 @@ function agregarCompra(item,origen){
 				});
 			}
 		else{
-			productoImpuestosIndexes == 1 ? subtotalIvaCompra = (parseFloat(productoCantidad) * parseFloat(productoPrecio)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * parseFloat(productoPrecio));
+			productoImpuestosIndexes == 1 ? subtotalIvaCompra = ((parseFloat(productoCantidad) * parseFloat(productoPrecio))*sumaagregados) : subtotalSinIvaCompra = ((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados);
 			
 			if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
 				var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
-				taxTotal+= ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
+				taxTotal+= (((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados) * parseFloat(impuestoDetalles[2]));
 				$('#factura').append('<input type="hidden" id="impuestoFactura-'+ productoImpuestosIndexes +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ taxTotal +'"/>');
 				}
 			else{
 				var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
 				var currentTax = $('#impuestoFactura-'+ productoImpuestosIndexes).val();
-				taxTotal+= ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
+				taxTotal+= (((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados) * parseFloat(impuestoDetalles[2]));
 				$('#impuestoFactura-'+ productoImpuestosIndexes).val(parseFloat(currentTax) + parseFloat(taxTotal));
 				}
 			}
 		}else{
-			subtotalSinIvaCompra=(parseFloat(productoCantidad) * parseFloat(productoPrecio))
+			subtotalSinIvaCompra=((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados)
 		}
 	//impuestos end
 	$('.totales').each(function(){
 		i++;
 	});
 	
-	var total = ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) + parseFloat(taxTotal)).toFixed(2);//YAESTA
-	$('#tablaCompra').append('<tr id="cant_'+i+'"><td class="lineadetalle" data-borrarcantidad="'+ productoCantidad +'" data-borrarimpuesto="'+ productoImpuestos +'" data-borrarimpuestoindexes="'+ productoImpuestosIndexes +'" data-borrarprecio="'+ productoPrecio +'" onclick="borrarCompra(this); return false;" style="width: 5%;"><button type="button" class="btn btn-danger btn-xs product_del"><span class="glyphicon glyphicon-remove" ></span></button><input type="hidden" class="totales" value="'+ total +'"/></td><td onclick="modificarCantidad('+i+' , '+id_local+')" style="border-right:1px solid #909192; text-align: center; width:20%;" class="lineadetalle" "><input type="hidden" class="productDetails" value="'+ productoID +'|'+ productoNombre +'|'+ productoCantidad +'|'+ productoPrecio +'|'+ productoPrecio +'|'+ productoImpuestos +'|'+ ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) + parseFloat(taxTotal)) +'|'+productoImpuestosIndexes+'" /><input type="hidden" class="cantidadproductoscomandados" value="'+productoCantidad+'"/>'+productoCantidad +'</td><td style="border-right:1px solid #909192; padding-left:20px;text-align: left; width:50%; text-transform:capitalize;" class="lineadetalle">'+ productoNombre+'</td><td style="padding-right:20px; text-align: right;" class="lineadetalle">'+ parseFloat(total).toFixed(2) +'</td></tr>');
+	var total = ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) + parseFloat(taxTotal)+sumaagregados).toFixed(2);//YAESTA
+	$('#tablaCompra').append('<tr id="cant_'+i+'"><td class="lineadetalle" data-borrarcantidad="'+ productoCantidad +'" data-borrarimpuesto="'+ productoImpuestos +'" data-borrarimpuestoindexes="'+ productoImpuestosIndexes +'" data-borrarprecio="'+ productoPrecio +'" onclick="borrarCompra(this); return false;" style="width: 5%;"><button type="button" class="btn btn-danger btn-xs product_del"><span class="glyphicon glyphicon-remove" ></span></button><input type="hidden" class="totales" value="'+ total +'"/></td><td onclick="modificarCantidad('+i+' , '+id_local+')" style="border-right:1px solid #909192; text-align: center; width:20%;" class="lineadetalle" "><input type="hidden" class="productDetails" value="'+ productoID +'|'+ productoNombre +'|'+ productoCantidad +'|'+ productoPrecio +'|'+ productoPrecio +'|'+ productoImpuestos +'|'+ ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) + parseFloat(taxTotal)) +'|'+productoImpuestosIndexes+'" /><input type="hidden" class="cantidadproductoscomandados" value="'+productoCantidad+'"/>'+productoCantidad +'</td><td style="border-right:1px solid #909192; padding-left:20px;text-align: left; width:50%; text-transform:capitalize;" class="lineadetalle">'+productoNombre+tablaagregados+'</td><td style="padding-right:20px; text-align: right;" class="lineadetalle">'+ parseFloat(total).toFixed(2) +'</td></tr>');
 	$('.totales').each(function(){
 		sumTotal += parseFloat($.trim($(this).val()));
 		i++;
@@ -2374,3 +2393,85 @@ function PagoAvanzado(){
 		$('#changeFromPurchase').html(mitot.toFixed(2));
 	}
 }
+
+function VerificarAgregados(btnprod){
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	var mitimespan=$(btnprod).attr("id");
+	db.transaction(
+	function (tx){
+		tx.executeSql('SELECT * from MODIFICADORES WHERE id_formulado LIKE ? and activo=? order by no_modificador asc',[mitimespan,"true"],function(tx,res1){
+			var mods= new Array();
+			if(res1.rows.length>0){
+				$('#titlemodificador').html("Modificadores de "+$(btnprod).attr("data-formulado"));
+				$('#id_formulado_modificadores').val(mitimespan);
+				for(var m=0;m<res1.rows.length;m++){
+					var miobj=res1.rows.item(m);
+					var objmod=res1.rows.item(m).no_modificador;
+					if(!('"'+objmod+'"' in mods))
+						mods['"'+objmod+'"']= new Array();
+					
+					mods['"'+objmod+'"'].push("<button style='margin:3px;' class='btn btn-primary btn-lg' id='btnmodif_"+miobj.id+"' data-valor='"+miobj.valor+"'  onclick='SiguienteModificador("+objmod+","+miobj.id+");' type='button'>"+miobj.nombre+"</button>");
+					
+				}
+				
+				console.log(mods);
+				var c=1;
+				$('#divmodificadores').html('');
+				for(var s in mods){
+					var display='';
+					if(c>1)
+						display='display:none';
+					
+					var inhtml="<div class='grupobotones' id='mod_"+s.replace(/"/g,'')+"' data-orden="+c+" style='margin:5px;"+display+"'>";
+					for(var t in mods[s]){
+						inhtml+=mods[s][t];
+					}
+					inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0);'>Ninguno</button></div>";
+					$('#divmodificadores').append(inhtml);
+					c++;
+				}
+				$('#popupModificadores').modal("show");
+				
+			}else{
+				agregarCompra($(btnprod));
+			}
+		});
+	},errorCB,successCB);
+} 
+
+function SiguienteModificador(divid,idmod){
+	var div=$('#mod_'+divid);
+	var orden=div.attr("data-orden");
+	$('.grupobotones').css('display','none');
+	var ya=false;
+	$('.grupobotones').each(function(){
+		if($(this).attr('data-orden')>orden){
+			if(ya==false){
+				$(this).fadeIn();
+				ya=true;
+			}
+			
+		}
+	});
+	
+	if(idmod>0){
+		var elbotonm=$('#btnmodif_'+idmod);
+		var valormas=elbotonm.attr("data-valor");
+		var nombrem=elbotonm.html();
+		var dataagreg=$('#'+$('#id_formulado_modificadores').val()).attr("data-modificadores");
+		var agregadoschain="";
+		if(dataagreg!=null)
+			agregadoschain=dataagreg+"@"+nombrem+"|"+valormas;
+		else
+			agregadoschain=nombrem+"|"+valormas;
+		
+		$('#'+$('#id_formulado_modificadores').val()).attr("data-modificadores",agregadoschain);
+	}
+	
+	if(ya==false){
+		$('#popupModificadores').modal("hide");
+		agregarCompra($('#'+$('#id_formulado_modificadores').val()));
+	}
+}
+
+

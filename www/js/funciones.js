@@ -677,16 +677,18 @@ function cambiarCantidad(){
 							//alert(datosimp[7]);
 							for(var x=0;x<vectorimp.length;x++){
 								var taxnow=vectorimp[x];
-								if('"'+taxnow+'"' in impgenerales){
+								if(taxnow!=''&&taxnow!='undefined'&&taxnow!=null){
+									if('"'+taxnow+'"' in impgenerales){
 									var antes=impgenerales['"'+taxnow+'"'];
 									var datosp=$('#impuesto-'+taxnow).val().split('|');
 									var porcent=parseFloat(datosp[2]);
 									impgenerales['"'+taxnow+'"']=antes+((parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcent);
-								}else{
-									alert(taxnow);
-									var datosp=$('#impuesto-'+taxnow).val().split('|');
-									var porcent=parseFloat(datosp[2]);
-									impgenerales['"'+taxnow+'"']=((parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcent);
+									}else{
+										//alert(taxnow);
+										var datosp=$('#impuesto-'+taxnow).val().split('|');
+										var porcent=parseFloat(datosp[2]);
+										impgenerales['"'+taxnow+'"']=((parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcent);
+									}
 								}
 							}
 							
@@ -885,7 +887,6 @@ function pagar(){
 	var idimpuestos = '';
 	var ivavalor=0;
 	var servalor=0;
-	var valimpuestos="";
 	var dataimpuestos="";
 	var c=0;
 	
@@ -897,19 +898,14 @@ function pagar(){
 		idimpuestos += getId+'@';
 		if(getId==parseInt($('#idiva').html()))
 			ivavalor=$(this).val();
-		if(c>0){
-			valimpuestos+="@";
-			dataimpuestos+="@";
-		}
-			
-		dataimpuestos=getId+"|"getName+"|"+getValue;
-		valimpuestos+=$(this).val();
 		
-		/*if(getId=='-1')
-			servalor=$(this).val();*/
+		if(c>0){
+			dataimpuestos+="@";
+		}	
+		dataimpuestos+=getId+"|"+getName+"|"+getValue+"|"+$(this).val();
 		c++;
 	});
-
+	
 	idimpuestos = idimpuestos.substring(0,idimpuestos.length -1);
 	
 	
@@ -930,7 +926,10 @@ function pagar(){
 			json += '"producto": [';
 	$('.productDetails').each(function(){
 		var splitDetails = $(this).val().split('|');
-		var detalleagregados= $(this).attr("data-detagregados");
+		var detalleagregados="";
+		if($(this).attr("data-detagregados")!=''&&$(this).attr("data-detagregados")!=null&&$(this).attr("data-detagregados")!='undefined')
+		   detalleagregados=$(this).attr("data-detagregados");
+	   
 		json += '{';
 			json += '"id_producto" : "'+ splitDetails[0] +'",';
 			json += '"timespanproducto" : "'+ splitDetails[0] +'",';
@@ -970,7 +969,6 @@ function pagar(){
 		json += '"numerofact" : "'+ nofactura +'",';
 		json += '"encabezado" : "'+ localStorage.getItem("encabezado") +'",';
 		json += '"largo" : "'+ localStorage.getItem("largo") +'",';
-		json += '"impuestosval" : "'+ valimpuestos +'",';
 		json += '"impuestosdata" : "'+ dataimpuestos +'"';
 		json += '},';
 		json +=$('#JSONempresaLocal').html()+'"pagos":[';

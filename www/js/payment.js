@@ -263,6 +263,7 @@ function performPurchase(restaurant){
 			
 			/*cadenaimpuestos*/
 			var c=0;
+			var dataimpuestos='';
 			$('.esImpuesto').each(function(){
 				var getName = $(this).data('nombre');
 				var getId = $(this).data('id');
@@ -271,7 +272,8 @@ function performPurchase(restaurant){
 				if(c>0){
 					dataimpuestos+="@";
 				}	
-				dataimpuestos=getId+"|"getName+"|"+getValue+"|"+$(this).val();
+				dataimpuestos=getId+"|"+getName+"|"+getValue+"|"+$(this).val();
+				c++;
 			});
 			
 			

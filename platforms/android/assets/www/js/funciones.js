@@ -44,7 +44,7 @@ function ActivarCategoria(cual,categoria){
 										impuestosid+="@";
 									}
 									impuestos+=parseFloat(imp.porcentaje)/100;
-									impuestosid+=imp.id;
+									impuestosid+=imp.timespan;
 									cuan++;
 								}
 								console.log(impuestos+'/'+impuestosid);
@@ -168,10 +168,11 @@ function agregarCompra(item,origen){
 	}
 	var productoNombre = $(item).data('formulado');
 	var id_local = $(item).data('id_local');
-	var productoImpuestos = $(item).data('impuestos');
-	var productoImpuestosIndexes = $(item).data('impuestosindexes');
+	var productoImpuestos = $(item).attr('data-impuestos');
+	var productoImpuestosIndexes = $(item).attr('data-impuestosindexes');
 	var productoPrecio = $(item).data('precio');
-	var productoAgregados = $(item).data('modificadores');
+	var productoAgregados = $(item).attr('data-modificadores');
+	//alert(productoAgregados);
 	var subtotalSinIvaCompra = 0;
 	var subtotalIvaCompra = 0;
 	
@@ -180,7 +181,7 @@ function agregarCompra(item,origen){
 	var vectoragregados=0;
 	var tablaagregados="";
 	var sumaagregados=0;
-	if(productoAgregados!=''&&productoAgregados!=null){
+	if(productoAgregados!=''&&productoAgregados!=null&&productoAgregados!='undefined'){
 		vectoragregados=productoAgregados.split('@');
 		tablaagregados+="<table style='width:100%; font-size:10px; color:#808081;'>";
 		for(var k in vectoragregados){
@@ -200,17 +201,17 @@ function agregarCompra(item,origen){
 	if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
 		if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
 			$.each(productoImpuestosIndexes.split('@'), function(index,value){
-				if(productoImpuestosIndexes.indexOf('1') !== -1){
-					subtotalIvaCompra = ((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados);
+				if(productoImpuestosIndexes.indexOf(parseInt($('#idiva').html())) !== -1){
+					subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
 					}
 				else{
-					subtotalSinIvaCompra = ((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados);
+					subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
 					}
 				
 				if($('#impuestoFactura-'+ value).length == 0){
 					
 					var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
-					var currentimp=(((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados) * parseFloat(impuestoDetalles[2]));
+					var currentimp=(parseFloat(productoCantidad) *( parseFloat(productoPrecio)+sumaagregados) * parseFloat(impuestoDetalles[2]));
 					taxTotal+= currentimp;
 					
 					$('#factura').append('<input type="hidden" id="impuestoFactura-'+ value +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ currentimp +'"/>');
@@ -218,7 +219,7 @@ function agregarCompra(item,origen){
 				else{
 					var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
 					var currentTax = $('#impuestoFactura-'+ value).val();
-					var calcimp=(((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados) * parseFloat(impuestoDetalles[2]));
+					var calcimp=((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
 					taxTotal += calcimp;
 
 					$('#impuestoFactura-'+ value).val(parseFloat(currentTax) + parseFloat(calcimp));
@@ -226,22 +227,22 @@ function agregarCompra(item,origen){
 				});
 			}
 		else{
-			productoImpuestosIndexes == 1 ? subtotalIvaCompra = ((parseFloat(productoCantidad) * parseFloat(productoPrecio))*sumaagregados) : subtotalSinIvaCompra = ((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados);
+			productoImpuestosIndexes == parseInt($('#idiva').html()) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
 			
 			if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
 				var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
-				taxTotal+= (((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados) * parseFloat(impuestoDetalles[2]));
+				taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
 				$('#factura').append('<input type="hidden" id="impuestoFactura-'+ productoImpuestosIndexes +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ taxTotal +'"/>');
 				}
 			else{
 				var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
 				var currentTax = $('#impuestoFactura-'+ productoImpuestosIndexes).val();
-				taxTotal+= (((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados) * parseFloat(impuestoDetalles[2]));
+				taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
 				$('#impuestoFactura-'+ productoImpuestosIndexes).val(parseFloat(currentTax) + parseFloat(taxTotal));
 				}
 			}
 		}else{
-			subtotalSinIvaCompra=((parseFloat(productoCantidad) * parseFloat(productoPrecio))+sumaagregados)
+			subtotalSinIvaCompra=(parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
 		}
 	//impuestos end
 	$('.totales').each(function(){
@@ -249,12 +250,13 @@ function agregarCompra(item,origen){
 	});
 	
 	var total = ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) + parseFloat(taxTotal)+sumaagregados).toFixed(2);//YAESTA
-	$('#tablaCompra').append('<tr id="cant_'+i+'"><td class="lineadetalle" data-borrarcantidad="'+ productoCantidad +'" data-borrarimpuesto="'+ productoImpuestos +'" data-borrarimpuestoindexes="'+ productoImpuestosIndexes +'" data-borrarprecio="'+ productoPrecio +'" onclick="borrarCompra(this); return false;" style="width: 5%;"><button type="button" class="btn btn-danger btn-xs product_del"><span class="glyphicon glyphicon-remove" ></span></button><input type="hidden" class="totales" value="'+ total +'"/></td><td onclick="modificarCantidad('+i+' , '+id_local+')" style="border-right:1px solid #909192; text-align: center; width:20%;" class="lineadetalle" "><input type="hidden" class="productDetails" value="'+ productoID +'|'+ productoNombre +'|'+ productoCantidad +'|'+ productoPrecio +'|'+ productoPrecio +'|'+ productoImpuestos +'|'+ ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) + parseFloat(taxTotal)) +'|'+productoImpuestosIndexes+'" /><input type="hidden" class="cantidadproductoscomandados" value="'+productoCantidad+'"/>'+productoCantidad +'</td><td style="border-right:1px solid #909192; padding-left:20px;text-align: left; width:50%; text-transform:capitalize;" class="lineadetalle">'+productoNombre+tablaagregados+'</td><td style="padding-right:20px; text-align: right;" class="lineadetalle">'+ parseFloat(total).toFixed(2) +'</td></tr>');
+	$('#tablaCompra').append('<tr id="cant_'+i+'"><td class="lineadetalle" data-borrarcantidad="'+ productoCantidad +'" data-borrarimpuesto="'+ productoImpuestos +'" data-borrarimpuestoindexes="'+ productoImpuestosIndexes +'" data-borrarprecio="'+ productoPrecio +'" data-agregados="'+sumaagregados+'" onclick="borrarCompra(this); return false;" style="width: 5%;"><button type="button" class="btn btn-danger btn-xs product_del"><span class="glyphicon glyphicon-remove" ></span></button><input type="hidden" class="totales" value="'+ total +'"/></td><td onclick="modificarCantidad('+i+' , '+id_local+')" style="border-right:1px solid #909192; text-align: center; width:20%;" class="lineadetalle" "><input type="hidden" class="productDetails" value="'+ productoID +'|'+ productoNombre +'|'+ productoCantidad +'|'+ productoPrecio +'|'+ productoPrecio +'|'+ productoImpuestos +'|'+ ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) + parseFloat(taxTotal)+parseFloat(sumaagregados)) +'|'+productoImpuestosIndexes+'|'+sumaagregados+'" data-detagregados="'+productoAgregados+'" /><input type="hidden" class="cantidadproductoscomandados" value="'+productoCantidad+'"/>'+productoCantidad +'</td><td style="border-right:1px solid #909192; padding-left:20px;text-align: left; width:50%; text-transform:capitalize;" class="lineadetalle">'+productoNombre+tablaagregados+'</td><td style="padding-right:20px; text-align: right;" class="lineadetalle">'+ parseFloat(total).toFixed(2) +'</td></tr>');
 	$('.totales').each(function(){
 		sumTotal += parseFloat($.trim($(this).val()));
 		i++;
 	});
 	console.log (i+'cantidad');
+	$('#'+productoID).attr("data-modificadores","");
 	var sumcantidadComandada = 0;
 	//alert($('.cantidadproductoscomandados').length)
 	$('.cantidadproductoscomandados').each(function(){
@@ -518,7 +520,7 @@ function agregarCompra2(item,origen){
 	//init2();
 }
 function modificarCantidad(i,id_local){
-	console.log(id_local);
+	//console.log(id_local);
 	$('#popupCantidad').modal("show");
 	$('#modificaCantidadActual').html('1');
 	$('#recibeIdentificadorTr').val(i);
@@ -530,6 +532,16 @@ function cambiarCantidad(){
 	var identificadorTr = $('#recibeIdentificadorTr').val();
 	var cantidadActual = $('#modificaCantidadActual').html();
 	var productoIDAcambiar = $('#productoIDAcambiar').val();
+	
+	//var sumaagregados=0;
+	var tdagregados=$('#cant_'+identificadorTr+' td')[0];
+	//console.log(tdagregados);
+	var sumaagregados=parseFloat($(tdagregados).attr("data-agregados"));
+	var tddetalles=$('#cant_'+identificadorTr+' td')[1];
+	var inpdetalleagregados=$(tddetalles).find('.productDetails');
+	var detalleagregados=inpdetalleagregados.attr("data-detagregados");
+	var tdhtml=$('#cant_'+identificadorTr+' td')[2];
+	var htmlprod=$(tdhtml).html();
 	
 	$('#cant_'+identificadorTr).remove();
 	
@@ -554,7 +566,15 @@ function cambiarCantidad(){
 						var productoImpuestosIndexes ='';
 						var productoImpuestos='';
 						var productomas=1;
-						if(cargaiva == 1){
+						if(row.tieneimpuestos=="true"){
+							productoImpuestos=$('#impuestosactivos').html();
+							productoImpuestosIndexes=$('#impuestosactivosid').html();
+							var porcentajes=productoImpuestos.split('@');
+							for(var l in porcentajes){
+								productomas+=parseFloat(porcentajes[l]);
+							}
+						}
+						/*if(cargaiva == 1){
 							productoImpuestos= "0.12";
 							productoImpuestosIndexes+='1';
 							productomas+=0.12;
@@ -564,10 +584,10 @@ function cambiarCantidad(){
 							productoImpuestos +="@0.10";
 							productoImpuestosIndexes+='@2';
 							productomas+=0.10;
-						}
+						}*/
 						
 						var productoPrecio = row.precio;
-						var total = ((parseFloat(productoPrecio) * parseFloat(productomas))*productoCantidad).toFixed(2);
+						var total = (((parseFloat(productoPrecio)+sumaagregados) * parseInt(productoCantidad))*parseFloat(productomas)).toFixed(2);
 						console.log(productoPrecio);
 						var productoID = row.timespan;
 						//console.log(formulado);
@@ -577,7 +597,7 @@ function cambiarCantidad(){
 						/**/
 						
 						//YAESTA
-						$('#tablaCompra').append('<tr id="cant_'+i+'"><td class="lineadetalle" data-borrarcantidad="'+ productoCantidad +'" data-borrarimpuesto="'+ productoImpuestos +'" data-borrarimpuestoindexes="'+ productoImpuestosIndexes +'" data-borrarprecio="'+ productoPrecio +'" onclick="borrarCompra(this); return false;" style="width: 5%;"><button type="button" class="btn btn-danger btn-xs product_del"><span class="glyphicon glyphicon-remove" ></span></button><input type="hidden" class="totales" value="'+ total +'"/></td><td onclick="modificarCantidad('+i+' , '+productoIDAcambiar+')" style="border-right:1px solid #909192; text-align: center; width:20%;" class="lineadetalle" "><input type="hidden" class="productDetails" value="'+ productoID +'|'+ productoNombre +'|'+ productoCantidad +'|'+ productoPrecio +'|'+ productoPrecio +'|'+ productoImpuestos +'|'+ total +'|'+productoImpuestosIndexes+'" /><input type="hidden" class="cantidadproductoscomandados" value="'+productoCantidad+'"/>'+ productoCantidad +'</td><td style="border-right:1px solid #909192; padding-left:20px;text-align: left; width:50%; text-transform:capitalize;" class="lineadetalle">'+ productoNombre+'</td><td style="padding-right:20px; text-align: right;" class="lineadetalle">'+ parseFloat(total).toFixed(2) +'</td></tr>');
+						$('#tablaCompra').append('<tr id="cant_'+i+'"><td class="lineadetalle" data-borrarcantidad="'+ productoCantidad +'" data-borrarimpuesto="'+ productoImpuestos +'" data-borrarimpuestoindexes="'+ productoImpuestosIndexes +'" data-agregados="'+sumaagregados+'" data-borrarprecio="'+ productoPrecio +'" onclick="borrarCompra(this); return false;" style="width: 5%;"><button type="button" class="btn btn-danger btn-xs product_del"><span class="glyphicon glyphicon-remove" ></span></button><input type="hidden" class="totales" value="'+ total +'"/></td><td onclick="modificarCantidad('+i+' , '+productoIDAcambiar+')" style="border-right:1px solid #909192; text-align: center; width:20%;" class="lineadetalle" "><input type="hidden" class="productDetails" value="'+ productoID +'|'+ productoNombre +'|'+ productoCantidad +'|'+ productoPrecio +'|'+ productoPrecio +'|'+ productoImpuestos +'|'+ total +'|'+productoImpuestosIndexes+'|'+sumaagregados+'" data-detagregados="'+detalleagregados+'" /><input type="hidden" class="cantidadproductoscomandados" value="'+productoCantidad+'"/>'+ productoCantidad +'</td><td style="border-right:1px solid #909192; padding-left:20px;text-align: left; width:50%; text-transform:capitalize;" class="lineadetalle">'+ htmlprod+'</td><td style="padding-right:20px; text-align: right;" class="lineadetalle">'+ parseFloat(total).toFixed(2) +'</td></tr>');
 						$('.totales').each(function(){
 							sumTotal += parseFloat($.trim($(this).val()));
 						});
@@ -648,24 +668,52 @@ function cambiarCantidad(){
 						var subconivanew=0;
 						var ivanew=0;
 						var servnew=0;
+						var impgenerales=new Array();
 						$('.productDetails').each(function(){
 							var datosimp=$(this).val().split('|');
-							if(datosimp[7].indexOf('1')>=0){
-								subconivanew+=parseFloat(datosimp[3])*parseFloat(datosimp[2]);
-								ivanew+=parseFloat(datosimp[3])*parseFloat(datosimp[2])*0.12;
+							var newsumaagregados=parseFloat(datosimp[8]);
+							var vectorimp=datosimp[7].split('@');
+							
+							//alert(datosimp[7]);
+							for(var x=0;x<vectorimp.length;x++){
+								var taxnow=vectorimp[x];
+								if(taxnow!=''&&taxnow!='undefined'&&taxnow!=null){
+									if('"'+taxnow+'"' in impgenerales){
+									var antes=impgenerales['"'+taxnow+'"'];
+									var datosp=$('#impuesto-'+taxnow).val().split('|');
+									var porcent=parseFloat(datosp[2]);
+									impgenerales['"'+taxnow+'"']=antes+((parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcent);
+									}else{
+										//alert(taxnow);
+										var datosp=$('#impuesto-'+taxnow).val().split('|');
+										var porcent=parseFloat(datosp[2]);
+										impgenerales['"'+taxnow+'"']=((parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcent);
+									}
+								}
+							}
+							
+							if(datosimp[7].indexOf($('#idiva').html())>=0){
+								subconivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
+								var datosp=$('#impuesto-'+$('#idiva').html()).val().split('|');
+								var porcentiva=parseFloat(datosp[2]);
+								ivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcentiva;
 							}
 							else{
-								subsinivanew+=parseFloat(datosimp[3])*parseFloat(datosimp[2]);
+								subsinivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
 							}
 							
 							//para servicio
-							if(datosimp[7].indexOf('2')>=0){
-								servnew+=parseFloat(datosimp[3])*0.10*parseFloat(datosimp[2]);
-							}
-						})
+							//if(datosimp[7].indexOf('2')>=0){
+								servnew+=(parseFloat(datosimp[3])+newsumaagregados)*0.10*parseFloat(datosimp[2]);
+							//}
+						});
 						
-						$('#impuestoFactura-1').val(ivanew);
-						$('#impuestoFactura-2').val(servnew);
+						console.log(impgenerales);
+						for(var j in impgenerales){
+							$('#impuestoFactura-'+(j.replace(/"/g,''))).val(impgenerales[j]);
+						}
+						
+						
 						$('#subtotalSinIva').val(subsinivanew);
 						$('#subtotalIva').val(subconivanew);
 						
@@ -839,20 +887,25 @@ function pagar(){
 	var idimpuestos = '';
 	var ivavalor=0;
 	var servalor=0;
-
+	var dataimpuestos="";
+	var c=0;
+	
 	$('.esImpuesto').each(function(){
 		var getName = $(this).data('nombre');
 		var getId = $(this).data('id');
 		var getValue = $(this).data('valor');
 		//idimpuestos += getName +'/'+ $(this).val() +'/'+ getId +'/'+ getValue +'@';
 		idimpuestos += getId+'@';
-		if(getId=='1')
+		if(getId==parseInt($('#idiva').html()))
 			ivavalor=$(this).val();
-		if(getId=='2')
-			servalor=$(this).val();
 		
+		if(c>0){
+			dataimpuestos+="@";
+		}	
+		dataimpuestos+=getId+"|"+getName+"|"+getValue+"|"+$(this).val();
+		c++;
 	});
-
+	
 	idimpuestos = idimpuestos.substring(0,idimpuestos.length -1);
 	
 	
@@ -873,6 +926,10 @@ function pagar(){
 			json += '"producto": [';
 	$('.productDetails').each(function(){
 		var splitDetails = $(this).val().split('|');
+		var detalleagregados="";
+		if($(this).attr("data-detagregados")!=''&&$(this).attr("data-detagregados")!=null&&$(this).attr("data-detagregados")!='undefined')
+		   detalleagregados=$(this).attr("data-detagregados");
+	   
 		json += '{';
 			json += '"id_producto" : "'+ splitDetails[0] +'",';
 			json += '"timespanproducto" : "'+ splitDetails[0] +'",';
@@ -883,7 +940,9 @@ function pagar(){
 			json += '"precio_prod" : "'+ splitDetails[4] +'",';
 			json += '"impuesto_prod" : "'+ splitDetails[7] +'",';
 			json += '"precio_total" : "'+ splitDetails[6] +'",';
-			json += '"precio_descuento_justificacion" : ""';
+			json += '"precio_descuento_justificacion" : "",';
+			json += '"agregados" : "'+splitDetails[8]+'",';
+			json += '"detalle_agregados" : "'+detalleagregados+'"';
 		json += '},';
 		});
 		
@@ -909,7 +968,8 @@ function pagar(){
 		json += '"total" : "'+ (total-descuento) +'",';
 		json += '"numerofact" : "'+ nofactura +'",';
 		json += '"encabezado" : "'+ localStorage.getItem("encabezado") +'",';
-		json += '"largo" : "'+ localStorage.getItem("largo") +'"';
+		json += '"largo" : "'+ localStorage.getItem("largo") +'",';
+		json += '"impuestosdata" : "'+ dataimpuestos +'"';
 		json += '},';
 		json +=$('#JSONempresaLocal').html()+'"pagos":[';
 		
@@ -1013,7 +1073,7 @@ function addDiscount(){
 			var totales = 0;
 			$('.totales').each(function(){
 				totales += parseFloat($(this).val());
-				});
+			});
 
 			$('#discountAdded').fadeIn();
 			//$('#totalmiFactura').val(parseFloat(totales) + parseFloat(discount));
@@ -1021,6 +1081,8 @@ function addDiscount(){
 			$('#total').html('$'+ (parseFloat(totales) - parseFloat(discount)).toFixed(2));
 			$('#payButton').html('PAGAR $'+ (parseFloat(totales) - parseFloat(discount)).toFixed(2));
 			$('#descuentoFactura').val(discount);
+			
+			//alert(discount);
 			
 			$('#popupDiscount').modal("hide");
 			var sumTotal = 0;
@@ -1079,6 +1141,8 @@ function borrarCompra(item){
 	var productoImpuestos = $(item).data('borrarimpuesto');
 	var productoImpuestosIndexes = $(item).data('borrarimpuestoindexes');
 	var productoPrecio = $(item).data('borrarprecio');
+	var productoAgregados = $(item).attr('data-agregados');
+	var idiva=$('#idiva').html();
 	
 	$(item).closest('tr').remove();
 	
@@ -1087,29 +1151,29 @@ function borrarCompra(item){
 		if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
 			$.each(productoImpuestosIndexes.split('@'), function(index,value){
 				
-				if(productoImpuestosIndexes.indexOf('1') !== -1){
-					subtotalIvaCompra = (parseFloat(productoCantidad) * parseFloat(productoPrecio));
+				if(productoImpuestosIndexes.indexOf(idiva) !== -1){
+					subtotalIvaCompra = (parseFloat(productoCantidad) *(parseFloat(productoPrecio)+parseFloat(productoAgregados)));
 					}
 				else{
-					subtotalSinIvaCompra = (parseFloat(productoCantidad) * parseFloat(productoPrecio));
+					subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)));
 					}
 					
 				var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
 				var currentTax = $('#impuestoFactura-'+ value).val();
-				taxTotal = ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
+				taxTotal = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+productoAgregados) * parseFloat(impuestoDetalles[2]));
 				$('#impuestoFactura-'+ value).val(parseFloat(currentTax) - parseFloat(taxTotal));
 				});
 			}
 		else{
-			productoImpuestosIndexes == 1 ? subtotalIvaCompra = (parseFloat(productoCantidad) * parseFloat(productoPrecio)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * parseFloat(productoPrecio));
+			productoImpuestosIndexes == parseInt(idiva) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados))) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)));
 
 			var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
 			var currentTax = $('#impuestoFactura-'+ productoImpuestosIndexes).val();
-			taxTotal = ((parseFloat(productoCantidad) * parseFloat(productoPrecio)) * parseFloat(impuestoDetalles[2]));
+			taxTotal = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)) * parseFloat(impuestoDetalles[2]));
 			$('#impuestoFactura-'+ productoImpuestosIndexes).val(parseFloat(currentTax) - parseFloat(taxTotal));
 			}
 		}else{
-			subtotalSinIvaCompra = (parseFloat(productoCantidad) * parseFloat(productoPrecio));
+			subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)));
 		}
 	//impuestos end
 	
@@ -1209,7 +1273,7 @@ function BuscarSugerencias(filtro,e){
 							if(suger!='')
 							{
 								if(document.getElementById('tableresults').rows.length<4){
-									$('#tableresults').append("<tr><td class='sugerencia' onmousenter='AclararSugerencia(this,true);' onmouseout='AclararSugerencia(this,false);' enfocada='0'><div id='busc_"+ item.formulado_id +"' data-precio='"+ item.formulado_precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado_nombre.toUpperCase()+"' ontap='PlaySound(2); agregarCompra(this,2); return false;'>"+suger.toUpperCase()+"</div></td></tr>");
+									$('#tableresults').append("<tr><td class='sugerencia' onmousenter='AclararSugerencia(this,true);' onmouseout='AclararSugerencia(this,false);' enfocada='0'><div id='busc_"+ item.formulado_id +"' data-precio='"+ item.formulado_precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado_nombre.toUpperCase()+"' ontap='VerificarAgregados(this,2); return false;'>"+suger.toUpperCase()+"</div></td></tr>");
 								}
 								
 							}
@@ -1802,6 +1866,25 @@ function ClickNumeroD(numd){
 }
 
 function Ready(){
+	
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function(tx){
+		tx.executeSql('SELECT * FROM IMPUESTOS',[],function(tx,results){
+			for(var r=0;r<results.rows.length;r++){
+				var itemi=results.rows.item(r);
+				if($.trim(itemi.nombre.toLowerCase())=='iva')
+					$('#idiva').html(itemi.timespan);
+				
+				if($('#impuesto-'+itemi.id).length==0){
+					$('#taxes').append('<input id="impuesto-'+itemi.timespan+'" type="text" value="'+itemi.timespan+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100)+'">');
+				}else{
+					$("impuesto-"+itemi.timespan).val(itemi.timespan+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100))
+				}
+			}
+			
+		});
+	},errorCB,successCB);
+	
 	if($(window).height()>500){
 			Init31();
 		}
@@ -1937,7 +2020,7 @@ function Ready(){
 					if(suger!='')
 					{
 						if(document.getElementById('tableresults').rows.length<4){
-						$('#tableresults').append("<tr id='busc_"+ item.id +"' data-id_local = '"+item.id_local+"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"'><td class='sugerencia' enfocada='0'><div id='busc_"+ item.id +"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"' data-id_local = '"+item.id_local+"' onclick='agregarCompra(this,2);'>"+suger.toUpperCase()+"</div></td></tr>");
+						$('#tableresults').append("<tr id='busc_"+ item.id +"' data-id_local = '"+item.id_local+"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"'><td class='sugerencia' enfocada='0'><div id='busc_"+ item.id +"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"' data-id_local = '"+item.id_local+"' onclick='VerificarAgregados(this,2)'>"+suger.toUpperCase()+"</div></td></tr>");
 						}
 									
 					}
@@ -2250,7 +2333,7 @@ function formarCategoriasMenu(){
 }
 
 function ActivarCategoriaMenu(cual,categoria){
-	console.log(categoria);
+	//console.log(categoria);
 	$('#category').val(categoria);
 	$('#controller').val(1);
 	$('.directionProducts').css('display','none');
@@ -2270,6 +2353,32 @@ function ActivarCategoriaMenu(cual,categoria){
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(
 	function (tx){
+		
+		/*impuestos activos */
+		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? order by id",["true"],function(tx,results3){
+							console.log(results3);
+							var impuestos='';
+							var impuestosid='';
+							if(results3.rows.length>0){
+								console.log("encuentra impuestos");
+								var cuan=0;
+								for(var r=0;r<results3.rows.length;r++){
+									var imp=results3.rows.item(r);
+									if(cuan>0){
+										impuestos+="@";
+										impuestosid+="@";
+									}
+									impuestos+=parseFloat(imp.porcentaje)/100;
+									impuestosid+=imp.timespan;
+									cuan++;
+								}
+								console.log(impuestos+'/'+impuestosid);
+								$('#impuestosactivos').html(impuestos);
+								$('#impuestosactivosid').html(impuestosid);
+								}
+		});
+		/**/
+		
 		tx.executeSql("SELECT MAX(fila) as max from menu where activo='true'",[],function(tx,res1){
 			var maxfilas=0;
 			if(res1.rows.length>0){
@@ -2289,6 +2398,12 @@ function ActivarCategoriaMenu(cual,categoria){
 									if(isNaN(row.precio)){row.precio = 0;}
 									var impuestos='';
 									var impuestosid='';
+									if(row.tieneimpuestos=="true"){
+										impuestos=$('#impuestosactivos').html();
+										impuestosid=$('#impuestosactivosid').html();
+									}
+									/*var impuestos='';
+									var impuestosid='';
 									if(row.cargaiva==1){
 										impuestos+='0.12';
 										impuestosid+='1';
@@ -2300,11 +2415,11 @@ function ActivarCategoriaMenu(cual,categoria){
 										}
 										impuestos+='0.10';
 										impuestosid+='2';
-									}
+									}*/
 									var lineHeight='';
 									if(row.formulado.length>12)
 										lineHeight='line-height:18px;';
-									vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" ontap="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
+									vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
 									/*if(row.formulado.length>12)
 										lineHeight='line-height:18px;';
 									var resto=parseInt(row.col)-t;
@@ -2394,9 +2509,11 @@ function PagoAvanzado(){
 	}
 }
 
-function VerificarAgregados(btnprod){
+function VerificarAgregados(btnprod,origen){
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	var mitimespan=$(btnprod).attr("id");
+	if(mitimespan.indexOf('busc_')>=0)
+		mitimespan=mitimespan.substring(5);
 	db.transaction(
 	function (tx){
 		tx.executeSql('SELECT * from MODIFICADORES WHERE id_formulado LIKE ? and activo=? order by no_modificador asc',[mitimespan,"true"],function(tx,res1){
@@ -2410,7 +2527,7 @@ function VerificarAgregados(btnprod){
 					if(!('"'+objmod+'"' in mods))
 						mods['"'+objmod+'"']= new Array();
 					
-					mods['"'+objmod+'"'].push("<button style='margin:3px;' class='btn btn-primary btn-lg' id='btnmodif_"+miobj.id+"' data-valor='"+miobj.valor+"'  onclick='SiguienteModificador("+objmod+","+miobj.id+");' type='button'>"+miobj.nombre+"</button>");
+					mods['"'+objmod+'"'].push("<button style='margin:3px;' class='btn btn-primary btn-lg' id='btnmodif_"+miobj.id+"' data-valor='"+miobj.valor+"'  onclick='SiguienteModificador("+objmod+","+miobj.id+","+origen+");' type='button'>"+miobj.nombre+"</button>");
 					
 				}
 				
@@ -2426,20 +2543,20 @@ function VerificarAgregados(btnprod){
 					for(var t in mods[s]){
 						inhtml+=mods[s][t];
 					}
-					inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0);'>Ninguno</button></div>";
+					inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
 					$('#divmodificadores').append(inhtml);
 					c++;
 				}
 				$('#popupModificadores').modal("show");
 				
 			}else{
-				agregarCompra($(btnprod));
+				agregarCompra($(btnprod),origen);
 			}
 		});
 	},errorCB,successCB);
 } 
 
-function SiguienteModificador(divid,idmod){
+function SiguienteModificador(divid,idmod,origen){
 	var div=$('#mod_'+divid);
 	var orden=div.attr("data-orden");
 	$('.grupobotones').css('display','none');
@@ -2459,18 +2576,28 @@ function SiguienteModificador(divid,idmod){
 		var valormas=elbotonm.attr("data-valor");
 		var nombrem=elbotonm.html();
 		var dataagreg=$('#'+$('#id_formulado_modificadores').val()).attr("data-modificadores");
+		if(origen==2)
+			dataagreg=$('#busc_'+$('#id_formulado_modificadores').val()).attr("data-modificadores");
 		var agregadoschain="";
-		if(dataagreg!=null)
+		if(dataagreg!=null&&dataagreg!=''&&dataagreg!='undefined')
 			agregadoschain=dataagreg+"@"+nombrem+"|"+valormas;
 		else
 			agregadoschain=nombrem+"|"+valormas;
 		
-		$('#'+$('#id_formulado_modificadores').val()).attr("data-modificadores",agregadoschain);
+		//alert(agregadoschain);
+		
+		if(origen==2)
+			$('#busc_'+$('#id_formulado_modificadores').val()).attr("data-modificadores",agregadoschain);
+		else
+			$('#'+$('#id_formulado_modificadores').val()).attr("data-modificadores",agregadoschain);
 	}
 	
 	if(ya==false){
 		$('#popupModificadores').modal("hide");
-		agregarCompra($('#'+$('#id_formulado_modificadores').val()));
+		if(origen==2)
+		agregarCompra($('#busc_'+$('#id_formulado_modificadores').val()),origen);
+		else
+		agregarCompra($('#'+$('#id_formulado_modificadores').val()),origen);
 	}
 }
 

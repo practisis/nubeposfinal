@@ -55,7 +55,9 @@
 		var sumaDescuentos=0;
 		var sumaServicios=0;
 		var sumaAnuladas=0;
+		var impuestosdata="";
 		var today = new Date().getTime();
+		var arrayimpuestos=new Object();
 
 		jsonFormaPago=$.parseJSON($("#jsonformaspago").text());
 		console.log('misfiltros:'+fechaFiltro+'/'+fechaFiltroh);
@@ -112,9 +114,11 @@
 						
 						
 					
-					
 						/*var Json = rowa.fetchJson;
 						obj=$.parseJSON(Json);*/
+						
+						//2|Iva|0.12|1.104
+						
 						currentTotal=parseFloat(rowa.total);
 						sumaTotales=sumaTotales+currentTotal;
 						currentSubtotal=parseFloat(rowa.subconiva)+parseFloat(rowa.subsiniva);
@@ -125,7 +129,30 @@
 						sumaIvas = sumaIvas + parseFloat(rowa.iva);
 						sumaDescuentos = sumaDescuentos + parseFloat(rowa.descuento);
 						sumaServicios = sumaServicios + parseFloat(rowa.servicio);
+						
+						console.log(rowa.dataimpuestos);
+						
+						var linea=rowa.dataimpuestos;
+						var lineaimp=linea.split("|");
+						console.log(lineaimp);
+						/*for(var n=0;n<lineaimp.length;n++){*/
+							var id=lineaimp[0];
+							var nombre=lineaimp[1];
+							var monto=parseFloat(lineaimp[3]);
+							if('"'+nombre+'"' in arrayimpuestos){
+								var antes=parseFloat(arrayimpuestos['"'+nombre+'"']);
+								var datosp=antes+monto;
+								arrayimpuestos['"'+nombre+'"']=datosp;
+							}else{
+								arrayimpuestos['"'+nombre+'"']=monto;
+							}
+							
+						console.log(arrayimpuestos);
+						/*}*/
 					}
+					
+					
+					console.log(arrayimpuestos.toString());
 					
 					tx.executeSql('SELECT count(*) as c FROM FACTURAS WHERE anulada=1 and fecha>=? and fecha<=?',[fechaFiltro,fechaFiltroh],function(tx,results2){
 						if(results2.rows.length>0){
@@ -136,7 +163,7 @@
 							if(contPasa){
 								strDetalle=strDetalle.substring(0,strDetalle.length-1);
 								nFacturas=results.rows.length;
-								var respuesta = imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,sumaSubtotales.toFixed(2),sumaTotales.toFixed(2),sumaIvas.toFixed(2),sumaServicios.toFixed(2),sumaDescuentos.toFixed(2),strDetalle,sumaAnuladas);
+								var respuesta = imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,sumaSubtotales.toFixed(2),sumaTotales.toFixed(2),sumaIvas.toFixed(2),sumaServicios.toFixed(2),sumaDescuentos.toFixed(2),strDetalle,sumaAnuladas,JSON.stringify(arrayimpuestos));
 								var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 								db.transaction(function(tx){
 										tx.executeSql("SELECT printer FROM CONFIG where id=1",[],function(tx,results){
@@ -186,7 +213,7 @@ function SinTildes(word){
   return word;
 }
 
-function imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,subtotales,totales,ivas,servicios,descuentos,strDetalle,anuladas){
+function imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,subtotales,totales,ivas,servicios,descuentos,strDetalle,anuladas,jsonimpuestos){
 		console.log(fechaNow);
 		console.log(fechaRealFiltro);
 		console.log(subtotales);
@@ -261,7 +288,7 @@ valor="0 @0 ";
   txt_linea7="TEXT+7+0+20+320+TOTAL+$"+dosTotal+BR;
   txt_linea8="TEXT+7+0+20+"+finali+"+"+BR;*/
   var subdesc=(subtotales-dosDescuentos).toFixed(2);
-  txt_linea='{"Cierre": [{"fecha_caja":"'+fechaRealFiltro+'","fecha_imp":"'+fechaNow+'","num_facts":"'+nFacturas+'","fact_anuladas":"'+anuladas+'","subtotal":"'+subtotales+'","iva":"'+dosIvas+'","servicio":"'+dosServicios+'","descuento":"'+dosDescuentos+'","subdesc":"'+subdesc+'","total":"'+dosTotal+'",'+strImprimir+'}]}';
+  txt_linea='{"Cierre": [{"fecha_caja":"'+fechaRealFiltro+'","fecha_imp":"'+fechaNow+'","num_facts":"'+nFacturas+'","fact_anuladas":"'+anuladas+'","subtotal":"'+subtotales+'","iva":"'+dosIvas+'","servicio":"'+dosServicios+'","descuento":"'+dosDescuentos+'","subdesc":"'+subdesc+'","total":"'+dosTotal+'",'+strImprimir+',"impuestos":"'+jsonimpuestos+'"}]}';
   //extend=extend+100;
   //baseu+="TEXT+4+0+20+10+"+SinTildes(nombrelocal).replace(" ","+")+"%0d%0aTEXT+7+0+20+60+"+SinTildes(nombreCliente).replace(" ","+")+"-RUC."+rucCliente+"%0d%0aTEXT+7+0+20+110+"+midate+"+"+hora+"%3a"+min+"%3a"+seg+"%0d%0a";
   //baseu+="%0d%0aTEXT+7+0+20+60+"+SinTildes(nombreCliente).replace(" ","+")+"-RUC."+rucCliente+"%0d%0aTEXT+7+0+20+110+"+midate+"+"+hora+"%3a"+min+"%3a"+seg+"%0d%0a";
@@ -493,7 +520,7 @@ function CambiarPagina(arg){
 $(document).keyup(function(event){
 	if(event.keyCode === 13){
 		getSearch();
-		}
+	}
 });
 
 function EditarFactura(idfactura){

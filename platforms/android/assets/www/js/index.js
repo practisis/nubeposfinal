@@ -23,9 +23,9 @@ campos["FACTURAS"]=['id|integer primary key AUTOINCREMENT','timespan|text','clie
 
 campos["PRESUPUESTO"]=['id|integer primary key AUTOINCREMENT','timespan|text','valor|real','fecha|integer UNIQUE','transacciones|integer'];
 
-campos["IMPUESTOS"]=['id|integer primary key AUTOINCREMENT, nombre|text default "" UNIQUE,porcentaje|numeric default 0.00,activo|boolean default "true",timespan|text default ""'];
+campos["IMPUESTOS"]=['id|integer primary key AUTOINCREMENT','nombre|text default "" UNIQUE','porcentaje|numeric default 0.00','activo|boolean default "true"','timespan|text default ""'];
 
-campos["MODIFICADORES"]=['id|integer primary key AUTOINCREMENT,no_modificador|integer default 0,id_formulado|text default "",nombre|text default "" UNIQUE,valor|numeric default 0.00,activo|boolean default true,id_formulado_descuento|text default ""'];
+campos["MODIFICADORES"]=['id|integer primary key AUTOINCREMENT','no_modificador|integer default 0','id_formulado|text default ""','nombre|text default "" UNIQUE','valor|numeric default 0.00','activo|boolean default true','id_formulado_descuento|text default ""','timespan|text default ""'];
 
 
 
@@ -284,7 +284,7 @@ var app = {
 		
 		VerificarCampos('IMPUESTOS');
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS MODIFICADORES (id integer primary key AUTOINCREMENT,no_modificador integer default 0,id_formulado text default "",nombre text default "" UNIQUE,valor numeric default 0.00,activo boolean default true,id_formulado_descuento text default "")');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MODIFICADORES (id integer primary key AUTOINCREMENT,no_modificador integer default 0,id_formulado text default "",nombre text default "" UNIQUE,valor numeric default 0.00,activo boolean default true,id_formulado_descuento text default "",timespan text default "")');
 		
 		VerificarCampos('MODIFICADORES');
 		
@@ -536,7 +536,7 @@ var app = {
         $('#mprima').prop('checked',true);
         if(row.productofinal==1)
         $('#pfinal').prop('checked',true);
-        if(row.cargaiva==1)
+        if(row.tieneimpuestos=="true")
         $('#coniva').prop('checked',true);
 		if(row.servicio==1)
         $('#conservicio').prop('checked',true);

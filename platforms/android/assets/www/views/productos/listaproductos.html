@@ -273,6 +273,33 @@ getSearch();
 
 $(document).ready(function(){
 	$('#recibeTodosLosProductos').css("height",parseFloat($(window).height())*55/100);
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(
+	function (tx){
+		//console.log('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc');
+		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? order by id",["true"],function(tx,results3){
+							console.log(results3);
+							var impuestos='';
+							var impuestosid='';
+							if(results3.rows.length>0){
+								console.log("encuentra impuestos");
+								var cuan=0;
+								for(var r=0;r<results3.rows.length;r++){
+									var imp=results3.rows.item(r);
+									if(cuan>0){
+										impuestos+="@";
+										impuestosid+="@";
+									}
+									impuestos+=parseFloat(imp.porcentaje)/100;
+									impuestosid+=imp.timespan;
+									cuan++;
+								}
+								console.log(impuestos+'/'+impuestosid);
+								$('#impuestosactivos').html(impuestos);
+								$('#impuestosactivosid').html(impuestosid);
+								}
+		});
+	});
 });
 	
 
@@ -368,7 +395,7 @@ function getSearch(){
 	});
 	tx.executeSql(' SELECT p.*, c.categoria as cat  , c.timespan as timespancat FROM PRODUCTOS AS p LEFT JOIN CATEGORIAS AS c ON p.categoriaid = c.timespan where p.estado = 1 order by p.formulado ASC',[],function(tx,resulta){
 		//console.log(resulta);
-		var inhtml='<table class="table table-striped"><thead><tr><th>Nombre</th><th>Categoria</th><th style="text-align:right; width:10%;">Precio</th><th style="text-align:center;  width:10%;">IVA</th><th style="text-align:center; width:10%;">Servicio</th><th style="  width:10%;"></th></tr></thead><tbody>';
+		var inhtml='<table class="table table-striped"><thead><tr><th>Nombre</th><th>Categoria</th><th style="text-align:right; width:10%;">Precio</th><th style="text-align:center;  width:10%;">Aplica Impuestos</th><th style="text-align:center; width:10%; display:none;">Servicio</th><th style="  width:10%;"></th></tr></thead><tbody>';
 		if(resulta.rows.length==0){
 			$('#recibeTodosLosProductos').append('<center><div class="alert alert-success" role="alert"><h3>No Tiene Productos Ingresados</h3></div></center>');
 			setTimeout(function() {
@@ -385,9 +412,12 @@ function getSearch(){
 				var checkmatprima='';
 				var precioproducto = row.precio;
 				var precioConImpuestos = 0;
-				var cargaiva = row.cargaiva;
-				if(row.cargaiva==1)
-						checkiva2='<span class="glyphicon glyphicon-ok"> </span>'; else checkiva2='<span class="glyphicon glyphicon-remove"> </span>';  
+				var cargaiva = row.tieneimpuestos;
+				if(cargaiva=="true"){
+					checkiva2='<span class="glyphicon glyphicon-ok"> </span>'; 
+					//alert(row.tieneimpuestos);
+				}else checkiva2='<span class="glyphicon glyphicon-remove"> </span>';
+						
 				if(row.productofinal==1)
 						checkprfinal='checked';
 				if(row.materiaprima==1)
@@ -402,11 +432,21 @@ function getSearch(){
 				} 
 					
 				var agregarimp=1;
-				if(cargaiva==1)
+				if(cargaiva=="true"){
+					var cadimp=$('#impuestosactivos').html();
+					if(cadimp!=''){
+						var misporcentimp=cadimp.split('@');
+						for(var t=0;t<misporcentimp.length;t++){
+							var por=parseFloat(misporcentimp[t]);
+							agregarimp+=por;
+						}
+					}
+				}
+				/*if(cargaiva==1)
 					agregarimp+=0.12;
 				
 				if(servicio==1)
-					agregarimp+=0.10;
+					agregarimp+=0.10;*/
 					
 				precioConImpuestos=parseFloat(precioproducto)*agregarimp;
 				
@@ -420,7 +460,7 @@ function getSearch(){
 							<td>'+row.formulado+'</td>';
 							inhtml+='<td>'+categoria+'</td>\
 								<td style="text-align:right;">'+parseFloat(precioConImpuestos).toFixed(2)+'</td><td style="text-align:center;">'+checkiva2+'\
-								</td><td style="text-align:center;">'+checkServ2+'</td><td style="text-align:right;">';
+								</td><td style="text-align:center; display:none;">'+checkServ2+'</td><td style="text-align:right;">';
 							inhtml+='<button class="btn btn-default btn-sm" style="display:none;" onclick="VerificarEliminar('+row.id_local+",'"+row.formulado+"'"+');"><span class="glyphicon glyphicon-trash"></span></button>&nbsp;<button class="btn btn-default btn-sm" style="display:none;" onclick="editProduct(\''+row.timespan+'\')" ><span class="glyphicon glyphicon-pencil"></span></button></td>\
 						\
 					</tr>\

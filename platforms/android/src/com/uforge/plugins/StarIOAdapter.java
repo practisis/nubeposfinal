@@ -188,6 +188,7 @@ public class StarIOAdapter extends CordovaPlugin {
 		String totalCierre="0.00";
 		String ivaCierre="0.00";
 		String cadimpuestos="";
+		JSONObject cierreImpuestos= new JSONObject();
 		Integer lineastotales=30; //18cm-2lineas
 		Integer lineasencabezado=0; //3cm-2lineas
 		long fechanumber=0;
@@ -249,6 +250,8 @@ public class StarIOAdapter extends CordovaPlugin {
 				descuentoCierre=expjson.getString("descuento");
 				subdes=expjson.getString("subdesc");
 				expformas=expjson.getJSONArray("formaspago");
+				if(!(expjson.getJSONObject("impuestos").equals(JSONObject.NULL)))
+					cierreImpuestos=expjson.getJSONObject("impuestos");
 				//{"Cierre": [{"fecha_caja":"2015-12-17","fecha_imp":"2015-12-17","num_facts":"1","fact_anuladas":"0","subtotal":"3.13","iva":"0.38","total":"3.50","formaspago":[{"Efectivo":"3.50","Tarjetas":"0.00","Cheques":"0.00","CxC":"0.00"}]}]}
 			}
 			
@@ -462,7 +465,7 @@ public class StarIOAdapter extends CordovaPlugin {
 								}
 								
 								list.add(createCp1252(String.valueOf(nombreimp)+String.valueOf(valorimp)+"\r\n"));
-								lineasescritas=lineasescritas+1;
+								//lineasescritas=lineasescritas+1;
 							}
 						}
 						
@@ -470,11 +473,11 @@ public class StarIOAdapter extends CordovaPlugin {
 				}else{
 					if(Double.parseDouble(iva.replace(",","."))>0){
 						list.add(createCp1252("                      IVA:"+String.valueOf(iva)+"\r\n"));
-						lineasescritas=lineasescritas+1;
+						//lineasescritas=lineasescritas+1;
 					}
 					if(Double.parseDouble(servicio.replace(",","."))>0){
 						list.add(createCp1252("                 SERVICIO:"+String.valueOf(servicio)+"\r\n"));
-						lineasescritas=lineasescritas+1;
+						//lineasescritas=lineasescritas+1;
 					}
 				}
 				/*fin impuestos*/
@@ -984,6 +987,30 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(createCp1252("Subtotal        "+subtotalCierre+"\r\n"));
 				list.add(createCp1252("Descuentos      "+descuentoCierre+"\r\n"));
 				list.add(createCp1252("Sub-desc        "+subdes+"\r\n"));
+				 
+				/*impuestos*/
+				/*Iterator<?> imp = cierreImpuestos.keys();
+				while(imp.hasNext() ){
+					String key = (String)imp.next();
+					String monto=DoubleFormat(cierreImpuestos.getDouble(key));
+					if(monto.length()<9){
+						int tam=9-monto.length();
+							for(int n=0;n<tam;n++){
+								monto=" "+monto;
+							}
+					}
+					if(key.length()<17){
+						int tam=9-key.length();
+							for(int n=0;n<tam;n++){
+								key=" "+key;
+							}
+					}
+					list.add(createCp1252(key+monto+"\r\n"));
+					
+				}*/
+				
+				/**/
+				
 				list.add(createCp1252("Iva             "+ivaCierre+"\r\n"));
 				list.add(createCp1252("Servicio        "+servicioCierre+"\r\n"));
 				

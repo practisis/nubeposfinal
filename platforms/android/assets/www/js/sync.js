@@ -101,7 +101,7 @@ function ExtraeDatosApi(donde){
 				tx.executeSql("delete from sqlite_sequence where name='MODIFICADORES'",[],function(tx,results){});
 			for(var n=0;n<jsonmodificadores.length;n++){
 				var item=jsonmodificadores[n];		
-				tx.executeSql('INSERT OR IGNORE INTO MODIFICADORES(no_modificador,id_formulado,nombre,valor,id_formulado_descuento,activo) VALUES('+item.no_modif+', "'+item.id_formulado+'" ,"'+item.nombre+'",'+item.valor+',"'+item.id_form_desc+'","'+item.activo+'")',[],function(tx,resultsm){
+				tx.executeSql('INSERT OR IGNORE INTO MODIFICADORES(no_modificador,id_formulado,nombre,valor,id_formulado_descuento,activo,timespan) VALUES('+item.no_modif+', "'+item.id_formulado+'" ,"'+item.nombre+'",'+item.valor+',"'+item.id_form_desc+'","'+item.activo+'","'+item.timespan+'")',[],function(tx,resultsm){
 				console.log("insertado producto:"+resultsm.insertId);
 				});
 			}
@@ -622,11 +622,11 @@ function DatosRecurrentes(cual){
 					var item=jsonmodif[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
 						
-					tx.executeSql('INSERT OR IGNORE INTO MODIFICADORES(no_modificador,id_formulado,nombre,valor,id_formulado_descuento,activo) VALUES('+item.no_modif+', "'+item.id_formulado+'" ,"'+item.nombre+'",'+item.valor+',"'+item.id_form_desc+'","'+item.activo+'")',[],function(tx,resultsm){
+					tx.executeSql('INSERT OR IGNORE INTO MODIFICADORES(no_modificador,id_formulado,nombre,valor,id_formulado_descuento,activo,timespan) VALUES('+item.no_modif+', "'+item.id_formulado+'" ,"'+item.nombre+'",'+item.valor+',"'+item.id_form_desc+'","'+item.activo+'","'+item.timespan+'")',[],function(tx,resultsm){
 						console.log("insertado modificador:"+resultsm.insertId);
 					});
 						
-					tx.executeSql('UPDATE MODIFICADORES SET no_modificador=?,id_formulado=?,nombre=?,valor=?,id_formulado_descuento=?,activo=? WHERE nombre like ?',[item.no_modif,item.id_formulado,item.nombre,item.valor,item.id_form_desc,item.activo,item.nombre],function(tx,resultsm){
+					tx.executeSql('UPDATE MODIFICADORES SET no_modificador=?,id_formulado=?,nombre=?,valor=?,id_formulado_descuento=?,activo=?,timespan=? WHERE nombre like ?',[item.no_modif,item.id_formulado,item.nombre,item.valor,item.id_form_desc,item.activo,item.nombre,item.timespan],function(tx,resultsm){
 						console.log("actualizado modificador:"+item.nombre);
 					});
 				}

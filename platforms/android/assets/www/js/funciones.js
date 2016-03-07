@@ -536,7 +536,10 @@ function cambiarCantidad(){
 	//var sumaagregados=0;
 	var tdagregados=$('#cant_'+identificadorTr+' td')[0];
 	//console.log(tdagregados);
-	var sumaagregados=parseFloat($(tdagregados).attr("data-agregados"));
+	var sumaagregados=0;
+	//alert($(tdagregados).attr("data-agregados"));
+	if($(tdagregados).attr("data-agregados")!=null&&$(tdagregados).attr("data-agregados")!=""&&$(tdagregados).attr("data-agregados")!="undefined")
+		sumaagregados=parseFloat($(tdagregados).attr("data-agregados"));
 	var tddetalles=$('#cant_'+identificadorTr+' td')[1];
 	var inpdetalleagregados=$(tddetalles).find('.productDetails');
 	var detalleagregados=inpdetalleagregados.attr("data-detagregados");
@@ -571,7 +574,8 @@ function cambiarCantidad(){
 							productoImpuestosIndexes=$('#impuestosactivosid').html();
 							var porcentajes=productoImpuestos.split('@');
 							for(var l in porcentajes){
-								productomas+=parseFloat(porcentajes[l]);
+								if(porcentajes[l]!=null&&porcentajes[l]!=""&&porcentajes[l]!='undefined')
+									productomas+=parseFloat(porcentajes[l]);
 							}
 						}
 						/*if(cargaiva == 1){
@@ -2527,7 +2531,7 @@ function VerificarAgregados(btnprod,origen){
 					if(!('"'+objmod+'"' in mods))
 						mods['"'+objmod+'"']= new Array();
 					
-					mods['"'+objmod+'"'].push("<button style='margin:3px;' class='btn btn-primary btn-lg' id='btnmodif_"+miobj.id+"' data-valor='"+miobj.valor+"'  onclick='SiguienteModificador("+objmod+","+miobj.id+","+origen+");' type='button'>"+miobj.nombre+"</button>");
+					mods['"'+objmod+'"'].push("<button style='margin:3px;' class='btn btn-primary btn-lg' id='btnmodif_"+miobj.id+"' data-valor='"+miobj.valor+"' data-time='"+miobj.timespan+"'  onclick='SiguienteModificador("+objmod+","+miobj.id+","+origen+");' type='button'>"+miobj.nombre+"</button>");
 					
 				}
 				
@@ -2574,15 +2578,16 @@ function SiguienteModificador(divid,idmod,origen){
 	if(idmod>0){
 		var elbotonm=$('#btnmodif_'+idmod);
 		var valormas=elbotonm.attr("data-valor");
+		var valortime=elbotonm.attr("data-time");
 		var nombrem=elbotonm.html();
 		var dataagreg=$('#'+$('#id_formulado_modificadores').val()).attr("data-modificadores");
 		if(origen==2)
 			dataagreg=$('#busc_'+$('#id_formulado_modificadores').val()).attr("data-modificadores");
 		var agregadoschain="";
 		if(dataagreg!=null&&dataagreg!=''&&dataagreg!='undefined')
-			agregadoschain=dataagreg+"@"+nombrem+"|"+valormas;
+			agregadoschain=dataagreg+"@"+nombrem+"|"+valormas+"|"+valortime;
 		else
-			agregadoschain=nombrem+"|"+valormas;
+			agregadoschain=nombrem+"|"+valormas+"|"+valortime;
 		
 		//alert(agregadoschain);
 		

@@ -260,15 +260,29 @@ function performPurchase(restaurant){
 			if($('#impuestoFactura-2').length&&$('#impuestoFactura-2').val()!='') servicio=$('#impuestoFactura-2').val();
 			
 			var descuento=$('#descuentoFactura').val();
-			/*FIN VALORES PARA LA FACTURA*/
 			
+			/*cadenaimpuestos*/
+			var c=0;
+			$('.esImpuesto').each(function(){
+				var getName = $(this).data('nombre');
+				var getId = $(this).data('id');
+				var getValue = $(this).data('valor');
+				
+				if(c>0){
+					dataimpuestos+="@";
+				}	
+				dataimpuestos=getId+"|"getName+"|"+getValue+"|"+$(this).val();
+			});
+			
+			
+			/*FIN VALORES PARA LA FACTURA*/
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(Ingresafacturas, errorCB, successCB);
 			function Ingresafacturas(tx){
 				var now=new Date().getTime();
 				tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Inserta Factura",fetchJson],function(tx,results){});
 				
-				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc],function(){
+				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact,dataimpuestos)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc,dataimpuestos],function(){
 					console.log("Nueva Factura Ingresada");
 					var mijsonprod=JSON.parse(fetchJson);
 					var misprod = mijsonprod.Pagar[0].producto;

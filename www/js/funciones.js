@@ -674,7 +674,7 @@ function cambiarCantidad(){
 							var newsumaagregados=parseFloat(datosimp[8]);
 							var vectorimp=datosimp[7].split('@');
 							
-							alert(datosimp[7]);
+							//alert(datosimp[7]);
 							for(var x=0;x<vectorimp.length;x++){
 								var taxnow=vectorimp[x];
 								if('"'+taxnow+'"' in impgenerales){
@@ -708,7 +708,7 @@ function cambiarCantidad(){
 						
 						console.log(impgenerales);
 						for(var j in impgenerales){
-							$('#impuestoFactura-'+j.s.replace(/"/g,'')).val(impgenerales[j]);
+							$('#impuestoFactura-'+(j.replace(/"/g,''))).val(impgenerales[j]);
 						}
 						
 						
@@ -885,18 +885,29 @@ function pagar(){
 	var idimpuestos = '';
 	var ivavalor=0;
 	var servalor=0;
-
+	var valimpuestos="";
+	var dataimpuestos="";
+	var c=0;
+	
 	$('.esImpuesto').each(function(){
 		var getName = $(this).data('nombre');
 		var getId = $(this).data('id');
 		var getValue = $(this).data('valor');
 		//idimpuestos += getName +'/'+ $(this).val() +'/'+ getId +'/'+ getValue +'@';
 		idimpuestos += getId+'@';
-		if(getId=='1')
+		if(getId==parseInt($('#idiva').html()))
 			ivavalor=$(this).val();
-		if(getId=='2')
-			servalor=$(this).val();
+		if(c>0){
+			valimpuestos+="@";
+			dataimpuestos+="@";
+		}
+			
+		dataimpuestos=getId+"|"getName+"|"+getValue;
+		valimpuestos+=$(this).val();
 		
+		/*if(getId=='-1')
+			servalor=$(this).val();*/
+		c++;
 	});
 
 	idimpuestos = idimpuestos.substring(0,idimpuestos.length -1);
@@ -958,7 +969,9 @@ function pagar(){
 		json += '"total" : "'+ (total-descuento) +'",';
 		json += '"numerofact" : "'+ nofactura +'",';
 		json += '"encabezado" : "'+ localStorage.getItem("encabezado") +'",';
-		json += '"largo" : "'+ localStorage.getItem("largo") +'"';
+		json += '"largo" : "'+ localStorage.getItem("largo") +'",';
+		json += '"impuestosval" : "'+ valimpuestos +'",';
+		json += '"impuestosdata" : "'+ dataimpuestos +'"';
 		json += '},';
 		json +=$('#JSONempresaLocal').html()+'"pagos":[';
 		
@@ -1131,6 +1144,7 @@ function borrarCompra(item){
 	var productoImpuestosIndexes = $(item).data('borrarimpuestoindexes');
 	var productoPrecio = $(item).data('borrarprecio');
 	var productoAgregados = $(item).attr('data-agregados');
+	var idiva=$('#idiva').html();
 	
 	$(item).closest('tr').remove();
 	
@@ -1139,7 +1153,7 @@ function borrarCompra(item){
 		if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
 			$.each(productoImpuestosIndexes.split('@'), function(index,value){
 				
-				if(productoImpuestosIndexes.indexOf('1') !== -1){
+				if(productoImpuestosIndexes.indexOf(idiva) !== -1){
 					subtotalIvaCompra = (parseFloat(productoCantidad) *(parseFloat(productoPrecio)+parseFloat(productoAgregados)));
 					}
 				else{
@@ -1153,7 +1167,7 @@ function borrarCompra(item){
 				});
 			}
 		else{
-			productoImpuestosIndexes == 1 ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados))) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)));
+			productoImpuestosIndexes == parseInt(idiva) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados))) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)));
 
 			var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
 			var currentTax = $('#impuestoFactura-'+ productoImpuestosIndexes).val();

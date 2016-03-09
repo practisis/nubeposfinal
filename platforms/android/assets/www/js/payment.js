@@ -272,7 +272,7 @@ function performPurchase(restaurant){
 				if(c>0){
 					dataimpuestos+="@";
 				}	
-				dataimpuestos=getId+"|"+getName+"|"+getValue+"|"+$(this).val();
+				dataimpuestos+=getId+"|"+getName+"|"+getValue+"|"+$(this).val();
 				c++;
 			});
 			
@@ -417,8 +417,6 @@ function cancelPayment(){
 	$('.paymentMethods').val('');
 	$('#justification').val('');
 	$('.passwordCheck').val('');
-	$('.statuses').hide();
-	$('.statuses').html('');
 	$('.payOverview').html(0);
 	$('.cardRow').remove();
 	$('.chequeRow').remove();
@@ -490,17 +488,20 @@ function CambiarMetodo(cual){
 	//console.log('viene aqui');
 	var nombre=$('#payment'+cual).attr('paymentMethod');
 	var index=$('#payment'+cual).attr('idPaymentMethod');
-	if(pagonormal) $('.touchpago').hide();
+	if(pagonormal==true) $('.touchpago').hide();
 	
-	if(pagonormal&&cual!='Tarjetas'){
+	if(pagonormal==true&&cual!='Tarjetas'){
 		$('.cardv').html('');
 		$('#valortarjeta').val('0.00');
 		$('.card').attr('data-value','0');
 		$('#simple_2').html('0.00');
 	}
 	
+	//alert(pagonormal+"/"+cual);
+	
 	if(cual=='Efectivo'){
-		if(pagonormal){
+		if(pagonormal==true){
+			$('#valorcxc,#paymentCxC,#valorcheque1,#paymentCheques').val("0.00");
 			$('#simple_2,#simple_3,#simple_4').html('0.00');
 			//$('#paymentEfectivo').val(parseFloat($('#total').html().substring(1)).toFixed(2));
 			//$('#simple_1').html(parseFloat($('#total').html().substring(1)).toFixed(2));
@@ -515,18 +516,22 @@ function CambiarMetodo(cual){
 	}
 	if(cual=='Tarjetas'){
 	
-		if(pagonormal){
+		if(pagonormal==true){
+			alert("entra tarjetas");
+			$('#valorcxc,#paymentCxC,#valorcheque1,#paymentCheques').val("0.00");
 			$('#simple_1,#simple_3,#simple_4').html('0.00');
-			$('.touchpago').hide();
+			///$('.touchpago').hide();
 			$('#touchtarjetas').slideDown();
 		}else if($('#touchtarjetas').css('display')=='none'){
 				$('.touchpago').hide();
 			$('#touchtarjetas').slideDown();
 		}
 	}
+	
 	if(cual=='Cheques'){
-		if(pagonormal){
+		if(pagonormal==true){
 			$('#simple_1,#simple_2,#simple_4').html('0.00');
+			$('#valorcxc,#paymentCxC').val("0.00");
 			$('#valorcheque1,#paymentCheques').val(parseFloat($('#total').html().substring(1)).toFixed(2));
 			$('#simple_3').html(parseFloat($('#total').html().substring(1)).toFixed(2));
 			$('#touchcheques').slideDown();
@@ -546,7 +551,8 @@ function CambiarMetodo(cual){
 		
 	}
 	if(cual=='CxC'){
-		if(pagonormal){
+		if(pagonormal==true){
+			$('#valorcheque1,#paymentCheques').val("0.00");
 			$('#simple_1,#simple_2,#simple_3').html('0.00');
 			$('#valorcxc,#paymentCxC').val(parseFloat($('#total').html().substring(1)).toFixed(2));
 			$('#simple_4').html(parseFloat($('#total').html().substring(1)).toFixed(2));

@@ -23,9 +23,9 @@ campos["FACTURAS"]=['id|integer primary key AUTOINCREMENT','timespan|text','clie
 
 campos["PRESUPUESTO"]=['id|integer primary key AUTOINCREMENT','timespan|text','valor|real','fecha|integer UNIQUE','transacciones|integer'];
 
-campos["IMPUESTOS"]=['id|integer primary key AUTOINCREMENT','nombre|text default "" UNIQUE','porcentaje|numeric default 0.00','activo|boolean default "true"','timespan|text default ""'];
+campos["IMPUESTOS"]=['id|integer primary key AUTOINCREMENT','nombre|text default ""','porcentaje|numeric default 0.00','activo|boolean default "true"','timespan|text default "" UNIQUE'];
 
-campos["MODIFICADORES"]=['id|integer primary key AUTOINCREMENT','no_modificador|integer default 0','id_formulado|text default ""','nombre|text default "" UNIQUE','valor|numeric default 0.00','activo|boolean default true','id_formulado_descuento|text default ""','timespan|text default ""'];
+campos["MODIFICADORES"]=['id|integer primary key AUTOINCREMENT','no_modificador|integer default 0','id_formulado|text default ""','nombre|text default ""','valor|numeric default 0.00','activo|boolean default true','id_formulado_descuento|text default ""','timespan|text default "" UNIQUE'];
 
 
 
@@ -280,11 +280,11 @@ var app = {
 		
 		VerificarCampos('PERMISOS');
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS IMPUESTOS (id integer primary key AUTOINCREMENT, nombre text default "" UNIQUE,porcentaje numeric default 0.00,activo boolean default true,timespan text default "")');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS IMPUESTOS (id integer primary key AUTOINCREMENT, nombre text default "",porcentaje numeric default 0.00,activo boolean default true,timespan text default "" UNIQUE)');
 		
 		VerificarCampos('IMPUESTOS');
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS MODIFICADORES (id integer primary key AUTOINCREMENT,no_modificador integer default 0,id_formulado text default "",nombre text default "" UNIQUE,valor numeric default 0.00,activo boolean default true,id_formulado_descuento text default "",timespan text default "")');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MODIFICADORES (id integer primary key AUTOINCREMENT,no_modificador integer default 0,id_formulado text default "",nombre text default "",valor numeric default 0.00,activo boolean default true,id_formulado_descuento text default "",timespan text default "" UNIQUE)');
 		
 		VerificarCampos('MODIFICADORES');
 		
@@ -572,7 +572,7 @@ var app = {
                 $('#cliente').val(row.clientName);
 				
 				//si no tiene permisos
-				if(localStorage.getItem("permisos")){
+				if(localStorage.getItem("permisos")=="true"){
 					tx.executeSql("SELECT id from permisos where clave like ? and anular=? and activo=?",[localStorage.getItem("claveuser"),"true","true"],function(tx,results2){
 						if(results2.rows.length>0){
 							if(results2.rows.item(0).id!=null){
@@ -584,6 +584,8 @@ var app = {
 							$('#btnanularf').fadeOut();
 						}
 					});
+				}else{
+					$('#btnanularf').fadeIn();
 				}
 				//permisos
 				

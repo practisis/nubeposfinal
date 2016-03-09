@@ -116,7 +116,7 @@ function ExtraeDatosApi(donde){
 				tx.executeSql("delete from sqlite_sequence where name='PRODUCTOS'",[],function(tx,results){});
 			for(var n=0;n<jsonproductos.length;n++){
 				var item=jsonproductos[n];
-				tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado) VALUES("'+item.formulado_nombre+'", "'+item.formulado_codigo+'" ,'+item.formulado_precio+','+item.categoria_timespan+','+item.cargaiva+','+item.formulado_productofinal+','+item.formulado_matprima+',"'+item.formulado_timespan+'",'+item.carga_servicio+',"false","'+item.color+'",'+item.activo+')',[],function(tx,results){
+				tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado,tieneimpuestos) VALUES("'+item.formulado_nombre+'", "'+item.formulado_codigo+'" ,'+item.formulado_precio+','+item.categoria_timespan+','+item.cargaiva+','+item.formulado_productofinal+','+item.formulado_matprima+',"'+item.formulado_timespan+'",'+item.carga_servicio+',"false","'+item.color+'",'+item.activo+',"'+item.tieneimpuestos+'")',[],function(tx,results){
 				console.log("insertado producto:"+results.insertId);
 				});
 			}
@@ -250,6 +250,7 @@ function ExtraeDatosApi(donde){
 				db.transaction(function(tx){
 					tx.executeSql('delete from IMPUESTOS',[],function(tx,results){});
 					tx.executeSql("delete from sqlite_sequence where name='IMPUESTOS'",[],function(tx,results){});
+					//$('#idiva').html('0');
 					for(var t in imp){
 						var itemi=imp[t];
 						tx.executeSql('INSERT OR IGNORE INTO IMPUESTOS (nombre,porcentaje,activo,timespan) values (?,?,?,?)',[itemi.nombre,itemi.porcentaje,itemi.activo,itemi.id],function(tx,results){
@@ -643,11 +644,11 @@ function DatosRecurrentes(cual){
 					var item=jsonproductos[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
 					
-					tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado)VALUES("'+item.formulado+'","'+item.formulado_codigo+'",'+item.precio+',"'+item.formulado_tipo_timespan+'",'+item.ivacompra+','+item.esproductofinal+','+item.esmateria+',"'+item.timespan+'" ,'+item.tieneservicio+',"false","'+item.color+'",'+item.activo+')',[],function(tx,results){
+					tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado,tieneimpuestos)VALUES("'+item.formulado+'","'+item.formulado_codigo+'",'+item.precio+',"'+item.formulado_tipo_timespan+'",'+item.ivacompra+','+item.esproductofinal+','+item.esmateria+',"'+item.timespan+'" ,'+item.tieneservicio+',"false","'+item.color+'",'+item.activo+',"'+item.tieneimpuestos+'")',[],function(tx,results){
 						console.log("insertado prod:"+results.insertId);       
 					});
 					
-					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+item.formulado+'",codigo="'+item.formulado_codigo+'",precio='+item.precio+',categoriaid="'+item.formulado_tipo_timespan+'",cargaiva='+item.ivacompra+',productofinal='+item.esproductofinal+',materiaprima='+item.esmateria+',timespan="'+item.timespan+'",servicio='+item.tieneservicio+',sincronizar="false",color="'+item.color+'",estado='+item.activo+' WHERE timespan="'+item.timespan+'"',[],function(tx,results){
+					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+item.formulado+'",codigo="'+item.formulado_codigo+'",precio='+item.precio+',categoriaid="'+item.formulado_tipo_timespan+'",cargaiva='+item.ivacompra+',productofinal='+item.esproductofinal+',materiaprima='+item.esmateria+',timespan="'+item.timespan+'",servicio='+item.tieneservicio+',sincronizar="false",color="'+item.color+'",estado='+item.activo+' ,tieneimpuestos="'+item.tieneimpuestos+'" WHERE timespan="'+item.timespan+'"',[],function(tx,results){
 						console.log("actualizado prod");
 					});
 				}
@@ -902,7 +903,9 @@ function DatosRecurrentes(cual){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
 			var jsonimp=JSON.parse($('#JSONImpuestosNube').html());
-			var imp=jsonimp.impuestos;
+			var imp=jsonimp;
+			console.log(imp);
+			//$('#idiva').html('0');
 			for(var t in imp){
 				var itemi=imp[t];
 				
@@ -918,8 +921,8 @@ function DatosRecurrentes(cual){
 						}
 					});
 					
-					tx.executeSql('UPDATE IMPUESTOS SET nombre=?,porcentaje=?,activo=? WHERE timespan like ?',[itemi.nombre,itemi.porcentaje,itemi.activo,itemi.id],function(tx,results){
-						console.log("Insertado impuesto: "+itemi.nombre);
+					tx.executeSql('UPDATE IMPUESTOS SET nombre=?,porcentaje=?,activo=? WHERE timespan = ?',[itemi.nombre,itemi.porcentaje,itemi.activo,itemi.id],function(tx,results){
+						console.log("Actualizado impuesto: "+itemi.nombre);
 					});		
 			}
 			},errorCB,successCB);

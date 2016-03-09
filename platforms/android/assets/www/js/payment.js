@@ -517,10 +517,10 @@ function CambiarMetodo(cual){
 	if(cual=='Tarjetas'){
 	
 		if(pagonormal==true){
-			alert("entra tarjetas");
+			//alert("entra tarjetas");
 			$('#valorcxc,#paymentCxC,#valorcheque1,#paymentCheques').val("0.00");
 			$('#simple_1,#simple_3,#simple_4').html('0.00');
-			///$('.touchpago').hide();
+			//$('.touchpago').hide();
 			$('#touchtarjetas').slideDown();
 		}else if($('#touchtarjetas').css('display')=='none'){
 				$('.touchpago').hide();

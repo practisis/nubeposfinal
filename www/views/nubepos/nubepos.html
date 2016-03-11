@@ -435,6 +435,27 @@
 	</div>
 </div>
 
+<!---pop up order name ------>
+<div  class="modal fade" id="popupNameorder" role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
+	<div class='modal-content text-center'>
+		<!--<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupModificadores").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>-->
+		<div class='modal-header'><h4 id='titlemodificador'>Nombre para la Orden</h4></div>
+		<span id='msjnombreError'></span>
+		<div class="modal-body" style='color:#404041; position:relative;'>
+			<div class='row'>
+				<div class='col-lg-10'>
+					<input class='form-control input-lg' id='ordername' placeholder='Ingrese el nombre...'/>
+				</div>
+				<div class='col-lg-2'>
+					<button type='button' class='btn btn-lg btn-primary' onclick="AsignarNombre();">Listo</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+
 	<div  class="modal fade" id="popupCantidad" role="dialog" data-backdrop="static">
 		<div class="modal-dialog modal-sm">
 			<div class='modal-content text-center'>
@@ -770,6 +791,9 @@
 								<td>
     							    <button id="cancelButton" class='btn btn-default btn-lg' onclick="cancelPayment(); return false;" style='margin-right:5px;'>Cancelar</button>
                                 </td>
+								<td>
+									<button class='btn btn-lg btn-primary' onclick="$('#popupNameorder').modal('show');" style='margin-right:5px;' type='button'>Nombre Orden</button>
+								</td>
                                 <td>
         						<button style="float:right; margin-right:3px;" id="payButton" class="btn btn-success btn-lg" onclick="performPurchase('table'); return false;">PAGAR $<span id="invoiceTotal" class="payOverview">
 									0.00</span></button>

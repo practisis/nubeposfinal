@@ -10,8 +10,7 @@
 		<div class="col-lg-12">
 			<div class="row">
 				<div class="col-sm-12" >
-					<h2 style="margin-left:15px;">Lista de Productos</h2>
-					<hr color="gray"/>
+					<h3 style="margin-left:15px;">Lista de Productos</h3>
 				</div>
 			</div>
 
@@ -67,9 +66,14 @@
 						
 					</div>
 			</div>
-					<div class="row" align="center" > <!-- Row Table of products.. -->
-				
+			<div class='row'>
+				<div class='col-lg-3 col-md-3 col-xs-3' style='margin-bottom:5px; text-align:left;'>
+					<label class='label label-default'>Resultados: <span id='nproductos'></span> productos.</label>
+				</div>
+			</div>
+			<div class="row" align="center" > <!-- Row Table of products.. -->
 					<div class="col-sm-12">
+						<table class="table table-striped" style="margin-bottom:0px;"><thead><tr><th style="width:30%;">Nombre</th><th style=" width:30%;">Categoría</th><th style="width:10%; text-align:right;">Precio</th><th style="width:10%;" >Aplica Impuestos</th><th style="text-align:center; width:10%; display:none;"></th><th style="width:10%;"></th></tr></thead></table>
 						<div id="recibeTodosLosProductos" style="font-size:14px; overflow-y:auto;" class="table-responsive">
 						</div>
 						<input id='totalpags' style='display:none;'/>
@@ -272,7 +276,7 @@ ListarCategorias();
 getSearch();
 
 $(document).ready(function(){
-	$('#recibeTodosLosProductos').css("height",parseFloat($(window).height())*55/100);
+	$('#recibeTodosLosProductos').css("height",parseFloat($(window).height())*45/100);
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(
 	function (tx){
@@ -395,7 +399,7 @@ function getSearch(){
 	});
 	tx.executeSql(' SELECT p.*, c.categoria as cat  , c.timespan as timespancat FROM PRODUCTOS AS p LEFT JOIN CATEGORIAS AS c ON p.categoriaid = c.timespan where p.estado = 1 order by p.formulado ASC',[],function(tx,resulta){
 		//console.log(resulta);
-		var inhtml='<table class="table table-striped"><thead><tr><th>Nombre</th><th>Categoria</th><th style="text-align:right; width:10%;">Precio</th><th style="text-align:center;  width:10%;">Aplica Impuestos</th><th style="text-align:center; width:10%; display:none;">Servicio</th><th style="  width:10%;"></th></tr></thead><tbody>';
+		var inhtml='<table class="table table-striped"><tbody>';
 		if(resulta.rows.length==0){
 			$('#recibeTodosLosProductos').append('<center><div class="alert alert-success" role="alert"><h3>No Tiene Productos Ingresados</h3></div></center>');
 			setTimeout(function() {
@@ -405,6 +409,7 @@ function getSearch(){
 				$('#nuevoProducto').effect('highlight');
 			}, 3300);
 		}else{
+			$('#nproductos').html(resulta.rows.length);
 			for (var i=0; i < resulta.rows.length; i++){
 				var row = resulta.rows.item(i);
 				var checkiva='';
@@ -457,11 +462,11 @@ function getSearch(){
 					categoria=$('.categoriasPrecargadas[timespan='+row.categoriaid+']').text();
 					inhtml+='\
 					<tr  iddb="'+row.id+'" categoria="'+categoria+'" codedb="'+row.codigo+'" formulado="'+row.formulado+'"  clase="listProduct" timespanCat="'+row.categoriaid+'">\
-							<td>'+row.formulado+'</td>';
-							inhtml+='<td>'+categoria+'</td>\
-								<td style="text-align:right;">'+parseFloat(precioConImpuestos).toFixed(2)+'</td><td style="text-align:center;">'+checkiva2+'\
-								</td><td style="text-align:center; display:none;">'+checkServ2+'</td><td style="text-align:right;">';
-							inhtml+='<button class="btn btn-default btn-sm" style="display:none;" onclick="VerificarEliminar('+row.id_local+",'"+row.formulado+"'"+');"><span class="glyphicon glyphicon-trash"></span></button>&nbsp;<button class="btn btn-default btn-sm" style="display:none;" onclick="editProduct(\''+row.timespan+'\')" ><span class="glyphicon glyphicon-pencil"></span></button></td>\
+							<td  style="width:30%;">'+row.formulado+'</td>';
+							inhtml+='<td style="width:30%;">'+categoria+'</td>\
+								<td style="text-align:right; width:10%;">'+parseFloat(precioConImpuestos).toFixed(2)+'</td><td style="text-align:center; width:10%;">'+checkiva2+'\
+								</td><td style="text-align:center; display:none; width:10%;">'+checkServ2+'</td><td style="text-align:right;  width:10%;">';
+							inhtml+='<button class="btn btn-default btn-sm" style="display:none; margin-right:10px;" onclick="editProduct(\''+row.timespan+'\')" ><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<button class="btn btn-default btn-sm" style="display:none;" onclick="VerificarEliminar('+row.id_local+",'"+row.formulado+"'"+');"><span class="glyphicon glyphicon-trash"></span></button></td>\
 						\
 					</tr>\
 					';
@@ -541,14 +546,15 @@ function EditarProducto(idpr){
 
 
 function searchProduct(t){
-	buscar=$.trim(t.val());
+	buscar=$.trim(t.val().toLowerCase());
 	$('tr[clase="listProduct"]').css("display" , "none");
 	var todosLista=$('tr[clase="listProduct"]');
 	//console.log(todosLista);
 	
 	var timespanc=$('#catsel').attr('data-selec');
-				
-	for(var t in todosLista){
+	var cuantos=0;
+	
+	for(var t=0;t<todosLista.length;t++){
 		var elprod=todosLista[t];
 		//console.log($(elprod));
 		//console.log($(elprod).attr('formulado'));
@@ -556,6 +562,7 @@ function searchProduct(t){
 		if($('#catsel').attr('data-selec')=='0'){
 			if(dataform.toLowerCase().indexOf(buscar)>=0){
 				$(elprod).fadeIn('fast');
+				cuantos++;
 			}
 		}else{
 				var lacat=$(elprod).attr('timespanCat');
@@ -565,6 +572,8 @@ function searchProduct(t){
 				}
 		}	
 	}
+	
+	$('#nproductos').html(cuantos);
 	
 	/*$('div[clase="listProduct"][formulado*="'+buscar+'"]i').fadeIn("fast");
 	if(!$('div[clase="listProduct"][formulado*="'+buscar+'"]i').length) $('div[clase="listProduct"]').css("display" , "none");

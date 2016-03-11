@@ -704,7 +704,8 @@ function cambiarCantidad(){
 								}
 							}
 							
-							if(datosimp[7].indexOf($('#idiva').html())>=0){
+
+							if(datosimp[7].indexOf($('#idiva').html())>=0&&$('#idiva').html()!=''){
 								subconivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
 								var datosp=$('#impuesto-'+$('#idiva').html()).val().split('|');
 								var porcentiva=parseFloat(datosp[2]);
@@ -981,7 +982,8 @@ function pagar(){
 		json += '"numerofact" : "'+ nofactura +'",';
 		json += '"encabezado" : "'+ localStorage.getItem("encabezado") +'",';
 		json += '"largo" : "'+ localStorage.getItem("largo") +'",';
-		json += '"impuestosdata" : "'+ dataimpuestos +'"';
+		json += '"impuestosdata" : "'+ dataimpuestos +'",';
+		json += '"ordername" : "'+ localStorage.getItem("nameorder") +'"';
 		json += '},';
 		json +=$('#JSONempresaLocal').html()+'"pagos":[';
 		
@@ -1340,9 +1342,10 @@ function AntesDePagar(){
 	//$('#paymentModule').modal('show');
 	if(parseFloat($('#total').html().substring(1))>0){
 		document.body.scrollTop = document.documentElement.scrollTop = 0;
-		$('#paymentEfectivo').val($('#total').html().substring(1));
-		$('#simple_1').html($('#total').html().substring(1));
-		changePaymentCategory('1','Efectivo');
+		//$('#paymentEfectivo').val($('#total').html().substring(1));
+		//$('#simple_1').html($('#total').html().substring(1));
+		//changePaymentCategory('1','Efectivo');
+		$('#justo').click();
 		$('#paymentModule').slideDown();
 		$('#cedulaP').val('9999999999999');
 		BuscarCliente(13);
@@ -2057,6 +2060,7 @@ function subirefectivo(boton){
 		cuantohay=0;
 	else
 		cuantohay=parseFloat($('#paymentEfectivo').val());
+	
 	var newvalor=0;
 	if(valor>0)
 		newvalor=valor+cuantohay;
@@ -2222,7 +2226,7 @@ function ResetPagos(cual){
 		//$('#paymentEfectivo').change();
 		//CambiarMetodo('Efectivo');
 	}else if(cual==2){
-		console.log('anacard');
+		//console.log('anacard');
 		$('.cardv').html('');
 		$('.card').attr('data-value','0');
 		$('#valortarjeta,#paymentTarjetas').val('0.00');
@@ -2613,5 +2617,14 @@ function SiguienteModificador(divid,idmod,origen){
 		agregarCompra($('#'+$('#id_formulado_modificadores').val()),origen);
 	}
 }
+
+function AsignarNombre(){
+	var n=$('#ordername').val();
+	if(n!=''&&n!=null){
+		localStorage.setItem("nameorder",n);
+	}
+	$('#popupNameorder').modal("hide");
+}
+
 
 

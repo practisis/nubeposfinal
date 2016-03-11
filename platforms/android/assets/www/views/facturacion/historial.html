@@ -323,10 +323,10 @@ valor="0 @0 ";
 </style>
 <div id="mainDiv" class='row'>
 		<div class='col-lg-12 col-sm-12 col-md-12'>
-		<div class='row' style='margin-bottom:10px;'>
-			<div class='col-lg-12 col-md-12 col-sm-12'  style='padding-top:10px; padding-bottom:10px; background-color:white;'><h3>Historial de Facturas</h3></div>
+		<div class='row sumarow' style='margin-bottom:10px;'>
+			<div class='col-lg-12 col-md-12 col-sm-12'  style='background-color:white;'><h3>Historial de Facturas</h3></div>
 		</div>
-		<div class='row' style='padding-top:10px; padding-bottom:10px; background-color:white;'>
+		<div class='row sumarow' style='padding-top:10px; padding-bottom:10px; background-color:white;'>
 			<div class='col-lg-6 col-sm-6 col-md-6' style='padding-left:20px;'>
 				<table align='left' border="0" cellpadding="4px" cellspacing="10px">
 						<tr>
@@ -354,38 +354,24 @@ valor="0 @0 ";
 					</table>
 			</div>
 		</div>
+		<div class='row sumarow'>
+			<div class='col-lg-12' style="text-align:left; padding-top:5px;">
+				<label class='label label-default'>Resultados: <span id='cuantos'></span> facturas.</label>
+			</div>
+		</div>
 		<div class='row'>
 		<div class='col-lg-12 col-md-12 col-sm-12' style='margin-top:10px;'>
-		<div id='contentdetail' style='overflow-x:hidden; overflow-y:auto;'>
-		<table style="width:100%;" border="0" cellpadding='10px' class='table table-striped'>
-			<tr>
-				<td colspan="2">
-					<div id="detailDiv" style="height:100%; padding-top:20px; margin:0px; font-size:15px;"></div>
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<ul class="pagination pagination-lg">
-				  </ul>
-				</td>
-			</tr>
-            <tr>
-				<td colspan="2" style="background-color: #FFFFFF;">
-                    <div id="detailDiva" style="height:100%;padding-top:20px;font-size:15px;background-color: #FFFFFF;"></div>
-				</td>
-			</tr>
-			<tr style="display: none;">
-				<td colspan="2" style='text-align:center;'>
-					<ul class="pagination paginacion-lg" id='paginacion'>
-					</ul>
-					<input id='totalpags' style='display:none;'/>
-				</td>
-			</tr>
-		</table>
+		<table align='center' class='table table-hover table-striped' style='margin-bottom:0px;'><tr><th style='width:20%;'>Fecha</th><th  style='width:20%;'>Cliente</th><th  style='width:20%;'>RUC</th><th  style='width:20%;'># Factura</th><th  style='width:5%;'>Anulada</th><th style='text-align:right; width:10%;'>Total US</th><th style='text-align:right; width:5%;'></th></tr></table>
+		<div id="detailDiv" class='table-responsive'></div>
 		</div>
 		</div>
+		<div class='row'>
+			<div class='col-lg-12 col-md-12'>
+				<ul class="pagination pagination-lg">
+				 </ul>
+			</div>
 		</div>
-		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
@@ -393,7 +379,15 @@ var page=1;
 
 $(document).ready(function(){
 
-$('#contentdetail').css("height",parseInt($(window).height())*57/100);
+var filas=0;
+$('.sumarow').each(function(){
+	filas+=$(this).outerHeight();
+});
+
+//alert(filas);
+
+//$('#contentdetail').css("height",parseInt($(window).height()-$('.navbar').outerHeight()-filas-40));
+$('#detailDiv').css("height",parseInt($(window).height())*30/100);
 $('#fechahasta,#fechadesde').datepicker({"dateFormat":"yy-mm-dd"});
 
 var fechahoyaux=new Date();
@@ -470,6 +464,7 @@ function getSearch(){
 	tx.executeSql(miquery,[],function(tx,results){
 		var inhtml='';
 		var totalfinal=0;
+		$('#cuantos').html(results.rows.length);
 		for (var i=0; i < results.rows.length; i++){
 			var row = results.rows.item(i);
 			//console.log(row.fecha);
@@ -485,10 +480,11 @@ function getSearch(){
 			var anulada='No';
 			if(row.anulada==1){
 				anulada='Si';
+				totalf='0.00';
             }else{
                 totalfinal += parseFloat(totalf);
             }
-			inhtml+='<tr><td>'+fechaformat+'</td><td>'+row.clientName+'</td><td>'+row.RUC+'</td><td>'+row.nofact+'</td><td>'+anulada+'</td><td style="text-align:right;">'+totalf+'</td><td><button class="btn btn-default btn-sm" onclick="'+mifunc+'"><span class="glyphicon glyphicon-pencil"></span></button></td></tr>';
+			inhtml+='<tr><td  style="width:20%; text-align:left;">'+fechaformat+'</td><td style="width:20%;  text-align:left;">'+row.clientName+'</td><td style="width:20%;  text-align:left;">'+row.RUC+'</td><td style="width:20%;  text-align:left;">'+row.nofact+'</td><td style="width:5%;">'+anulada+'</td><td style="text-align:right; width:10%;">'+totalf+'</td><td style="width:5%;"><button class="btn btn-default btn-sm" onclick="'+mifunc+'"><span class="glyphicon glyphicon-pencil"></span></button></td></tr>';
 		}
 		LlenarTablaFacturas(inhtml);
 		$('#totalencabezado').html(totalfinal.toFixed(2));
@@ -498,7 +494,7 @@ function getSearch(){
 }
 
 function LlenarTablaFacturas(datos){
-	$('#detailDiv').html("<table align='center' class='table table-hover table-striped'><tr><th>Fecha</th><th>Cliente</th><th>RUC</th><th># Factura</th><th>Anulada</th><th style='text-align:right;'>Total US</th><th style='text-align:right;width: 50px;'></th>"+datos+"</table>");
+	$('#detailDiv').html("<table align='center' class='table table-hover table-striped'>"+datos+"</table>");
 }
 function LlenarTablaFacturasp(datosp){
 	$('#detailDiva').html("<div style='background-color: #FFFFFF;'><table align='right' class='table' style='width: 25%;'><tr><th colspan='2' style='text-align:center;'>Formas de Pago</th><th style='text-align:right;width: 50px;'></th></tr>"+datosp+"</table><div>");

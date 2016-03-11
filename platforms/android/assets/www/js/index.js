@@ -540,8 +540,22 @@ var app = {
         $('#coniva').prop('checked',true);
 		if(row.servicio==1)
         $('#conservicio').prop('checked',true);
-    },errorCB,successCB);
     });
+	/*tx.executeSql("SELECT * FROM IMPUESTOS WHERE ACTIVO=?",["true"],function(tx,res1){
+		if(res1.rows.length>0){
+			var cadenaaplica='';
+			for(var n=0;n<res1.rows.length;n++){
+				var miitem=res1.rows.item(n);
+				if(n>0)
+					cadenaaplica+=",";
+				cadenaaplica+=miitem.nombre+" ("+item.porcentaje+"%)";
+			}
+			alert(cadenaaplica);
+			$('#aplican').html(cadenaaplica);
+		}
+	});*/
+	
+    },errorCB,successCB);
     }
     
     function VerDatosCliente(id){
@@ -615,13 +629,44 @@ var app = {
 				
                 $('#total').html(totalf);
                 $('#invoiceTotal').html(totalf);
+				
                 var intabla='';
                 var variosprods=(datosfact.Pagar[0].producto);
 				var itemsfact=0;
+				var subtotal=0;
                 for(var n=0;n<variosprods.length;n++){
-                    intabla+="<tr><td style='text-align:left;'>"+variosprods[n].nombre_producto+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].cant_prod)+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].precio_prod).toFixed(2)+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].precio_total).toFixed(2)+"</td></tr>";
+					var agregados="";
+					var valoragregados=0;
+					if(variosprods[n].detalle_agregados!=""){
+						valoragregados=parseFloat(variosprods[n].agregados);
+						var detagregados=variosprods[n].detalle_agregados;
+						var vdetagregados=detagregados.split('@');
+						for(var t=0;t<vdetagregados.length;t++){
+							var dataagr=vdetagregados[t].split('|');
+							agregados+="<div style='text-align:left; font-size:11px; margin-left:20px;'>"+dataagr[0]+": $"+parseFloat(dataagr[1]).toFixed(2)+"</div>";
+						}
+					}
+					
+					subtotal+=parseFloat(variosprods[n].cant_prod)*(parseFloat(variosprods[n].precio_prod)+valoragregados);
+					
+                    intabla+="<tr><td style='text-align:left;'>"+variosprods[n].nombre_producto+agregados+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].cant_prod)+"</td><td style='text-align:right;'>"+(parseFloat(variosprods[n].precio_prod)+valoragregados).toFixed(2)+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].precio_total).toFixed(2)+"</td></tr>";
 					itemsfact+=parseInt(parseInt(variosprods[n].cant_prod));
                 }
+				
+				var subs="";
+				subs+="<table class='table table-hovered'>";
+				subs+="<tr><td style='text-align:right;'>SUBTOTAL</td><td style='text-align:right;'> $"+subtotal.toFixed(2)+"</td></tr>";
+				if(row.dataimpuestos!=""){
+					var detagregados=row.dataimpuestos;
+					var vdetagregados=detagregados.split('@');
+					for(var t=0;t<vdetagregados.length;t++){
+						var dataagr=vdetagregados[t].split('|');
+						subs+="<tr><td style='text-align:right;'>"+dataagr[1]+"</td><td style='text-align:right;'> $"+parseFloat(dataagr[3]).toFixed(2)+"</td></tr>";
+					}
+				}
+				
+				subs+="</table>";
+				$('#subtotales').html(subs);
 				$('#itemsfacturados').html("<b>Items Facturados:</b> "+itemsfact);
                 $('#cuerpodetalle').html(intabla);
 				var formaDePago = row.paymentsUsed;

@@ -14,11 +14,11 @@ function receiveJson(){
 		}
 }
 
-changePaymentCategory(0);
+//changePaymentCategory(0);
 	
 function changePaymentCategory(index,nombre){
 	
-	if(pagonormal){
+	if(pagonormal==true){
 		$('.paymentMethods').each(function(){
 			if($(this).attr('idpaymentmethod')!=index){
 				$(this).val('0.00');
@@ -420,7 +420,7 @@ function cancelPayment(){
 	$('.payOverview').html(0);
 	$('.cardRow').remove();
 	$('.chequeRow').remove();
-	changePaymentCategory(0);
+	//changePaymentCategory(0);
 	//$('#pay').hide();
 	
 	$('#printFactura').hide();

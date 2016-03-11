@@ -923,6 +923,11 @@ function DatosRecurrentes(cual){
 					
 					tx.executeSql('UPDATE IMPUESTOS SET nombre=?,porcentaje=?,activo=? WHERE timespan = ?',[itemi.nombre,itemi.porcentaje,itemi.activo,itemi.id],function(tx,results){
 						console.log("Actualizado impuesto: "+itemi.nombre);
+						if($('#impuesto-'+itemi.id).length==0){
+							$('#taxes').append('<input id="impuesto-'+itemi.id+'" type="text" value="'+itemi.id+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100)+'">');
+						}else{
+							$("impuesto-"+itemi.id).val(itemi.id+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100));
+						}
 					});		
 			}
 			},errorCB,successCB);

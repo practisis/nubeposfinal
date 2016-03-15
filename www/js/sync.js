@@ -278,7 +278,7 @@ function ExtraeDatosApi(donde){
 				tx.executeSql("delete from sqlite_sequence where name='PERMISOS'",[],function(tx,results){});
 				for(var n=0;n<jsonpresupuestos.length;n++){
 					var item=jsonpresupuestos[n];
-					tx.executeSql('INSERT OR IGNORE INTO PERMISOS (clave,historial,configuracion,anular,impcierre,productos,activo) VALUES("'+item.clave+'","'+item.historial+'","'+item.configuracion+'","'+item.anular+'","'+item.imprimircierre+'","'+item.productos+'","'+item.activo+'")',[],function(tx,results){
+					tx.executeSql('INSERT OR IGNORE INTO PERMISOS (clave,historial,configuracion,anular,impcierre,productos,activo,vertotales,irnube) VALUES("'+item.clave+'","'+item.historial+'","'+item.configuracion+'","'+item.anular+'","'+item.imprimircierre+'","'+item.productos+'","'+item.activo+'","'+item.vertotales+'","'+item.irnube+'")',[],function(tx,results){
 					console.log("insertado permiso:"+results.insertId);
 					});
 				}
@@ -972,11 +972,11 @@ function DatosRecurrentes(cual){
 					//tx.executeSql('delete from PERMISOS',[],function(tx,results){});
 					//tx.executeSql("delete from sqlite_sequence where name='PERMISOS'",[],function(tx,results){});
 					
-					tx.executeSql('INSERT OR IGNORE INTO PERMISOS(clave,historial,configuracion,anular,impcierre,productos,activo)VALUES("'+item.clave+'","'+item.historial+'","'+item.configuracion+'","'+item.anular+'","'+item.imprimircierre+'","'+item.productos+'","'+item.activo+'")',[],function(tx,results){
+					tx.executeSql('INSERT OR IGNORE INTO PERMISOS(clave,historial,configuracion,anular,impcierre,productos,activo,vertotales,irnube)VALUES("'+item.clave+'","'+item.historial+'","'+item.configuracion+'","'+item.anular+'","'+item.imprimircierre+'","'+item.productos+'","'+item.activo+'","'+item.vertotales+'","'+item.irnube+'")',[],function(tx,results){
 						console.log("insertado permiso :"+results.insertId);
 					});
 					
-					tx.executeSql('UPDATE PERMISOS SET clave="'+item.clave+'" , historial = "'+item.historial+'", configuracion = "'+item.configuracion+'" ,anular="'+item.anular+'",impcierre="'+item.imprimircierre+'",productos="'+item.productos+'",activo="'+item.activo+'" WHERE clave like "'+item.clave+'"',[],function(tx,results){
+					tx.executeSql('UPDATE PERMISOS SET clave="'+item.clave+'" , historial = "'+item.historial+'", configuracion = "'+item.configuracion+'" ,anular="'+item.anular+'",impcierre="'+item.imprimircierre+'",productos="'+item.productos+'",activo="'+item.activo+'",vertotales="'+item.vertotales+'",irnube="'+item.irnube+'" WHERE clave like "'+item.clave+'"',[],function(tx,results){
 							console.log("actualizado permiso.");
 					});
 				}

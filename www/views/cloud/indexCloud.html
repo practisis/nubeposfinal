@@ -89,7 +89,7 @@
 	  <div class='row' id='cuentaactiva' style='display:none;'>
 		<div class='col-lg-12'>
 			<div style='margin-top:10px; margin-bottom:10px;'>Ingresa a tu cuenta PractiPOS en la nube</div>
-			<center><button onclick='IraNube(this);' class="btn btn-md btn-primary btn-center" type="button" id="linklogin">Ir a la nube</button></center>
+			<center><button onclick="VerificarPermiso('nube');" class="btn btn-md btn-primary btn-center" type="button" id="linklogin">Ir a la nube</button></center>
 			<div class='alert alert-success' style='margin-top:20px; margin-bottom:20px;'>Su cuenta se encuentra activa por <b><span id='dias'>x</span></b> dias.</div>
 		</div>
 	  </div>
@@ -330,6 +330,7 @@ $(document).ready(function(){
 });
 
 function IraNube(elem){
+  //alert(elem);
 	var url=$(elem).attr('link');
 	window.open(url);
 }

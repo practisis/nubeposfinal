@@ -27,7 +27,7 @@ function changePaymentCategory(index,nombre){
 				
 				//$('#simple_'+index).html('0.00');
 			}
-				
+
 		});
 	}
 		
@@ -368,6 +368,7 @@ function performPurchase(restaurant){
 			$('#totalPagado').html(totalFac);
 			console.log(datosFactura.Pagar[0]);
             impresionMovil(fetchJson.toString());
+            //setTimeout(function(){localStorage.setItem("nameorder","");},2000);
 		}else{
 			showalertred("El valor pagado es menor que el total.");
 		}
@@ -408,6 +409,7 @@ function impresionMovil(mijson){
 			}
 		});
 	},errorCB,successCB);
+    localStorage.setItem("nameorder","");
 }
 
 function cancelPayment(){

@@ -1,0 +1,281 @@
+<div class="page page-dashboard" data-ng-controller="DashboardCtrl">
+	<div class='row'>
+		<div class='col-lg-12'>
+			<div class="panel" style='padding-top:10px; padding-bottom:10px; padding-left:5px;'>
+				<div class='row'>
+					<!---<div class='col-lg-1 col-md-1 col-xs-1'>
+						<div style='text-align:right; margin-top:5px;'>Fecha:</div>
+					</div>--->
+					<div class='col-lg-4 col-md-4 col-xs-4' style='margin-left:10px;'>
+					<table align='left'><tr><td>
+						<div class="input-group"> 
+						<span class="input-group-addon glyphicon glyphicon-calendar" id="basic-addon1"></span>
+						<input type='text' class='form-control' id='desde' readonly style="min-width:100px;"/>
+						<input type='text' class='form-control' id='hasta' style='display:none;'/></div>
+					<!--</div>
+					<div class='col-lg-2 col-md-2 col-xs-2' style='text-align:left;'>-->
+					</td><td>
+						<button class='btn btn-primary' type='button' style='margin-top:0px;' onclick='ObtenerDatosDashboard();'>Filtrar</button>
+						</td>
+						</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <div class="row">
+	    <div class="col-md-3">
+            <div class="panel mini-box">
+                <span class="box-icon bg-danger">
+                    <i class="fa fa-dollar"></i>
+                </span>
+                <div class="box-info">
+                    <p class="size-h3" id='totalventas'>0.00</p>
+                    <p class="text-muted"><span data-i18n="Ventas $">Ventas $</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel mini-box">
+                <span class="box-icon bg-success">
+                    <i class="fa fa-credit-card"></i>
+                </span>
+                <div class="box-info">
+                    <p class="size-h3" id='ticketpromedio'>0.00</p>
+                    <p class="text-muted"><span data-i18n="Ticket Promedio $">Ticket Promedio $</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel mini-box">
+                <span class="box-icon bg-info">
+                    <i class="fa fa-users"></i>
+                </span>
+                <div class="box-info">
+                    <p class="size-h3" id='transacciones'>0</p>
+                    <p class="text-muted"><span data-i18n="Transacciones">Transacciones</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel mini-box">
+                <span class="box-icon bg-warning">
+                    <i class="fa fa-star"></i>
+                </span>
+                <div class="box-info">
+                    <p class="size-h3"><span id='cumplimiento'>0.00</span>%</p>
+                    <p class="text-muted"><span data-i18n="cumplimiento $">% Cumplimiento - Presupuesto US<span id='mipres'></span></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end stats -->
+
+    <div class="row">
+        <!--<div class="col-md-6">
+            <section class="panel panel-default" style='text-align:left;'>
+                <div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span data-i18n="Ventas">Ventas</span></strong></div>
+				<div class="panel-body" data-ng-controller="morrisChartCtrl">
+                        <div id="chartventas"></div>
+                </div>
+            </section> 
+        </div>-->
+		<div class='col-md-6'>
+			<section class="panel panel-box info-box">
+					<div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span data-i18n="ventascateg">Ventas por Categoria</span></strong></div>
+					<div class="panel-body">
+					<div id='ventascategoria'>
+					</div>
+					</div>
+			</section>
+		</div>
+		<div class='col-md-6'>
+			<section class="panel panel-box info-box">
+					<div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span data-i18n="productosten">Ranking de Productos</span></strong></div>
+					<div class="panel-body">
+					<div id='productosten'>
+					</div>
+					</div>
+			</section>
+		</div>
+	</div>
+	<div class='row' style='display:none;'>
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span data-i18n="Rank Productos">Ranking de Productos</span></strong></div>
+                <div class="panel-body"  data-ng-controller="flotChartCtrl">
+					<table class="table" id='tablarank'>
+					<thead>
+						<tr>
+							<th>Producto</th>
+							<th>Cantidad</th>
+							<th>Ventas US$</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+					</table>
+							
+			</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id='jsoncats'></div>
+<script>
+$(document).ready(function(){ 
+  //obtener datos para el dashboard
+  /*"SELECT COUNT(*) AS number_rows FROM facturacion join locales on facturacion.id_locales = locales.id WHERE ".$plazafact." and (fecha >=? AND fecha <=?) AND anulada = FALSE".$localFact." and facturacion.id not in (select f.id from facturacion f,pagos p where p.idfactura=f.idreal and p.idformapago in(7,12) and f.id_locales=p.id_locales)"*/
+  
+  $('#desde,#hasta').datepicker();
+ //colocar fechas
+  var ahora=new Date();
+			
+  var mesa=(parseInt(ahora.getMonth())+1).toString();//console.log(mes);
+  var diaa=ahora.getDate().toString();
+  if(diaa.length==1)
+			diaa='0'+diaa;
+  if(mesa.length==1)
+			mesa='0'+mesa;
+  var fechahoy=ahora.getFullYear()+"-"+mesa+'-'+diaa;
+  
+  var mimanana=new Date(fechahoy.replace("-","/")+" 00:00:00").getTime()+(1000*59*59*23);
+  var manana=new Date(mimanana);
+  console.log(fechahoy);
+  var dia=manana.getDate().toString();
+  var mes=(parseInt(manana.getMonth())+1).toString();//console.log(mes);
+  if(dia.length==1)
+			dia='0'+dia;
+  if(mes.length==1)
+			mes='0'+mes;
+  
+  var fechamanana=manana.getFullYear()+"-"+mes+'-'+dia;
+  $('#desde').val(fechahoy);
+  $('#hasta').val(fechamanana);
+  
+  $('#desde').change(function(){
+		$('#hasta').val($(this).val());
+  });
+  
+   ObtenerDatosDashboard();
+});
+
+
+function ObtenerDatosDashboard(){
+	//alert("datos");
+	$('#ventascategoria,#productosten,#mipres').html('');
+	$('#cumplimiento').html('0.00');
+	var fdesde=$('#desde').val();
+	fdesde=fdesde.replace("-","/");
+	fdesde=new Date(fdesde);
+	var fhasta=$('#hasta').val()+" 23:59:59";
+	fhasta=fhasta.replace("-","/");
+	fhasta=new Date(fhasta);
+	categoriasvector= new Array();
+	var misubtotal=0;
+	var db = window.openDatabase("Database","1.0","PractisisMobile", 200000);
+	db.transaction(
+		function (tx){
+			//console.log('SELECT COUNT(*) AS number_rows FROM facturas WHERE fecha >='+fdesde.getTime()+' AND fecha <='+fhasta.getTime()+'');
+			tx.executeSql('SELECT COUNT(*) AS number_rows FROM facturas WHERE anulada=0 and fecha >=? AND fecha <=?',[fdesde.getTime(),fhasta.getTime()],
+			function(tx,res){
+				console.log('trans'+res.rows.item(0).number_rows);
+				console.log('fecha'+fdesde.getTime()+'/'+fhasta.getTime());
+				$('#transacciones').html(res.rows.item(0).number_rows);
+			});				
+	},errorCB,successCB);
+	
+	//querysubtotal
+    //console.log(fdesde.getTime()+'*12*'+fhasta.getTime());
+	db.transaction(
+		function (tx){
+			//tx.executeSql('select sum(f.cantidad*f.precio_unitario) as total from facturas_formulados f,facturas p where f.timespan_factura=p.timespan and p.anulada=0 and p.fecha>=? and p.fecha<=? ',[fdesde.getTime(),fhasta.getTime()],
+            tx.executeSql('select sum(subconiva+subsiniva) as total from facturas where anulada=0 and fecha>=? and fecha<=? ',[fdesde.getTime(),fhasta.getTime()],
+			function(tx,res){
+				if(res.rows.length>0){
+					console.log(res);
+					if(res.rows.item(0).total==null)
+						misubtotal=0;
+					else
+						misubtotal=parseFloat(res.rows.item(0).total);
+					$('#totalventas').html(parseFloat(misubtotal).toFixed(2));
+				}
+				
+				//$('#totalventas').html(misubtotal.toFixed(2));
+				var trans=parseFloat($('#transacciones').html());
+				
+				if(trans>0)
+				$('#ticketpromedio').html((misubtotal/trans).toFixed(2));
+				else
+				$('#ticketpromedio').html((0).toFixed(2));
+				//console.log(JSON.parse(cadenamorris));
+				//$('#chartventas,#ventascategoria,#productosten').html('');
+			});				
+	},errorCB,successCB);
+
+	
+	db.transaction(
+		function (tx){
+			//console.log('SELECT s.formulado as formu,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, productos s WHERE f.fecha >='+fdesde.getTime()+' AND s.timespan=p.timespan_formulado AND f.fecha <='+fhasta.getTime()+' and f.timespan=p.timespan_factura group by timespan_formulado order by tot desc limit 10');
+			tx.executeSql('SELECT s.formulado as formu,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, productos s WHERE f.anulada=0 and f.fecha >=? AND s.timespan=p.timespan_formulado AND f.fecha <=? and f.timespan=p.timespan_factura group by timespan_formulado order by tot desc limit 10',[fdesde.getTime(),fhasta.getTime()],
+			function(tx,res){
+				if(res.rows.length>0){
+					var datap = new google.visualization.DataTable();
+					datap.addColumn('string', 'Producto');
+					datap.addColumn('number', 'Ventas $USD');
+					for(var n=0;n<res.rows.length;n++){
+						var entot=parseFloat(res.rows.item(n).tot).toFixed(2);
+						datap.addRow([res.rows.item(n).formu,Number(entot)]);
+					var optionsp = {
+						title: 'Ranking de ventas por Producto'
+					};
+					var chartp = new google.visualization.ColumnChart(document.getElementById('productosten'));
+					chartp.draw(datap,optionsp);
+					}
+				}
+			});				
+	},errorCB,successCB);
+	
+	db.transaction(
+		function (tx){
+			//console.log('SELECT s.categoria as categ,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, categorias s,productos pr WHERE f.fecha >='+fdesde.getTime()+' AND s.timespan=pr.categoriaid AND p.timespan_formulado=pr.timespan AND f.fecha <='+fhasta.getTime()+' and f.timespan=p.timespan_factura group by categoriaid order by tot desc');
+			tx.executeSql('SELECT s.categoria as categ,sum(p.cantidad*p.precio_unitario) as tot FROM facturas f, facturas_formulados p, categorias s,productos pr WHERE f.anulada=0 and f.fecha >=? AND s.timespan=pr.categoriaid AND p.timespan_formulado=pr.timespan AND f.fecha <=? and f.timespan=p.timespan_factura group by categoriaid order by tot desc',[fdesde.getTime(),fhasta.getTime()],
+			function(tx,res){
+				if(res.rows.length>0){
+					var data = new google.visualization.DataTable();
+					data.addColumn('string', 'Categoria');
+					data.addColumn('number', 'Ventas USD');
+					for(var t=0;t<res.rows.length;t++){
+						var entot=parseFloat(res.rows.item(t).tot).toFixed(2);
+						data.addRow([res.rows.item(t).categ+' USD',Number(entot)]);
+					}
+					var options = {
+						title: 'Ventas por Categoría'
+					};
+
+					var chart = new google.visualization.PieChart(document.getElementById('ventascategoria'));
+					chart.draw(data,options);
+				}
+			});				
+	},errorCB,successCB);
+
+	
+	//query para presupuesto
+	db.transaction(
+		function (tx5){
+			tx5.executeSql('SELECT valor as suma , transacciones as trans FROM presupuesto WHERE fecha >=? AND fecha <=?',[fdesde.getTime(),fhasta.getTime()],
+			function(tx5,res){
+				if(res.rows.length>0){
+					var vendido=res.rows.item(0);
+					var ventast=parseFloat($('#totalventas').html());
+					var trans=parseFloat($('#transacciones').html());
+					var porcen=(ventast)*100/(vendido.suma);
+					$('#cumplimiento').html(porcen.toFixed(2));
+					$('#mipres').html(vendido.suma.toFixed(2));
+				}
+			});
+		},errorCB,successCB);
+}
+</script>
+  

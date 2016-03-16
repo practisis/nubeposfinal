@@ -240,6 +240,14 @@ function ExtraeDatosApi(donde){
 			localStorage.setItem("msj",ext[0].msj);
 			localStorage.setItem("dias",ext[0].dias);
 			localStorage.setItem("ultimafact",ext[0].num_factura);
+
+            var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){
+              tx.executeSql('UPDATE CONFIG SET pais="'+ext[0].pais+'",id_idioma = "'+ext[0].idioma+'",sin_documento="'+ext[0].documento+'",con_nombre_orden="'+ext[0].orden+'",con_propina="'+ext[0].propina+'" WHERE id=1',[],function(tx,results){
+  				console.log("actualizada empresa permisos");
+  			  });
+            },errorCB,successCB);
+
 		}
 		/**/
 		
@@ -560,6 +568,16 @@ function DatosRecurrentes(cual){
 				localStorage.setItem("msj",jsonSync.BigJson[7].Extra[0].msj);
 				//localStorage.setItem("permisos",jsonSync.BigJson[5].Extra[0].constrasenia);
 				localStorage.setItem("permisos",jsonSync.BigJson[7].Extra[0].contrasenia);
+
+                //**********************datos extra permisos config***********************
+                var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+    			db.transaction(function(tx){
+                  tx.executeSql('UPDATE CONFIG SET pais="'+jsonSync.BigJson[7].Extra[0].pais+'",id_idioma = "'+jsonSync.BigJson[7].Extra[0].idioma+'",sin_documento="'+jsonSync.BigJson[7].Extra[0].documento+'",con_nombre_orden="'+jsonSync.BigJson[7].Extra[0].orden+'",con_propina="'+jsonSync.BigJson[7].Extra[0].propina+'" WHERE id=1',[],function(tx,results){
+      				console.log("actualizada empresa permisos recurrente");
+      			  });
+                },errorCB,successCB);
+                //************************************************************************
+
 				//localStorage.setItem("claveuser","");
 				//localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].diseno);
 				//localStorage.setItem("diseno",1);

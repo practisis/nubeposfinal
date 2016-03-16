@@ -101,6 +101,7 @@
 				var tabname=$('#tablet_name').val();
                 var idioma = $('#idioma').val();
                 var sin_documento = $('#sin_documento').bootstrapSwitch('state');
+				localStorage.setItem('sin_documento',sin_documento);
                 var con_orden = $('#con_orden').bootstrapSwitch('state');
                 var con_propina = $('#con_propina').bootstrapSwitch('state');
 				if(tabname=='')

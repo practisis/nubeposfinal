@@ -678,7 +678,7 @@ function noCliente(){
 		if($("#newCliente").html()!=''){
 			$("#opaco,#cuadroClientes,#newCliente").fadeIn();
 		}else{
-			if(localStorage.getItem("sin_documento")==true){
+			if(localStorage.getItem("sin_documento")=='true'){
 				//codigo sin documento
 				$("#newCliente ").html('\
 			<div style="position:relative; left:0%; width:100%; height:100%" id="borrable">\

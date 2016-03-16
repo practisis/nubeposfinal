@@ -670,11 +670,17 @@ function noCliente(){
 	$("#cuadroClientes,#opaco").fadeOut("fast",function(){});
 }
 
-function mostrarClientes(){
+ 
+  function mostrarClientes(){
+	  
+	  console.log("tiene documento:"+localStorage.getItem("sin_documento"));
+	  
 		if($("#newCliente").html()!=''){
 			$("#opaco,#cuadroClientes,#newCliente").fadeIn();
 		}else{
-			$("#newCliente ").html('\
+			if(localStorage.getItem("sin_documento")==true){
+				//codigo sin documento
+				$("#newCliente ").html('\
 			<div style="position:relative; left:0%; width:100%; height:100%" id="borrable">\
 				<div id="cuadroClientes" class="cuadroClientes" style="height:100%;"> \
 					<h3>Cliente</h3><div style="width:100%; text-align:right; padding-right:5px;  padding-right:5px; cursor:pointer;color:#1495C0; position:absolute; top:3px; right:12px; cursor:pointer;"><i onclick="noCliente();" class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
@@ -682,18 +688,12 @@ function mostrarClientes(){
 						<tr> \
 							<td colspan=2>\
 								<br><br>\
-									<table cellpadding="0" cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
-										<tr>\
-											<td>\
-										<div class="input-group" style="width:100%; margin-bottom:10px;"><span class="input-group-addon" style="width:30%">\
-													&nbsp;Cédula* \
-											</span><input tabindex="0" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control"/> </div>\
-												</td>\
-										</tr>\
+								<input type="hidden" tabIndex="1" id="cedulaP" value="0000000000" onkeypress="isalphanumeric(event);" class="form-control"/> \
+									<table tabIndex="99"  cellpadding="0"  cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
 										<tr>\
 											<td>\
 												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%">&nbsp;Nombre*</span>\
-													<input  tabindex="1" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
+													<input  tabIndex="2" onkeyup="validacliente()" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
 											</td>\
 										</tr>\
 										\
@@ -704,13 +704,85 @@ function mostrarClientes(){
 										<tr>\
 												<td>\
 												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon"  style="width:30%">&nbsp;Dirección</span>\
-													<input tabindex="4" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
+													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
 												</td>\
 										</tr>\
 										<tr>\
 												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon"  style="width:30%">&nbsp;Email</span>\
 													\
-													<input tabindex="5" id="emailP" class="form-control"/></div>\
+													<input tabIndex="4" id="emailP" class="form-control"/></div>\
+												</td>\
+										</tr>\
+										\
+									</table>\
+									\
+									<br>\
+							</td>\
+						</tr>\
+						<tr>\
+							<td colspan=2>\
+								<br>\
+								<div>\
+									<table style="cursor:pointer;position: relative; margin: 0px auto;" cellspacing="5px">\
+										<tr>\
+											<td style="vertical-align:top;">\
+												<button onclick="noCliente();" tabindex="8" class="btn btn-default">Cancelar</button> \
+											</td>\
+											<td style="vertical-align: top;">\
+												<button tabindex="7" class="btn btn-success" onclick="jsonNuevoCliente()">Guardar</button> \
+											</td>\
+										</tr>\
+									</table>\
+								</div>\
+							</td>\
+						</tr>\
+					</table>\
+				</div>\
+			<input type="hidden" id="idCliente" value="1"/></div>\
+			<style>\
+				#descripcionD tr td table tr td{\
+					text-align:left;font-size:13px;height:25px;\
+				}\
+			</style>');
+			}else{
+				//codigo con documento
+			$("#newCliente ").html('\
+			<div style="position:relative; left:0%; width:100%; height:100%" id="borrable">\
+				<div id="cuadroClientes" class="cuadroClientes" style="height:100%;"> \
+					<h3>Cliente</h3><div style="width:100%; text-align:right; padding-right:5px;  padding-right:5px; cursor:pointer;color:#1495C0; position:absolute; top:3px; right:12px; cursor:pointer;"><i onclick="noCliente();" class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
+					<table id="descripcionD" class="table table-striped">\
+						<tr> \
+							<td colspan=2>\
+								<br><br>\
+									<table tabIndex="99"  cellpadding="0" cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
+										<tr>\
+											<td>\
+										<div class="input-group" style="width:100%; margin-bottom:10px;"><span class="input-group-addon" style="width:30%">\
+													&nbsp;Cédula* \
+											</span><input tabIndex="1" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control"/> </div>\
+												</td>\
+										</tr>\
+										<tr>\
+											<td>\
+												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%">&nbsp;Nombre*</span>\
+													<input  tabIndex="2" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
+											</td>\
+										</tr>\
+										\
+										<tr>\
+												<td>\
+											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control" type="number"/></div>				</td>\
+										</tr>\
+										<tr>\
+												<td>\
+												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon"  style="width:30%">&nbsp;Dirección</span>\
+													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
+												</td>\
+										</tr>\
+										<tr>\
+												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon"  style="width:30%">&nbsp;Email</span>\
+													\
+													<input tabIndex="4" id="emailP" class="form-control"/></div>\
 												</td>\
 										</tr>\
 										\
@@ -798,6 +870,7 @@ function mostrarClientes(){
 	});
 	}
 	//}
+}
 }
 
 function cedula() {

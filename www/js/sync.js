@@ -240,6 +240,7 @@ function ExtraeDatosApi(donde){
 			localStorage.setItem("msj",ext[0].msj);
 			localStorage.setItem("dias",ext[0].dias);
 			localStorage.setItem("ultimafact",ext[0].num_factura);
+			localStorage.setItem("sin_documento",ext[0].documento);
 
             var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
@@ -808,6 +809,8 @@ function DatosRecurrentes(cual){
 				for(var n=0;n<jsonpresup.length;n++){
 					var item=jsonpresup[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+'1,');
+					localStorage.setItem('sin_documento',item.documento);
+					
 
 					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'" WHERE id=1',[],function(tx,results){
 						console.log("actualizada empresa");

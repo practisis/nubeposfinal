@@ -86,10 +86,18 @@
 						</tr>
 						<tr>
 							<th>
-								Dirección : 
+								Dirección :
 							</th>
 							<td>
 								<textarea id='dir'  placeholder='Dirección...' class='inputs form-control'></textarea>
+							</td>
+						</tr>
+                        <tr>
+							<th>
+								País :
+							</th>
+							<td>
+								<input type='text' id='pais_empresa' name='pais_empresa' placeholder='País' readonly="readonly" class='inputs'/>
 							</td>
 						</tr>
 						<tr>
@@ -237,6 +245,7 @@
 						var direccion = row.direccion;
 						var serie = row.serie;
 						var establecimiento = row.establecimiento;
+                        var pais_empresa = row.pais;
 						
 						$('#nombreEsta').val(nombre);
 						$('#razon').val(razon);
@@ -246,6 +255,7 @@
 						$('#dir').val(direccion);
 						$('#serie').val(serie);
 						$('#establecimiento').val(establecimiento);
+                        $('#pais_empresa').val(pais_empresa);
 					}
 					
 					$('#actualiza').css('display','block');

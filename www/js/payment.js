@@ -612,7 +612,20 @@ function jsonNuevoCliente(){
 	var apellidoP=$('#apellidoP').val();
 	
 	var nacionalidad=1;//$('#nacionalidad').val();
-	var cedula=$('#cedulaP').val();
+	var cedulatemp=$('#cedulaP').val();
+	var cedula;
+	
+	//console.log("voy a grabar:"+$('#cedulaP').val());          
+	if(localStorage.getItem("sin_documento")=='true' && cedulatemp=='9999999999'){
+		var minombre=$('#nombreP').val();
+		minombre=minombre.replace(/ /g,'');
+		cedula='p00'+minombre;
+		//console.log("cambiando cedula:"+cedula);
+	}else{
+		cedula=$('#cedulaP').val();	
+		//console.log("cedula igual:"+cedula);
+	}
+	
 	var nombreP=$('#nombreP').val();
 	var tipoP=$('#tipoP').val();
 	var direccionP=$('#direccionP').val();
@@ -622,6 +635,7 @@ function jsonNuevoCliente(){
 	var fecha=$('#fecha').val();
 	var notasP=$('#notasP').val();
 	$("#cedula").val( cedula );
+	$("#cedulaP").val( cedula );
 	$("#nombre").val( nombreP + " " + apellidoP );
 	$("#telefono").val( telefonoP );
 	$(".direccion").html( direccionP );
@@ -639,7 +653,7 @@ function jsonNuevoCliente(){
 		tx.executeSql('SELECT id FROM CLIENTES WHERE cedula=?;',[cedula],
 		function(tx,res){
 			if(res.rows.length>0){
-				tx.executeSql('UPDATE CLIENTES SET nombre=?,direccion=?, telefono=?, email=?, sincronizar=? WHERE cedula=?;',[nombreP,direccionP,telefonoP,email,cedula,'true'],
+				tx.executeSql('UPDATE CLIENTES SET nombre=?,direccion=?, telefono=?, email=?, sincronizar=? WHERE cedula=?;',[nombreP,direccionP,telefonoP,email,'true',cedula],
 				function(tx,res2){
 					console.log("Cliente Actualizado!");
 					$('#idCliente').val(res.rows.item(0).id);
@@ -688,7 +702,7 @@ function noCliente(){
 						<tr> \
 							<td colspan=2>\
 								<br><br>\
-								<input type="hidden" tabIndex="1" id="cedulaP" value="0000000000" onkeypress="isalphanumeric(event);" class="form-control"/> \
+								<input type="hidden" tabIndex="1" id="cedulaP" value="9999999999" onkeypress="isalphanumeric(event);" class="form-control"/> \
 									<table tabIndex="99"  cellpadding="0"  cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
 										<tr>\
 											<td>\
@@ -997,3 +1011,54 @@ function cedula() {
 	}
 	return true;
 }
+
+
+function validacliente(){
+	var minombre=$('#nombreP').val();
+	var tags=[];
+	if (minombre.length>2){
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(
+		function (tx){
+			tx.executeSql("SELECT nombre, cedula, direccion, telefono, email, id FROM CLIENTES WHERE nombre like '%"+minombre+"%';",[],
+			function(tx,res){
+				if(res.rows.length>0){
+					//construye elselect - objeto res
+					for (i = 0; i < res.rows.length; i++) { 
+						itemp= {label:res.rows.item(i).nombre, value2:res.rows.item(i).id+"|"+res.rows.item(i).telefono+"|"+res.rows.item(i).direccion+"|"+res.rows.item(i).email+"|"+res.rows.item(i).cedula+"|"+res.rows.item(i).nombre};
+						tags.push(itemp);
+						//console.log("item:"+i+":"+res.rows.item(i).nombre);
+					}				
+					//me falta::::  Romper la respuesta y asignarle a cada textbox. Ver que al grabar no se repita.  Ver 
+					//que si es nuevo se cree con el numero de cedula igual al nombre hecho pequeno, sin espacios y con la P adelante.
+					//tags=[{label:"Jose Villena", value2:"1|telefono|direccion|email"}, {label:"Jose Villarreal", value2:"2|telefono|direccion|email"}, {label:"Jose Vizcaino", value2:"3|telefono|direccion|email"}];
+					finalizadeunavez(tags);
+			}
+			});	
+		},errorCB,successCB);
+		}
+}
+function finalizadeunavez(tags){
+  
+    var availableTags = tags;
+    $( "#nombreP" ).autocomplete({
+      source: availableTags,
+	  select: function( event, ui ) {
+		  //$('#direccionP').val(ui.item.label);
+		  var xtemp=ui.item.value2.split("|");
+		  $('#telefonoP').val(xtemp[1]);
+		  $('#emailP').val(xtemp[3]);
+		  $('#direccionP').val(xtemp[2]);
+		  $('#cedulaP').val(xtemp[4]);
+		  $('#idCliente').val(xtemp[0]);
+		  $('#clientID').val(xtemp[0]);
+		  $('#clientefind').html(xtemp[5]);
+		  $('#payClientName').html(xtemp[5]);
+		  $('.tipoClienteP').val(1);
+		  if($('#insideShop').length > 0){
+						continueShopping(xtemp[0]);
+					}
+	  }
+    });
+  
+  }

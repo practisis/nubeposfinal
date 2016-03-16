@@ -41,13 +41,28 @@
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT nombreterminal as c,id_idioma from CONFIG where id=1",[],
+				tx1.executeSql("SELECT nombreterminal as c,id_idioma,sin_documento,con_nombre_orden,con_propina from CONFIG where id=1",[],
 				function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c!=''){
 							$('#tablet_name').val(results1.rows.item(0).c);
-                            //alert(results1.rows.item(0).id_idioma);
+                            //alert(results1.rows.item(0).con_nombre_orden);
                             $('#idioma > option[value="'+results1.rows.item(0).id_idioma+'"]').attr('selected', 'selected');
+                            if(results1.rows.item(0).sin_documento=='true'){
+                                $('#sin_documento').bootstrapSwitch('state', true, true);
+                            }else{
+                    			$('#sin_documento').bootstrapSwitch('state', false, true);
+                    		}
+                            if(results1.rows.item(0).con_nombre_orden=='true'){
+                                $('#con_orden').bootstrapSwitch('state', true, true);
+                            }else{
+                    			$('#con_orden').bootstrapSwitch('state', false, true);
+                    		}
+                            if(results1.rows.item(0).con_propina=='true'){
+                                $('#con_propina').bootstrapSwitch('state', true, true);
+                            }else{
+                    			$('#con_propina').bootstrapSwitch('state', false, true);
+                    		}
 						}
 					}
 				});}
@@ -80,16 +95,22 @@
 	
 	
 	function GuardarNombre(){
+
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
 				var tabname=$('#tablet_name').val();
+                var idioma = $('#idioma').val();
+                var sin_documento = $('#sin_documento').bootstrapSwitch('state');
+                var con_orden = $('#con_orden').bootstrapSwitch('state');
+                var con_propina = $('#con_propina').bootstrapSwitch('state');
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					
-				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=? where id=1",[tabname,true],
+				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina],
 				function(tx1,results1){
 					showalert("Datos Guardados con exito.");
 				});}
 			,errorCB,successCB);
+
 	}
 </script>

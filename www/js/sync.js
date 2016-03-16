@@ -569,15 +569,6 @@ function DatosRecurrentes(cual){
 				//localStorage.setItem("permisos",jsonSync.BigJson[5].Extra[0].constrasenia);
 				localStorage.setItem("permisos",jsonSync.BigJson[7].Extra[0].contrasenia);
 
-                //**********************datos extra permisos config***********************
-                var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-    			db.transaction(function(tx){
-                  tx.executeSql('UPDATE CONFIG SET pais="'+jsonSync.BigJson[7].Extra[0].pais+'",id_idioma = "'+jsonSync.BigJson[7].Extra[0].idioma+'",sin_documento="'+jsonSync.BigJson[7].Extra[0].documento+'",con_nombre_orden="'+jsonSync.BigJson[7].Extra[0].orden+'",con_propina="'+jsonSync.BigJson[7].Extra[0].propina+'" WHERE id=1',[],function(tx,results){
-      				console.log("actualizada empresa permisos recurrente");
-      			  });
-                },errorCB,successCB);
-                //************************************************************************
-
 				//localStorage.setItem("claveuser","");
 				//localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].diseno);
 				//localStorage.setItem("diseno",1);
@@ -817,8 +808,8 @@ function DatosRecurrentes(cual){
 				for(var n=0;n<jsonpresup.length;n++){
 					var item=jsonpresup[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+'1,');
-						
-					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'" WHERE id=1',[],function(tx,results){
+
+					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'" WHERE id=1',[],function(tx,results){
 						console.log("actualizada empresa");
 					});
 				}
@@ -1104,7 +1095,7 @@ function PostaLaNube(arraydatos,cual,accion,t){
 	}else if(accion=='Facturas'){
 		jsonc=item.fetchJson;
 	}else if(accion=='Config'){
-		jsonc='{"nombreempresa":"'+item.nombre+'","razon":"'+item.razon+'","telefono":"'+item.telefono+'","ruc":"'+item.ruc+'","direccion":"'+item.direccion+'","email":"'+item.email+'","serie":"'+item.serie+'","establecimiento":"'+item.establecimiento+'","nombreterminal":"'+item.nombreterminal+'"}';
+		jsonc='{"nombreempresa":"'+item.nombre+'","razon":"'+item.razon+'","telefono":"'+item.telefono+'","ruc":"'+item.ruc+'","direccion":"'+item.direccion+'","email":"'+item.email+'","serie":"'+item.serie+'","establecimiento":"'+item.establecimiento+'","nombreterminal":"'+item.nombreterminal+'","idioma":"'+item.id_idioma+'","documento":"'+item.sin_documento+'","orden":"'+item.con_nombre_orden+'","propina":"'+item.con_propina+'"}';
 	}
 	
 	console.log(jsonc);

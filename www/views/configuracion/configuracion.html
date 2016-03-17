@@ -126,6 +126,7 @@
                 var con_propina = $('#con_propina').bootstrapSwitch('state');
                 var con_tarjeta = $('#con_tarjeta').bootstrapSwitch('state');
                 var con_shop = $('#con_shop').bootstrapSwitch('state');
+                localStorage.setItem('con_shop',con_shop);
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					

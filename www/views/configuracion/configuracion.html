@@ -28,6 +28,14 @@
             <td  style='text-align:right;'>Con Propina:</td>
             <td align='left'><input data-size='small' type='checkbox' id='con_propina' class='switch' /></td>
         </tr>
+        <tr>
+            <td  style='text-align:right;'>Con Tarjeta:</td>
+            <td align='left'><input data-size='small' type='checkbox' id='con_tarjeta' class='switch' /></td>
+        </tr>
+        <tr>
+            <td  style='text-align:right;'>Con Shop:</td>
+            <td align='left'><input data-size='small' type='checkbox' id='con_shop' class='switch' /></td>
+        </tr>
 	</table>
 </div>
 <div class='row'>
@@ -41,7 +49,7 @@
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT nombreterminal as c,id_idioma,sin_documento,con_nombre_orden,con_propina from CONFIG where id=1",[],
+				tx1.executeSql("SELECT nombreterminal as c,id_idioma,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop from CONFIG where id=1",[],
 				function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c!=''){
@@ -63,6 +71,16 @@
                             }else{
                     			$('#con_propina').bootstrapSwitch('state', false, true);
                     		}
+                            if(results1.rows.item(0).con_tarjeta=='true'){
+                                $('#con_tarjeta').bootstrapSwitch('state', true, true);
+                            }else{
+                    			$('#con_tarjeta').bootstrapSwitch('state', false, true);
+                    		}
+                            if(results1.rows.item(0).con_shop=='true'){
+                                $('#con_shop').bootstrapSwitch('state', true, true);
+                            }else{
+                    			$('#con_shop').bootstrapSwitch('state', false, true);
+                    		}
 						}
 					}
 				});}
@@ -72,6 +90,8 @@
         $('#sin_documento').bootstrapSwitch();
         $('#con_orden').bootstrapSwitch();
         $('#con_propina').bootstrapSwitch();
+        $('#con_tarjeta').bootstrapSwitch();
+        $('#con_shop').bootstrapSwitch();
 		if(localStorage.getItem("diseno")==1){
 			$('#tablet_menu').bootstrapSwitch('state', true, true);
 		}else{
@@ -104,10 +124,12 @@
 				localStorage.setItem('sin_documento',sin_documento);
                 var con_orden = $('#con_orden').bootstrapSwitch('state');
                 var con_propina = $('#con_propina').bootstrapSwitch('state');
+                var con_tarjeta = $('#con_tarjeta').bootstrapSwitch('state');
+                var con_shop = $('#con_shop').bootstrapSwitch('state');
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					
-				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina],
+				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop],
 				function(tx1,results1){
 					showalert("Datos Guardados con exito.");
 				});}

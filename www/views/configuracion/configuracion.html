@@ -36,7 +36,6 @@
             <td  style='text-align:right;'>Con Shop:</td>
             <td align='left'><input data-size='small' type='checkbox' id='con_shop' class='switch' /></td>
         </tr>
->>>>>>> 7afd257fc58678afea93afb5b912c03419ebff7a
 	</table>
 </div>
 <div class='row'>
@@ -152,7 +151,7 @@
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					
-				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=? where id=1",[tabname,true],
+				//tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=? where id=1",[tabname,true],function(){
                 var idioma = $('#idioma').val();
                 var sin_documento = $('#sin_documento').bootstrapSwitch('state');
 				localStorage.setItem('sin_documento',sin_documento);

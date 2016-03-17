@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu>
+	<item><text>Resúmen</text></item>
+	<item><text>Ventas</text></item>
+	<item><text>Historial</text></item>
+	<item><text>Productos</text></item>
+	<item><text>Cloud</text></item>
+	<item><text>Config</text></item>
+	<item><text>Impresoras</text></item>
+	<item><text>Configuracion</text></item>
+	<item><text>Empresa</text></item>
+	<item><text>Log</text></item>
+</menu>

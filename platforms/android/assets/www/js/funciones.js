@@ -279,7 +279,7 @@ function agregarCompra(item,origen){
 	//alert(subtotalSinIva+'/'+subtotalSinIvaCompra);
 	$('#totalmiFactura').val(sumTotal);
 	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2))
-	$('#payButton').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2))
+	//$('#total').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2))
 	$('#justo').html(sumTotal.toFixed(2));
 	$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
 	$('#redondeado').html(Math.ceil(sumTotal).toFixed(2));
@@ -1393,7 +1393,7 @@ function ColocarFormasPago(){
 				mihtml+= '<table style="width: 100%; height: 100%;" cellspacing="0px" cellpadding="0px">';
 			    mihtml+= '<tr style="cursor:pointer;">';
 				mihtml+= '<td style="width:10%; height:100% text-align: right; font-size: 12px; font-weight:400; padding-left:10px;"><span class="glyphicon glyphicon-ok-circle"></span></td>';
-				mihtml+= '<td class="textoformapago" id="forma_'+evalJson[k][j].id+'">';
+				mihtml+= '<td class="textoformapago trans_'+evalJson[k][j].nombre+'" id="forma_'+evalJson[k][j].id+'">';
 				mihtml+=evalJson[k][j].nombre;
 				mihtml+= '</td><td class="simple" id="simple_'+evalJson[k][j].id+'" style="text-align:right; padding-right:10px; display:none;">0.00</td>';
 				mihtml+= '</tr>';
@@ -1899,6 +1899,45 @@ function Ready(){
 			
 		});
 	},errorCB,successCB);
+	
+	//idioma
+	var xmlidioma=$.get("lang/en.xml",function(d){
+		
+		var itemestructura=$(d).find("estructura")[0];
+		var itemplaceholder=$(itemestructura).find("placeholder")[0];
+		var itemtitles=$(itemestructura).find("titles")[0];
+		var itembuttons=$(itemestructura).find("botones")[0];
+		var itemlabels=$(itemestructura).find("labels")[0];
+		var todosplaceholder=$(itemplaceholder).find("item");
+		var todostitles=$(itemtitles).find("item");
+		var todosbuttons=$(itembuttons).find("item");
+		var todoslabels=$(itemlabels).find("item");	
+		for(var k=0;k<todosplaceholder.length;k++){
+			var miitemname=$(todosplaceholder[k]).attr("name");
+			//alert(miitemname);
+			$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
+		}
+		
+		for(var k=0;k<todostitles.length;k++){
+			var miitemname=$(todostitles[k]).attr("name");
+			//alert(miitemname);
+			$('.'+miitemname).html($(todostitles[k]).html());
+		}
+		
+		for(var k=0;k<todosbuttons.length;k++){
+			var miitemname=$(todosbuttons[k]).attr("name");
+			//alert(miitemname);
+			$('.'+miitemname).html($(todosbuttons[k]).html());
+		}
+		
+		for(var k=0;k<todoslabels.length;k++){
+								var miitemname=$(todoslabels[k]).attr("name");
+								$('#'+miitemname).html($(todoslabels[k]).html());
+							}
+		
+	});
+	
+	//idioma
 	
 	if($(window).height()>500){
 			Init31();

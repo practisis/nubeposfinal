@@ -324,7 +324,7 @@ valor="0 @0 ";
 <div id="mainDiv" class='row'>
 		<div class='col-lg-12 col-sm-12 col-md-12'>
 		<div class='row sumarow' style='margin-bottom:10px;'>
-			<div class='col-lg-12 col-md-12 col-sm-12'  style='background-color:white;'><h3>Historial de Facturas</h3></div>
+			<div class='col-lg-12 col-md-12 col-sm-12'  style='background-color:white;'><h3 class='trans_historial'>Historial de Facturas</h3></div>
 		</div>
 		<div class='row sumarow' style='padding-top:10px; padding-bottom:10px; background-color:white;'>
 			<div class='col-lg-6 col-sm-6 col-md-6' style='padding-left:20px;'>
@@ -334,7 +334,7 @@ valor="0 @0 ";
 								<input placeholder='Desde' type="text" class='form-control' id="fechadesde" name="fechadesde" style='margin:5px;' readonly />
 							</td>
 							<td  style='vertical-align:middle;'>
-                                <button type='button' class="btn btn-primary" onclick="page=0; getSearch(); return false;">Filtrar</button>
+                                <button type='button' class="btn btn-primary trans_filter" onclick="page=0; getSearch(); return false;">Filtrar</button>
 							</td>
 
 						</tr>
@@ -344,7 +344,7 @@ valor="0 @0 ";
 				<table align='right' style="text-align:center; margin-left: 0px; margin-right: auto;" border="0" cellpadding="4px" cellspacing="10px">
 						<tr>
 							<td  style='vertical-align:middle;'>
-								  <button class="btn btn-success" style="margin-right:15px;" id="imprimirDetalle" type="button" >Imprimir Cierre de Caja</button>
+								  <button class="btn btn-success trans_drawer" style="margin-right:15px;" id="imprimirDetalle" type="button" >Imprimir Cierre de Caja</button>
 							</td>
 
 							<td  style='vertical-align:middle; padding-right:20px;'>
@@ -356,12 +356,12 @@ valor="0 @0 ";
 		</div>
 		<div class='row sumarow'>
 			<div class='col-lg-12' style="text-align:left; padding-top:5px;">
-				<label class='label label-default'>Resultados: <span id='cuantos'></span> facturas.</label>
+				<label class='label label-default'><span id='trans_label_7'>Resultados</span>: <span id='cuantos'></span> <span id='trans_label_8'>facturas</span>.</label>
 			</div>
 		</div>
 		<div class='row'>
 		<div class='col-lg-12 col-md-12 col-sm-12' style='margin-top:10px;'>
-		<table align='center' class='table table-hover table-striped' style='margin-bottom:0px;'><tr><th style='width:20%;'>Fecha</th><th  style='width:20%;'>Cliente</th><th  style='width:20%;'>RUC</th><th  style='width:20%;'># Factura</th><th  style='width:5%;'>Anulada</th><th style='text-align:right; width:10%;'>Total US</th><th style='text-align:right; width:5%;'></th></tr></table>
+		<table align='center' class='table table-hover table-striped' style='margin-bottom:0px;'><tr><th style='width:20%;' class='trans_fecha'>Fecha</th><th  style='width:20%;' class='trans_cliente'>Cliente</th><th  style='width:20%;'>RUC</th><th class='trans_nfact' style='width:20%;'>Factura No.</th><th style='width:5%;' class='trans_anulada'>Anulada</th><th style='text-align:right; width:10%;'>Total US</th><th style='text-align:right; width:5%;'></th></tr></table>
 		<div id="detailDiv" class='table-responsive'></div>
 		</div>
 		</div>
@@ -378,6 +378,46 @@ valor="0 @0 ";
 var page=1;
 
 $(document).ready(function(){
+
+//idioma
+	var xmlidioma=$.get("lang/en.xml",function(d){
+		
+		var itemestructura=$(d).find("estructura")[0];
+		var itemplaceholder=$(itemestructura).find("placeholder")[0];
+		var itemtitles=$(itemestructura).find("titles")[0];
+		var itembuttons=$(itemestructura).find("botones")[0];
+		var itemlabels=$(itemestructura).find("labels")[0];
+		var todosplaceholder=$(itemplaceholder).find("item");
+		var todostitles=$(itemtitles).find("item");
+		var todosbuttons=$(itembuttons).find("item");
+		var todoslabels=$(itemlabels).find("item");
+		for(var k=0;k<todosplaceholder.length;k++){
+			var miitemname=$(todosplaceholder[k]).attr("name");
+			//alert(miitemname);
+			$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
+		}
+		
+		for(var k=0;k<todostitles.length;k++){
+			var miitemname=$(todostitles[k]).attr("name");
+			//alert(miitemname);
+			$('.'+miitemname).html($(todostitles[k]).html());
+		}
+		
+		for(var k=0;k<todosbuttons.length;k++){
+			var miitemname=$(todosbuttons[k]).attr("name");
+			//alert(miitemname);
+			$('.'+miitemname).html($(todosbuttons[k]).html());
+		}
+		
+		for(var k=0;k<todoslabels.length;k++){
+						var miitemname=$(todoslabels[k]).attr("name");
+						$('#'+miitemname).html($(todoslabels[k]).html());
+					}
+		
+	});
+	
+//idioma
+
 
 var filas=0;
 $('.sumarow').each(function(){

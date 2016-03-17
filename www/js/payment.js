@@ -684,14 +684,11 @@ function noCliente(){
 	$("#cuadroClientes,#opaco").fadeOut("fast",function(){});
 }
 
- 
-  function mostrarClientes(){
-	  
-	  console.log("tiene documento:"+localStorage.getItem("sin_documento"));
-	  
+function mostrarClientes(){
 		if($("#newCliente").html()!=''){
 			$("#opaco,#cuadroClientes,#newCliente").fadeIn();
 		}else{
+
 			if(localStorage.getItem("sin_documento")=='true'){
 				//codigo sin documento
 				$("#newCliente ").html('\
@@ -760,6 +757,7 @@ function noCliente(){
 			</style>');
 			}else{
 				//codigo con documento
+
 			$("#newCliente ").html('\
 			<div style="position:relative; left:0%; width:100%; height:100%" id="borrable">\
 				<div id="cuadroClientes" class="cuadroClientes" style="height:100%;"> \
@@ -768,18 +766,18 @@ function noCliente(){
 						<tr> \
 							<td colspan=2>\
 								<br><br>\
-									<table tabIndex="99"  cellpadding="0" cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
+									<table cellpadding="0" cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
 										<tr>\
 											<td>\
 										<div class="input-group" style="width:100%; margin-bottom:10px;"><span class="input-group-addon" style="width:30%">\
 													&nbsp;Cédula* \
-											</span><input tabIndex="1" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control"/> </div>\
+											</span><input tabindex="0" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control"/> </div>\
 												</td>\
 										</tr>\
 										<tr>\
 											<td>\
 												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%">&nbsp;Nombre*</span>\
-													<input  tabIndex="2" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
+													<input  tabindex="1" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
 											</td>\
 										</tr>\
 										\
@@ -790,13 +788,13 @@ function noCliente(){
 										<tr>\
 												<td>\
 												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon"  style="width:30%">&nbsp;Dirección</span>\
-													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
+													<input tabindex="4" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
 												</td>\
 										</tr>\
 										<tr>\
 												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon"  style="width:30%">&nbsp;Email</span>\
 													\
-													<input tabIndex="4" id="emailP" class="form-control"/></div>\
+													<input tabindex="5" id="emailP" class="form-control"/></div>\
 												</td>\
 										</tr>\
 										\
@@ -884,7 +882,6 @@ function noCliente(){
 	});
 	}
 	//}
-}
 }
 
 function cedula() {

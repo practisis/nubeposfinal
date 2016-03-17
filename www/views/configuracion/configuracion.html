@@ -1,5 +1,5 @@
 <div id='console' class='table-responsive' style='padding:20px; font-size:12px; color:#404041; background-color:white;'>
-<h2>Configuración General</h2>
+<h2 id='trans_label_24'>Configuración General</h2>
 <div style='margin-top:25px; font-size:16px;'>
 	<table class='table'>
 		<tr><td  style='text-align:right;'>Nombre Dispositivo:</td><td><input id='tablet_name' class='form-control' /></td></tr>
@@ -36,21 +36,50 @@
             <td  style='text-align:right;'>Con Shop:</td>
             <td align='left'><input data-size='small' type='checkbox' id='con_shop' class='switch' /></td>
         </tr>
+>>>>>>> 7afd257fc58678afea93afb5b912c03419ebff7a
 	</table>
 </div>
 <div class='row'>
 	<div class='col-lg-12'>
-		<button type='button' class='btn btn-success' onclick='GuardarNombre();'>Guardar</button>
+		<button type='button' class='btn btn-success trans_save' onclick='GuardarNombre();'>Guardar</button>
 	</div>
 </div>
 </div>
 <script>
 	$(document).ready(function(){
+		//idioma
+		var xmlidioma=$.get("lang/en.xml",function(d){
+			var itemestructura=$(d).find("estructura")[0];
+			var itemtitles=$(itemestructura).find("titles")[0];
+			var itembuttons=$(itemestructura).find("botones")[0];
+			var itemlabels=$(itemestructura).find("labels")[0];
+			var todostitles=$(itemtitles).find("item");
+			var todosbuttons=$(itembuttons).find("item");
+			var todoslabels=$(itemlabels).find("item");	
+				for(var k=0;k<todostitles.length;k++){
+					var miitemname=$(todostitles[k]).attr("name");
+					//alert(miitemname);
+					$('.'+miitemname).html($(todostitles[k]).html());
+				}
+				
+				for(var k=0;k<todosbuttons.length;k++){
+					var miitemname=$(todosbuttons[k]).attr("name");
+					//alert(miitemname);
+					$('.'+miitemname).html($(todosbuttons[k]).html());
+				}
+				
+				for(var k=0;k<todoslabels.length;k++){
+								var miitemname=$(todoslabels[k]).attr("name");
+								$('#'+miitemname).html($(todoslabels[k]).html());
+							}
+				
+		});
+	
+	
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT nombreterminal as c,id_idioma,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop from CONFIG where id=1",[],
-				function(tx1,results1){
+				tx1.executeSql("SELECT nombreterminal as c,id_idioma,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop from CONFIG where id=1",[],function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c!=''){
 							$('#tablet_name').val(results1.rows.item(0).c);
@@ -87,6 +116,7 @@
 			,errorCB,successCB);
 			
 		$('#tablet_menu').bootstrapSwitch();
+
         $('#sin_documento').bootstrapSwitch();
         $('#con_orden').bootstrapSwitch();
         $('#con_propina').bootstrapSwitch();
@@ -115,10 +145,14 @@
 	
 	
 	function GuardarNombre(){
-
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
 				var tabname=$('#tablet_name').val();
+
+				if(tabname=='')
+					tabname="Tablet "+$('#devicemodel').html();
+					
+				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=? where id=1",[tabname,true],
                 var idioma = $('#idioma').val();
                 var sin_documento = $('#sin_documento').bootstrapSwitch('state');
 				localStorage.setItem('sin_documento',sin_documento);
@@ -135,6 +169,5 @@
 					showalert("Datos Guardados con exito.");
 				});}
 			,errorCB,successCB);
-
 	}
 </script>

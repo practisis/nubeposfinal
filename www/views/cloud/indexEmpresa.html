@@ -14,7 +14,7 @@
 	<div class='panel' id='sihayEmp' style='height:150%;'>
 		<div  class="row" >
 			<div class="col-sm-12">
-				<h2>Datos de la Empresa</h2>
+				<h2 id="trans_label_30">Datos de la Empresa</h2>
 				<hr color="gray" />
 			</div>
 			
@@ -29,16 +29,16 @@
 					</div>
 					<table class='table' style='width:80%;align:center !important;'>
 						<tr>
-							<th>
-								Nombre Establecimiento : 
+							<th id='trans_label_11'>
+								Nombre Establecimiento
 							</th>
 							<td>
 								<input type='text' id='nombreEsta' placeholder='Nombre Establecimiento' class='inputs'/>
 							</td>
 						</tr>
 						<tr>
-							<th>
-								Razón Social : 
+							<th id='trans_label_31'>
+								Razón Social
 							</th>
 							<td>
 								<input type='text' id='razon' placeholder='Razón Social' class='inputs'/>
@@ -46,14 +46,14 @@
 						</tr>
 						<tr>
 							<th>
-								Ruc : 
+								Ruc
 							</th>
 							<td>
 								<input type='text' id='ruc' placeholder='Ruc' class='inputs'/>
 							</td>
 						</tr>
 						<tr>
-							<th>
+							<th class='trans_tel'>
 								Telefono : 
 							</th>
 							<td>
@@ -69,7 +69,7 @@
 							</td>
 						</tr>
 						<tr>
-							<th>
+							<th class='trans_serie'>
 								No. Serie: 
 							</th>
 							<td>
@@ -77,34 +77,26 @@
 							</td>
 						</tr>
 						<tr>
-							<th>
-								No. Establecimiento : 
+							<th class='trans_est'>
+								No. Establecimiento
 							</th>
 							<td>
 								<input type='number' id='establecimiento' placeholder='Establecimiento' class='inputs'/>
 							</td>
 						</tr>
 						<tr>
-							<th>
-								Dirección :
+							<th class='trans_dir'>
+								Dirección
 							</th>
 							<td>
 								<textarea id='dir'  placeholder='Dirección...' class='inputs form-control'></textarea>
 							</td>
 						</tr>
-                        <tr>
-							<th>
-								País :
-							</th>
-							<td>
-								<input type='text' id='pais_empresa' name='pais_empresa' placeholder='País' readonly="readonly" class='inputs'/>
-							</td>
-						</tr>
 						<tr>
 							<td colspan='2' align='center' style='text-align:center;'>
 								<center>
-									<button type="button" class="btn btn-success" style='display:none;' id='actualiza' onclick='actualizar()'>Actualizar</button>
-									<button type="button" class="btn btn-success" style='display:;' id='graba' onclick='grabar()'>Guardar</button>
+									<button type="button" class="btn btn-success trans_update" style='display:none;' id='actualiza' onclick='actualizar()'>Actualizar</button>
+									<button type="button" class="btn btn-success trans_save" style='display:;' id='graba' onclick='grabar()'>Guardar</button>
 									<br/>
 								</center>
 							</td>
@@ -126,6 +118,33 @@
 	</div>
 <script type="text/javascript">
 	$( document ).ready(function() {
+	
+		var xmlidioma=$.get("lang/en.xml",function(d){
+			var itemestructura=$(d).find("estructura")[0];
+			var itemtitles=$(itemestructura).find("titles")[0];
+			var itembuttons=$(itemestructura).find("botones")[0];
+			var itemlabels=$(itemestructura).find("labels")[0];
+			var todostitles=$(itemtitles).find("item");
+			var todosbuttons=$(itembuttons).find("item");
+			var todoslabels=$(itemlabels).find("item");	
+				for(var k=0;k<todostitles.length;k++){
+					var miitemname=$(todostitles[k]).attr("name");
+					//alert(miitemname);
+					$('.'+miitemname).html($(todostitles[k]).html());
+				}
+				
+				for(var k=0;k<todosbuttons.length;k++){
+					var miitemname=$(todosbuttons[k]).attr("name");
+					//alert(miitemname);
+					$('.'+miitemname).html($(todosbuttons[k]).html());
+				}
+				
+				for(var k=0;k<todoslabels.length;k++){
+								var miitemname=$(todoslabels[k]).attr("name");
+								$('#'+miitemname).html($(todoslabels[k]).html());
+							}
+				
+		});
 		$('#sihayEmp').css('height',parseInt($(window).height())*150/100);
 		saberDatosEmpresa();
 	});
@@ -245,7 +264,6 @@
 						var direccion = row.direccion;
 						var serie = row.serie;
 						var establecimiento = row.establecimiento;
-                        var pais_empresa = row.pais;
 						
 						$('#nombreEsta').val(nombre);
 						$('#razon').val(razon);
@@ -255,7 +273,6 @@
 						$('#dir').val(direccion);
 						$('#serie').val(serie);
 						$('#establecimiento').val(establecimiento);
-                        $('#pais_empresa').val(pais_empresa);
 					}
 					
 					$('#actualiza').css('display','block');

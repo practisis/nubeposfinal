@@ -64,7 +64,7 @@ function ExtraeDatosApi(donde){
 		//$(".navbar").slideUp();
 		$("#demoGratis,#fadeRow,#finalizado").css("display","none");
 		$("#contentStepSincro,#cuentaactiva,#mensajeperso").fadeIn();
-		$("#txtSincro").html("Sincronizando Categorías...");
+		$("#txtSincro").html("0%");
 		var jsoncateg=JSON.parse($('#JSONCategoriasNube').html());
 		var jsoncategorias=jsoncateg.Categorias;
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -90,7 +90,7 @@ function ExtraeDatosApi(donde){
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Productos y Modificadores...");
+		$("#txtSincro").html("15%");
 		
 		/*Agregar modificadores*/
 		var jsonmodif=JSON.parse($('#JSONModifNube').html());
@@ -131,7 +131,7 @@ function ExtraeDatosApi(donde){
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Clientes...");
+		$("#txtSincro").html("30%");
 		var jsoncli=JSON.parse($('#JSONclientesNube').html());
 		//{"Clientes":[{"id":"1","nombre":" Consumidor Final","cedula":"9999999999999","telefono":"","direccion":"","email":"","timespan" : "0"}]}
 		var jsonclientes=jsoncli.Clientes;
@@ -155,7 +155,7 @@ function ExtraeDatosApi(donde){
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Presupuesto...");
+		$("#txtSincro").html("45%");
 		var jsonpres=JSON.parse($('#JSONpresupuestoNube').html());
 		var jsonpresupuestos=jsonpres.presupuesto;
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -178,7 +178,7 @@ function ExtraeDatosApi(donde){
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Categorias Menu Diseño...");
+		$("#txtSincro").html("60%");
 		var jsonpres=JSON.parse($('#JSONCatMenuNube').html());
 		var jsonpresupuestos=jsonpres.menucategorias;
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -201,7 +201,7 @@ function ExtraeDatosApi(donde){
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Menu...");
+		$("#txtSincro").html("85%");
 		var jsonpres=JSON.parse($('#JSONMenuNube').html());
 		var jsonpresupuestos=jsonpres.menu;
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -228,7 +228,7 @@ function ExtraeDatosApi(donde){
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Permisos...");
+		$("#txtSincro").html("95%");
 		//alert($('#JSONPermisosNube').html());
 		
 		/*json permisos extra*/
@@ -240,6 +240,7 @@ function ExtraeDatosApi(donde){
 			localStorage.setItem("msj",ext[0].msj);
 			localStorage.setItem("dias",ext[0].dias);
 			localStorage.setItem("ultimafact",ext[0].num_factura);
+
 			localStorage.setItem("sin_documento",ext[0].documento);
             localStorage.setItem("con_shop",ext[0].shop);
 
@@ -570,7 +571,6 @@ function DatosRecurrentes(cual){
 				localStorage.setItem("msj",jsonSync.BigJson[7].Extra[0].msj);
 				//localStorage.setItem("permisos",jsonSync.BigJson[5].Extra[0].constrasenia);
 				localStorage.setItem("permisos",jsonSync.BigJson[7].Extra[0].contrasenia);
-
 				//localStorage.setItem("claveuser","");
 				//localStorage.setItem("msj",jsonSync.BigJson[5].Extra[0].diseno);
 				//localStorage.setItem("diseno",1);
@@ -606,7 +606,7 @@ function DatosRecurrentes(cual){
 	if(cual==1){
 		console.log("Datos Nube 1: Categorias");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Categorías...");
+		$("#txtSincro").html("0");
 		if($('#JSONCategoriasNube').html().length>0){
 			var jsoncategorias=JSON.parse($('#JSONCategoriasNube').html());
 			console.log(jsoncategorias);
@@ -649,7 +649,7 @@ function DatosRecurrentes(cual){
 	}else if(cual==2){
 		console.log("recurrentes 2: Productos y Modificadores");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Productos y Modificadores...");
+		$("#txtSincro").html("15%");
 		
 		/*Ingreso y actualizacion de modificadores*/
 		if($('#JSONModifNube').html()!=''){
@@ -714,7 +714,7 @@ function DatosRecurrentes(cual){
 	}else if(cual==3){
 		console.log("recurrentes 3: Clientes");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Clientes...");
+		$("#txtSincro").html("30%");
 		if($('#JSONclientesNube').html().length>0){
 			var jsonclientes=JSON.parse($('#JSONclientesNube').html());
 			console.log(jsonclientes);
@@ -756,7 +756,7 @@ function DatosRecurrentes(cual){
 	}else if(cual==4){
 		console.log("recurrentes 4: Presupuestos");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Presupuesto...");
+		$("#txtSincro").html("45%");
 		if($('#JSONpresupuestoNube').html().length>0){
 			var jsonpresup=JSON.parse($('#JSONpresupuestoNube').html());
 			console.log(jsonpresup);
@@ -800,7 +800,7 @@ function DatosRecurrentes(cual){
 	}else if(cual==5){
 		console.log("recurrentes 5: Empresa");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando datos Empresa...");
+		$("#txtSincro").html("60%");
 		if($('#JSONEmpresaNube').html().length>0){
 			var jsonpresup=JSON.parse($('#JSONEmpresaNube').html());
 			console.log(jsonpresup);
@@ -810,10 +810,14 @@ function DatosRecurrentes(cual){
 				for(var n=0;n<jsonpresup.length;n++){
 					var item=jsonpresup[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+'1,');
+
+						
+					/*tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'" WHERE id=1',[],function(tx,results){
 					localStorage.setItem('sin_documento',item.documento);
-					localStorage.setItem("con_shop",item.shop);
+					localStorage.setItem("con_shop",item.shop);*/
 
 					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'" WHERE id=1',[],function(tx,results){
+
 						console.log("actualizada empresa");
 					});
 				}
@@ -840,7 +844,7 @@ function DatosRecurrentes(cual){
 	}else if(cual==6){
 		console.log("recurrentes 6: Categorias Diseño Menu");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Categorías de Menu...");
+		$("#txtSincro").html("75%");
 		if($('#JSONCatMenuNube').html().length>0){
 			var jsoncatmenu=JSON.parse($('#JSONCatMenuNube').html());
 			console.log(jsoncatmenu);
@@ -883,7 +887,7 @@ function DatosRecurrentes(cual){
 	}	else if(cual==7){
 		console.log("recurrentes 7: Productos Diseño de Menu");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando productos Diseño de Menú...");
+		$("#txtSincro").html("90%");
 		if($('#JSONMenuNube').html().length>0){
 			var jsonmenu=JSON.parse($('#JSONMenuNube').html());
 			console.log(jsonmenu);
@@ -908,7 +912,7 @@ function DatosRecurrentes(cual){
 						});
 					}
 				},errorCB,function(){
-					$("#theProgress").css("width" , "90%");
+					$("#txtSincro").html("95%");
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -921,10 +925,10 @@ function DatosRecurrentes(cual){
 						localStorage.setItem("dataupdate","");
 						DatosRecurrentes(8);
 						setTimeout(function(){
-							$("#theProgress").css("width" , "0%");
+							$("#theProgress").css("width" , "95%");
 							$("#finalizado").fadeIn();
 							$("#contentStepSincro").css("display","none");
-							$("#txtSincro").html("Sincronizando..");
+							$("#txtSincro").html("");
 						},1500);
 						updateOnlineStatus('ONLINE');
 					}).fail(function(){
@@ -937,7 +941,7 @@ function DatosRecurrentes(cual){
 	else if(cual==8){
 		console.log("recurrentes 8: Permisos Usuario");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("Sincronizando Permisos de Usuario...");
+		$("#txtSincro").html("100%");
 		
 		if($('#JSONImpuestosNube').html()!=''){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -994,7 +998,7 @@ function DatosRecurrentes(cual){
 					});
 				}
 				},errorCB,function(){
-					$("#theProgress").css("width" , "95%");
+					$("#theProgress").css("width" , "100%");
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -1009,7 +1013,7 @@ function DatosRecurrentes(cual){
 						updateOnlineStatus('ONLINE');
 					}).fail(function(){
 						updateOnlineStatus("OFFLINE");
-						setTimeout(function(){SincronizadorNormal()},180000);
+						setTimeout(function(){$("#theProgress").css("width" , "0%"); SincronizadorNormal()},180000);
 					});
 				});
 		}
@@ -1100,6 +1104,7 @@ function PostaLaNube(arraydatos,cual,accion,t){
 		jsonc=item.fetchJson;
 	}else if(accion=='Config'){
 		jsonc='{"nombreempresa":"'+item.nombre+'","razon":"'+item.razon+'","telefono":"'+item.telefono+'","ruc":"'+item.ruc+'","direccion":"'+item.direccion+'","email":"'+item.email+'","serie":"'+item.serie+'","establecimiento":"'+item.establecimiento+'","nombreterminal":"'+item.nombreterminal+'","idioma":"'+item.id_idioma+'","documento":"'+item.sin_documento+'","orden":"'+item.con_nombre_orden+'","propina":"'+item.con_propina+'","tarjeta":"'+item.con_tarjeta+'","shop":"'+item.con_shop+'"}';
+
 	}
 	
 	console.log(jsonc);

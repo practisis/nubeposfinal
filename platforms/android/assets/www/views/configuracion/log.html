@@ -1,10 +1,8 @@
 <div id='console' class='table-responsive' style='padding:20px; font-size:12px; color:#404041; background-color:white;'>
 <p style="text-align: right"><button type="button" class="btn btn-success" id='backup' onclick='backupbdd();'>Backup</button> </p>
 	<table id='tableconsole' class='table table-stripped'>
-	<thead><tr><th>Fecha</th><th>Descripcion</th><th>Datos</th></tr></thead>
-	<tbody>
-		
-	</tbody>
+	<thead><tr><th class='trans_fecha'>Fecha</th><th class="trans_descr">Descripcion</th><th class="trans_detail">Datos</th></tr></thead>
+	<tbody></tbody>
 	</table>
 </div>
 <div id="myModalbdd" class="modal fade" role="dialog" style="margin-top: 25px;position: absolute;">
@@ -32,6 +30,34 @@
 </div>
 <script>
 	$(document).ready(function(){
+			var xmlidioma=$.get("lang/en.xml",function(d){
+			var itemestructura=$(d).find("estructura")[0];
+			var itemtitles=$(itemestructura).find("titles")[0];
+			var itembuttons=$(itemestructura).find("botones")[0];
+			var itemlabels=$(itemestructura).find("labels")[0];
+			var todostitles=$(itemtitles).find("item");
+			var todosbuttons=$(itembuttons).find("item");
+			var todoslabels=$(itemlabels).find("item");	
+				for(var k=0;k<todostitles.length;k++){
+					var miitemname=$(todostitles[k]).attr("name");
+					//alert(miitemname);
+					$('.'+miitemname).html($(todostitles[k]).html());
+				}
+				
+				for(var k=0;k<todosbuttons.length;k++){
+					var miitemname=$(todosbuttons[k]).attr("name");
+					//alert(miitemname);
+					$('.'+miitemname).html($(todosbuttons[k]).html());
+				}
+				
+				for(var k=0;k<todoslabels.length;k++){
+								var miitemname=$(todoslabels[k]).attr("name");
+								$('#'+miitemname).html($(todoslabels[k]).html());
+							}
+				
+		});
+	
+	
 	$('#console').css("height",parseInt($(window).height())*80/100);
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){

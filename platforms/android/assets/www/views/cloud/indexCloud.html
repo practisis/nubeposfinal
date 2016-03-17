@@ -30,7 +30,7 @@
 				  <li role="presentation"><a href="#" >  <span class="badge">4</span> Final </a></li>
 				</ul>
 				<br><br>
-				<center> <i> <span id="txtSincro">Sincronizando Productos...</span> </i> </center>
+				<center> <i><span id='trans_label_18'></span> <span id="txtSincro"></span></i></center>
 				<div class="progress" >
 					<div id="theProgress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0.5%"><span class="sr-only">25% Complete</span></div>
 				</div>
@@ -83,27 +83,27 @@
 	  <div class='row'>
 		<div class='col-lg-12' id='finalizado' style='margin-top:10px; margin-bottom:10px;'>
 		<!--<img style='max-width:60%;' src='images/doneSync.png' style='cursor:pointer;' />-->
-		<h1>Sincronizado con exito! </h1>
+		<h1 id='trans_label_14'>Sincronizado con exito! </h1>
 		</div>
 	  </div>
 	  <div class='row' id='cuentaactiva' style='display:none;'>
 		<div class='col-lg-12'>
-			<div style='margin-top:10px; margin-bottom:10px;'>Ingresa a tu cuenta PractiPOS en la nube</div>
-			<center><button onclick="VerificarPermiso('nube');" class="btn btn-md btn-primary btn-center" type="button" id="linklogin">Ir a la nube</button></center>
-			<div class='alert alert-success' style='margin-top:20px; margin-bottom:20px;'>Su cuenta se encuentra activa por <b><span id='dias'>x</span></b> dias.</div>
+			<div style='margin-top:10px; margin-bottom:10px;' id='trans_label_15' >Ingresa a tu cuenta PractiPOS en la nube</div>
+			<center><button onclick="VerificarPermiso('nube');" class="btn btn-md btn-primary btn-center trans_cloud" type="button" id="linklogin">Ir a la nube</button></center>
+			<div class='alert alert-success' style='margin-top:20px; margin-bottom:20px;'><span id='trans_label_16'>Su cuenta se encuentra activa por</span><b><span id='dias'>x</span></b> <label id='trans_label_17'>dias</label>.</div>
 		</div>
 	  </div>
 	  <div class='row'  id="bloqueo" style="display: none;">
 			<div class="col-lg-12">
 				<h1>Licencia Caducada!</h1>
-				<div class='alert alert-danger' style='margin-top:30px;'>Su cuenta PractiPOS se encuentra bloqueada, ya que se ha terminado la validez de la licencia.</div>
-				<center style='margin-top:20px; margin-bottom:20px;'><button link="" onclick='IraNube(this);'  id="linkloginb" class="btn btn-primary" type="button">Abrir PractiPOS en la nube</button></center>
+				<div class='alert alert-danger trans_block' style='margin-top:30px;'>Su cuenta PractiPOS se encuentra bloqueada, ya que se ha terminado la validez de la licencia.</div>
+				<center style='margin-top:20px; margin-bottom:20px;'><button link="" onclick='IraNube(this);'  id="linkloginb" class="btn btn-primary trans_cloud" type="button">Abrir PractiPOS en la nube</button></center>
 			</div>
 	  </div>
       <div class='row'  id="desactivo" style="display: none;">
 			<div class="col-lg-12">
 				<h1>Terminal Desactivado!</h1>
-				<div class='alert alert-danger' style='margin-top:30px;'>Su terminal esta desactivado de PractiPOS.</div>
+				<div class='alert alert-danger trans_inactive' style='margin-top:30px;'>Su terminal esta desactivado de PractiPOS.</div>
 			</div>
 	  </div>
 	  <div class='row'>
@@ -306,6 +306,41 @@
 <input type="hidden" id="idcategoria" />
 <script>
 $(document).ready(function(){
+	//idioma
+		var xmlidioma=$.get("lang/en.xml",function(d){
+			var itemestructura=$(d).find("estructura")[0];
+			var itemplaceholder=$(itemestructura).find("placeholder")[0];
+			var itemtitles=$(itemestructura).find("titles")[0];
+			var itembuttons=$(itemestructura).find("botones")[0];
+			var itemlabels=$(itemestructura).find("labels")[0];
+			var todosplaceholder=$(itemplaceholder).find("item");
+			var todostitles=$(itemtitles).find("item");
+			var todosbuttons=$(itembuttons).find("item");
+			var todoslabels=$(itemlabels).find("item");
+			for(var k=0;k<todosplaceholder.length;k++){
+				var miitemname=$(todosplaceholder[k]).attr("name");
+					//alert(miitemname);
+				$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
+			}
+				
+				for(var k=0;k<todostitles.length;k++){
+					var miitemname=$(todostitles[k]).attr("name");
+					//alert(miitemname);
+					$('.'+miitemname).html($(todostitles[k]).html());
+				}
+				
+				for(var k=0;k<todosbuttons.length;k++){
+					var miitemname=$(todosbuttons[k]).attr("name");
+					//alert(miitemname);
+					$('.'+miitemname).html($(todosbuttons[k]).html());
+				}
+				
+				for(var k=0;k<todoslabels.length;k++){
+								var miitemname=$(todoslabels[k]).attr("name");
+								$('#'+miitemname).html($(todoslabels[k]).html());
+							}
+				
+		});
 	
 	$('#demoGratis').css('height',parseInt($(window).height())*150/100);
 	$('#fadeRow').css('height',parseInt($(window).height())*110/100);

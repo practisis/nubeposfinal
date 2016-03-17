@@ -337,7 +337,7 @@
 		<div class='col-md-12' >
 			<div class="input-group">
 			<span class="input-group-addon"><span class='glyphicon glyphicon-search'></span></span>
-			<input type='text' id='inputbusc' name='inputbusc' placeholder='Buscar' onkeydown='BuscarSugerencias2(this.value,event);' class='form-control input'/>
+			<input type='text' id='inputbusc' name='inputbusc' placeholder='Buscar' onkeydown='BuscarSugerencias2(this.value,event);' class='form-control input trans_buscar'/>
 			</div>
 			<div id="resultBuscador" class='resultBuscador'>
 				<table id='tableresults' width='100%' cellspacing='0px' cellpadding='0px'>
@@ -360,7 +360,7 @@
 								<th style="width:20%;" >
 									<table width='100%' height='100%'>
 										<tr>
-											<td valign='middle' align='center'>
+											<td valign='middle' align='center' class='trans_cant'>
 												Cant.
 											</td>
 											<td valign='middle' align='center'>
@@ -369,7 +369,7 @@
 										</tr>
 									</table>
 								</th>
-								<th style="width:50%; text-align:left; padding-left:20px;">Producto</th>
+								<th style="width:50%; text-align:left; padding-left:20px;"  class='trans_prod'>Producto</th>
 								<th style="text-align:right; padding-right:20px;">$ Total</th>
 							</tr>
 						</table>
@@ -395,12 +395,12 @@
 			<!--<div class='row'>
 				<div class='col-xs-6'>
 					<center>-->
-						<button type='button' class='btn btn-default' style='margin-bottom:5px; margin-right:5px;' id='btn_descuento' onclick="showPopup(); return false;">DESCUENTO</button>
+						<button type='button' class='btn btn-default trans_desc' style='margin-bottom:5px; margin-right:5px;' id='btn_descuento' onclick="showPopup(); return false;">DESCUENTO</button>
 					<!--</center>
 				</div>
 				<div class='col-xs-6'>
 					<center>	-->
-						<button type='button' class='btn btn-success' id='btn_pagar' style='margin-bottom:5px;' onclick="AntesDePagar(); return false;">PAGAR&nbsp;<span id='total'>0.00</span></button>
+						<button type='button' class='btn btn-success' id='btn_pagar' style='margin-bottom:5px;' onclick="AntesDePagar(); return false;"><span class='trans_pay'>PAGAR</span>&nbsp;<span id='total'>0.00</span></button>
 					<!--</center>
 				</div>
 			</div>-->
@@ -451,7 +451,7 @@
 	<div class="modal-dialog modal-sm">
 	<div class='modal-content text-center'>
 		<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupDiscount").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>
-		<div class='modal-header'><h2>DESCUENTO</h2></div>
+		<div class='modal-header'><h2 class='trans_desc'>DESCUENTO</h2></div>
 		<span id='msjDescuentoError'></span>
 		<div class="modal-body divdescuento" style='color:#404041; position:relative;'>
 			<!--<div id="discountAdded" style="display: none; text-align: center; color: green">OK!</div>
@@ -498,11 +498,11 @@
 							<button class='numerod btn btn-default btn-lg' cual='p'>.</button>
 						</div>
 						<div class='col-xs-4' align='center'>
-							<button class='numerod btn btn-default btn-lg' cual='d'><span class='glyphicon glyphicon-remove'></span></button>
+							<button class='numerod btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button>
 						</div>
 			</div>
-			<div class='btn btn-default' onclick="closePopup(); return false;" id='btn_cancelar' style='margin:10px;'>Cancelar</div>
-			<div id='btn_agregar' class='btn btn-success' onclick='addDiscount(); return false;' style='margin:10px;'>Descontar</div>
+			<div class='btn btn-default trans_cancel' onclick="closePopup(); return false;" id='btn_cancelar' style='margin:10px;'>Cancelar</div>
+			<div id='btn_agregar' class='btn btn-success  trans_desc' onclick='addDiscount(); return false;' style='margin:10px;'>Descontar</div>
 			
 		</div>
 	</div>
@@ -553,7 +553,7 @@
 			<div class='modal-content text-center'>
 				<div class='modal-header'>
 						<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupCantidad").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>
-					<h3>Nueva Cantidad</h3>
+					<h3 class='trans_cantc'>Nueva Cantidad</h3>
 				</div>
 				<span id='msjCantidadError'></span>
 				<div class="modal-body divcalculadora" style='color:#404041; position:relative;'>
@@ -604,9 +604,9 @@
 					</div>
 					<input type='hidden' id='recibeIdentificadorTr' />
 					<input type='hidden' id='productoIDAcambiar'  />
-					<div class='btn btn-default' onclick="closePopup2(); return false;" id='btn_cancelar' style='margin:10px;'>Cancelar</div>
-					<div id='btn_agregar1' class='btn btn-success' onclick='cambiarCantidad()' style='margin:10px;'>Cambiar</div>
-					<div id='btn_agregar2' class='btn btn-success' onclick='cambiarCantidad2()' style='margin:10px;display:none;'>Cambiar</div>
+					<div class='btn btn-default trans_cancel' onclick="closePopup2(); return false;" id='btn_cancelar' style='margin:10px;'>Cancelar</div>
+					<div id='btn_agregar1' class='btn btn-success trans_change' onclick='cambiarCantidad()' style='margin:10px;'>Cambiar</div>
+					<div id='btn_agregar2' class='btn btn-success trans_change' onclick='cambiarCantidad2()' style='margin:10px;display:none;'>Cambiar</div>
 					
 				</div>
 			</div>
@@ -682,7 +682,7 @@
 				<div class='row' style='background-color:#fff;'>
 						<div class='col-xs-12'>
 						<div style='margin-top:10px; margin-bottom:20px;'>
-						<h3 style='margin-top:0px;'>Ingreso de Pagos</h3>
+						<h3 style='margin-top:0px;' id='trans_label_32'>Ingreso de Pagos</h3>
 							<div style='width:100%; text-align:right; padding-right:5px; padding-top:5px;cursor:pointer;color:#1495C0; position:absolute; top:0px; right:12px; cursor:pointer;'>
 								<i class="fa fa-chevron-circle-left fa-3x" title='Volver...' onclick='$("#paymentModule").slideUp();'></i>
 							</div>
@@ -712,7 +712,7 @@
 				<div class='col-xs-6'>
 					<div class="row">
 						<div class='col-md-5' style='padding-right:0px; '>
-							<div style='margin-top:5px; text-align:left;'><b>Factura No.&nbsp;&nbsp;</b><span id='seriesfact'></span></div>
+							<div style='margin-top:5px; text-align:left;'><b><span class='trans_nfact'>Factura No.</span>&nbsp;&nbsp;</b><span id='seriesfact'></span></div>
 							<input id='invoiceNrComplete' type='hidden' style='display:none;'/>
 						</div>
 						<div class='col-md-3'>
@@ -725,7 +725,7 @@
 				<div class='col-xs-6' style='text-align:right;'>
 					<span name='busquedacliente' id='busquedacliente'>9999999999999</span> - 	
 					<span style='color:#404041; font-weight:bold;' id='clientefind'>Consumidor Final</span>
-					<button style='margin-left:5px;' onclick="BuscarCliente(13);" type='button' class='btn btn-default btn'>Cambiar Cliente</button>&nbsp;		
+					<button style='margin-left:5px;' onclick="BuscarCliente(13);" type='button' class='btn btn-default btn trans_cliente'>Cambiar Cliente</button>&nbsp;		
 				</div>
 				</div>
 				</div>
@@ -738,7 +738,7 @@
 							</table>
 						</div>
 						<div style='text-align:left; font-size:12px;'>
-						<div onclick='PagoAvanzado();' id='pagoavan' style='padding-left:10px;'>Pago Avanzado</div>
+						<div onclick='PagoAvanzado();' id='pagoavan' style='padding-left:10px;' class='trans_advance'>Pago Avanzado</div>
 						</div>
 						<!--<div style='padding-top:10px; text-align:right; margin-bottom:10px;'><button class='btn btn-xs btn-success'>Pago Avanzado</button></div>-->
 					</div>
@@ -746,7 +746,7 @@
 				<div class='col-md-7'>
 						<div class='tipopago panel'>
 							<div class='touchpago' id='touchefectivo'>
-								<span>Elige tu pago en efectivo</span>
+								<span id='trans_label_34'>Elige tu pago en efectivo</span>
 								<div class='' style='margin-bottom:3px; margin-top:15px; text-align:left;'>
 								<!---<div class='col-lg-4'>
 								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='100' type='button'>100</button>
@@ -804,7 +804,7 @@
 								
 							</div>
 							<div class="touchpago col-xs-12" id='touchtarjetas' style='display:none;'>
-								<span>Elige la tarjeta con la que vas a pagar</span>
+								<span id='trans_label_35'>Elige la tarjeta con la que vas a pagar</span>
 								<div class='col-lg-12 col-md-12 col-xs-12' style='padding:0px;'>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; display:none;' id='cardgroup'>
 								<span class="input-group-addon" id="basic-addon1" >Valor US</span>
@@ -815,7 +815,7 @@
 								    </div>
 							</div>
 							<div class="touchpago" id='touchcheques'  style='display:none;'>
-								<span>Ingresa el monto del cheque</span>
+								<span id='trans_label_36'>Ingresa el monto del cheque</span>
 								<table width='100%' style='margin-top:15px;'>
 								<tr><td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
@@ -833,7 +833,7 @@
 								</table>
 							</div>
 							<div class="touchpago" id='touchcxc'  style='display:none;'>
-								<span>Ingresa el monto que se va a cancelar</span>
+								<span id='trans_label_37'>Ingresa el monto que se va a cancelar</span>
 								<table width='100%' style='margin-top:15px;'>
 								<tr><td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
@@ -861,14 +861,14 @@
 						<div class='col-md-3' style="padding-top:10px;">
 						<table class="cuadrototal" border="0" cellpadding="0px" cellspacing="0px" width='100%'>
 							<tr>
-								<td class="" align='right'>
+								<td class="" align='right' id='trans_label_33'>
 									 PAGADO
 								</td>
 								<td id="invoicePaid" class='' style='' align='right'>
 									0.00
 								</td>
 							
-								<td id="invoiceDebt" class="" style='' align='right'>
+								<td id="invoiceDebt" class="trans_change" style='' align='right'>
 									FALTANTE
 								</td>
 								<td id="changeFromPurchase" class='' style='' align='right'>
@@ -881,17 +881,17 @@
 						<table align='right'>
                             <tr>
 								<td>
-    							    <button id="cancelButton" class='btn btn-default btn-lg' onclick="cancelPayment(); return false;" style='margin-right:5px;'>Cancelar</button>
+    							    <button id="cancelButton" class='btn btn-default btn-lg trans_cancel' onclick="cancelPayment(); return false;" style='margin-right:5px;'>Cancelar</button>
                                 </td>
 								<td>
-									<button class='btn btn-lg btn-primary' onclick="$('#popupNameorder').modal('show');" style='margin-right:5px;' type='button'>Nombre Orden</button>
+									<button class='btn btn-lg btn-primary trans_ordern' onclick="$('#popupNameorder').modal('show');" style='margin-right:5px;' type='button'>Nombre Orden</button>
 								</td>
                                 <td>
-        						<button style="float:right; margin-right:3px;" id="payButton" class="btn btn-success btn-lg" onclick="performPurchase('table'); return false;">PAGAR $<span id="invoiceTotal" class="payOverview">
+        						<button style="float:right; margin-right:3px;" id="payButton" class="btn btn-success btn-lg" onclick="performPurchase('table'); return false;"><span class='trans_pay'>PAGAR</span> $<span id="invoiceTotal" class="payOverview">
 									0.00</span></button>
 								</td>
                                 <td>
-        						    <div style="display:none; min-width:80px; width:80px; height:30px; min-height:30px; padding-top:5px;" id="payButtonActivated" class='actiongreenbutton'>PAGAR <span id="invoiceTotal" class="payOverview">
+        						    <div style="display:none; min-width:80px; width:80px; height:30px; min-height:30px; padding-top:5px;" id="payButtonActivated" class='actiongreenbutton'><span class='trans_pay'>PAGAR</span> <span id="invoiceTotal" class="payOverview">
 									0.00</span></div>
                                 </td>
                                 

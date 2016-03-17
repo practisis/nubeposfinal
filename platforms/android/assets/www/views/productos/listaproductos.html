@@ -10,7 +10,7 @@
 		<div class="col-lg-12">
 			<div class="row">
 				<div class="col-sm-12" >
-					<h3 style="margin-left:15px;">Lista de Productos</h3>
+					<h3 style="margin-left:15px;" class='trans_products'>Lista de Productos</h3>
 				</div>
 			</div>
 
@@ -18,11 +18,8 @@
 			
 			<!--<div class="row"> <!-- Row Header Search.. -->
 			<div class="row"> <!-- Row Header Search.. -->
-				
-				
 				<div class="col-sm-12" align="center">
 					<div class="row"> 
-									
 						<!--<div class="col-md-3" align="left">
 							<div role="group" class="btn-group">-->
 								   <div id="includeDropCategory" style="display:none;"></div>
@@ -30,16 +27,15 @@
 						</div>-->
 						<div class="col-lg-4 col-md-4 col-xs-4" align="left">
 							<div class="input-group" style="width:100%;">
-								<input  type="text" style="min-width:100px;"  class="form-control" placeholder="Escriba un producto..." id="searchKeyword">
+								<input  type="text" style="min-width:100px;"  class="form-control trans_buscar" placeholder="Escriba un producto..." id="searchKeyword">
 								<span class="input-group-btn">
-									<button class="btn btn-primary" type="button" onclick="searchProduct($('#searchKeyword')); ">Buscar</button>
+									<button class="btn btn-primary trans_search" type="button" onclick="searchProduct($('#searchKeyword')); ">Buscar</button>
 								</span>
 							</div><!-- /input-group -->
 						</div>
 						<div class='col-md-8 col-lg-8 col-xs-8' style='text-align:right;'>
-							<button type='button' class='btn btn-success' id='nuevoProducto'  style="display:none;" onclick="envia('nuevoproducto');">Nuevo Producto</button>
+							<button type='button' class='btn btn-success trans_new_prod' id='nuevoProducto'  style="display:none;" onclick="envia('nuevoproducto');">Nuevo Producto</button>
 						</div>
-						
 						
 					</div>
 					
@@ -68,12 +64,12 @@
 			</div>
 			<div class='row'>
 				<div class='col-lg-3 col-md-3 col-xs-3' style='margin-bottom:5px; text-align:left;'>
-					<label class='label label-default'>Resultados: <span id='nproductos'></span> productos.</label>
+					<label class='label label-default'><span id='trans_label_7'>Resultados</span>: <span id='nproductos'></span> <span id="trans_label_9">productos</span>.</label>
 				</div>
 			</div>
 			<div class="row" align="center" > <!-- Row Table of products.. -->
 					<div class="col-sm-12">
-						<table class="table table-striped" style="margin-bottom:0px;"><thead><tr><th style="width:30%;">Nombre</th><th style=" width:30%;">Categoría</th><th style="width:10%; text-align:right;">Precio</th><th style="width:10%;" >Aplica Impuestos</th><th style="text-align:center; width:10%; display:none;"></th><th style="width:10%;"></th></tr></thead></table>
+						<table class="table table-striped" style="margin-bottom:0px;"><thead><tr><th style="width:30%;" class="trans_prod">Nombre</th><th style=" width:30%;" class="trans_categ">Categoría</th><th style="width:10%; text-align:right;" class="trans_precio">Precio</th><th style="width:10%; text-align:center;" class="trans_imp" >Aplica Impuestos</th><th style="text-align:center; width:10%; display:none;"></th><th style="width:10%;"></th></tr></thead></table>
 						<div id="recibeTodosLosProductos" style="font-size:14px; overflow-y:auto;" class="table-responsive">
 						</div>
 						<input id='totalpags' style='display:none;'/>
@@ -276,6 +272,45 @@ ListarCategorias();
 getSearch();
 
 $(document).ready(function(){
+	//idioma
+	var xmlidioma=$.get("lang/en.xml",function(d){
+		var itemestructura=$(d).find("estructura")[0];
+		var itemplaceholder=$(itemestructura).find("placeholder")[0];
+		var itemtitles=$(itemestructura).find("titles")[0];
+		var itembuttons=$(itemestructura).find("botones")[0];
+		var itemlabels=$(itemestructura).find("labels")[0];
+		var todosplaceholder=$(itemplaceholder).find("item");
+		var todostitles=$(itemtitles).find("item");
+		var todosbuttons=$(itembuttons).find("item");
+		var todoslabels=$(itemlabels).find("item");
+		for(var k=0;k<todosplaceholder.length;k++){
+			var miitemname=$(todosplaceholder[k]).attr("name");
+				//alert(miitemname);
+			$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
+		}
+			
+			for(var k=0;k<todostitles.length;k++){
+				var miitemname=$(todostitles[k]).attr("name");
+				//alert(miitemname);
+				$('.'+miitemname).html($(todostitles[k]).html());
+			}
+			
+			for(var k=0;k<todosbuttons.length;k++){
+				var miitemname=$(todosbuttons[k]).attr("name");
+				//alert(miitemname);
+				$('.'+miitemname).html($(todosbuttons[k]).html());
+			}
+			
+			for(var k=0;k<todoslabels.length;k++){
+							var miitemname=$(todoslabels[k]).attr("name");
+							$('#'+miitemname).html($(todoslabels[k]).html());
+						}
+			
+	});
+
+
+
+
 	$('#recibeTodosLosProductos').css("height",parseFloat($(window).height())*45/100);
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(

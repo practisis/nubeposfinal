@@ -1,7 +1,7 @@
 var campos=new Array();
 campos["PRODUCTOS"]=['id_local|integer primary key AUTOINCREMENT','id|integer','formulado|text','codigo|text','precio|real','categoriaid|text','cargaiva|integer','productofinal|integer','materiaprima|integer','timespan|text UNIQUE','ppq|real default 0','color|text','servicio|integer default 0','estado|integer default 1','sincronizar|boolean default "true"','tieneimpuestos|boolean default "true"'];
 
-campos["CONFIG"]=['id|integer primary key AUTOINCREMENT','nombre|text, razon|text','ruc|integer','telefono|integer','email|text','direccion|text','printer|text','serie|text default "001"','establecimiento|text default "001"','sincronizar|boolean default "false"','encabezado|integer default 3','largo|integer default 18','nombreterminal|text default "Tablet 1"','pais|text default ""','id_idioma|integer default 1','sin_documento|boolean default "false"','con_nombre_orden|boolean default "false"','con_propina|boolean default "false"'];
+campos["CONFIG"]=['id|integer primary key AUTOINCREMENT','nombre|text, razon|text','ruc|integer','telefono|integer','email|text','direccion|text','printer|text','serie|text default "001"','establecimiento|text default "001"','sincronizar|boolean default "false"','encabezado|integer default 3','largo|integer default 18','nombreterminal|text default "Tablet 1"'];
 
 campos["LOGACTIONS"]=['id|integer primary key AUTOINCREMENT','time|numeric','descripcion|text','datos|text'];
 
@@ -253,8 +253,8 @@ var app = {
 		VerificarCampos('PRODUCTOS');
 		
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS CONFIG (id integer primary key AUTOINCREMENT, nombre text, razon text , ruc integer, telefono integer , email text , direccion text, printer text,serie text default "001",establecimiento text default "001",sincronizar boolean default "false",encabezado integer default 3,largo integer default 18, nombreterminal text default "Tablet 1",pais text default "",id_idioma integer default 1,sin_documento boolean default "false",con_nombre_orden boolean default "false",con_propina boolean default "false")');
-
+		tx.executeSql('CREATE TABLE IF NOT EXISTS CONFIG (id integer primary key AUTOINCREMENT, nombre text, razon text , ruc integer, telefono integer , email text , direccion text, printer text,serie text default "001",establecimiento text default "001",sincronizar boolean default "false",encabezado integer default 3,largo integer default 18, nombreterminal text default "Tablet 1")');
+		
 		VerificarCampos('CONFIG');
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS LOGACTIONS (id integer primary key AUTOINCREMENT, time numeric, descripcion text, datos text)');
@@ -360,9 +360,9 @@ var app = {
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function (tx){
 			tx.executeSql('SELECT sql from sqlite_master WHERE type = "table" and name like ?',[tabla],function(tx,res){
-				console.log(res);
+				//console.log(res);
 				if(res.rows.length>0){
-					console.log(res.rows.item(0).sql);
+					//console.log(res.rows.item(0).sql);
 					var sqlvec=res.rows.item(0).sql.replace(")","").split('(');
 					var camposvec=sqlvec[1].split(',');
 					for(var n=0;n<camposvec.length;n++){
@@ -378,7 +378,7 @@ var app = {
 						var cols=$.trim(campostabla[n]).split('|');
 						var nombrecol=cols[0];
 						if(camposvec.indexOf(nombrecol)<0){
-							console.log("falta campo: "+campostabla[n]);
+							//console.log("falta campo: "+campostabla[n]);
 							tx.executeSql("ALTER TABLE "+tabla+" ADD COLUMN "+campostabla[n].replace("|"," "),[],function(tx,res){});
 						}
 					}
@@ -627,7 +627,7 @@ var app = {
 				console.log('Descuento : '+descAplicado);
 
 				var facturanumber=datosfact.Pagar[0].factura.numerofact;
-				$('#numerofactura').html('Factura N° '+facturanumber);
+				$('#numerofactura').html(facturanumber);
 
                 $('#total').html(totalf);
                 $('#invoiceTotal').html(totalf);
@@ -669,7 +669,7 @@ var app = {
 
 				subs+="</table>";
 				$('#subtotales').html(subs);
-				$('#itemsfacturados').html("<b>Items Facturados:</b> "+itemsfact);
+				$('#itemsfacturados').html(" "+itemsfact);
                 $('#cuerpodetalle').html(intabla);
 				var formaDePago = row.paymentsUsed;
 				var totalpagof=0;
@@ -811,7 +811,7 @@ var app = {
 				console.log('Descuento : '+descAplicado);
 
 				var facturanumber=datosfact.Pagar[0].factura.numerofact;
-				$('#numerofactura').html('Factura N° '+facturanumber);
+				$('#numerofactura').html(facturanumber);
 				
                 $('#total').html(totalf);
                 $('#invoiceTotal').html(totalf);
@@ -853,7 +853,7 @@ var app = {
 				
 				subs+="</table>";
 				$('#subtotales').html(subs);
-				$('#itemsfacturados').html("<b>Items Facturados:</b> "+itemsfact);
+				$('#itemsfacturados').html(" "+itemsfact);
                 $('#cuerpodetalle').html(intabla);
 				var formaDePago = row.paymentsUsed;
 				var totalpagof=0;

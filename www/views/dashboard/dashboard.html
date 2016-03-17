@@ -15,7 +15,7 @@
 					<!--</div>
 					<div class='col-lg-2 col-md-2 col-xs-2' style='text-align:left;'>-->
 					</td><td>
-						<button class='btn btn-primary' type='button' style='margin-top:0px;' onclick='ObtenerDatosDashboard();'>Filtrar</button>
+						<button class='btn btn-primary trans_filter' type='button' style='margin-top:0px;' onclick='ObtenerDatosDashboard();'>Filtrar</button>
 						</td>
 						</tr>
 						</table>
@@ -32,7 +32,7 @@
                 </span>
                 <div class="box-info">
                     <p class="size-h3" id='totalventas'>0.00</p>
-                    <p class="text-muted"><span data-i18n="Ventas $">Ventas $</span></p>
+                    <p class="text-muted"><span data-i18n="Ventas $" id='trans_label_1'>Ventas $</span></p>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
                 </span>
                 <div class="box-info">
                     <p class="size-h3" id='ticketpromedio'>0.00</p>
-                    <p class="text-muted"><span data-i18n="Ticket Promedio $">Ticket Promedio $</span></p>
+                    <p class="text-muted"><span data-i18n="Ticket Promedio $" id='trans_label_2'>Ticket Promedio $</span></p>
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@
                 </span>
                 <div class="box-info">
                     <p class="size-h3" id='transacciones'>0</p>
-                    <p class="text-muted"><span data-i18n="Transacciones">Transacciones</span></p>
+                    <p class="text-muted"><span data-i18n="Transacciones" id='trans_label_3'>Transacciones</span></p>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
                 </span>
                 <div class="box-info">
                     <p class="size-h3"><span id='cumplimiento'>0.00</span>%</p>
-                    <p class="text-muted"><span data-i18n="cumplimiento $">% Cumplimiento - Presupuesto US<span id='mipres'></span></span></p>
+                    <p class="text-muted"><span data-i18n="cumplimiento $"><span id="trans_label_4">% Cumplimiento - Presupuesto US</span><span id='mipres'></span></span></p>
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
         </div>-->
 		<div class='col-md-6'>
 			<section class="panel panel-box info-box">
-					<div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span data-i18n="ventascateg">Ventas por Categoria</span></strong></div>
+					<div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span id='trans_label_5' data-i18n="ventascateg">Ventas por Categoria</span></strong></div>
 					<div class="panel-body">
 					<div id='ventascategoria'>
 					</div>
@@ -92,7 +92,7 @@
 		</div>
 		<div class='col-md-6'>
 			<section class="panel panel-box info-box">
-					<div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span data-i18n="productosten">Ranking de Productos</span></strong></div>
+					<div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span data-i18n="productosten" id='trans_label_6'>Ranking de Productos</span></strong></div>
 					<div class="panel-body">
 					<div id='productosten'>
 					</div>
@@ -103,7 +103,7 @@
 	<div class='row' style='display:none;'>
         <div class="col-xs-12">
             <div class="panel panel-default">
-                <div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span data-i18n="Rank Productos">Ranking de Productos</span></strong></div>
+                <div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span id='trans_label_7' data-i18n="Rank Productos">Ranking de Productos</span></strong></div>
                 <div class="panel-body"  data-ng-controller="flotChartCtrl">
 					<table class="table" id='tablarank'>
 					<thead>

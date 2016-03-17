@@ -47,7 +47,12 @@
 <script>
 	$(document).ready(function(){
 		//idioma
-		var xmlidioma=$.get("lang/en.xml",function(d){
+		var linklang="es";
+		if(localStorage.getItem("idioma")==2)
+			linklang="en";
+		
+		//alert(linklang);
+		var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
 			var itemestructura=$(d).find("estructura")[0];
 			var itemtitles=$(itemestructura).find("titles")[0];
 			var itembuttons=$(itemestructura).find("botones")[0];
@@ -160,12 +165,53 @@
                 var con_tarjeta = $('#con_tarjeta').bootstrapSwitch('state');
                 var con_shop = $('#con_shop').bootstrapSwitch('state');
                 localStorage.setItem('con_shop',con_shop);
+                localStorage.setItem('idioma',idioma);
+				
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					
 				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop],
 				function(tx1,results1){
 					showalert("Datos Guardados con exito.");
+					var linklang="es";
+					if(localStorage.getItem("idioma")==2)
+						linklang="en";
+					
+					//alert(linklang);
+					
+					var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
+					//alert("Ana");
+					var itemestructura=$(d).find("estructura")[0];
+					var itemmen=$(itemestructura).find("menu")[0];
+					var itembotones=$(itemestructura).find("botones")[0];
+					var itemlabels=$(itemestructura).find("labels")[0];
+					var itemplaceholder=$(itemestructura).find("placeholder")[0];
+					var todositems=$(itemmen).find("item");
+					var todosbotones=$(itembotones).find("item");
+					var todoslabels=$(itemlabels).find("item");
+					var todosplaceholder=$(itemplaceholder).find("item");
+					for(var k=0;k<todositems.length;k++){
+						var miitem=$(todositems[k]);
+						$('#lab_menu_'+(k+1)).html(miitem.html());
+					}
+					
+					for(var k=0;k<todosbotones.length;k++){
+						var miitemname=$(todosbotones[k]).attr("name");
+						$('.'+miitemname).html($(todosbotones[k]).html());
+					}	
+					
+					for(var k=0;k<todoslabels.length;k++){
+						var miitemname=$(todoslabels[k]).attr("name");
+						$('#'+miitemname).html($(todoslabels[k]).html());
+					}
+					
+					for(var k=0;k<todosplaceholder.length;k++){
+						var miitemname=$(todosplaceholder[k]).attr("name");
+						$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
+					}
+					
+					
+				});
 				});}
 			,errorCB,successCB);
 	}

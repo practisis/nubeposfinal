@@ -124,7 +124,20 @@ function updateForm(value){
 	    
 	$('#changeFromPurchase').html(change.toFixed(2));
 }
+
+function antesperformPurchase(restaurant){
 	
+	localStorage.setItem("dongle","no"); //este es un tema temporal, esto tiene que conectarse con Ruben.
+	var tieneDongle=localStorage.getItem("dongle");
+	if (localStorage.getItem("dongle")=='yes'){
+		llamaDongle();
+	}
+	else{
+		performPurchase(restaurant);
+	}
+		
+}
+
 
 function performPurchase(restaurant){
 	//$('#printFactura').show();
@@ -684,11 +697,14 @@ function noCliente(){
 	$("#cuadroClientes,#opaco").fadeOut("fast",function(){});
 }
 
-function mostrarClientes(){
+ 
+  function mostrarClientes(){
+	  
+	  //console.log("tiene documento:"+localStorage.getItem("sin_documento"));
+	  
 		if($("#newCliente").html()!=''){
 			$("#opaco,#cuadroClientes,#newCliente").fadeIn();
 		}else{
-
 			if(localStorage.getItem("sin_documento")=='true'){
 				//codigo sin documento
 				$("#newCliente ").html('\
@@ -757,7 +773,6 @@ function mostrarClientes(){
 			</style>');
 			}else{
 				//codigo con documento
-
 			$("#newCliente ").html('\
 			<div style="position:relative; left:0%; width:100%; height:100%" id="borrable">\
 				<div id="cuadroClientes" class="cuadroClientes" style="height:100%;"> \
@@ -766,18 +781,18 @@ function mostrarClientes(){
 						<tr> \
 							<td colspan=2>\
 								<br><br>\
-									<table cellpadding="0" cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
+									<table tabIndex="99"  cellpadding="0" cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
 										<tr>\
 											<td>\
 										<div class="input-group" style="width:100%; margin-bottom:10px;"><span class="input-group-addon" style="width:30%">\
 													&nbsp;Cédula* \
-											</span><input tabindex="0" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control"/> </div>\
+											</span><input tabIndex="1" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control"/> </div>\
 												</td>\
 										</tr>\
 										<tr>\
 											<td>\
 												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%">&nbsp;Nombre*</span>\
-													<input  tabindex="1" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
+													<input  tabIndex="2" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
 											</td>\
 										</tr>\
 										\
@@ -788,13 +803,13 @@ function mostrarClientes(){
 										<tr>\
 												<td>\
 												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon"  style="width:30%">&nbsp;Dirección</span>\
-													<input tabindex="4" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
+													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
 												</td>\
 										</tr>\
 										<tr>\
 												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon"  style="width:30%">&nbsp;Email</span>\
 													\
-													<input tabindex="5" id="emailP" class="form-control"/></div>\
+													<input tabIndex="4" id="emailP" class="form-control"/></div>\
 												</td>\
 										</tr>\
 										\
@@ -882,6 +897,7 @@ function mostrarClientes(){
 	});
 	}
 	//}
+}
 }
 
 function cedula() {
@@ -1059,3 +1075,57 @@ function finalizadeunavez(tags){
     });
   
   }
+  
+ function llamaDongle(){
+	 
+	 console.log("dongle");
+
+	 var account_token1="946BBABDCE61560D388DEBFA8351A662CDC12B9E41B7C1F7EFA74B2487DC5FEA9852B95DE547A0A79D";
+	 var transaction_type1="CREDIT_CARD";
+	 var charge_total1="10.00";
+	 var charge_type1="SALE";
+	 var entry_mode1="SWIPED";
+	 var order_id1="898198919871";
+	 
+var form = document.createElement("form");
+form.setAttribute("method", "post");
+form.setAttribute("action", "https://ws.test.paygateway.com/HostPayService/v1/hostpay/paypage/");
+form.setAttribute("target", "view");
+var hiddenField = document.createElement("input"); 
+hiddenField.setAttribute("type", "hidden");
+hiddenField.setAttribute("name", "account_token");
+hiddenField.setAttribute("value", account_token1);
+form.appendChild(hiddenField);
+var hiddenField2 = document.createElement("input"); 
+hiddenField2.setAttribute("type", "hidden");
+hiddenField2.setAttribute("name", "transaction_type");
+hiddenField2.setAttribute("value", transaction_type1);
+form.appendChild(hiddenField2);
+var hiddenField3 = document.createElement("input"); 
+hiddenField3.setAttribute("type", "hidden");
+hiddenField3.setAttribute("name", "charge_total");
+hiddenField3.setAttribute("value", charge_total1);
+form.appendChild(hiddenField3);
+var hiddenField4 = document.createElement("input"); 
+hiddenField4.setAttribute("type", "hidden");
+hiddenField4.setAttribute("name", "charge_type");
+hiddenField4.setAttribute("value", charge_type1);
+form.appendChild(hiddenField4);
+var hiddenField5 = document.createElement("input"); 
+hiddenField5.setAttribute("type", "hidden");
+hiddenField5.setAttribute("name", "entry_mode");
+hiddenField5.setAttribute("value", entry_mode1);
+form.appendChild(hiddenField4);
+var hiddenField6 = document.createElement("input"); 
+hiddenField6.setAttribute("type", "hidden");
+hiddenField6.setAttribute("name", "order_id");
+hiddenField6.setAttribute("value", order_id1);
+form.appendChild(hiddenField6);
+
+document.body.appendChild(form);
+var win=window.open('', 'view', 'location=yes');
+form.submit();
+
+
+
+ }

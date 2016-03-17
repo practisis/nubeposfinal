@@ -128,6 +128,45 @@ $(document).ready(function(){
   //obtener datos para el dashboard
   /*"SELECT COUNT(*) AS number_rows FROM facturacion join locales on facturacion.id_locales = locales.id WHERE ".$plazafact." and (fecha >=? AND fecha <=?) AND anulada = FALSE".$localFact." and facturacion.id not in (select f.id from facturacion f,pagos p where p.idfactura=f.idreal and p.idformapago in(7,12) and f.id_locales=p.id_locales)"*/
   
+  	//idioma
+					var linklang="es";
+					if(localStorage.getItem("idioma")==2)
+						linklang="en";
+					var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
+					//alert("Ana");
+					var itemestructura=$(d).find("estructura")[0];
+					var itemmen=$(itemestructura).find("menu")[0];
+					var itembotones=$(itemestructura).find("botones")[0];
+					var itemlabels=$(itemestructura).find("labels")[0];
+					var itemplaceholder=$(itemestructura).find("placeholder")[0];
+					var todositems=$(itemmen).find("item");
+					var todosbotones=$(itembotones).find("item");
+					var todoslabels=$(itemlabels).find("item");
+					var todosplaceholder=$(itemplaceholder).find("item");
+					for(var k=0;k<todositems.length;k++){
+						var miitem=$(todositems[k]);
+						$('#lab_menu_'+(k+1)).html(miitem.html());
+					}
+					
+					for(var k=0;k<todosbotones.length;k++){
+						var miitemname=$(todosbotones[k]).attr("name");
+						$('.'+miitemname).html($(todosbotones[k]).html());
+					}	
+					
+					for(var k=0;k<todoslabels.length;k++){
+						var miitemname=$(todoslabels[k]).attr("name");
+						$('#'+miitemname).html($(todoslabels[k]).html());
+					}
+					
+					for(var k=0;k<todosplaceholder.length;k++){
+						var miitemname=$(todosplaceholder[k]).attr("name");
+						$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
+					}
+					
+					
+				});
+				//fin idioma
+  
   $('#desde,#hasta').datepicker();
  //colocar fechas
   var ahora=new Date();

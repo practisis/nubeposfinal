@@ -140,7 +140,7 @@
 		<div class="col-md-2"></div>
 		<div class="col-md-8" style="position:relative;min-height: 300px;overflow:hidden;">
 			 <div id="divdatoslogin" style="overflow:auto;">
-			  <h4 style="text-align:left; margin-top:40px; margin-bottom:30px;">Regístrate! Ingresa tus datos y crea tu cuenta PractiPOS.</h4>
+			  <h4 style="text-align:left; margin-top:40px; margin-bottom:30px;" id='trans_label_38'>Regístrate! Ingresa tus datos y crea tu cuenta PractiPOS.</h4>
             <div class="form-group">
               <input onkeydown="isalphanumeric(event);" type="form-control input-lg" name="empresa"  class="form-control input-lg" id="newEmpresa" placeholder="Nombre de tu Negocio" tabindex="1" required="" autocomplete="off">
             </div>
@@ -307,7 +307,10 @@
 <script>
 $(document).ready(function(){
 	//idioma
-		var xmlidioma=$.get("lang/en.xml",function(d){
+		var linklang="es";
+		if(localStorage.getItem("idioma")==2)
+			linklang="en";
+		var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
 			var itemestructura=$(d).find("estructura")[0];
 			var itemplaceholder=$(itemestructura).find("placeholder")[0];
 			var itemtitles=$(itemestructura).find("titles")[0];

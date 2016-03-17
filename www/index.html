@@ -512,7 +512,10 @@
 				})
 				
 				//idioma
-				var xmlidioma=$.get("lang/en.xml",function(d){
+					var linklang="es";
+					if(localStorage.getItem("idioma")==2)
+						linklang="en";
+					var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
 					//alert("Ana");
 					var itemestructura=$(d).find("estructura")[0];
 					var itemmen=$(itemestructura).find("menu")[0];

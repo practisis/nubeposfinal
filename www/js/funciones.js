@@ -2156,7 +2156,10 @@ function Ready(){
 	},errorCB,successCB);
 	
 	//idioma
-	var xmlidioma=$.get("lang/en.xml",function(d){
+	var linklang="es";
+		if(localStorage.getItem("idioma")==2)
+			linklang="en";
+		var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
 		
 		var itemestructura=$(d).find("estructura")[0];
 		var itemplaceholder=$(itemestructura).find("placeholder")[0];

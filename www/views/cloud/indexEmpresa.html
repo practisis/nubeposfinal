@@ -118,31 +118,52 @@
 	</div>
 <script type="text/javascript">
 	$( document ).ready(function() {
-	
-		var xmlidioma=$.get("lang/en.xml",function(d){
-			var itemestructura=$(d).find("estructura")[0];
-			var itemtitles=$(itemestructura).find("titles")[0];
-			var itembuttons=$(itemestructura).find("botones")[0];
-			var itemlabels=$(itemestructura).find("labels")[0];
-			var todostitles=$(itemtitles).find("item");
-			var todosbuttons=$(itembuttons).find("item");
-			var todoslabels=$(itemlabels).find("item");	
+			var linklang="es";
+		if(localStorage.getItem("idioma")==2)
+			linklang="en";
+			var xmlidioma=$.get("lang/"+linklang+".html",function(datos){
+			d=JSON.parse(datos);
+			var itemestructura=d.estructura;
+			//console.log(itemestructura);
+			var itemmen=itemestructura.menu;
+			var itemplaceholder=itemestructura.placeholder;
+			var itemtitles=itemestructura.titles;
+			var itembuttons=itemestructura.botones;
+			var itemlabels=itemestructura.labels;
+			var todostitles=itemtitles.item;
+			var todosbuttons=itembuttons.item;
+			var todoslabels=itemlabels.item;
+			var todositems=itemmen.item;	
+			var todosplaceholder=itemplaceholder.item;
+			
+			for(var k=0;k<todosplaceholder.length;k++){
+				var miitemname=todosplaceholder[k].name;
+				//alert(miitemname);
+				$('.'+miitemname).attr("placeholder",todosplaceholder[k].text);
+			}
+			
+			for(var k=0;k<todositems.length;k++){
+					var miitem=todositems[k];
+					$('#lab_menu_'+(k+1)).html(miitem);
+			}
+					
 				for(var k=0;k<todostitles.length;k++){
-					var miitemname=$(todostitles[k]).attr("name");
+					var miitemname=todostitles[k].name;
 					//alert(miitemname);
-					$('.'+miitemname).html($(todostitles[k]).html());
+					$('.'+miitemname).html(todostitles[k].text);
 				}
 				
 				for(var k=0;k<todosbuttons.length;k++){
-					var miitemname=$(todosbuttons[k]).attr("name");
+					var miitemname=todosbuttons[k].name;
 					//alert(miitemname);
-					$('.'+miitemname).html($(todosbuttons[k]).html());
+					$('.'+miitemname).html(todosbuttons[k].text);
 				}
 				
 				for(var k=0;k<todoslabels.length;k++){
-								var miitemname=$(todoslabels[k]).attr("name");
-								$('#'+miitemname).html($(todoslabels[k]).html());
-							}
+					//console.log(todoslabels[k].name+"/"+todoslabels[k].name);
+					var miitemname=todoslabels[k].name;
+					$('#'+miitemname).html(todoslabels[k].text);
+				}
 				
 		});
 		$('#sihayEmp').css('height',parseInt($(window).height())*150/100);

@@ -1087,16 +1087,16 @@ function VerificarClave(){
 	}
 }
 function VerificarPermiso(donde){
-	
 		if(localStorage.getItem("permisos")=="true"){
 			
 			if(localStorage.getItem("claveuser")==""||localStorage.getItem("claveuser")==null){
-				
 				if(donde!=''){
 					$('#modalpermiso').modal("show");
 					$('#accesodonde').val(donde);
 				}
 			}else{
+				
+				//alert(donde+"/"+localStorage.getItem("permisos"));
 				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 				var miclave=localStorage.getItem("claveuser");
 				db.transaction(function(tx1){
@@ -1111,7 +1111,7 @@ function VerificarPermiso(donde){
 								envia('historialst');
 							}else if(donde=='configuracion'&&it.configuracion=="true"){
 								envia('config');
-							}else if(donde=='productos'&&it.productos=="true"){
+							}else if(donde=='productos'){
 								envia('listaproductos');
 							}else if(donde=='nube'&&it.irnube=="true"){
 								IraNube(document.getElementById('linklogin'));
@@ -1127,6 +1127,7 @@ function VerificarPermiso(donde){
 				});
 			}
 		}else{
+			//alert(donde);
 			if(donde=='historial'){
 				envia('historial');
 			}else if(donde=='configuracion'){

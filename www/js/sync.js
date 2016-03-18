@@ -14,6 +14,7 @@ function SyncStart(){
 	//console.log(idbarra+'*'+categoriasya+'*'+productosya+'*'+clientesya);
 	if((clientesya||productosya||categoriasya||presupuestoya||menucategoriasya||menuya||idbarra)&&permisosya==false){
 		envia('cloud');
+		localStorage.setItem("idioma",2);
 		$('.navbar').slideDown();
 	}
 	if(permisosya){
@@ -58,6 +59,7 @@ function SyncStart(){
 function ExtraeDatosApi(donde){
 	console.log("saca datos del api"+donde);
 	if(donde==0){
+		localStorage.setItem("idioma",2);
 		envia('cloud');
 	}else if(donde==1){
 		console.log("Datos API 1: Categorias");

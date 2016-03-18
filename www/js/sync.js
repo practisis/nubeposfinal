@@ -245,6 +245,7 @@ function ExtraeDatosApi(donde){
 
 			localStorage.setItem("sin_documento",ext[0].documento);
             localStorage.setItem("con_shop",ext[0].shop);
+            localStorage.setItem("con_nombre_orden",ext[0].orden);
             localStorage.setItem("idioma",ext[0].idioma);
 
             var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -816,9 +817,10 @@ function DatosRecurrentes(cual){
 					localStorage.setItem('idioma',item.idioma);
 
 						
-					/*tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'" WHERE id=1',[],function(tx,results){
+					/*tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'" WHERE id=1',[],function(tx,results){*/
 					localStorage.setItem('sin_documento',item.documento);
-					localStorage.setItem("con_shop",item.shop);*/
+					localStorage.setItem("con_shop",item.shop);
+                    localStorage.setItem("con_nombre_orden",item.orden);
 
 					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'" WHERE id=1',[],function(tx,results){
 						console.log("actualizada empresa");

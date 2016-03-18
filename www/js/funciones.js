@@ -1199,7 +1199,8 @@ function pagar(){
 		json += '"encabezado" : "'+ localStorage.getItem("encabezado") +'",';
 		json += '"largo" : "'+ localStorage.getItem("largo") +'",';
 		json += '"impuestosdata" : "'+ dataimpuestos +'",';
-		json += '"ordername" : "'+ localStorage.getItem("nameorder") +'"';
+		json += '"ordername" : "'+ localStorage.getItem("nameorder") +'",';
+		json += '"lang" : "'+ localStorage.getItem("idioma") +'"';
 		json += '},';
 		json +=$('#JSONempresaLocal').html()+'"pagos":[';
 		

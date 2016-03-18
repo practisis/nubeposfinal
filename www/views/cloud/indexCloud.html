@@ -50,16 +50,14 @@
 		<div class="text-center" id="contentLogin" style="min-height: 263px;">
 			<div class="modal-body" style="min-height: 266px;">
 			 <div id="divdatoslogin" style="overflow:auto;">
-			  <h3 style="-webkit-margin-before: 1em;
-		-webkit-margin-after: 1em;
-		-webkit-margin-start: 0px;
-		-webkit-margin-end: 0px;">Ingresa a tu sistema y <span style="color:#0893d2;">Empecemos!</span></h3>
+			  <h3 style="-webkit-margin-before: 1em; -webkit-margin-after: 1em; 	-webkit-margin-start: 0px;
+		-webkit-margin-end: 0px;" id="trans_label_40">Ingresa a tu sistema y <span style="color:#0893d2;">Empecemos!</span></h3>
 			  <form method="post" class="contact-form form-validate4" id="myloginform" novalidate="novalidate">
 				<div class="form-group">
-				  <input class="form-control input-lg" type="text" id="user2" name="usuario" placeholder="Usuario" required="" value="" tabindex='1' autocomplete="off" aria-required="true">
+				  <input class="form-control input-lg trans_user" type="text" id="user2" name="usuario" placeholder="Usuario" required="" value="" tabindex='1' autocomplete="off" aria-required="true">
 				</div>
 				<div class="form-group">
-				  <input type="password" id="pass2" name="mipass" value="" class="form-control input-lg" placeholder="Password" required="" tabindex='2' autocomplete="off" aria-required="true">
+				  <input type="password" id="pass2" name="mipass" value="" class="form-control input-lg trans_pass" placeholder="Password" required="" tabindex='2' autocomplete="off" aria-required="true">
 				</div>
 			   <button class="btn btn-success" tabindex='3'  id="btnvalida2" type="button" onclick="UserLogin();">Login</button>
 			  </form>
@@ -160,7 +158,7 @@
 			</div>
 				
 			
-<input class="btn btn-md btn-success btn-center trans_create" type="button" id="btnNewEmp" value="Crear Cuenta" onclick="registrarUser();">
+<button class="btn btn-md btn-success btn-center trans_create" type="button" id="btnNewEmp" onclick="registrarUser();">Crear Cuenta</button>
 			  </div>
 			  
 			  <div id="varias">

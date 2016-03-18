@@ -2,11 +2,11 @@
 <h2 id='trans_label_24'>Configuración General</h2>
 <div style='margin-top:25px; font-size:16px;'>
 	<table class='table'>
-		<tr><td  style='text-align:right;'>Nombre Dispositivo:</td><td><input id='tablet_name' class='form-control' /></td></tr>
-		<tr><td  style='text-align:right;'>Ver Diseño Menú:</td><td align='left'><input data-size='small' type='checkbox' id='tablet_menu' class='switch' /></td></tr>
-		<tr><td  style='text-align:right;'>Version:</td><td><input id='tablet_version' class='form-control' readonly /></td></tr>
-		<tr><td  style='text-align:right;'>Numero Empresa:</td><td><input id='tablet_emp' class='form-control' readonly /></td></tr>
-		<tr><td  style='text-align:right;'>Cuenta/usuario:</td><td><input id='tablet_cuenta' class='form-control' readonly /></td></tr>
+		<tr><td  style='text-align:right;' id="trans_label_25">Nombre Dispositivo:</td><td><input id='tablet_name' class='form-control' /></td></tr>
+		<tr><td  style='text-align:right;' id="trans_label_26">Ver Diseño Menú:</td><td align='left'><input data-size='small' type='checkbox' id='tablet_menu' class='switch' /></td></tr>
+		<tr><td  style='text-align:right;' id="trans_label_27">Version:</td><td><input id='tablet_version' class='form-control' readonly /></td></tr>
+		<tr><td  style='text-align:right;' id="trans_label_28">Numero Empresa:</td><td><input id='tablet_emp' class='form-control' readonly /></td></tr>
+		<tr><td  style='text-align:right;' id="trans_label_29">Cuenta/usuario:</td><td><input id='tablet_cuenta' class='form-control' readonly /></td></tr>
         <tr>
           <td  style='text-align:right;'>Idioma:</td>
           <td>
@@ -52,30 +52,33 @@
 			linklang="en";
 		
 		//alert(linklang);
-		var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
-			var itemestructura=$(d).find("estructura")[0];
-			var itemtitles=$(itemestructura).find("titles")[0];
-			var itembuttons=$(itemestructura).find("botones")[0];
-			var itemlabels=$(itemestructura).find("labels")[0];
-			var todostitles=$(itemtitles).find("item");
-			var todosbuttons=$(itembuttons).find("item");
-			var todoslabels=$(itemlabels).find("item");	
+			var xmlidioma=$.get("lang/"+linklang+".html",function(datos){
+			d=JSON.parse(datos);
+			var itemestructura=d.estructura;
+			//console.log(itemestructura);
+			var itemtitles=itemestructura.titles;
+			var itembuttons=itemestructura.botones;
+			var itemlabels=itemestructura.labels;
+			var todostitles=itemtitles.item;
+			var todosbuttons=itembuttons.item;
+			var todoslabels=itemlabels.item;	
 				for(var k=0;k<todostitles.length;k++){
-					var miitemname=$(todostitles[k]).attr("name");
+					var miitemname=todostitles[k].name;
 					//alert(miitemname);
-					$('.'+miitemname).html($(todostitles[k]).html());
+					$('.'+miitemname).html(todostitles[k].text);
 				}
 				
 				for(var k=0;k<todosbuttons.length;k++){
-					var miitemname=$(todosbuttons[k]).attr("name");
+					var miitemname=todosbuttons[k].name;
 					//alert(miitemname);
-					$('.'+miitemname).html($(todosbuttons[k]).html());
+					$('.'+miitemname).html(todosbuttons[k].text);
 				}
 				
 				for(var k=0;k<todoslabels.length;k++){
-								var miitemname=$(todoslabels[k]).attr("name");
-								$('#'+miitemname).html($(todoslabels[k]).html());
-							}
+					//console.log(todoslabels[k].name+"/"+todoslabels[k].name);
+					var miitemname=todoslabels[k].name;
+					$('#'+miitemname).html(todoslabels[k].text);
+				}
 				
 		});
 	
@@ -177,41 +180,42 @@
 					if(localStorage.getItem("idioma")==2)
 						linklang="en";
 					
-					//alert(linklang);
+			var xmlidioma=$.get("lang/"+linklang+".html",function(datos){
+			d=JSON.parse(datos);
+			var itemestructura=d.estructura;
+			//console.log(itemestructura);
+			var itemmen=itemestructura.menu;
+			var itemtitles=itemestructura.titles;
+			var itembuttons=itemestructura.botones;
+			var itemlabels=itemestructura.labels;
+			var todostitles=itemtitles.item;
+			var todosbuttons=itembuttons.item;
+			var todoslabels=itemlabels.item;
+			var todositems=itemmen.item;	
+				for(var k=0;k<todositems.length;k++){
+					var miitem=todositems[k];
+					$('#lab_menu_'+(k+1)).html(miitem);
+				}
 					
-					var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
-					//alert("Ana");
-					var itemestructura=$(d).find("estructura")[0];
-					var itemmen=$(itemestructura).find("menu")[0];
-					var itembotones=$(itemestructura).find("botones")[0];
-					var itemlabels=$(itemestructura).find("labels")[0];
-					var itemplaceholder=$(itemestructura).find("placeholder")[0];
-					var todositems=$(itemmen).find("item");
-					var todosbotones=$(itembotones).find("item");
-					var todoslabels=$(itemlabels).find("item");
-					var todosplaceholder=$(itemplaceholder).find("item");
-					for(var k=0;k<todositems.length;k++){
-						var miitem=$(todositems[k]);
-						$('#lab_menu_'+(k+1)).html(miitem.html());
-					}
-					
-					for(var k=0;k<todosbotones.length;k++){
-						var miitemname=$(todosbotones[k]).attr("name");
-						$('.'+miitemname).html($(todosbotones[k]).html());
-					}	
-					
-					for(var k=0;k<todoslabels.length;k++){
-						var miitemname=$(todoslabels[k]).attr("name");
-						$('#'+miitemname).html($(todoslabels[k]).html());
-					}
-					
-					for(var k=0;k<todosplaceholder.length;k++){
-						var miitemname=$(todosplaceholder[k]).attr("name");
-						$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
-					}
-					
-					
-				});
+				for(var k=0;k<todostitles.length;k++){
+					var miitemname=todostitles[k].name;
+					//alert(miitemname);
+					$('.'+miitemname).html(todostitles[k].text);
+				}
+				
+				for(var k=0;k<todosbuttons.length;k++){
+					var miitemname=todosbuttons[k].name;
+					//alert(miitemname);
+					$('.'+miitemname).html(todosbuttons[k].text);
+				}
+				
+				for(var k=0;k<todoslabels.length;k++){
+					//console.log(todoslabels[k].name+"/"+todoslabels[k].name);
+					var miitemname=todoslabels[k].name;
+					$('#'+miitemname).html(todoslabels[k].text);
+				}
+				
+		});
 				});}
 			,errorCB,successCB);
 	}

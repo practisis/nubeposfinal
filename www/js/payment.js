@@ -127,7 +127,7 @@ function updateForm(value){
 
 function antesperformPurchase(restaurant){
 	
-	localStorage.setItem("dongle","yes"); //este es un tema temporal, esto tiene que conectarse con Ruben.
+	localStorage.setItem("dongle","no"); //este es un tema temporal, esto tiene que conectarse con Ruben.
 	var tieneDongle=localStorage.getItem("dongle");
 	if (localStorage.getItem("dongle")=='yes'){
 		llamaDongle();

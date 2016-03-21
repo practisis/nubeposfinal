@@ -189,6 +189,7 @@ public class StarIOAdapter extends CordovaPlugin {
 		String totalCierre="0.00";
 		String ivaCierre="0.00";
 		String cadimpuestos="";
+		Integer lang=1;
 		JSONArray cierreImpuestos= new JSONArray();
 		Integer lineastotales=30; //18cm-2lineas
 		Integer lineasencabezado=0; //3cm-2lineas
@@ -241,6 +242,11 @@ public class StarIOAdapter extends CordovaPlugin {
 				ordername=objfactura.getString("ordername");
 			}
 			
+			if(objfactura.has("lang")){
+				if(!(objfactura.getString("lang").equals(JSONObject.NULL)))
+				lang=objfactura.getInt("lang");
+			}
+			
 			tipo="pagar";
 			}else if(nombres.toString().contains("Cierre")){
 				tipo="cierre";
@@ -258,8 +264,14 @@ public class StarIOAdapter extends CordovaPlugin {
 				descuentoCierre=expjson.getString("descuento");
 				subdes=expjson.getString("subdesc");
 				expformas=expjson.getJSONArray("formaspago");
+				
 				if(!(expjson.getJSONArray("impuestos").equals(JSONObject.NULL)))
 					cierreImpuestos=expjson.getJSONArray("impuestos");
+				
+				if(expjson.has("lang")){
+					if(!(expjson.getString("lang").equals(JSONObject.NULL)))
+						lang=expjson.getInt("lang");
+				}
 				//{"Cierre": [{"fecha_caja":"2015-12-17","fecha_imp":"2015-12-17","num_facts":"1","fact_anuladas":"0","subtotal":"3.13","iva":"0.38","total":"3.50","formaspago":[{"Efectivo":"3.50","Tarjetas":"0.00","Cheques":"0.00","CxC":"0.00"}]}]}
 			}
 			
@@ -290,17 +302,26 @@ public class StarIOAdapter extends CordovaPlugin {
 				// Character expansion
 				list.add(new byte[] { 0x06, 0x09, 0x1b, 0x69, 0x01, 0x01 });
 				
-			if(tipo.equals("pagar")){
+			if(tipo.equals("pagar")){ 
 					
 				list.add(createCp1252(nombreEmpresa+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(createCp1252(direccionEmpresa+"-"+telefonoEmpresa+"\r\n"));
 				//list.add(createCp1252("08029 BARCELONA\r\n\r\n"));
 				
-				list.add(createCp1252(nombreCliente+"-"+cedulaCliente+"\r\n"));
+				if(lang.equals(1))
+					list.add(createCp1252(nombreCliente+"-"+cedulaCliente+"\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252(nombreCliente.replace("Consumidor Final","Final Customer")+"-"+cedulaCliente+"\r\n"));
+					
+				
 				list.add(createCp1252(direccionCliente+"/"+telefonoCliente+"\r\n"));
-				if(textoreimpr!=""){
-					list.add(createCp1252(textoreimpr+"\r\n"));
+				
+				if(!textoreimpr.equals("")){
+					if(lang.equals(1))
+						list.add(createCp1252(textoreimpr+"\r\n"));
+					else if(lang.equals(2))
+						list.add(createCp1252(textoreimpr.replace("Reimpresion Factura","Invoice Reprint")+"\r\n"));
 				}
 					
 				list.add(createCp1252("--------------------------------\r\n"));
@@ -318,16 +339,24 @@ public class StarIOAdapter extends CordovaPlugin {
 				Date fechafact=new Date(fechanumber);
 				//String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
 				String fechaf=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(fechafact);
-				
 				list.add(createCp1252("NO:"+nofact+"                   \r\n"));
-				list.add(createCp1252("FECHA:"+fechaf+"                   \r\n"));
+				if(lang.equals(1)){
+					list.add(createCp1252("FECHA:"+fechaf+"                   \r\n"));
+				}else if(lang.equals(2)){
+					list.add(createCp1252("DATE:"+fechaf+"                    \r\n"));
+				}
+				
 				
 
 				
 				
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 }); // Alignment (center)
 				list.add(createCp1252("--------------------------------\r\n"));
-				list.add(createCp1252("  # DESCRIPCION             SUMA\r\n"));
+				if(lang.equals(1)){
+					list.add(createCp1252("  # DESCRIPCION             SUMA\r\n"));
+				}else if(lang.equals(2)){
+					list.add(createCp1252("  # DESCRIPTION          AMMOUNT\r\n"));
+				}
 				if(expprod.length()>0){
 					for(int i=0;i<expprod.length();i++){
 						try{
@@ -508,7 +537,12 @@ public class StarIOAdapter extends CordovaPlugin {
 					list.add(createCp1252("                 SERVICIO:"+String.valueOf(servicio)+"\r\n"));
 				}*/
 				if(Double.parseDouble(descuento.replace(",","."))>0){
-					list.add(createCp1252("                DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
+					if(lang.equals(1)){
+						list.add(createCp1252("                DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
+					}else if(lang.equals(2)){
+						list.add(createCp1252("                 DISCOUNT:"+String.valueOf(descuento)+"\r\n"));
+					}
+					
 				}
 				
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
@@ -523,7 +557,12 @@ public class StarIOAdapter extends CordovaPlugin {
 				if(expago.length()>0){
 					
 					list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
-					list.add(createCp1252("Pagado:\r\n"));
+					if(lang.equals(1)){
+						list.add(createCp1252("Pagado:\r\n"));
+					}else if(lang.equals(2)){
+						list.add(createCp1252("Paid:\r\n"));
+					}
+					
 					String forma="";
 					String elvuelto="0.00";
 					for(int i=0;i<expago.length();i++){
@@ -535,7 +574,11 @@ public class StarIOAdapter extends CordovaPlugin {
 							vuelto=-1*valor;
 						}
 						else{
-							forma=linea.getString("forma")+":"+DoubleFormat(valor);
+							if(lang.equals(2)){
+								forma=transpayment(linea.getString("forma"))+":"+DoubleFormat(valor);
+							}else{
+								forma=linea.getString("forma")+":"+DoubleFormat(valor);
+							}
 							list.add(createCp1252(forma+"\r\n"));
 						}
 							
@@ -545,7 +588,11 @@ public class StarIOAdapter extends CordovaPlugin {
 							ex.printStackTrace();
 						}
 					}
-					list.add(createCp1252("Vuelto:"+String.valueOf(elvuelto)+"\r\n"));
+					if(lang.equals(1)){
+						list.add(createCp1252("Vuelto:"+String.valueOf(elvuelto)+"\r\n"));
+					}else{
+						list.add(createCp1252("Change:"+String.valueOf(elvuelto)+"\r\n"));
+					}
 				}
 				
 			}else if(tipo.equals("cierre")){
@@ -585,17 +632,29 @@ public class StarIOAdapter extends CordovaPlugin {
 						}
 				}
 						
-				list.add(createCp1252("CIERRE DE CAJA\r\n"));
+				if(lang.equals(1))
+					list.add(createCp1252("CIERRE DE CAJA\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("DRAWER CLOSE\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
 				list.add(createCp1252("--------------------------------\r\n"));
-				list.add(createCp1252("  FECHA IMP.:"+fechaImpresion+"\r\n"));
-				list.add(createCp1252("FECHA CIERRE:"+fechaCierre+"\r\n"));
-				list.add(createCp1252("--------------------------------\r\n"));
+				if(lang.equals(1))
+					list.add(createCp1252("FECHA IMP.:"+fechaImpresion+"\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("PRINT DATE:"+fechaImpresion+"\r\n"));
+				
+				if(lang.equals(1))
+					list.add(createCp1252("FECHA CIERRE:"+fechaCierre+"\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("CLOSE DATE:"+fechaCierre+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
 				list.add(createCp1252("--------------------------------\r\n"));
+				if(lang.equals(1))
 				list.add(createCp1252("FACTURAS\r\n"));
+				else if(lang.equals(2))
+				list.add(createCp1252("INVOICES\r\n"));
 				if(numeroFacturas.length()<9){
 								int tam=9-numeroFacturas.length();
 									for(int n=0;n<tam;n++){
@@ -610,12 +669,32 @@ public class StarIOAdapter extends CordovaPlugin {
 						}
 				}
 				
-				list.add(createCp1252("No. Facturas    "+numeroFacturas+"\r\n"));
-				list.add(createCp1252("No. Anuladas    "+anuladas+"\r\n"));
+				if(lang.equals(1))
+					list.add(createCp1252("No. Facturas    "+numeroFacturas+"\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("Invoices        "+numeroFacturas+"\r\n"));
+				
+				if(lang.equals(1))
+					list.add(createCp1252("No. Anuladas    "+anuladas+"\r\n"));
+		 	    else if(lang.equals(2))
+					list.add(createCp1252("Canceled        "+anuladas+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(createCp1252("--------------------------------\r\n"));
-				list.add(createCp1252("TOTALES\r\n"));
+				if(lang.equals(1))
+					list.add(createCp1252("TOTALES\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("TOTALS\r\n"));
 				list.add(createCp1252("Subtotal        "+subtotalCierre+"\r\n"));
+				
+				if(lang.equals(1))
+					list.add(createCp1252("Descuentos      "+descuentoCierre+"\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("Discounts       "+descuentoCierre+"\r\n"));
+				
+				if(lang.equals(1))
+				list.add(createCp1252("Sub-desc        "+subdes+"\r\n"));
+				else if(lang.equals(2))
+				list.add(createCp1252("Sub-disc        "+subdes+"\r\n"));
 				
 				/*impuestos*/
 				if(cierreImpuestos.length()>0){
@@ -652,11 +731,14 @@ public class StarIOAdapter extends CordovaPlugin {
 				}
 				
 				/**/
-				list.add(createCp1252("Descuentos      "+descuentoCierre+"\r\n"));
+			
 				list.add(createCp1252("TOTAL           "+totalCierre+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(createCp1252("--------------------------------\r\n"));
-				list.add(createCp1252("FORMAS DE PAGO\r\n"));
+				if(lang.equals(1))
+					list.add(createCp1252("FORMAS DE PAGO\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("PAYMENT METHODS\r\n"));
 				if(expformas.length()>0){
 						try{
 						JSONObject linea=expformas.getJSONObject(0);
@@ -672,6 +754,9 @@ public class StarIOAdapter extends CordovaPlugin {
 											valor=" "+valor;
 									}
 							}
+							
+							if(lang.equals(2))
+								nombre=transpayment(nombre);
 							
 							if(nombre.length()<15){
 								int tam=15-nombre.length();
@@ -701,7 +786,18 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(createCp1252("--------------------------------\r\n"));
 
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });
-				list.add(createCp1252("*Orden para: "+ordername+"*\r\n"));
+				if(tipo.equals("pagar")){
+					if(lang.equals(1)){
+						if(!ordername.equals("")){
+							list.add(createCp1252("*Orden para: "+ordername+"*\r\n"));
+						}
+					}else if(lang.equals(2)){
+						if(!ordername.equals("")){
+							list.add(createCp1252("*Name Order: "+ordername+"*\r\n"));
+						}
+					}
+				}
+				
 				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
 
@@ -752,17 +848,39 @@ public class StarIOAdapter extends CordovaPlugin {
 					lineasescritas=lineasescritas+1;
 				}
 				
+				if(lang.equals(2)){
+					nombreCliente=nombreCliente.replace("Consumidor Final","Final Customer");
+				}
+				
+					
+				
 				list.add(createCp1252(nombreCliente+"-"+cedulaCliente+"\r\n")); lineasescritas=lineasescritas+1;
 				list.add(createCp1252(direccionCliente+"/"+telefonoCliente+"\r\n")); lineasescritas=lineasescritas+1;
 				if(textoreimpr!=""){
-					list.add(createCp1252(textoreimpr+"\r\n")); lineasescritas=lineasescritas+1;
+					if(lang.equals(2)){
+						list.add(createCp1252(textoreimpr.replace("Reimpresion Factura","Invoce Reprint")+"\r\n"));
+					}
+					else if (lang.equals(1)){
+						list.add(createCp1252(textoreimpr+"\r\n"));
+					}
+					lineasescritas=lineasescritas+1;
 				}
 				list.add(createCp1252("------------------------------------------\r\n"));lineasescritas=lineasescritas+1;
 				list.add(createCp1252("NO:"+nofact+"                      \r\n"));lineasescritas=lineasescritas+1;
 				Date fechafact=new Date(fechanumber);
 				String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);lineasescritas=lineasescritas+1;
-				list.add(createCp1252("FECHA:"+fechaf+"                      \r\n"));lineasescritas=lineasescritas+1;
-				list.add(createCp1252("  # DESCRIPCION                       SUMA\r\n"));lineasescritas=lineasescritas+1;
+				if(lang.equals(1)){
+					list.add(createCp1252("FECHA:"+fechaf+"                      \r\n"));
+				}else if(lang.equals(2)){
+					list.add(createCp1252("DATE:"+fechaf+"                       \r\n"));
+				}
+				lineasescritas=lineasescritas+1;
+				if(lang.equals(1)){
+					list.add(createCp1252("  # DESCRIPCION                       SUMA\r\n"));
+				}else if(lang.equals(1)){
+					list.add(createCp1252("  # DESCRIPTION                    AMMOUNT\r\n"));
+				}
+				lineasescritas=lineasescritas+1;
 				
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
 				list.add(createCp1252("------------------------------------------\r\n"));lineasescritas=lineasescritas+1;
@@ -810,7 +928,7 @@ public class StarIOAdapter extends CordovaPlugin {
 								String [] agregadosv=linea.getString("detalle_agregados").split("@");
 								for(int s=0;s<agregadosv.length;s++){
 									String [] detalleagr=agregadosv[s].split("\\|");
-									list.add(createCp1252("    "+detalleagr[0]+":"+detalleagr[1]+"\r\n"));
+									list.add(createCp1252("    "+detalleagr[0]+"\r\n"));
 									lineasescritas=lineasescritas+1;
 								}
 							}
@@ -932,7 +1050,12 @@ public class StarIOAdapter extends CordovaPlugin {
 				
 				
 				if(Double.parseDouble(descuento.replace(",","."))>0){
-					list.add(createCp1252("                          DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
+					if(lang.equals(1)){
+						list.add(createCp1252("                          DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
+					}else{
+						list.add(createCp1252("                           DISCOUNT:"+String.valueOf(descuento)+"\r\n"));
+					}
+					
 					lineasescritas=lineasescritas+1;
 				}
 				
@@ -945,8 +1068,16 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(new byte[] { 0x1b, 0x57, 0x00 });
 				list.add(createCp1252("------------------------------------------\r\n"));lineasescritas=lineasescritas+1;
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });				
-				list.add(new byte[] { 0x1b, 0x68, 0x01 });				
-				list.add(createCp1252("*Orden para: "+ordername+"*\r\n"));
+				list.add(new byte[] { 0x1b, 0x68, 0x01 });	
+				if(lang.equals(1)){
+					if(!ordername.equals(""))
+						list.add(createCp1252("*Orden para: "+ordername+"*\r\n"));
+				}
+				else if(lang.equals(2)){
+					if(!ordername.equals(""))	
+						list.add(createCp1252("*Order Name: "+ordername+"*\r\n"));
+				}
+				
 				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
 				lineasescritas=lineasescritas+1;
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });	
@@ -992,18 +1123,32 @@ public class StarIOAdapter extends CordovaPlugin {
 				// Notice that we use a unicode representation because that is
 				// how Java expresses these bytes as double byte unicode
 				// Character expansion
-				list.add(new byte[] { 0x1b, 0x68, 0x01 });				
-				list.add(createCp1252("CIERRE DE CAJA\r\n"));
+				list.add(new byte[] { 0x1b, 0x68, 0x01 });	
+				if(lang.equals(1))
+					list.add(createCp1252("CIERRE DE CAJA\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("DRAWER CLOSE\r\n"));
+				
 				list.add(new byte[] { 0x1b, 0x68, 0x00 }); // Cancel Character Expansion
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
 				list.add(createCp1252("--------------------------------\r\n"));
-				list.add(createCp1252("FECHA IMP.:"+fechaImpresion+"\r\n"));
-				list.add(createCp1252("FECHA CIERRE:"+fechaCierre+"\r\n"));
-				list.add(createCp1252("--------------------------------\r\n"));
+				if(lang.equals(1))
+					list.add(createCp1252("FECHA IMP.:"+fechaImpresion+"\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("PRINT DATE:"+fechaImpresion+"\r\n"));
+				
+				if(lang.equals(1))
+					list.add(createCp1252("FECHA CIERRE:"+fechaCierre+"\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("CLOSE DATE:"+fechaCierre+"\r\n"));
+			
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
 				list.add(createCp1252("--------------------------------\r\n"));
+				if(lang.equals(1))
 				list.add(createCp1252("FACTURAS\r\n"));
+				else if(lang.equals(2))
+				list.add(createCp1252("INVOICES\r\n"));
 				if(numeroFacturas.length()<9){
 								int tam=9-numeroFacturas.length();
 									for(int n=0;n<tam;n++){
@@ -1039,14 +1184,34 @@ public class StarIOAdapter extends CordovaPlugin {
 						}
 				}
 				
-				list.add(createCp1252("No. Facturas    "+numeroFacturas+"\r\n"));
-				list.add(createCp1252("No. Anuladas    "+anuladas+"\r\n"));
+				if(lang.equals(1))
+					list.add(createCp1252("No. Facturas    "+numeroFacturas+"\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("Invoices        "+numeroFacturas+"\r\n"));
+				
+				if(lang.equals(1))
+					list.add(createCp1252("No. Anuladas    "+anuladas+"\r\n"));
+		 	    else if(lang.equals(2))
+					list.add(createCp1252("Canceled        "+anuladas+"\r\n"));
+				
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(createCp1252("--------------------------------\r\n"));
-				list.add(createCp1252("TOTALES\r\n"));
+				if(lang.equals(1))
+					list.add(createCp1252("TOTALES\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("TOTALS\r\n"));
+				
 				list.add(createCp1252("Subtotal        "+subtotalCierre+"\r\n"));
-				list.add(createCp1252("Descuentos      "+descuentoCierre+"\r\n"));
+				
+				if(lang.equals(1))
+					list.add(createCp1252("Descuentos      "+descuentoCierre+"\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("Discounts       "+descuentoCierre+"\r\n"));
+				
+				if(lang.equals(1))
 				list.add(createCp1252("Sub-desc        "+subdes+"\r\n"));
+				else if(lang.equals(2))
+				list.add(createCp1252("Sub-disc        "+subdes+"\r\n"));
 				 
 				/*impuestos*/
 				
@@ -1090,7 +1255,11 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(createCp1252("TOTAL           "+totalCierre+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(createCp1252("--------------------------------\r\n"));
-				list.add(createCp1252("FORMAS DE PAGO\r\n"));
+				
+				if(lang.equals(1))
+					list.add(createCp1252("FORMAS DE PAGO\r\n"));
+				else if(lang.equals(2))
+					list.add(createCp1252("PAYMENT METHODS\r\n"));
 				if(expformas.length()>0){
 						try{
 						JSONObject linea=expformas.getJSONObject(0);
@@ -1106,6 +1275,9 @@ public class StarIOAdapter extends CordovaPlugin {
 											valor=" "+valor;
 									}
 							}
+							
+							if(lang.equals(2))
+								nombre=transpayment(nombre);
 							
 							if(nombre.length()<15){
 								int tam=15-nombre.length();
@@ -1272,6 +1444,17 @@ public class StarIOAdapter extends CordovaPlugin {
 		}
 
 		return command;
+	}
+	
+	private static String transpayment(String word){
+		if(word.toLowerCase().equals("efectivo")){
+			word="cash";
+		}else if(word.toLowerCase().equals("tarjetas")){
+			word="cards";
+		}else if(word.toLowerCase().equals("cheques")){
+			word="checks";
+		}
+		return word;
 	}
 }
 

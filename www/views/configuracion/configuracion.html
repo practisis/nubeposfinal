@@ -144,7 +144,7 @@
 		});
 		
 		$('#tablet_cuenta').val(localStorage.getItem("userRegister"));
-		
+
 		cordova.getAppVersion.getVersionNumber().then(function (version) {
 			$('#tablet_version').val(version);
 		});
@@ -166,6 +166,7 @@
                 var con_orden = $('#con_orden').bootstrapSwitch('state');
                 var con_propina = $('#con_propina').bootstrapSwitch('state');
                 var con_tarjeta = $('#con_tarjeta').bootstrapSwitch('state');
+                localStorage.setItem("con_tarjeta",con_tarjeta);
                 var con_shop = $('#con_shop').bootstrapSwitch('state');
                 localStorage.setItem('con_shop',con_shop);
                 localStorage.setItem('idioma',idioma);

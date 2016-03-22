@@ -247,6 +247,7 @@ function ExtraeDatosApi(donde){
             localStorage.setItem("con_shop",ext[0].shop);
             localStorage.setItem("idioma",ext[0].idioma);
             localStorage.setItem("propina",ext[0].propina);
+            localStorage.setItem("con_tarjeta",ext[0].tarjeta);
 
             var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
@@ -272,7 +273,7 @@ function ExtraeDatosApi(donde){
 						console.log("Insertado impuesto: "+results.insertId);
 						if($.trim(itemi.nombre.toLowerCase())=='iva')
 							$('#idiva').html(itemi.id);
-						
+
 						if($('#impuesto-'+itemi.id).length==0){
 							$('#taxes').append('<input id="impuesto-'+itemi.id+'" type="text" value="'+itemi.id+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100)+'">');
 						}else{
@@ -282,7 +283,7 @@ function ExtraeDatosApi(donde){
 					}
 				},errorCB,successCB);
 		}
-		
+
 		//inserta propinas
 		if($('#JSONPropinasNube').html()!=''){
 			var jsonprop=JSON.parse($('#JSONPropinasNube').html());
@@ -841,9 +842,10 @@ function DatosRecurrentes(cual){
 					localStorage.setItem('propina',item.propina);
 
 						
-					/*tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'" WHERE id=1',[],function(tx,results){
+					/*tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'" WHERE id=1',[],function(tx,results){*/
 					localStorage.setItem('sin_documento',item.documento);
-					localStorage.setItem("con_shop",item.shop);*/
+					localStorage.setItem("con_shop",item.shop);
+                    localStorage.setItem("con_tarjeta",item.tarjeta);
 
 					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'" WHERE id=1',[],function(tx,results){
 						console.log("actualizada empresa");

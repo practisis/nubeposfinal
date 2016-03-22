@@ -17,6 +17,10 @@ function receiveJson(){
 //changePaymentCategory(0);
 	
 function changePaymentCategory(index,nombre){
+
+    $('#valortarjeta').prop("readonly",false);
+    $('#payButton').fadeIn("fast");
+    $('#oreder_id').val('');
 	
 	if(pagonormal==true){
 		$('.paymentMethods').each(function(){
@@ -1141,7 +1145,40 @@ form.appendChild(hiddenField6);
 document.body.appendChild(form);
 var win=window.open('', 'view', 'location=yes');
 form.submit();
+}
 
+var iabRef = null;
+function iabLoadStart(event) {
+  //alert(event);
+}
+function iabLoadStop(event) {
+  //alert(event.type + ' - ' + event.url);
+  var link = event.url;
+  var res = link.split("?");
+  if(res[0]=='https://www.practisis.net/pagos_prueba_back.php'){
+    var datos = res[1].split("&");
+    var order_idaux = datos[0].split("order_id=");
+    var order_id = order_idaux[1]
+    var response_codeaux = datos[1].split("response_code=");
+    var response_code = response_codeaux[1];
+    document.getElementById('respuestatarjeta').value=order_id+'||'+response_code;
+  }
+}
+function iabClose(event) {
+    alert(event.type + ' - ' + event.code);
+    iabRef.removeEventListener('loadstart', iabLoadStart);
+    iabRef.removeEventListener('loadstop', iabLoadStop);
+    iabRef.removeEventListener('exit', iabClose);
+}
 
-
- }
+function pagotarjeta(){
+  var charge_total = window.btoa($('#valortarjeta').val());
+  var d = new Date();
+  var order_id =  window.btoa(d.getTime());
+  $('#oreder_id').val(d.getTime());
+  var myURL=encodeURI('https://www.practisis.net/pagos_prueba.php?charge_total='+charge_total+'&order_id='+order_id);
+          iabRef = window.open(myURL,'_blank', 'location=yes');
+          iabRef.addEventListener('loadstart', iabLoadStart);
+          iabRef.addEventListener('loadstop', iabLoadStop);
+          iabRef.addEventListener('exit', iabClose);
+}

@@ -2555,6 +2555,16 @@ function elegirTarjeta(id){
 	$('#paymentTarjetas').val((suma).toFixed(2));
 	$('#simple_2').html((suma).toFixed(2));
 	changePaymentCategory('2','Tarjetas');
+
+    if(localStorage.getItem("con_tarjeta")=='true'){
+      $('#valortarjeta').prop("readonly",true);
+      $('#payButton').fadeOut("fast");
+      pagotarjeta();
+    }else{
+      $('#valortarjeta').prop("readonly",false);
+      $('#payButton').fadeIn("fast");
+      $('#oreder_id').val('');
+    }
 	
 }
 

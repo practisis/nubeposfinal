@@ -1108,10 +1108,16 @@ function pagar(){
 		$('#changeFromPurchase').html((total-discount-pagado).toFixed(2));
 	}
 	//$('#changeFromPurchase').html((total-discount).toFixed(2));
-	if((total-pagado)<=0)
+	if((total-pagado)<=0){
 		$('#invoiceDebt').html('VUELTO');
-	else
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("CHANGE");
+	}
+	else{
 		$('#invoiceDebt').html('FALTANTE');
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("TO PAY");
+	}
 
 	var idimpuestos = '';
 	var ivavalor=0;
@@ -1200,7 +1206,8 @@ function pagar(){
 		json += '"largo" : "'+ localStorage.getItem("largo") +'",';
 		json += '"impuestosdata" : "'+ dataimpuestos +'",';
 		json += '"ordername" : "'+ localStorage.getItem("nameorder") +'",';
-		json += '"lang" : "'+ localStorage.getItem("idioma") +'"';
+		json += '"lang" : "'+ localStorage.getItem("idioma") +'",';
+		json += '"propina" : "'+ $('#propinaFactura').val()+'"';
 		json += '},';
 		json +=$('#JSONempresaLocal').html()+'"pagos":[';
 		
@@ -1562,15 +1569,10 @@ function AntesDePagar(){
 		//$('#paymentEfectivo').val($('#total').html().substring(1));
 		//$('#simple_1').html($('#total').html().substring(1));
 		//changePaymentCategory('1','Efectivo');
-
-        if(localStorage.getItem("con_nombre_orden")=='true'){
-          document.getElementById('nombre_orden').style.display='block';
-        }else{
-          document.getElementById('nombre_orden').style.display='none';
-        }
-
 		$('#justo').click();
 		$('#paymentModule').slideDown();
+		if(localStorage.getItem("propina")=="false")
+			VerPropinas();
 		$('#cedulaP').val('9999999999999');
 		BuscarCliente(13);
 		//$("#cuadroClientes").css('display','none');
@@ -2079,7 +2081,6 @@ function ClickNumeroC(numc){
 function ClickNumeroCnew(numc){
 	var accion = $.trim($(numc).attr('cual'));
 		console.log(accion);
-        $( "#inputbuscnew" ).focus();
 		if(accion == 'p'){
 			if($('.cantidadnew').html().indexOf('.') == -1){
 				if($('.cantidadnew').html() == '0'){
@@ -2135,12 +2136,21 @@ function ClickNumeroD(numd){
 
 function Ready(){
   if(localStorage.getItem("con_shop")=='true'){
+    /*$('#productos').fadeOut();
+    $('#productosnew').fadeIn();*/
     document.getElementById('productos').style.display='none';
     document.getElementById('productosnew').style.display='block';
   }else{
+    /*$('#productosnew').fadeOut();
+    $('#productos').fadeIn();*/
     document.getElementById('productosnew').style.display='none';
     document.getElementById('productos').style.display='block';
   }
+	
+	if(localStorage.getItem("propina")!=null&&localStorage.getItem("propina")!="false"){
+		//alert(localStorage.getItem("propina"));
+		$('.trans_propina').css("display","none");
+	}
 	
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function(tx){
@@ -2632,12 +2642,18 @@ function ResetPagos(cual){
 	
 	if((mitot-pagado)>0){
 		$('#invoiceDebt').html("FALTANTE");
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("TO PAY");	
 		$('#changeFromPurchase').html(falta.toFixed(2));
 	}else if((mitot-pagado)==0){
 		$('#invoiceDebt').html("VUELTO");
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("CHANGE");
 		$('#changeFromPurchase').html("0.00");
 	}else{
 		$('#invoiceDebt').html("VUELTO");
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("CHANGE");
 		$('#changeFromPurchase').html(falta.toFixed(2));
 	}
 }
@@ -2893,12 +2909,18 @@ function PagoAvanzado(){
 
 	if((mitot-pagado)>0){
 		$('#invoiceDebt').html("FALTANTE");
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("TO PAY");
 		$('#changeFromPurchase').html(mitot.toFixed(2));
 	}else if((mitot-pagado)==0){
 		$('#invoiceDebt').html("VUELTO");
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("CHANGE");
 		$('#changeFromPurchase').html("0.00");
 	}else{
 		$('#invoiceDebt').html("VUELTO");
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("CHANGE");
 		$('#changeFromPurchase').html(mitot.toFixed(2));
 	}
 }
@@ -3036,7 +3058,6 @@ function SiguienteModificador(divid,idmod,origen){
 	
 	if(ya==false){
 		$('#popupModificadores').modal("hide");
-        $( "#inputbuscnew" ).focus();
 		if(origen==2)
 		agregarCompra($('#busc_'+$('#id_formulado_modificadores').val()),origen);
 		else
@@ -3052,5 +3073,44 @@ function AsignarNombre(){
 	$('#popupNameorder').modal("hide");
 }
 
+function VerPropinas(){
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(
+	function (tx){
+		tx.executeSql('SELECT * from PROPINAS WHERE activo=? order by es_porcentaje,valor asc',["true"],function(tx,res1){
+			$('#divpropinas').html('');
+			if(res1.rows.length>0){
+				for(var t=0;t<res1.rows.length;t++){
+					var item=res1.rows.item(t);
+					var htmlbut="";
+					if(item.es_porcentaje=="true")
+						htmlbut="<button type='button' style='margin:3px;' onclick='PropinaValor("+item.valor+",1)' class='btn btn-success btn-lg'>"+parseFloat(item.valor).toFixed(2)+"%</button>";
+					else
+						htmlbut="<button type='button' style='margin:3px;' onclick='PropinaValor("+item.valor+",2)' class='btn btn-primary btn-lg'>$"+parseFloat(item.valor).toFixed(2)+"</button>";
+					$('#divpropinas').append(htmlbut);
+				}
+			}
+			$('#divpropinas').append("<button type='button' style='margin:3px;' onclick='PropinaValor(0,2)' class='btn btn-default btn-lg'>NO</button>");
+			$('#divpropinas').append('<div style="margin-top:10px;"><div class="input-group"><span class="input-group-addon" id="basic-addon1">USD</span><input onclick="this.select()" id="valorpropina" type="text" class="form-control input-lg" value="0.00" aria-describedby="basic-addon1"></div></div>');
+		});
+	},errorCB,successCB);	
+	
+	$('#popupPropina').modal('show');
+}
 
+function PropinaValor(valor,caso){
+	if(caso==1){
+		var calculo=(parseFloat($('#subtotalSinIva').val())+parseFloat($('#subtotalIva').val()))*parseFloat(valor)/100;
+		$('#valorpropina').val(parseFloat(calculo).toFixed(2));
+	}else if(caso==2){
+		$('#valorpropina').val(parseFloat(valor).toFixed(2));
+	}
+}
+
+function GuardarPropina(){
+	$('#propinaFactura').val($('#valorpropina').val());
+	$('#invoiceprop').html($('#valorpropina').val());
+	$('#popupPropina').modal('hide');
+	
+}
 

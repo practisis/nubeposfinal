@@ -163,8 +163,8 @@
 											<div class="col-lg-9">
 											En esta sección puedes ver un resumen detallado de ventas de tu negocio</div>
 											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
-											<button type="button" class="btn btn-primary" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary" onclick='siguiente(1)'>Siguiente</button>
+											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
+											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(1)'>Siguiente</button>
 											</div>
 										</div>
 										</div>
@@ -173,8 +173,8 @@
 										</center>
 										<br/>
 										<div class="modal-footer">
-											<button type="button" class="btn btn-primary" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary" onclick='siguiente(1)'>Siguiente</button>
+											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
+											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(1)'>Siguiente</button>
 										</div>
 										</div>
 										<!--fin--->
@@ -187,8 +187,8 @@
 										<div class='row'>
 											<div class="col-lg-9">En esta sección puedes facturar tus productos.</div>
 											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
-											<button type="button" class="btn btn-primary" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary" onclick='siguiente(2)'>Siguiente</button>
+											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
+											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(2)'>Siguiente</button>
 											</div>
 											</div>
 										</div>
@@ -225,8 +225,8 @@
 											</div>
 										</center><br/>
 										<div class="modal-footer">
-											<button type="button" class="btn btn-primary" onclick='siguiente(5);'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary" onclick='siguiente(2);'>Siguiente</button>
+											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5);'>Omitir</button>&nbsp;
+											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(2);'>Siguiente</button>
 										</div>
 										</div>
 										<!--fin--->
@@ -239,8 +239,8 @@
 										<div class='row'>
 											<div class="col-lg-9">En esta sección puedes visualizar todas las facturas emitidas.</div>
 											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
-											<button type="button" class="btn btn-primary" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary" onclick='siguiente(3)'>Siguiente</button>
+											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
+											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(3)'>Siguiente</button>
 											</div>
 										</div>
 										</div>
@@ -248,8 +248,8 @@
 											<img src="images/historial.jpg" alt="..." class="img-thumbnail" style=';'/>
 										</center><br/>
 										<div class="modal-footer">
-											<button type="button" class="btn btn-primary" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary" onclick='siguiente(3);'>Siguiente</button>
+											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
+											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(3);'>Siguiente</button>
 										</div>
 										</div>
 										<!--fin--->
@@ -262,8 +262,8 @@
 											<div class='row'>
 											<div class="col-lg-9">En esta sección puedes visualizar el listado global de tus productos ingresados al sistema.</div>
 											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
-											<button type="button" class="btn btn-primary" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary" onclick='siguiente(4)'>Siguiente</button>
+											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
+											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(4)'>Siguiente</button>
 											</div>
 											</div>
 										</div>
@@ -288,8 +288,8 @@
 											</div>
 										</center><br/>
 										<div class="modal-footer">
-											<button type="button" class="btn btn-primary" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary" onclick='siguiente(4)'>Siguiente</button>
+											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
+											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(4)'>Siguiente</button>
 										</div>
 										</div>
 										<!--fin--->
@@ -330,7 +330,7 @@
 										</center>
 										</div>
 										<div class="modal-footer">
-											<button type="button" class="btn btn-primary" onclick='siguiente(5)'>Terminar</button>
+											<button type="button" class="btn btn-primary trans_end" onclick='siguiente(5)'>Terminar</button>
 										</div>
 										</div>
 										<!--fin--->
@@ -366,6 +366,7 @@
 		<div id="JSONExtraNube" style="color:red;display:none;" ></div>
 		<div id="JSONImpuestosNube" style="color:red;display:none;"></div>
 		<div id="JSONModifNube" style="color:red;display:none;"></div>
+		<div id="JSONPropinasNube" style="color:red;display:none;"></div>
 		<div id="impuestosactivos" style="color:red;display:none;"></div>
 		<div id="impuestosactivosid" style="color:red;display:none;"></div>
 		<div id="taxes" style="display: none;"></div>
@@ -380,7 +381,7 @@
 						<div id="contentCenterFadeArea">
 							<img src="" id="logo" style="display:none;"><BR/>
 							<img src='images/loader.gif' width='30px'/>
-							<br/><label style="color:white;" id="putText">Inicializando...</label>
+							<br/><label style="color:white;" id="putText">Loading..</label>
 						</div>
 					</td>
 				</tr>

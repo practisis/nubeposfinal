@@ -101,6 +101,8 @@ function updateForm(value){
 	//alert(value+'/'+total+'/'+change);
 	if(value < total){
 		$('#invoiceDebt').html('FALTANTE');
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("TO PAY");
 		change = Math.abs(change);
 		$('#invoicePaid').html(value.toFixed(2));
 		$('#cardValue').val(change.toFixed(2));
@@ -109,6 +111,8 @@ function updateForm(value){
 	}
 	else if(value > total){
 		$('#invoiceDebt').html('VUELTO');
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("CHANGE");
 		change = Math.abs(change);
 		$('#invoicePaid').html(value.toFixed(2));
 		$('#cardValue').val(0);
@@ -116,6 +120,8 @@ function updateForm(value){
 	}
 	else if(value == total){
 			$('#invoiceDebt').html('VUELTO');
+			if(localStorage.getItem("idioma")==2)
+				$('#invoiceDebt').html("CHANGE");
 			change = Math.abs(change);
 			$('#invoicePaid').html(value.toFixed(2));
 			$('#cardValue').val(0);
@@ -289,6 +295,10 @@ function performPurchase(restaurant){
 				c++;
 			});
 			
+			var propina=0;
+			if($('#propinaFactura').val()!='')
+				propina=$('#propinaFactura').val();
+			
 			
 			/*FIN VALORES PARA LA FACTURA*/
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -297,7 +307,7 @@ function performPurchase(restaurant){
 				var now=new Date().getTime();
 				tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Inserta Factura",fetchJson],function(tx,results){});
 				
-				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact,dataimpuestos)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc,dataimpuestos],function(){
+				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact,dataimpuestos,propina)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc,dataimpuestos,propina],function(){
 					console.log("Nueva Factura Ingresada");
 					var mijsonprod=JSON.parse(fetchJson);
 					var misprod = mijsonprod.Pagar[0].producto;
@@ -611,12 +621,18 @@ function CambiarMetodo(cual){
 	if(faltante==0){
 		//alert(faltante);
 		$('#invoiceDebt').html('VUELTO');
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("CHANGE");
 		$('#changeFromPurchase').html('0.00');
 	}else if(faltante<0){
 		$('#invoiceDebt').html('VUELTO');
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("CHANGE");
 		$('#changeFromPurchase').html((-1*faltante).toFixed(2));
 	}else{
 		$('#invoiceDebt').html('FALTANTE');
+		if(localStorage.getItem("idioma")==2)
+			$('#invoiceDebt').html("TO PAY");
 		$('#changeFromPurchase').html(faltante.toFixed(2));
 	}
 }

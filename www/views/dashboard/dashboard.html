@@ -273,13 +273,16 @@ function ObtenerDatosDashboard(){
 			function(tx,res){
 				if(res.rows.length>0){
 					var datap = new google.visualization.DataTable();
+					var titlev="Ranking de ventas por Producto"
+					if(localStorage.getItem("idioma")==2)
+						titlev="Ranking Sales per Product";
 					datap.addColumn('string', 'Producto');
 					datap.addColumn('number', 'Ventas $USD');
 					for(var n=0;n<res.rows.length;n++){
 						var entot=parseFloat(res.rows.item(n).tot).toFixed(2);
 						datap.addRow([res.rows.item(n).formu,Number(entot)]);
 					var optionsp = {
-						title: 'Ranking de ventas por Producto'
+						title: titlev
 					};
 					var chartp = new google.visualization.ColumnChart(document.getElementById('productosten'));
 					chartp.draw(datap,optionsp);
@@ -297,12 +300,15 @@ function ObtenerDatosDashboard(){
 					var data = new google.visualization.DataTable();
 					data.addColumn('string', 'Categoria');
 					data.addColumn('number', 'Ventas USD');
+					var titlev="Ventas por Categoría"
+					if(localStorage.getItem("idioma")==2)
+						titlev="Sales per Category";
 					for(var t=0;t<res.rows.length;t++){
 						var entot=parseFloat(res.rows.item(t).tot).toFixed(2);
 						data.addRow([res.rows.item(t).categ+' USD',Number(entot)]);
 					}
 					var options = {
-						title: 'Ventas por Categoría'
+						title:titlev
 					};
 
 					var chart = new google.visualization.PieChart(document.getElementById('ventascategoria'));

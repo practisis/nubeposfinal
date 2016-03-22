@@ -245,8 +245,8 @@ function ExtraeDatosApi(donde){
 
 			localStorage.setItem("sin_documento",ext[0].documento);
             localStorage.setItem("con_shop",ext[0].shop);
-            localStorage.setItem("con_nombre_orden",ext[0].orden);
             localStorage.setItem("idioma",ext[0].idioma);
+            localStorage.setItem("propina",ext[0].propina);
 
             var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
@@ -282,7 +282,25 @@ function ExtraeDatosApi(donde){
 					}
 				},errorCB,successCB);
 		}
-				
+		
+		//inserta propinas
+		if($('#JSONPropinasNube').html()!=''){
+			var jsonprop=JSON.parse($('#JSONPropinasNube').html());
+			var prop=jsonprop.propinas;
+				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){
+					tx.executeSql('delete from PROPINAS',[],function(tx,results){});
+					tx.executeSql("delete from sqlite_sequence where name='PROPINAS'",[],function(tx,results){});
+					//$('#idiva').html('0');
+					for(var t in prop){
+						var itemi=prop[t];
+						tx.executeSql('INSERT OR IGNORE INTO PROPINAS (valor,es_porcentaje,activo,timespan) values (?,?,?,?)',[itemi.valor,itemi.porcentaje,itemi.activo,itemi.id],function(tx,results){
+						console.log("Insertada propina: "+results.insertId);
+						});
+					}
+				},errorCB,successCB);
+		}
+		//propinas
 			
 		
 		var jsonpres=JSON.parse($('#JSONPermisosNube').html());
@@ -502,6 +520,8 @@ function DatosIniciales(cual){
     		JSONextraNube=arraydatos.extras;
     		JSONimpuestosNube=arraydatos.impuestos;
     		JSONmodificadoresNube=arraydatos.modificadores;
+			JSONpropinasNube='{"propinas":[{"id":"1","porcentaje":"true","valor":"5","activo":"true"},{"id":"2","porcentaje":"false","valor":"10","activo":"true"}]}';
+			//JSONmodificadoresNube=arraydatos.propinas;
     		//JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"1245"},{"id":"2","nombre":"Servicio","porcentaje":"10","activo":"true","timespan":"1246"}]}';
 
     		//JSONmodificadoresNube='{"modificadores":[{"id":"1","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal2","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"3","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal3","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"4","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal4","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"5","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal5","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"6","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal6","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"7","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal7","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"8","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal8","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"2","id_formulado":"708331454520391001","nombre":"Con Limon","valor":"0.10","activo":"true","id_form_desc":"0"}]}';
@@ -517,6 +537,7 @@ function DatosIniciales(cual){
     		$('#JSONExtraNube').html(JSONextraNube);
     		$('#JSONImpuestosNube').html(JSONimpuestosNube);
     		$('#JSONModifNube').html(JSONmodificadoresNube);
+    		$('#JSONPropinasNube').html(JSONpropinasNube);
 
     		ExtraeDatosApi(cual);
         }else if(response=='Desactivado'){
@@ -567,6 +588,8 @@ function DatosRecurrentes(cual){
 				$('#JSONPermisosNube').html(JSON.stringify(jsonSync.BigJson[8].Permisos));
 				$('#JSONImpuestosNube').html(JSON.stringify(jsonSync.BigJson[9].Impuestos));
 				$('#JSONModifNube').html(JSON.stringify(jsonSync.BigJson[10].Modificadores));
+				//$('#JSONModifNube').html(JSON.stringify(jsonSync.BigJson[10].Propinas));
+				$('#JSONPropinasNube').html('{"propinas":[{"id":"1","porcentaje":"true","valor":"5","activo":"true"},{"id":"2","porcentaje":"false","valor":"10","activo":"true"}]}');
 				//$('#JSONimpuestosNube').html('{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"1245"},{"id":"2","nombre":"Servicio","porcentaje":"10","activo":"true","timespan":"1246"}]}');
 				
 				//$('#JSONModifNube').html('{"modificadores":[{"id":"1","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal2","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"3","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal3","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"4","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal4","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"5","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal5","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"6","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal6","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"7","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal7","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"8","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal8","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"2","id_formulado":"708331454520391001","nombre":"Con Limon","valor":"0.10","activo":"true","id_form_desc":"0"}]}');
@@ -815,12 +838,12 @@ function DatosRecurrentes(cual){
 					var item=jsonpresup[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+'1,');
 					localStorage.setItem('idioma',item.idioma);
+					localStorage.setItem('propina',item.propina);
 
 						
-					/*tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'" WHERE id=1',[],function(tx,results){*/
+					/*tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'" WHERE id=1',[],function(tx,results){
 					localStorage.setItem('sin_documento',item.documento);
-					localStorage.setItem("con_shop",item.shop);
-                    localStorage.setItem("con_nombre_orden",item.orden);
+					localStorage.setItem("con_shop",item.shop);*/
 
 					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'" WHERE id=1',[],function(tx,results){
 						console.log("actualizada empresa");
@@ -981,6 +1004,29 @@ function DatosRecurrentes(cual){
 			}
 			},errorCB,successCB);
 		}
+		
+		//modifica propinas
+		if($('#JSONPropinasNube').html()!=''){
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){
+			var jsonprop=JSON.parse($('#JSONPropinasNube').html());
+			var prop=jsonprop;
+			console.log(prop);
+			//$('#idiva').html('0');
+			for(var t in prop){
+				var itemi=prop[t];
+				
+					tx.executeSql('INSERT OR IGNORE INTO PROPINAS (valor,es_porcentaje,activo,timespan) values (?,?,?,?)',[itemi.valor,itemi.porcentaje,itemi.activo,itemi.id],function(tx,results){
+						console.log("Insertada Propina rec: "+results.insertId);
+					});
+					
+					tx.executeSql('UPDATE PROPINAS SET valor=?,es_porcentaje=?,activo=? WHERE timespan = ?',[itemi.valor,itemi.porcentaje,itemi.activo,itemi.id],function(tx,results){
+						console.log("Actualizada propina: "+itemi.valor);
+					});		
+			}
+			},errorCB,successCB);
+		}
+		//
 		
 		if($('#JSONPermisosNube').html().length>0){
 			var jsonpermisos=JSON.parse($('#JSONPermisosNube').html());

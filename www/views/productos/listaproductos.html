@@ -95,13 +95,13 @@
 		<input type='hidden' style='display:none;' id='timeproduct'/>
 		<div class="modal-dialog modal-xs">
 			<div class="modal-content">
-				<div class="modal-header">
+				<div class="modal-header trans_delete">
 					Eliminar Producto
 				</div>
 				<div class='modal-body'>
-					Está seguro que desea eliminar el producto <b><span id='nombreelim'></span></b> ?
+					<label id='trans_label_41'>Está seguro que desea eliminar el producto </label> <b><span id='nombreelim'></span></b> ?
 					<div style='margin-top:20px;'>
-						<button class='btn btn-lg btn-danger' onclick='EliminarProduct();'>SI</button>
+						<button class='btn btn-lg btn-danger trans_yes' onclick='EliminarProduct();'>SI</button>
 						<button class='btn btn-lg btn-danger' onclick='$("#timeproduct").val(""); $("#nombreelim").html(""); $("#modaleliminar").modal("hide");'>NO</button>
 					</div>
 				</div>

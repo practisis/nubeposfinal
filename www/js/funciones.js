@@ -1571,7 +1571,7 @@ function AntesDePagar(){
 		//changePaymentCategory('1','Efectivo');
 		$('#justo').click();
 		$('#paymentModule').slideDown();
-		if(localStorage.getItem("propina")=="false")
+		if(localStorage.getItem("propina")=="true")
 			VerPropinas();
 		$('#cedulaP').val('9999999999999');
 		BuscarCliente(13);
@@ -2147,11 +2147,6 @@ function Ready(){
     document.getElementById('productos').style.display='block';
   }
 	
-	if(localStorage.getItem("propina")!=null&&localStorage.getItem("propina")!="false"){
-		//alert(localStorage.getItem("propina"));
-		$('.trans_propina').css("display","none");
-	}
-	
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function(tx){
 		tx.executeSql('SELECT * FROM IMPUESTOS',[],function(tx,results){
@@ -2166,7 +2161,6 @@ function Ready(){
 					$("impuesto-"+itemi.timespan).val(itemi.timespan+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100))
 				}
 			}
-			
 		});
 	},errorCB,successCB);
 	
@@ -3090,18 +3084,36 @@ function VerPropinas(){
 		tx.executeSql('SELECT * from PROPINAS WHERE activo=? order by es_porcentaje,valor asc',["true"],function(tx,res1){
 			$('#divpropinas').html('');
 			if(res1.rows.length>0){
+				var primervalor=0;
 				for(var t=0;t<res1.rows.length;t++){
 					var item=res1.rows.item(t);
 					var htmlbut="";
-					if(item.es_porcentaje=="true")
+					var readonly="readonly";
+					if(item.es_porcentaje=="true"){
 						htmlbut="<button type='button' style='margin:3px;' onclick='PropinaValor("+item.valor+",1)' class='btn btn-success btn-lg'>"+parseFloat(item.valor).toFixed(2)+"%</button>";
-					else
-						htmlbut="<button type='button' style='margin:3px;' onclick='PropinaValor("+item.valor+",2)' class='btn btn-primary btn-lg'>$"+parseFloat(item.valor).toFixed(2)+"</button>";
+						if(t==0)
+							primervalor=parseFloat(item.valor)*(parseFloat($('#subtotalIva').val())+parseFloat($('#subtotalSinIva').val()))/100;
+					}else{
+						if(item.valor>0){
+							htmlbut="<button type='button' style='margin:3px;' onclick='PropinaValor("+item.valor+",2)' class='btn btn-primary btn-lg'>$"+parseFloat(item.valor).toFixed(2)+"</button>";
+							if(t==0)
+								primervalor=parseFloat(item.valor);
+						}else{
+							if(item.valor==0){
+								htmlbut="<button type='button' style='margin:3px;' onclick='PropinaValor(0,2)' class='btn btn-default btn-lg'>NO</button>";
+								if(t==0)
+									primervalor=parseFloat(item.valor);
+							}else if(item.valor==-1){
+								if(t==0)
+									primervalor=0;
+								readonly="";
+							}
+						}
+					}
 					$('#divpropinas').append(htmlbut);
 				}
 			}
-			$('#divpropinas').append("<button type='button' style='margin:3px;' onclick='PropinaValor(0,2)' class='btn btn-default btn-lg'>NO</button>");
-			$('#divpropinas').append('<div style="margin-top:10px;"><div class="input-group"><span class="input-group-addon" id="basic-addon1">USD</span><input onclick="this.select()" id="valorpropina" type="text" class="form-control input-lg" value="0.00" aria-describedby="basic-addon1"></div></div>');
+			$('#divpropinas').append('<div style="margin-top:10px;"><div class="input-group"><span class="input-group-addon" id="basic-addon1">USD</span><input onclick="this.select()" '+readonly+' id="valorpropina" type="text" class="form-control input-lg" value="'+primervalor.toFixed(2)+'" aria-describedby="basic-addon1"></div></div>');
 		});
 	},errorCB,successCB);	
 	

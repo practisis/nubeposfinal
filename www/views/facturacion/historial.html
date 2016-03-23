@@ -66,7 +66,7 @@
 				tx.executeSql('SELECT * FROM FACTURAS WHERE anulada!=1 and fecha>=? and fecha<=?',[fechaFiltro,fechaFiltroh],function(tx,results){
 				strDetalle='';
 				intToday=parseInt(today);
-				
+				var sumapropina=0;
 				var contPasa=0;
 					for (var i=0; i <= results.rows.length-1; i++){
 						var rowa = results.rows.item(i);
@@ -75,6 +75,8 @@
 						//if(fechaFactura>=fechaFiltro && fechaFactura<=intToday){
 						contPasa++;
 
+						if(rowa.propina!='')
+							sumapropina+=parseFloat(rowa.propina);
 						
 						var formaPago = rowa.paymentsUsed.split(',');
 						
@@ -133,32 +135,40 @@
 						console.log(rowa.dataimpuestos);
 						
 						var linea=rowa.dataimpuestos;
-						var todosimp=linea.split("@");
-						for(var s=0;s<todosimp.length;s++){
-							var lineaimp=todosimp[s].split('|');
-							var id=lineaimp[0];
-							var nombre=lineaimp[1];
-							var monto=parseFloat(lineaimp[3]);
-							if(nombre in arrayimpuestos){
-								var antes=parseFloat(arrayimpuestos[nombre]);
-								var datosp=antes+monto;
-								arrayimpuestos[nombre]=datosp;
-							}else{
-								arrayimpuestos[nombre]=monto;
-								//arrayimpuestos[id]=["nombre":nombre,"monto":monto];
+						if(linea!=null&&linea!=""){
+							var todosimp=linea.split("@");
+							alert(todosimp);
+							if(todosimp!=null){
+							for(var s=0;s<todosimp.length;s++){
+								var lineaimp=todosimp[s].split('|');
+								var id=lineaimp[0];
+								var nombre=lineaimp[1];
+								var monto=parseFloat(lineaimp[3]);
+								if(nombre in arrayimpuestos){
+									var antes=parseFloat(arrayimpuestos[nombre]);
+									var datosp=antes+monto;
+									arrayimpuestos[nombre]=datosp;
+								}else{
+									arrayimpuestos[nombre]=monto;
+									//arrayimpuestos[id]=["nombre":nombre,"monto":monto];
+								}
+							}
 							}
 						}
 						console.log(arrayimpuestos);
+						
 						/*}*/
 					}
 					
 					var cadimp="[{";
 					var c=0;
 					for(var k in arrayimpuestos){
-						if(c>0)
-							cadimp+=",";
-						cadimp+='"'+k+'":"'+parseFloat(arrayimpuestos[k]).toFixed(2)+'"';
-						c++;
+						if(arrayimpuestos[k]!=null){
+							if(c>0)
+								cadimp+=",";
+							cadimp+='"'+k+'":"'+parseFloat(arrayimpuestos[k]).toFixed(2)+'"';
+							c++;
+						}
 					}
 					cadimp+="}]";
 					
@@ -175,7 +185,7 @@
 							if(contPasa){
 								strDetalle=strDetalle.substring(0,strDetalle.length-1);
 								nFacturas=results.rows.length;
-								var respuesta = imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,sumaSubtotales.toFixed(2),sumaTotales.toFixed(2),sumaIvas.toFixed(2),sumaServicios.toFixed(2),sumaDescuentos.toFixed(2),strDetalle,sumaAnuladas,cadimp);
+								var respuesta = imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,sumaSubtotales.toFixed(2),sumaTotales.toFixed(2),sumaIvas.toFixed(2),sumaServicios.toFixed(2),sumaDescuentos.toFixed(2),strDetalle,sumaAnuladas,cadimp,sumapropina.toFixed(2));
 								var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 								db.transaction(function(tx){
 										tx.executeSql("SELECT printer FROM CONFIG where id=1",[],function(tx,results){
@@ -225,7 +235,7 @@ function SinTildes(word){
   return word;
 }
 
-function imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,subtotales,totales,ivas,servicios,descuentos,strDetalle,anuladas,jsonimpuestos){
+function imprimirDetalle(fechaNow,fechaRealFiltro,nFacturas,subtotales,totales,ivas,servicios,descuentos,strDetalle,anuladas,jsonimpuestos,propina){
 		console.log(fechaNow);
 		console.log(fechaRealFiltro);
 		console.log(subtotales);
@@ -300,7 +310,7 @@ valor="0 @0 ";
   txt_linea7="TEXT+7+0+20+320+TOTAL+$"+dosTotal+BR;
   txt_linea8="TEXT+7+0+20+"+finali+"+"+BR;*/
   var subdesc=(subtotales-dosDescuentos).toFixed(2);
-  txt_linea='{"Cierre": [{"fecha_caja":"'+fechaRealFiltro+'","fecha_imp":"'+fechaNow+'","num_facts":"'+nFacturas+'","fact_anuladas":"'+anuladas+'","subtotal":"'+subtotales+'","iva":"'+dosIvas+'","servicio":"'+dosServicios+'","descuento":"'+dosDescuentos+'","subdesc":"'+subdesc+'","total":"'+dosTotal+'",'+strImprimir+',"impuestos":'+jsonimpuestos+',"lang":"'+localStorage.getItem("idioma")+'"}]}';
+  txt_linea='{"Cierre": [{"fecha_caja":"'+fechaRealFiltro+'","fecha_imp":"'+fechaNow+'","num_facts":"'+nFacturas+'","fact_anuladas":"'+anuladas+'","subtotal":"'+subtotales+'","iva":"'+dosIvas+'","servicio":"'+dosServicios+'","descuento":"'+dosDescuentos+'","subdesc":"'+subdesc+'","total":"'+dosTotal+'",'+strImprimir+',"impuestos":'+jsonimpuestos+',"lang":"'+localStorage.getItem("idioma")+'","propina":"'+propina+'"}]}';
   //extend=extend+100;
   //baseu+="TEXT+4+0+20+10+"+SinTildes(nombrelocal).replace(" ","+")+"%0d%0aTEXT+7+0+20+60+"+SinTildes(nombreCliente).replace(" ","+")+"-RUC."+rucCliente+"%0d%0aTEXT+7+0+20+110+"+midate+"+"+hora+"%3a"+min+"%3a"+seg+"%0d%0a";
   //baseu+="%0d%0aTEXT+7+0+20+60+"+SinTildes(nombreCliente).replace(" ","+")+"-RUC."+rucCliente+"%0d%0aTEXT+7+0+20+110+"+midate+"+"+hora+"%3a"+min+"%3a"+seg+"%0d%0a";

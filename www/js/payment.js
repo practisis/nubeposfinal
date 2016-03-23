@@ -1158,7 +1158,7 @@ var iabRef = null;
 function iabLoadStart(event) {
   //alert(event);
 }
-function iabLoadStop(event) {
+function iabLoadStop(event){
   //alert(event.type + ' - ' + event.url);
   var link = event.url;
   var res = link.split("?");
@@ -1172,6 +1172,7 @@ function iabLoadStop(event) {
     var response_code_text = response_code_textaux[1].replace(/%20/gi, " ");
     document.getElementById('respuestatarjeta').value=order_id+'||'+response_code+'||'+response_code_text;
     iabRef.close();
+    alert(event.type);
   }
 }
 function iabClose(event) {
@@ -1183,6 +1184,8 @@ function iabClose(event) {
 }
 
 function pagotarjeta(){
+  $('#respuestatarjeta').val('');
+  $('#order_id').val('');
   var charge_total = window.btoa($('#valortarjeta').val());
   var d = new Date();
   var emp = localStorage.getItem("empresa");

@@ -1249,7 +1249,7 @@ function pagar(){
 				if(count>0)
 					cadtarjetas+=',';
 				
-				cadtarjetas+='{"forma":"tarjetas","valor":"'+parseFloat($(this).parent().attr("data-value"))+'","tipotarjeta":"'+parseFloat($(this).parent().attr("data-id"))+'","lote":"","numerocheque":"","banco":""}';
+				cadtarjetas+='{"forma":"tarjetas","valor":"'+parseFloat($(this).parent().attr("data-value"))+'","tipotarjeta":"'+parseFloat($(this).parent().attr("data-id"))+'","lote":"'+$('#order_id').val()+'","numerocheque":"","banco":""}';
 				count++;
 				nformas++;
 			}
@@ -1283,7 +1283,7 @@ function pagar(){
 		
 		$('#json').html(json);
 		//alert("Ana");
-		receiveJson();	
+		receiveJson();
 	//$('#pay').show();
 }
 	
@@ -2563,7 +2563,7 @@ function elegirTarjeta(id){
     }else{
       $('#valortarjeta').prop("readonly",false);
       $('#payButton').fadeIn("fast");
-      $('#oreder_id').val('');
+      $('#order_id').val('');
     }
 	
 }

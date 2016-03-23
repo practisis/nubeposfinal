@@ -20,7 +20,7 @@ function changePaymentCategory(index,nombre){
 
     $('#valortarjeta').prop("readonly",false);
     $('#payButton').fadeIn("fast");
-    $('#oreder_id').val('');
+    $('#order_id').val('');
 	
 	if(pagonormal==true){
 		$('.paymentMethods').each(function(){
@@ -137,15 +137,15 @@ function updateForm(value){
 
 function antesperformPurchase(restaurant){
 	
-	localStorage.setItem("dongle","no"); //este es un tema temporal, esto tiene que conectarse con Ruben.
+	/*localStorage.setItem("dongle","no"); //este es un tema temporal, esto tiene que conectarse con Ruben.
 	var tieneDongle=localStorage.getItem("dongle");
 	if (localStorage.getItem("dongle")=='yes'){
 		llamaDongle();
 	}
-	else{
+	else{*/
 		performPurchase(restaurant);
-	}
-		
+	/*}*/
+
 }
 
 
@@ -302,6 +302,13 @@ function performPurchase(restaurant){
 			var propina=0;
 			if($('#propinaFactura').val()!='')
 				propina=$('#propinaFactura').val();
+
+            var order_id = '';
+            if($('#order_id').val()!=''){
+              var order_id = $('#order_id').val();
+            }
+
+            //alert(order_id+'**'+$('#order_id').val());
 			
 			
 			/*FIN VALORES PARA LA FACTURA*/
@@ -311,7 +318,7 @@ function performPurchase(restaurant){
 				var now=new Date().getTime();
 				tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Inserta Factura",fetchJson],function(tx,results){});
 				
-				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact,dataimpuestos,propina)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc,dataimpuestos,propina],function(){
+				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact,dataimpuestos,propina,order_id)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc,dataimpuestos,propina,order_id],function(){
 					console.log("Nueva Factura Ingresada");
 					var mijsonprod=JSON.parse(fetchJson);
 					var misprod = mijsonprod.Pagar[0].producto;
@@ -1155,17 +1162,21 @@ function iabLoadStop(event) {
   //alert(event.type + ' - ' + event.url);
   var link = event.url;
   var res = link.split("?");
-  if(res[0]=='https://www.practisis.net/pagos_prueba_back.php'){
+  if(res[0]=='https://www.practisis.net/pagos_tarjetas_back.php'){
     var datos = res[1].split("&");
     var order_idaux = datos[0].split("order_id=");
     var order_id = order_idaux[1]
     var response_codeaux = datos[1].split("response_code=");
     var response_code = response_codeaux[1];
-    document.getElementById('respuestatarjeta').value=order_id+'||'+response_code;
+    var response_code_textaux = datos[3].split("response_code_text=");
+    var response_code_text = response_code_textaux[1].replace(/%20/gi, " ");
+    document.getElementById('respuestatarjeta').value=order_id+'||'+response_code+'||'+response_code_text;
+    iabRef.close();
   }
 }
 function iabClose(event) {
-    alert(event.type + ' - ' + event.code);
+  validarpago();
+    //alert(event.type);
     iabRef.removeEventListener('loadstart', iabLoadStart);
     iabRef.removeEventListener('loadstop', iabLoadStop);
     iabRef.removeEventListener('exit', iabClose);
@@ -1174,11 +1185,31 @@ function iabClose(event) {
 function pagotarjeta(){
   var charge_total = window.btoa($('#valortarjeta').val());
   var d = new Date();
-  var order_id =  window.btoa(d.getTime());
-  $('#oreder_id').val(d.getTime());
-  var myURL=encodeURI('https://www.practisis.net/pagos_prueba.php?charge_total='+charge_total+'&order_id='+order_id);
+  var emp = localStorage.getItem("empresa");
+  var order_id_real = d.getTime()+'E'+emp;
+  var order_id =  window.btoa(order_id_real);
+  $('#order_id').val(order_id_real);
+  var myURL=encodeURI('https://www.practisis.net/pagos_tarjetas.php?charge_total='+charge_total+'&order_id='+order_id);
           iabRef = window.open(myURL,'_blank', 'location=yes');
           iabRef.addEventListener('loadstart', iabLoadStart);
           iabRef.addEventListener('loadstop', iabLoadStop);
           iabRef.addEventListener('exit', iabClose);
+}
+
+function validarpago(){
+  var respuesta = $('#respuestatarjeta').val();
+  if(respuesta!=''){
+    var resp = respuesta.split("||");
+    if(resp[0] != 'null' && resp[0] != '' && resp[1] == '1'){
+      antesperformPurchase('table');
+    }else{
+      if(resp[2] != ''){
+        alert('The transaction could not be executed successfully.\nError: '+resp[2]+'.\nPlease choose another card or change your payment method.');
+        $('#respuestatarjeta').val('');
+      }
+    }
+  }else{
+    alert('The transaction was canceled, please choose another card or change your payment method.');
+    $('#respuestatarjeta').val('');
+  }
 }

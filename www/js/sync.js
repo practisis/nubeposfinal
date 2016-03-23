@@ -521,7 +521,7 @@ function DatosIniciales(cual){
     		JSONextraNube=arraydatos.extras;
     		JSONimpuestosNube=arraydatos.impuestos;
     		JSONmodificadoresNube=arraydatos.modificadores;
-			JSONpropinasNube='{"propinas":[{"id":"1","porcentaje":"true","valor":"5","activo":"true"},{"id":"2","porcentaje":"false","valor":"10","activo":"true"}]}';
+			JSONpropinasNube=arraydatos.propinas;//JSONpropinasNube='{"propinas":[{"id":"1","porcentaje":"true","valor":"5","activo":"true"},{"id":"2","porcentaje":"false","valor":"10","activo":"true"}]}';
 			//JSONmodificadoresNube=arraydatos.propinas;
     		//JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"1245"},{"id":"2","nombre":"Servicio","porcentaje":"10","activo":"true","timespan":"1246"}]}';
 
@@ -589,8 +589,8 @@ function DatosRecurrentes(cual){
 				$('#JSONPermisosNube').html(JSON.stringify(jsonSync.BigJson[8].Permisos));
 				$('#JSONImpuestosNube').html(JSON.stringify(jsonSync.BigJson[9].Impuestos));
 				$('#JSONModifNube').html(JSON.stringify(jsonSync.BigJson[10].Modificadores));
-				//$('#JSONModifNube').html(JSON.stringify(jsonSync.BigJson[10].Propinas));
-				$('#JSONPropinasNube').html('{"propinas":[{"id":"1","porcentaje":"true","valor":"5","activo":"true"},{"id":"2","porcentaje":"false","valor":"10","activo":"true"}]}');
+				$('#JSONPropinasNube').html(JSON.stringify(jsonSync.BigJson[11].Propinas));
+				//$('#JSONPropinasNube').html('{"propinas":[{"id":"1","porcentaje":"true","valor":"5","activo":"true"},{"id":"2","porcentaje":"false","valor":"10","activo":"true"}]}');
 				//$('#JSONimpuestosNube').html('{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"1245"},{"id":"2","nombre":"Servicio","porcentaje":"10","activo":"true","timespan":"1246"}]}');
 				
 				//$('#JSONModifNube').html('{"modificadores":[{"id":"1","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal2","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"3","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal3","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"4","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal4","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"5","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal5","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"6","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal6","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"7","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal7","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"8","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal8","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"2","id_formulado":"708331454520391001","nombre":"Con Limon","valor":"0.10","activo":"true","id_form_desc":"0"}]}');

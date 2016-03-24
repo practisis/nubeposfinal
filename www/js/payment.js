@@ -1172,7 +1172,7 @@ function iabLoadStop(event){
     var response_code_text = response_code_textaux[1].replace(/%20/gi, " ");
     document.getElementById('respuestatarjeta').value=order_id+'||'+response_code+'||'+response_code_text;
     iabRef.close();
-    alert(event.type);
+    //alert(event.type);
   }
 }
 function iabClose(event) {

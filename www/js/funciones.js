@@ -3130,6 +3130,7 @@ function PropinaValor(valor,caso){
 }
 
 function GuardarPropina(){
+  
 	$('#propinaFactura').val($('#valorpropina').val());
 	$('#invoiceprop').html($('#valorpropina').val());
 	$('#popupPropina').modal('hide');

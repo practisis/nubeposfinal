@@ -1142,4 +1142,5 @@ function VerificarPermiso(donde){
 				IraNube(document.getElementById('linklogin'));
 			}
 		}
+        
 }

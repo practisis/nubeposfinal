@@ -307,8 +307,6 @@ function performPurchase(restaurant){
             if($('#order_id').val()!=''){
               var order_id = $('#order_id').val();
             }
-
-            //alert(order_id+'**'+$('#order_id').val());
 			
 			
 			/*FIN VALORES PARA LA FACTURA*/
@@ -466,6 +464,14 @@ function cancelPayment(){
 	$('#changeFromPurchase').html('0.00');
 	//$('#paymentModule').modal('hide');
 	$('#paymentModule').slideUp();
+	var propina=parseFloat($('#invoiceprop').html());
+	$('#total').html("$"+(parseFloat($('#total').html().substring(1))-propina).toFixed(2));
+	//$('#totalmiFactura').val(parseFloat(totales));
+	$('#payButton').html('PAGAR '+$('#total').html());
+	$('#propinaFactura').val("0");
+	$('#valorpropina').val("0");
+	$('#invoiceprop').html("0.00");
+	
 	ResetPagos(1);
 	ResetPagos(2);
 	ResetPagos(3);
@@ -1155,7 +1161,7 @@ form.submit();
 }
 
 var iabRef = null;
-function iabLoadStart(event) {
+function iabLoadStart(event){
   //alert(event);
 }
 function iabLoadStop(event){
@@ -1177,7 +1183,7 @@ function iabLoadStop(event){
 }
 function iabClose(event) {
   validarpago();
-    //alert(event.type);
+    //alert(event.type + ' - ' + event.code);
     iabRef.removeEventListener('loadstart', iabLoadStart);
     iabRef.removeEventListener('loadstop', iabLoadStop);
     iabRef.removeEventListener('exit', iabClose);

@@ -1574,6 +1574,11 @@ function AntesDePagar(){
 		//$('#paymentEfectivo').val($('#total').html().substring(1));
 		//$('#simple_1').html($('#total').html().substring(1));
 		//changePaymentCategory('1','Efectivo');
+    if(localStorage.getItem("con_nombre_orden")=='true'){
+          document.getElementById('nombre_orden').style.display='block';
+     }else{
+          document.getElementById('nombre_orden').style.display='none';
+     }
 		$('#justo').click();
 		$('#paymentModule').slideDown();
 		$('#cedulaP').val('9999999999999');
@@ -2083,6 +2088,7 @@ function ClickNumeroC(numc){
 function ClickNumeroCnew(numc){
 	var accion = $.trim($(numc).attr('cual'));
 		console.log(accion);
+     $( "#inputbuscnew" ).focus();
 		if(accion == 'p'){
 			if($('.cantidadnew').html().indexOf('.') == -1){
 				if($('.cantidadnew').html() == '0'){
@@ -3069,6 +3075,7 @@ function SiguienteModificador(divid,idmod,origen){
 	
 	if(ya==false){
 		$('#popupModificadores').modal("hide");
+    $( "#inputbuscnew" ).focus();
 		if(origen==2)
 		agregarCompra($('#busc_'+$('#id_formulado_modificadores').val()),origen);
 		else

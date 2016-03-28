@@ -663,6 +663,12 @@ var app = {
 				var subs="";
 				subs+="<table class='table table-hovered'>";
 				subs+="<tr><td style='text-align:right;'>SUBTOTAL</td><td style='text-align:right;'> $"+subtotal.toFixed(2)+"</td></tr>";
+				
+				/*descuento*/
+				if(descAplicado>0){
+						subs+="<tr><td style='text-align:right;' class='trans_discount'>Descuento</td><td style='text-align:right;'> $"+parseFloat(row.descuento).toFixed(2)+"</td></tr>";
+				}
+				
 				if(row.dataimpuestos!=""){
 					var detagregados=row.dataimpuestos;
 					var vdetagregados=detagregados.split('@');
@@ -751,12 +757,7 @@ var app = {
 				if((tot-totalpagof)<0){
 					$('#tabladetformaspago').append('<tr><td><b>Vuelto</b></td><td style="text-align:right;">'+(-1*(tot-totalpagof)).toFixed(2)+'</td></tr>');
 				}
-
-				if((descAplicado)>0){
-					$('#tabladetformaspago').append('<tr><td><b>Descuento</b></td><td style="text-align:right;">'+descAplicado+'</td></tr>');
-				}
-
-
+				
                 if(row.anulada==1){
                     $('#factanulada').fadeIn();
                 }
@@ -846,6 +847,9 @@ var app = {
 				
 				var subs="";
 				subs+="<table class='table table-hovered'>";
+				
+				
+				
 				subs+="<tr><td style='text-align:right;'>SUBTOTAL</td><td style='text-align:right;'> $"+subtotal.toFixed(2)+"</td></tr>";
 				if(row.dataimpuestos!=""){
 					var detagregados=row.dataimpuestos;
@@ -854,6 +858,10 @@ var app = {
 						var dataagr=vdetagregados[t].split('|');
 						subs+="<tr><td style='text-align:right;'>"+dataagr[1]+"</td><td style='text-align:right;'> $"+parseFloat(dataagr[3]).toFixed(2)+"</td></tr>";
 					}
+				}
+				
+				if(descAplicado>0){
+					subs+="<tr><td style='text-align:right;'>DESCUENTO</td><td style='text-align:right;'> $"+parseFloat(descAplicado).toFixed(2)+"</td></tr>";
 				}
 				
 				if(datosfact.Pagar[0].factura.propina!=null){
@@ -940,10 +948,6 @@ var app = {
 				var tot=parseFloat($('#total').html());
 				if((tot-totalpagof)<0){
 					$('#tabladetformaspago').append('<tr><td><b>Vuelto</b></td><td style="text-align:right;">'+(-1*(tot-totalpagof)).toFixed(2)+'</td></tr>');
-				}
-				
-				if((descAplicado)>0){
-					$('#tabladetformaspago').append('<tr><td><b>Descuento</b></td><td style="text-align:right;">'+descAplicado+'</td></tr>');
 				}
 
 				

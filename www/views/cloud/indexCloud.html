@@ -129,6 +129,29 @@
 				});
 			}
 	  </script>
+      <div class="row" style="display:block; padding:20px; color:#404041;" id="escojeIdioma" >
+        <h1>Select your language / Seleccione su idioma</h1>
+        <div class="row">
+        <div class="col-xs-1"></div>
+            <div class="col-xs-5">
+              <div id="selIngles" class="thumbnail" style="padding: 20px;" onclick="activaidioma(2);">
+                <img src="img/banderaen.png" alt="...">
+                <div class="caption">
+                  <h3>English</h3>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-5">
+              <div id="selEspaniol" class="thumbnail" style="padding: 20px;" onclick="activaidioma(1);">
+                <img src="img/banderaes.png" alt="...">
+                <div class="caption">
+                  <h3>Español</h3>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="col-xs-1"></div>
+	  </div>
 	  <!-- Registro -->
 	  <div class="row" style="display:block; padding:20px; color:#404041;" id="demoGratis" >
 		<form>
@@ -152,26 +175,27 @@
 			 <div class="form-group">
               <input type="password" name="pass" id="newConfirm"  class="form-control input-lg trans_confpass" placeholder="Confirma tu contraseña" required="" tabindex="4" autocomplete="off">
             </div>
-			
+
 			<div class="form-group">
 					<a id='trans_label_39' data-toggle="modal" data-target="#recuperarPass" onclick="mostrarSignIn();" href="">¿Ya tienes cuenta PractiPOS haz click aquí?</a><br/>
 			</div>
 				
-			
+
 <button class="btn btn-md btn-success btn-center trans_create" type="button" id="btnNewEmp" onclick="registrarUser();">Crear Cuenta</button>
 			  </div>
-			  
+
 			  <div id="varias">
 			  </div>
 		</div>
 		<div class="col-md-2"></div>
-		
-		
+
+
 		<div id="mensaje2"></div>
 		<input id="user" type="hidden" />
 		<input id="pass" type="hidden" />
+        <input id="id_idioma" name="id_idioma" type="hidden" value="2">
 		</form>
-		
+
 	  </div> <!--End row -->
 	  <br/><br/><br/><br/><br/><br/>
 	  <!-- STEP 1 -->
@@ -322,13 +346,13 @@ $(document).ready(function(){
 			var todoslabels=itemlabels.item;
 			var todositems=itemmen.item;	
 			var todosplaceholder=itemplaceholder.item;
-			
+
 			for(var k=0;k<todosplaceholder.length;k++){
 				var miitemname=todosplaceholder[k].name;
 				//alert(miitemname);
 				$('.'+miitemname).prop("placeholder",todosplaceholder[k].text);
 			}
-			
+
 			for(var k=0;k<todositems.length;k++){
 					var miitem=todositems[k];
 					$('#lab_menu_'+(k+1)).html(miitem);
@@ -351,7 +375,7 @@ $(document).ready(function(){
 					var miitemname=todoslabels[k].name;
 					$('#'+miitemname).html(todoslabels[k].text);
 				}
-				
+
 		});
 	
 	$('#demoGratis').css('height',parseInt($(window).height())*150/100);
@@ -363,7 +387,8 @@ $(document).ready(function(){
 	if(procesocount==0){
 		$('#fadeRow,#contentStepSincro,#cuentaactiva,#mensajeperso,#demoGratis').css("display","none");
 		if(localStorage.getItem("idbarra")==null){
-			$('#demoGratis').fadeIn();
+			//$('#demoGratis').fadeIn();
+            $('#escojeIdioma').fadeIn();
 			$('.navbar').slideUp();
 			$('#finalizado,#cuentaactiva,#mensajeperso').css('display','none');
 		}else{
@@ -515,4 +540,72 @@ function IraNube(elem){
                 }
 			}
 			$(".putHeightRows").css("height" , $(window).height() + "px");*/
+function activaidioma(cual){
+  if(cual == 1){
+   document.getElementById('id_idioma').value='1';
+   document.getElementById('selEspaniol').style.backgroundColor="#337AB7";
+   document.getElementById('selIngles').style.backgroundColor="#FFFFFF";
+   localStorage.setItem('idioma',1);
+   idiomaContinuar();
+  }else{
+   document.getElementById('id_idioma').value='2';
+   document.getElementById('selIngles').style.backgroundColor="#337AB7";
+   document.getElementById('selEspaniol').style.backgroundColor="#FFFFFF";
+   localStorage.setItem('idioma',2);
+   idiomaContinuar();
+  }
+}
+function idiomaContinuar(){
+  var linklang="es";
+  if(localStorage.getItem("idioma")==2)
+  	linklang="en";
+  	var xmlidioma=$.get("lang/"+linklang+".html",function(datos){
+  	d=JSON.parse(datos);
+  	var itemestructura=d.estructura;
+  	//console.log(itemestructura);
+  	var itemmen=itemestructura.menu;
+  	var itemplaceholder=itemestructura.placeholder;
+  	var itemtitles=itemestructura.titles;
+  	var itembuttons=itemestructura.botones;
+  	var itemlabels=itemestructura.labels;
+  	var todostitles=itemtitles.item;
+  	var todosbuttons=itembuttons.item;
+  	var todoslabels=itemlabels.item;
+  	var todositems=itemmen.item;
+  	var todosplaceholder=itemplaceholder.item;
+
+  	for(var k=0;k<todosplaceholder.length;k++){
+  		var miitemname=todosplaceholder[k].name;
+  		//alert(miitemname);
+  		$('.'+miitemname).prop("placeholder",todosplaceholder[k].text);
+  	}
+
+  	for(var k=0;k<todositems.length;k++){
+  			var miitem=todositems[k];
+  			$('#lab_menu_'+(k+1)).html(miitem);
+  	}
+
+  		for(var k=0;k<todostitles.length;k++){
+  			var miitemname=todostitles[k].name;
+  			//alert(miitemname);
+  			$('.'+miitemname).html(todostitles[k].text);
+  		}
+
+  		for(var k=0;k<todosbuttons.length;k++){
+  			var miitemname=todosbuttons[k].name;
+  			//alert(miitemname);
+  			$('.'+miitemname).html(todosbuttons[k].text);
+  		}
+
+  		for(var k=0;k<todoslabels.length;k++){
+  			//console.log(todoslabels[k].name+"/"+todoslabels[k].name);
+  			var miitemname=todoslabels[k].name;
+  			$('#'+miitemname).html(todoslabels[k].text);
+  		}
+
+  });
+
+  $('#demoGratis').fadeIn();
+  $('#escojeIdioma').fadeOut();
+}
 </script>

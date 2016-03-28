@@ -341,12 +341,19 @@ function registrarUser(){
     var expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     if(newEmpresa==''){
         $('.alert-danger').fadeIn('slow');
-        $(".alert-danger").html('Debe ingresar el nombre de tu negocio.');
+		if(localStorage.getItem("idioma")==1)
+			$(".alert-danger").html('Debe ingresar el nombre de su negocio.');
+		else if(localStorage.getItem("idioma")==2)
+			$(".alert-danger").html('Please, enter a business name.');
+		
         $("#newEmpresa").val('');
         setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
      }else if(newEmail=='' || !expr.test(newEmail)){
         $('.alert-danger').fadeIn('slow');
-        $(".alert-danger").html('Debe ingresar un e-mail valido para tu negocio.');
+		if(localStorage.getItem("idioma")==1)
+			$(".alert-danger").html('Debe ingresar un e-mail valido para su negocio.');
+		else if(localStorage.getItem("idioma")==2)
+			 $(".alert-danger").html('Enter a valid e-mail.');
         $("#newEmail").val('');
         setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
      }else{
@@ -387,7 +394,10 @@ function registrarUser(){
                 if(data=='existe'){
 						$("#cargandoTabs").fadeOut();
                         $('.alert-danger').fadeIn('slow');
+						if(localStorage.getItem("idioma")==1)
                         $(".alert-danger").html('El correo ingresado ya existe en el sistema, vuelva a ingresar otro correo.');
+						else if(localStorage.getItem("idioma")==1)
+                        $(".alert-danger").html('The mail entered already exists in the system, please enter another.');
                         $("#newEmail").val('');
                             setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
     			}else{
@@ -414,7 +424,10 @@ function registrarUser(){
     	}else{
 				$("#cargandoTabs").fadeOut();
     			$('.alert-danger').fadeIn('slow');
-                $(".alert-danger").html('Las contraseñas son distintas.');
+				if(localStorage.getItem("idioma")==1)
+					$(".alert-danger").html('Las contraseñas son distintas.');
+				else if(localStorage.getItem("idioma")==2)
+					$(".alert-danger").html('The passwords are different.');
                 $("#newPass").val('');
     			$("#newConfirm").val('');
                 setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
@@ -483,7 +496,10 @@ function UserLogin(){
 		//alert(quien+'/'+pass+'/'+iddevice);
 		//alert(data);
 		if(data=='error'){
-			showalert('Los datos son incorrectos.');
+			if(localStorage.getItem("idioma")==1)
+				showalert('Los datos son incorrectos.');
+			else if(localStorage.getItem("idioma")==2)
+				showalert('Please, enter valid information.');
 		}
 		else{
 			var datosaux = data.split("||");

@@ -163,7 +163,11 @@ function performPurchase(restaurant){
 		var invoiceTotal = parseFloat($('#invoiceTotal').html());
 		
 		if(invoicePaid < invoiceTotal){
-			showalertred('El valor pagado es menor del total');
+			if(localStorage.getItem("idioma")==1)
+				showalertred('El valor pagado es menor del total');
+			else if(localStorage.getItem("idioma")==2)
+				showalertred('The amount paid is less than the total');
+			
             //$('#printFactura').hide();
 			return false;
 		}
@@ -402,7 +406,10 @@ function performPurchase(restaurant){
             impresionMovil(fetchJson.toString());
             //setTimeout(function(){localStorage.setItem("nameorder","");},2000);
 		}else{
-			showalertred("El valor pagado es menor que el total.");
+			if(localStorage.getItem("idioma")==1)
+				showalertred('El valor pagado es menor del total');
+			else if(localStorage.getItem("idioma")==2)
+				showalertred('The amount paid is less than the total');
 		}
 	}else{
 		alert("Por favor, elija un cliente.");
@@ -434,10 +441,16 @@ function impresionMovil(mijson){
 				StarIOAdapter.rawprint(mijson,miprint.printer, function() {
 					var now=new Date().getTime();
 					tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
-					showalert("Imprimiendo Factura");
+					if(localStorage.getItem("idioma")==1)
+						showalert("Imprimiendo Factura.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("Printing Invoice.");
 				});
 			}else{
-				showalert("No se ha configurado una impresora");
+				if(localStorage.getItem("idioma")==1)
+					showalert("No se ha configurado una impresora.");
+				else if(localStorage.getItem("idioma")==2)
+					showalert("There is no configured printer.");
 			}
 		});
 	},errorCB,successCB);
@@ -894,7 +907,11 @@ function noCliente(){
 					BuscarCliente(13);
 				}
 		}else{
-			showalert("La cédula ingresada no es correcta.");
+			if(localStorage.getItem("idioma")==1)
+				showalert("La cédula ingresada no es correcta.");
+			else if(localStorage.getItem("idioma")==2)
+				showalert("The id number is not correct.");
+			
 			$('#cedulaP').val('');
 			$('#cedulaP').focus();
 		}

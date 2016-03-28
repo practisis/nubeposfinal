@@ -2952,7 +2952,10 @@ function VerificarAgregados(btnprod,origen){
 		tx.executeSql('SELECT * from MODIFICADORES WHERE id_formulado LIKE ? and activo=? order by no_modificador asc',[mitimespan,"true"],function(tx,res1){
 			var mods= new Array();
 			if(res1.rows.length>0){
-				$('#titlemodificador').html("Modificadores de "+$(btnprod).attr("data-formulado"));
+				if(localStorage.getItem("idioma")==1)
+					$('#titlemodificador').html("Modificadores de "+$(btnprod).attr("data-formulado"));
+				else
+					$('#titlemodificador').html("Aggregates of "+$(btnprod).attr("data-formulado"));
 				$('#id_formulado_modificadores').val(mitimespan);
 				for(var m=0;m<res1.rows.length;m++){
 					var miobj=res1.rows.item(m);
@@ -2976,7 +2979,10 @@ function VerificarAgregados(btnprod,origen){
 					for(var t in mods[s]){
 						inhtml+=mods[s][t];
 					}
-					inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
+					if(localStorage.getItem("idioma")==1)
+						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
+					else
+						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>NONE</button></div>";
 					$('#divmodificadores').append(inhtml);
 					c++;
 				}

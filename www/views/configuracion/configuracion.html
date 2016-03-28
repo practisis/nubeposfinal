@@ -145,9 +145,9 @@
 		
 		$('#tablet_cuenta').val(localStorage.getItem("userRegister"));
 
-		cordova.getAppVersion.getVersionNumber().then(function (version) {
+		/*cordova.getAppVersion.getVersionNumber().then(function (version) {
 			$('#tablet_version').val(version);
-		});
+		});*/
 	});
 	
 	
@@ -178,10 +178,16 @@
 					
 				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop],
 				function(tx1,results1){
-					showalert("Datos Guardados con exito.");
+					
+					
 					var linklang="es";
 					if(localStorage.getItem("idioma")==2)
 						linklang="en";
+						
+			if(localStorage.getItem("idioma")==1)
+				showalert("Datos Guardados con exito.");
+			else if(localStorage.getItem("idioma")==2)
+				showalert("Successfully Saved.");
 					
 			var xmlidioma=$.get("lang/"+linklang+".html",function(datos){
 			d=JSON.parse(datos);

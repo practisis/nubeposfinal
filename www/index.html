@@ -156,11 +156,11 @@
 										<!--1-->
 										<div  id='resumenInicia'>
 										<div class="popover-title">
-											<span style='display:inline;' class='fa fa-line-chart'></span>&nbsp;Resúmen
+											<span style='display:inline;' class='fa fa-line-chart'></span>&nbsp;<label class='trans_dash'>Resúmen</label>
 										</div>
 										<div class="popover-content">
 										<div class='row'>
-											<div class="col-lg-9">
+											<div class="col-lg-9" id='trans_label_42'>
 											En esta sección puedes ver un resumen detallado de ventas de tu negocio</div>
 											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
 											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
@@ -181,11 +181,11 @@
 										<!--2-->
 										<div id='ventasInicia' style='display:none;'>
 											<div class="popover-title">
-											<span style='display:inline;' class='fa fa-shopping-cart'></span>&nbsp;Ventas
+											<span style='display:inline;' class='fa fa-shopping-cart'></span>&nbsp;<label class='trans_sales'>Ventas</label>
 											</div>
 										<div class="popover-content">
 										<div class='row'>
-											<div class="col-lg-9">En esta sección puedes facturar tus productos.</div>
+											<div class="col-lg-9" id='trans_label_43'>En esta sección puedes facturar tus productos.</div>
 											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
 											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
 											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(2)'>Siguiente</button>
@@ -233,11 +233,11 @@
 										<!--3-->
 										<div id='historialInicia' style='display:none;'>
 										<div class="popover-title">
-											<span style='display:inline;' class='fa fa-money'></span>&nbsp;Historial
+											<span style='display:inline;' class='fa fa-money'></span>&nbsp;<label class='trans_historial'>Historial</label>
 										</div>
 										<div class="popover-content">
 										<div class='row'>
-											<div class="col-lg-9">En esta sección puedes visualizar todas las facturas emitidas.</div>
+											<div class="col-lg-9" id='trans_label_44'>En esta sección puedes visualizar todas las facturas emitidas.</div>
 											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
 											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
 											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(3)'>Siguiente</button>
@@ -256,11 +256,11 @@
 										<!--4-->
 										<div id='productosInicia' style='display:none;'>
 										<div class="popover-title">
-											<span style='display:inline;' class='fa fa-list-alt'></span>&nbsp;Productos
+											<span style='display:inline;' class='fa fa-list-alt'></span>&nbsp;<label id='trans_label_9'>Productos</label>
 										</div>
 										<div class="popover-content">
 											<div class='row'>
-											<div class="col-lg-9">En esta sección puedes visualizar el listado global de tus productos ingresados al sistema.</div>
+											<div class="col-lg-9" id='trans_label_45'>En esta sección puedes visualizar el listado global de tus productos ingresados al sistema.</div>
 											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
 											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
 											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(4)'>Siguiente</button>
@@ -296,13 +296,13 @@
 										<!--5-->
 										<div id='cloudInicia' style='display:none;'>
 										<div class="popover-title">
-											<span style='display:inline;' class='fa fa-cloud'></span>&nbsp;Cloud
+											<span style='display:inline;' class='fa fa-cloud'></span>&nbsp;<label>Cloud</label>
 										</div>
 										<div class="popover-content">
 											<div class='row'>
-											<div class="col-lg-9">En esta sección puedes conectarte con tu cuenta nubePOS en la web.</div>
+											<div class="col-lg-9" id='trans_label_46'>En esta sección puedes conectarte con tu cuenta nubePOS en la web.</div>
 											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
-											<button type="button" class="btn btn-primary" onclick='siguiente(5)'>Terminar</button>
+											<button type="button" class="btn btn-primary trans_end" onclick='siguiente(5)'>Terminar</button>
 											</div>
 											</div>
 										<center style="margin-left:20px; margin-right:20px;">

@@ -472,7 +472,11 @@
 					tx.executeSql('SELECT COUNT(codigo) as cuantos FROM PRODUCTOS WHERE codigo like "'+codigop+'";',[],function(tx,res){
 						var existen=res.rows.item(0).cuantos;
 						if(existen > 0){
-							showalertred('El codigo de producto : '+ codigop +' ya existe no puede ser el mismo');
+							if(localStorage.getItem("idioma")==1)
+								showalertred('El codigo de producto : '+ codigop +' ya existe no puede ser el mismo');
+							else if(localStorage.getItem("idioma")==2)
+								showalertred('The code : '+ codigop +' already exist.');
+							
 							setTimeout(function(){
 								$('#codigoproducto').focus();
 								$('#codigoproducto').effect('highlight',{color:'red'},2500);
@@ -490,7 +494,11 @@
 									db.transaction(function(tx){
 									tx.executeSql('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,estado,tieneimpuestos) SELECT "'+nombrep+'","'+codigop+'","'+preciop+'","'+timeSpanCat+'",'+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+' ,1,"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");',[],function(tx,results){
 									console.log("prod:"+results.insertId);
-									showalert("Producto <b>" + nombrep + "</b> Creado con éxito.");
+									if(localStorage.getItem("idioma")==1)
+										showalertred("Producto <b>" + nombrep + "</b> Creado con éxito.");
+									else if(localStorage.getItem("idioma")==2)
+										showalertred("Product <b>" + nombrep + "</b>, successfully created.");
+									
 									});
 									},errorCB,successCB);
 									});
@@ -501,7 +509,10 @@
 								timeSpan=getTimeSpan();
 								tx.executeSql('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,estado,tieneimpuestos) SELECT "'+nombrep+'","'+codigop+'","'+preciop+'",'+currentTimeSpanCat+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+' , 1 ,"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");',[],function(tx,results){
 								console.log('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,tieneimpuestos) SELECT '+nombrep+'","'+codigop+'","'+preciop+'",'+currentTimeSpanCat+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+',"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");');
-									showalert("Producto <b>" + nombrep + "</b> Creado con éxito.");
+									if(localStorage.getItem("idioma")==1)
+										showalertred("Producto <b>" + nombrep + "</b> Creado con éxito.");
+									else if(localStorage.getItem("idioma")==2)
+										showalertred("Product <b>" + nombrep + "</b>, successfully created.");
 								});
 								},errorCB,successCB);
 							}
@@ -513,6 +524,10 @@
 				});
 			}else{
 				showalert("Por favor complete todos los datos");
+				if(localStorage.getItem("idioma")==1)
+					showalert("Por favor complete todos los datos");
+				else if(localStorage.getItem("idioma")==2)
+					showalert("Please, complete all the information.");
 				if($("#nombreproducto").val()=='') {$(".errorLabel1").fadeIn();setTimeout(function(){$('.errorLabel1').fadeOut('slow');},5000);}
 				if($("#search-renderitem").val()=='') {$(".errorLabel2").fadeIn();setTimeout(function(){$('.errorLabel2').fadeOut('slow');},5000);}
 				if($("#precioproducto").val()=='') {$(".errorLabel3").fadeIn();setTimeout(function(){$('.errorLabel3').fadeOut('slow');},5000);}
@@ -573,7 +588,11 @@
 					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+nombrep+'",codigo="'+codigop+'",precio='+preciop+',categoriaid="'+currentTimespanCategory+'",productofinal='+prfinal+',materiaprima='+matprima+',ppq='+costo+',color='+micolor+' ,sincronizar="true",tieneimpuestos="'+iva+'" WHERE timespan="'+idproducto+'" AND NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE (formulado like "'+nombrep+'" or codigo like "'+codigop+'") and timespan!="'+idproducto+'");',[],function(tx,results){
 					console.log("prod:"+idproducto);
 					$('#jsalert').html("Datos Actualizados con éxito.");
-					showalert("Datos Actualizados con éxito.");
+					if(localStorage.getItem("idioma")==1)
+						showalert("Datos Actualizados con éxito.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("Successfully Updated");
+					
 					setTimeout(function(){$('#jsalert').effect('highlight',{color:'white'},1000);},500);
 					setTimeout(function(){$('#jsalert').fadeOut('slow');},4000);
 					showalert("Producto " + nombrep + " Actualizado con éxito");
@@ -587,13 +606,20 @@
 				db.transaction(function(tx){
 					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+nombrep+'",codigo="'+codigop+'",precio='+preciop+',categoriaid="'+idcategoria+'",productofinal='+prfinal+',materiaprima='+matprima+',ppq='+costo+',color='+micolor+',servicio='+serv+' ,sincronizar="true",tieneimpuestos="'+iva+'" WHERE timespan="'+idproducto + '"',[],function(tx,results){
 					console.log(results);
-					showalert("Datos Actualizados con éxito.");
+					if(localStorage.getItem("idioma")==1)
+						showalert("Datos Actualizados con éxito.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("Successfully Updated");
 					});
 					},errorCB,successCB);
 			}
 		}else{
 			$('#jsalert').html("Por favor complete todos los datos.");
-			showalert("Por favor complete todos los datos.");
+			if(localStorage.getItem("idioma")==1)
+				showalert("Por favor complete todos los datos.");
+			else if(localStorage.getItem("idioma")==2)
+				showalert("Complete all the information.");
+				
 			setTimeout(function(){$('#jsalert').effect('highlight',{color:'white'},1000);},500);
 			setTimeout(function(){$('#jsalert').fadeOut('slow');},4000);
 		}

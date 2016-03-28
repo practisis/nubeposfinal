@@ -351,7 +351,11 @@ function AnularFactura(){
 					//console.log(mijson);
 					tx3.executeSql('UPDATE FACTURAS SET anulada=?,sincronizar="true",fetchJson=? where id=?',[1,mijson,id],function(tx3,results3){
 						console.log(results3);
-						showalert("Factura anulada con éxito.");
+						if(localStorage.getItem("idioma")==1)
+							showalert("Factura anulada con éxito.");
+						else if(localStorage.getItem("idioma")==2)
+							showalert("Invoice canceled.");
+							
 						$('#factanulada').fadeIn('slow');
 						$('#btnanularf,#reimprimir').fadeOut('slow');
 						//location.reload(true);
@@ -385,7 +389,10 @@ function ReimprimirFactura(){
 				if(idprinter.printer!=null){
 					laprint=idprinter.printer;
 				}else{
-					showalert("No se ha configurado una impresora.");
+					if(localStorage.getItem("idioma")==1)
+						showalert("No se ha configurado una impresora.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("There is no configured printer.");
 				}
 				
 				/*si existe la impresora*/
@@ -397,9 +404,16 @@ function ReimprimirFactura(){
 								var jsonfact=results2.rows.item(0);
 								if(jsonfact.j!=''){
 									StarIOAdapter.rawprint(jsonfact.j+"reimpr",laprint, function() {
-										showalert("Imprimiendo Factura");
+										if(localStorage.getItem("idioma")==1)
+										showalert("Imprimiendo Factura.");
+										else if(localStorage.getItem("idioma")==2)
+											showalert("Printing Invoice.");
 									},function(error) {
-										showalert("Ocurrió un problema: " + error);
+										if(localStorage.getItem("idioma")==1)
+											showalert("Ocurrió un problema: " + error);
+										else if(localStorage.getItem("idioma")==2)
+											showalert("There is a problem: " + error);
+										
 									});
 								}
 							}
@@ -407,7 +421,10 @@ function ReimprimirFactura(){
 					},errorCB,successCB);
 				}
 			}else{
-				showalert("No se ha configurado una impresora.");
+				if(localStorage.getItem("idioma")==1)
+						showalert("No se ha configurado una impresora.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("There is no configured printer.");
 			}
 		});
 	},errorCB,successCB);	

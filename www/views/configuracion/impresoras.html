@@ -148,7 +148,11 @@
 		}, function(error){
 			var linea="<tr><td>No print</td><td><input class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
 			$('#listaimpresoras tbody').append(linea);
-			showalert("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
+			if(localStorage.getItem("idioma")==1)
+				showalert("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
+			else if(localStorage.getItem("idioma")==2)
+				showalert("There is a problem with the printer, go to configuration: " + error);
+			
 		});
 
 		
@@ -176,11 +180,20 @@
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c>0){
 							tx1.executeSql("UPDATE CONFIG SET printer=? where id=1",[laprinter],function(tx1,results2){
-								showalert("Se ha vinculado la impresora: "+laprinter);
+								
+									if(localStorage.getItem("idioma")==1)
+										showalert("Se ha vinculado la impresora: "+laprinter);
+									else if(localStorage.getItem("idioma")==2)
+										showalert("Linked printer: "+laprinter);
+								
 							});
 						}else{
 							tx1.executeSql("INSERT INTO CONFIG (printer) VALUES (?)",[laprinter],function(tx1,results3){
-								showalert("Se ha vinculado la impresora: "+laprinter);
+								if(localStorage.getItem("idioma")==1)
+									showalert("Se ha vinculado la impresora: "+laprinter);
+								else if(localStorage.getItem("idioma")==2)
+									showalert("Linked printer: "+laprinter);
+								
 							});
 							
 						}
@@ -220,10 +233,17 @@
 				if(idprinter.printer!=null){
 					//alert(idprinter.printer);
 					StarIOAdapter.rawprint($('#jsonprint').html(),idprinter.printer, function() {
-						showalert("Imprimiendo Test");
+						if(localStorage.getItem("idioma")==1)
+							showalert("Imprimiendo Test");
+						else if(localStorage.getItem("idioma")==2)
+							showalert("Printing Test");
+						
 					});
 				}else{
-					showalert("No se ha configurado una impresora.");
+					if(localStorage.getItem("idioma")==1)
+						showalert("No se ha configurado una impresora.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("There is no configured printer.");
 				}
 			}
 			});
@@ -245,7 +265,10 @@
 			function(tx,res){
 				localStorage.setItem("encabezado",encab);
 				localStorage.setItem("largo",largo);
-				showalert("Actualizado con éxito.");
+				if(localStorage.getItem("idioma")==1)
+						showalert("Datos Actualizados con éxito.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("Successfully Updated");
 			});				
 		},errorCB,successCB);
 	}

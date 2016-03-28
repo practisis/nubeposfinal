@@ -697,7 +697,11 @@ function VerificarEliminar(timeSpan,nombre){
 				var p=misprod[k];
 				if(p.id_producto==timeSpan){
 					console.log('encontrado en facturacion');
-					showalert("El producto no puede ser eliminado, ya que se encuentra facturado.");
+					if(localStorage.getItem("idioma")==1)
+						showalert("El producto no puede ser eliminado, ya que se encuentra facturado.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("The product can not be eliminated, as it is in an invoice.");
+					
 					esta=true;
 					break;
 				}

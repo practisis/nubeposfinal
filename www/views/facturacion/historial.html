@@ -137,7 +137,7 @@
 						var linea=rowa.dataimpuestos;
 						if(linea!=null&&linea!=""){
 							var todosimp=linea.split("@");
-							alert(todosimp);
+							//alert(todosimp);
 							if(todosimp!=null){
 							for(var s=0;s<todosimp.length;s++){
 								var lineaimp=todosimp[s].split('|');
@@ -197,12 +197,19 @@
 												var now=new Date().getTime();
 												tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Envia imprimir Cierre",respuesta]);
 												StarIOAdapter.rawprint(respuesta,idprinter.printer, function() {
-													showalert("Imprimiendo Cierre de Caja");
+													if(localStorage.getItem("idioma")==1)
+														showalert("Imprimiendo Cierre de Caja");
+													else if(localStorage.getItem("idioma")==2)
+														showalert("Printing close drawer");
+													
 													var now=new Date().getTime();
 													tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió el Cierre",""]);
 												});
 											}else{
-												showalert("No se ha configurado una impresora.");
+												if(localStorage.getItem("idioma")==1)
+													showalert("No se ha configurado una impresora.");
+												else if(localStorage.getItem("idioma")==2)
+													showalert("There is no configured printer.");
 											}
 										}
 									});

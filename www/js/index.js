@@ -1087,13 +1087,20 @@ function VerificarClave(){
 					else{
 						$('#modalpermiso').modal("hide");
 						$('#miclave').val("");
+						if(localStorage.getItem("idioma")==1)
 						showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+					    else if(localStorage.getItem("idioma")==2)
+						showalert("You don't have enough privileges to access, or the password is incorrect.");
+					
 						localStorage.setItem("claveuser","");
 					}
 				}else{
 					$('#modalpermiso').modal("hide");
 					$('#miclave').val("");
-					showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+					if(localStorage.getItem("idioma")==1)
+						showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("You don't have enough privileges to access, or the password is incorrect.");
 					localStorage.setItem("claveuser","");
 				}
 			});}
@@ -1130,10 +1137,16 @@ function VerificarPermiso(donde){
 							}else if(donde=='nube'&&it.irnube=="true"){
 								IraNube(document.getElementById('linklogin'));
 							}else if(donde=='nube'&&it.irnube=="false"){
+								if(localStorage.getItem("idioma")==1)
 								showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+								else if(localStorage.getItem("idioma")==2)
+								showalert("You don't have enough privileges to access, or the password is incorrect.");
 							}
 						}else{
+							if(localStorage.getItem("idioma")==1)
 							showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+							else if(localStorage.getItem("idioma")==2)
+							showalert("You don't have enough privileges to access, or the password is incorrect.");
 							localStorage.setItem("claveuser","");
 						}
 					}

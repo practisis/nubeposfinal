@@ -2381,8 +2381,8 @@ function BuscarSugerencias2new(filtro,e){
 
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
-			tx.executeSql("SELECT * FROM PRODUCTOS WHERE formulado like '%"+buscar+"%' and productofinal=1 and estado=1",[],function(tx,results){
-				//console.log(results);
+			tx.executeSql("SELECT * FROM PRODUCTOS WHERE (formulado like '%"+buscar+"%' or codigo like '%"+buscar+"%') and productofinal=1 and estado=1",[],function(tx,results){
+				//alert(results.rows.length);
 				if(results.rows.length>0){
 					var res1=new Object();
 					for(var n=0;n<results.rows.length;n++){
@@ -2417,29 +2417,44 @@ function BuscarSugerencias2new(filtro,e){
 		});
 			if(filtro!=''){
 				$('#resultBuscadornew').fadeIn('slow');
-                //alert(filtro);
 				$('#tableresultsnew').html('');
 				var jsonf = $('#jsonproductos').html().toString();
 				console.log(jsonf);
-				var mijson = JSON.parse(jsonf);
-				console.log(mijson);
-				for(var j in mijson){
-					var item = mijson[j];
-					var suger='';
-					if(item.formulado.toLowerCase().indexOf(filtro.toLowerCase())>-1)
-						suger=item.formulado;
-					else if(item.codigo.toLowerCase().indexOf(filtro.toLowerCase())>-1)
-						suger=item.codigo;
+                if(jsonf != ''){
+    				var mijson = JSON.parse(jsonf);
+    				console.log(mijson);
+                    var contaaux = 0;
+    				for(var j in mijson){
+    					var item = mijson[j];
+    					var suger='';
+    					if(item.formulado.toLowerCase().indexOf(filtro.toLowerCase())>-1)
+    						suger=item.formulado;
+    					else if(item.codigo.toLowerCase().indexOf(filtro.toLowerCase())>-1)
+    						suger=item.codigo;
 
-					if(suger!='')
-					{
-						if(document.getElementById('tableresultsnew').rows.length<4){
-						$('#tableresultsnew').append("<tr id='busc_"+ item.id +"' data-id_local = '"+item.id_local+"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"'><td class='sugerencia' enfocada='0'><div id='busc_"+ item.id +"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"' data-id_local = '"+item.id_local+"' onclick='VerificarAgregadosnew(this,2)'>"+suger.toUpperCase()+"</div></td></tr>");
-						}
+    					if(suger!=''){
+    					  contaaux++;
+    					  if(contaaux > 1){
+    						if(document.getElementById('tableresultsnew').rows.length<4){
+    						    $('#tableresultsnew').append("<tr id='busc_"+ item.id +"' data-id_local = '"+item.id_local+"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"'><td class='sugerencia' enfocada='0'><div id='busc_"+ item.id +"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"' data-id_local = '"+item.id_local+"' onclick='VerificarAgregadosnew(this,2)'>"+suger.toUpperCase()+"</div></td></tr>");
+    						}
+                          }else{
+                            if(buscar == suger){
+                              //alert(buscar+'**'+suger);
+                                if(document.getElementById('tableresultsnew').rows.length<4){
+        						    $('#tableresultsnew').append("<tr id='busc_"+ item.id +"' data-id_local = '"+item.id_local+"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"'><td class='sugerencia' enfocada='0'><div id='busc_"+ item.id +"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"' data-id_local = '"+item.id_local+"'>"+suger.toUpperCase()+"</div></td></tr>");
+        						}
+                            }else{
+                                if(document.getElementById('tableresultsnew').rows.length<4){
+        						    $('#tableresultsnew').append("<tr id='busc_"+ item.id +"' data-id_local = '"+item.id_local+"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"'><td class='sugerencia' enfocada='0'><div id='busc_"+ item.id +"' data-precio='"+ item.precio +"' data-impuestos='"+ item.formulado_impuestos +"' data-impuestosindexes='"+ item.formulado_tax_id +"' data-formulado='"+ item.formulado+"' data-id_local = '"+item.id_local+"' onclick='VerificarAgregadosnew(this,2)'>"+suger.toUpperCase()+"</div></td></tr>");
+        						}
+                            }
+                          }
 
-					}
+    					}
 
-				}
+    				}
+                }
 			}
 	}
 	

@@ -756,7 +756,7 @@ function noCliente(){
 				$("#newCliente ").html('\
 			<div style="position:relative; left:0%; width:100%; height:100%" id="borrable">\
 				<div id="cuadroClientes" class="cuadroClientes" style="height:100%;"> \
-					<h3>Cliente</h3><div style="width:100%; text-align:right; padding-right:5px;  padding-right:5px; cursor:pointer;color:#1495C0; position:absolute; top:3px; right:12px; cursor:pointer;"><i onclick="noCliente();" class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
+					<h3 class="trans_cliente">Cliente</h3><div style="width:100%; text-align:right; padding-right:5px;  padding-right:5px; cursor:pointer;color:#1495C0; position:absolute; top:3px; right:12px; cursor:pointer;"><i onclick="noCliente();" class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
 					<table id="descripcionD" class="table table-striped">\
 						<tr> \
 							<td colspan=2>\
@@ -765,23 +765,23 @@ function noCliente(){
 									<table tabIndex="99"  cellpadding="0"  cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
 										<tr>\
 											<td>\
-												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%">&nbsp;Nombre*</span>\
+												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%" id="trans_label_11">&nbsp;Nombre*</span>\
 													<input  tabIndex="2" onkeyup="validacliente()" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
 											</td>\
 										</tr>\
 										\
 										<tr>\
 												<td>\
-											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control" type="number"/></div>				</td>\
+											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon trans_tel"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control" type="number"/></div>				</td>\
 										</tr>\
 										<tr>\
 												<td>\
-												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon"  style="width:30%">&nbsp;Dirección</span>\
+												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon trans_dir"  style="width:30%">&nbsp;Dirección</span>\
 													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
 												</td>\
 										</tr>\
 										<tr>\
-												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon"  style="width:30%">&nbsp;Email</span>\
+												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon trans_mail"  style="width:30%">&nbsp;Email</span>\
 													\
 													<input tabIndex="4" id="emailP" class="form-control"/></div>\
 												</td>\
@@ -799,10 +799,10 @@ function noCliente(){
 									<table style="cursor:pointer;position: relative; margin: 0px auto;" cellspacing="5px">\
 										<tr>\
 											<td style="vertical-align:top;">\
-												<button onclick="noCliente();" tabindex="8" class="btn btn-default">Cancelar</button> \
+												<button onclick="noCliente();" tabindex="8" class="btn btn-default trans_cancel">Cancelar</button> \
 											</td>\
 											<td style="vertical-align: top;">\
-												<button tabindex="7" class="btn btn-success" onclick="jsonNuevoCliente()">Guardar</button> \
+												<button tabindex="7" class="btn btn-success trans_save" onclick="jsonNuevoCliente()">Guardar</button> \
 											</td>\
 										</tr>\
 									</table>\
@@ -822,7 +822,7 @@ function noCliente(){
 			$("#newCliente ").html('\
 			<div style="position:relative; left:0%; width:100%; height:100%" id="borrable">\
 				<div id="cuadroClientes" class="cuadroClientes" style="height:100%;"> \
-					<h3>Cliente</h3><div style="width:100%; text-align:right; padding-right:5px;  padding-right:5px; cursor:pointer;color:#1495C0; position:absolute; top:3px; right:12px; cursor:pointer;"><i onclick="noCliente();" class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
+					<h3 class="trans_cliente">Cliente</h3><div style="width:100%; text-align:right; padding-right:5px;  padding-right:5px; cursor:pointer;color:#1495C0; position:absolute; top:3px; right:12px; cursor:pointer;"><i onclick="noCliente();" class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
 					<table id="descripcionD" class="table table-striped">\
 						<tr> \
 							<td colspan=2>\
@@ -830,30 +830,30 @@ function noCliente(){
 									<table tabIndex="99"  cellpadding="0" cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
 										<tr>\
 											<td>\
-										<div class="input-group" style="width:100%; margin-bottom:10px;"><span class="input-group-addon" style="width:30%">\
+										<div class="input-group" style="width:100%; margin-bottom:10px;"><span class="input-group-addon trans_cedula" style="width:30%">\
 													&nbsp;Cédula* \
 											</span><input tabIndex="1" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control"/> </div>\
 												</td>\
 										</tr>\
 										<tr>\
 											<td>\
-												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%">&nbsp;Nombre*</span>\
+												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%" id="trans_label_11">&nbsp;Nombre*</span>\
 													<input  tabIndex="2" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
 											</td>\
 										</tr>\
 										\
 										<tr>\
 												<td>\
-											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control" type="number"/></div>				</td>\
+											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon trans_tel"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control" type="number"/></div>				</td>\
 										</tr>\
 										<tr>\
 												<td>\
-												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon"  style="width:30%">&nbsp;Dirección</span>\
+												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon trans_dir"  style="width:30%">&nbsp;Dirección</span>\
 													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
 												</td>\
 										</tr>\
 										<tr>\
-												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon"  style="width:30%">&nbsp;Email</span>\
+												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon trans_mail"  style="width:30%">&nbsp;Email</span>\
 													\
 													<input tabIndex="4" id="emailP" class="form-control"/></div>\
 												</td>\
@@ -871,10 +871,10 @@ function noCliente(){
 									<table style="cursor:pointer;position: relative; margin: 0px auto;" cellspacing="5px">\
 										<tr>\
 											<td style="vertical-align:top;">\
-												<button onclick="noCliente();" tabindex="8" class="btn btn-default">Cancelar</button> \
+												<button onclick="noCliente();" tabindex="8" class="btn btn-default  trans_cancel">Cancelar</button> \
 											</td>\
 											<td style="vertical-align: top;">\
-												<button tabindex="7" class="btn btn-success" onclick="jsonNuevoCliente()">Guardar</button> \
+												<button tabindex="7" class="btn btn-success trans_save" onclick="jsonNuevoCliente()">Guardar</button> \
 											</td>\
 										</tr>\
 									</table>\
@@ -899,6 +899,8 @@ function noCliente(){
 			$('#cedulaP').click(function(){
 				$(this).select();
 			});
+			
+		
 		$('#cedulaP').change(function(){
 		if(cedula()){
 				if($('#nombreP').length==0){
@@ -946,6 +948,58 @@ function noCliente(){
 		}
 	});
 	}
+	
+	//idioma
+	var linklang="es";
+		if(localStorage.getItem("idioma")==2)
+			linklang="en";
+			var xmlidioma=$.get("lang/"+linklang+".html",function(datos){
+			d=JSON.parse(datos);
+			var itemestructura=d.estructura;
+			//console.log(itemestructura);
+			var itemmen=itemestructura.menu;
+			var itemplaceholder=itemestructura.placeholder;
+			var itemtitles=itemestructura.titles;
+			var itembuttons=itemestructura.botones;
+			var itemlabels=itemestructura.labels;
+			var todostitles=itemtitles.item;
+			var todosbuttons=itembuttons.item;
+			var todoslabels=itemlabels.item;
+			var todositems=itemmen.item;	
+			var todosplaceholder=itemplaceholder.item;
+			
+			for(var k=0;k<todosplaceholder.length;k++){
+				var miitemname=todosplaceholder[k].name;
+				//alert(miitemname);
+				$('.'+miitemname).attr("placeholder",todosplaceholder[k].text);
+			}
+			
+			for(var k=0;k<todositems.length;k++){
+					var miitem=todositems[k];
+					$('#lab_menu_'+(k+1)).html(miitem);
+			}
+					
+				for(var k=0;k<todostitles.length;k++){
+					var miitemname=todostitles[k].name;
+					//alert(miitemname);
+					$('.'+miitemname).html(todostitles[k].text);
+				}
+				
+				for(var k=0;k<todosbuttons.length;k++){
+					var miitemname=todosbuttons[k].name;
+					//alert(miitemname);
+					$('.'+miitemname).html(todosbuttons[k].text);
+				}
+				
+				for(var k=0;k<todoslabels.length;k++){
+					//console.log(todoslabels[k].name+"/"+todoslabels[k].name);
+					var miitemname=todoslabels[k].name;
+					$('#'+miitemname).html(todoslabels[k].text);
+				}
+				
+		});
+		
+		/*idioma*/	
 	//}
 }
 }

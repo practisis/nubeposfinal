@@ -169,7 +169,7 @@
 										</div>
 										</div>
 										<center>
-											<img src="images/resumen.jpg" alt="..." class="img-thumbnail" style=';'/>
+											<img src="images/resumen.jpg" id='dash_1' alt="..." class="img-thumbnail" style=';'/>
 										</center>
 										<br/>
 										<div class="modal-footer">
@@ -196,19 +196,19 @@
 											<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
 												<div class="carousel-inner" role="listbox">
 													<div class="item ">
-														<img src="images/descProd.jpg" alt="..." class="img-thumbnail" style=';'/>
+														<img src="images/descProd.jpg" alt="..."  id='dash_2'  class="img-thumbnail" style=''/>
 														<!--<div class="carousel-caption">
 															Se puede aplicar un descuento al total de la factura
 														</div>--->
 													</div>
 													<div class="item">
-														<img src="images/pagar.jpg" alt="..." class="img-thumbnail" style=';'/>
+														<img src="images/pagar.jpg"  id='dash_3'  alt="..." class="img-thumbnail" style=';'/>
 														<!--<div class="carousel-caption" style='color:#000 !important;'>
 															Modulo de Pagos y Emisión de Facturas
 														</div>--->
 													</div>
 													<div class="item active">
-														<img src="images/ventas.jpg" alt="..." class="img-thumbnail" style=';'/>
+														<img src="images/ventas.jpg"  id='dash_4'  alt="..." class="img-thumbnail" style=';'/>
 														<!--<div class="carousel-caption" style='color:#000 !important;'>
 															Modulo de Facturación
 														</div>--->
@@ -245,7 +245,7 @@
 										</div>
 										</div>
 										<center>
-											<img src="images/historial.jpg" alt="..." class="img-thumbnail" style=';'/>
+											<img src="images/historial.jpg" alt="..." class="img-thumbnail"  id='dash_5'  style=''/>
 										</center><br/>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
@@ -271,10 +271,10 @@
 											<div id="carousel-example-generic2" class="carousel slide" data-ride="carousel">
 												<div class="carousel-inner" role="listbox">
 													<div class="item active">
-														<img src="images/listaProd.jpg" alt="..." class="img-thumbnail" style=';'/>
+														<img src="images/listaProd.jpg" alt="..."  id='dash_6'   class="img-thumbnail" style=';'/>
 													</div>
 													<div class="item">
-														<img src="images/nuevoProd.jpg" alt="..." class="img-thumbnail" style=';'/>
+														<img src="images/nuevoProd.jpg" alt="..."  id='dash_7'  class="img-thumbnail" style=';'/>
 													</div>
 												</div>
 												<a class="left carousel-control" href="#carousel-example-generic2" role="button" data-slide="prev">
@@ -309,13 +309,13 @@
 											<div id="carousel-example-generic3" class="carousel slide" data-ride="carousel">
 												<div class="carousel-inner" role="listbox">
 													<div class="item active">
-														<img src="images/cloud1.jpg" alt="..." class="img-thumbnail" style=';'/>
+														<img src="images/cloud1.jpg" alt="..." class="img-thumbnail"  id='dash_8'  style=''/>
 													</div>
 													<div class="item">
-														<img src="images/cloud2.jpg" alt="..." class="img-thumbnail" style=';'/>
+														<img src="images/cloud2.jpg" alt="..." class="img-thumbnail"  id='dash_9'  style=''/>
 													</div>
 													<div class="item">
-														<img src="images/cloud3.jpg" alt="..." class="img-thumbnail" style=';'/>
+														<img src="images/cloud3.jpg" alt="..." class="img-thumbnail"  id='dash_10'  style=''/>
 													</div>
 												</div>
 												<a class="left carousel-control" href="#carousel-example-generic3" role="button" data-slide="prev">
@@ -500,6 +500,8 @@
 				$('#deviceid').html(uuid);
 				$('#devicemodel').html(model);
 			});
+			
+			
 			$( document ).ready(function(){
 				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 				db.transaction(iniciaDB,errorCB,successCB);
@@ -515,8 +517,21 @@
 				
 				//idioma
 					var linklang="es";
-					if(localStorage.getItem("idioma")==2)
+					if(localStorage.getItem("idioma")==2){
 						linklang="en";
+						$('#dash_1').attr("src","images/resumen_en.jpg");
+						$('#dash_2').attr("src","images/pagar_en.jpg");
+						$('#dash_3').attr("src","images/descProd_en.jpg");
+						$('#dash_4').attr("src","images/ventas_en.jpg");
+						$('#dash_5').attr("src","images/historial_en.jpg");
+						$('#dash_6').attr("src","images/listaProd_en.jpg");
+						$('#dash_7').attr("src","images/nuevoProd_en.jpg");
+						$('#dash_8').attr("src","images/cloud1_en.jpg");
+						$('#dash_9').attr("src","images/cloud2_en.jpg");
+						$('#dash_10').attr("src","images/cloud3_en.jpg");
+					}
+						
+					
 					var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
 					//alert("Ana");
 					var itemestructura=$(d).find("estructura")[0];

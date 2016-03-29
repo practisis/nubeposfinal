@@ -189,6 +189,7 @@ public class StarIOAdapter extends CordovaPlugin {
 		String totalCierre="0.00";
 		String ivaCierre="0.00";
 		String cadimpuestos="";
+		String propina="";
 		Integer lang=1;
 		JSONArray cierreImpuestos= new JSONArray();
 		Integer lineastotales=30; //18cm-2lineas
@@ -238,13 +239,21 @@ public class StarIOAdapter extends CordovaPlugin {
 					cadimpuestos=objfactura.getString("impuestosdata");
 			}
 			if(objfactura.has("ordername")){
-				if(!(objfactura.getString("ordername").equals(JSONObject.NULL)))
-				ordername=objfactura.getString("ordername");
+				if(!(objfactura.getString("ordername").equals(JSONObject.NULL))){
+					if(!(objfactura.getString("ordername").equals("")||objfactura.getString("ordername").equals("null")))
+					ordername=objfactura.getString("ordername");
+				}
+				
 			}
 			
 			if(objfactura.has("lang")){
 				if(!(objfactura.getString("lang").equals(JSONObject.NULL)))
 				lang=objfactura.getInt("lang");
+			}
+			
+			if(objfactura.has("propina")){
+				if(!(objfactura.getString("propina").equals(JSONObject.NULL)))
+				propina=objfactura.getString("propina");
 			}
 			
 			tipo="pagar";
@@ -271,6 +280,11 @@ public class StarIOAdapter extends CordovaPlugin {
 				if(expjson.has("lang")){
 					if(!(expjson.getString("lang").equals(JSONObject.NULL)))
 						lang=expjson.getInt("lang");
+				}
+				
+				if(expjson.has("propina")){
+					if(!(expjson.getString("propina").equals(JSONObject.NULL)))
+						propina=expjson.getString("propina");
 				}
 				//{"Cierre": [{"fecha_caja":"2015-12-17","fecha_imp":"2015-12-17","num_facts":"1","fact_anuladas":"0","subtotal":"3.13","iva":"0.38","total":"3.50","formaspago":[{"Efectivo":"3.50","Tarjetas":"0.00","Cheques":"0.00","CxC":"0.00"}]}]}
 			}
@@ -478,6 +492,13 @@ public class StarIOAdapter extends CordovaPlugin {
 							}
 						}
 						
+						if(propina.length()<6){
+							int tam=6-propina.length();
+							for(int n=0;n<tam;n++){
+								propina=" "+propina;
+							}
+						}
+						
 				if(Double.parseDouble(subtotal.replace(",","."))>0){
 					list.add(createCp1252("                 SUBTOTAL:"+String.valueOf(subtotal)+"\r\n"));
 				}
@@ -545,6 +566,14 @@ public class StarIOAdapter extends CordovaPlugin {
 					
 				}
 				
+				if(!(propina.equals("")||Double.parseDouble(propina)==0)){
+					if(lang.equals(1)){
+						list.add(createCp1252("                  PROPINA:"+String.valueOf(propina)+"\r\n"));
+					}else{
+						list.add(createCp1252("                      TIP:"+String.valueOf(propina)+"\r\n"));
+					}
+				}
+				
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
 				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x02 });
 
@@ -593,6 +622,7 @@ public class StarIOAdapter extends CordovaPlugin {
 					}else{
 						list.add(createCp1252("Change:"+String.valueOf(elvuelto)+"\r\n"));
 					}
+						
 				}
 				
 			}else if(tipo.equals("cierre")){
@@ -669,6 +699,13 @@ public class StarIOAdapter extends CordovaPlugin {
 						}
 				}
 				
+				if(subdes.length()<9){
+					int tam=9-subdes.length();
+						for(int n=0;n<tam;n++){
+								subdes=" "+subdes;
+						}
+				}
+				
 				if(lang.equals(1))
 					list.add(createCp1252("No. Facturas    "+numeroFacturas+"\r\n"));
 				else if(lang.equals(2))
@@ -692,9 +729,9 @@ public class StarIOAdapter extends CordovaPlugin {
 					list.add(createCp1252("Discounts       "+descuentoCierre+"\r\n"));
 				
 				if(lang.equals(1))
-				list.add(createCp1252("Sub-desc        "+subdes+"\r\n"));
+				    list.add(createCp1252("Sub-desc        "+subdes+"\r\n"));
 				else if(lang.equals(2))
-				list.add(createCp1252("Sub-disc        "+subdes+"\r\n"));
+				    list.add(createCp1252("Sub-disc        "+subdes+"\r\n"));
 				
 				/*impuestos*/
 				if(cierreImpuestos.length()>0){
@@ -729,8 +766,18 @@ public class StarIOAdapter extends CordovaPlugin {
 					list.add(createCp1252("Iva             "+ivaCierre+"\r\n"));
 					list.add(createCp1252("Servicio        "+servicioCierre+"\r\n"));
 				}
-				
 				/**/
+				
+				if(!(propina.equals("")||Double.parseDouble(propina.replace(",","."))==0)){
+					int tam=9-propina.length();
+					for(int n=0;n<tam;n++){
+							propina=" "+propina;
+					}
+					if(lang.equals(1))
+					list.add(createCp1252("PROPINAS        "+propina+"\r\n"));
+					else if(lang.equals(2))
+					list.add(createCp1252("TIPS            "+propina+"\r\n"));
+				}
 			
 				list.add(createCp1252("TOTAL           "+totalCierre+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
@@ -777,6 +824,7 @@ public class StarIOAdapter extends CordovaPlugin {
 								ex.printStackTrace();
 						}
 				}
+				
 			}
 				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x00, 0x00 });
@@ -991,6 +1039,13 @@ public class StarIOAdapter extends CordovaPlugin {
 								servicio=" "+servicio;
 							}
 						}
+						
+						if(propina.length()<6){
+							int tam=6-propina.length();
+							for(int n=0;n<tam;n++){
+								propina=" "+propina;
+							}
+						}
 
 				if(Double.parseDouble(subtotal.replace(",","."))>0){
 					list.add(createCp1252("                           SUBTOTAL:"+String.valueOf(subtotal)+"\r\n"));
@@ -1059,6 +1114,16 @@ public class StarIOAdapter extends CordovaPlugin {
 					lineasescritas=lineasescritas+1;
 				}
 				
+				if(!(propina.equals("")||Double.parseDouble(propina.replace(",","."))==0)){
+					
+					if(lang.equals(1)){
+						list.add(createCp1252("                            PROPINA:"+String.valueOf(propina)+"\r\n"));
+					}else{
+						list.add(createCp1252("                                TIP:"+String.valueOf(propina)+"\r\n"));
+					}
+					lineasescritas=lineasescritas+1;
+				}
+				
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
 				list.add(new byte[] { 0x1b, 0x57, 0x01});
 				list.add(new byte[] { 0x1b, 0x1d, 0x61,0x02});
@@ -1066,6 +1131,9 @@ public class StarIOAdapter extends CordovaPlugin {
 				lineasescritas=lineasescritas+1;
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
 				list.add(new byte[] { 0x1b, 0x57, 0x00 });
+				
+				
+				
 				list.add(createCp1252("------------------------------------------\r\n"));lineasescritas=lineasescritas+1;
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });				
 				list.add(new byte[] { 0x1b, 0x68, 0x01 });	
@@ -1184,6 +1252,13 @@ public class StarIOAdapter extends CordovaPlugin {
 						}
 				}
 				
+				if(propina.length()<9){
+					int tam=9-propina.length();
+						for(int n=0;n<tam;n++){
+								propina=" "+propina;
+						}
+				}
+				
 				if(lang.equals(1))
 					list.add(createCp1252("No. Facturas    "+numeroFacturas+"\r\n"));
 				else if(lang.equals(2))
@@ -1250,6 +1325,15 @@ public class StarIOAdapter extends CordovaPlugin {
 				
 				/**/
 				
+				if(!(propina.equals("")||Double.parseDouble(propina.replace(",","."))==0)){
+					list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
+					list.add(createCp1252("--------------------------------\r\n"));
+					if(lang.equals(1))
+					list.add(createCp1252("PROPINAS        "+propina+"\r\n"));
+					else if(lang.equals(2))
+					list.add(createCp1252("TIPS            "+propina+"\r\n"));
+				}
+				
 				
 				
 				list.add(createCp1252("TOTAL           "+totalCierre+"\r\n"));
@@ -1298,6 +1382,9 @@ public class StarIOAdapter extends CordovaPlugin {
 								ex.printStackTrace();
 						}
 				}
+				
+				
+				
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
 				list.add(new byte[] { 0x1b, 0x57, 0x00 });
 				list.add(createCp1252("------------------------------------------\r\n"));

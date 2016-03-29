@@ -117,6 +117,7 @@
 			function mostrarSignIn(){
 				$(".putHeightRows").css("height" , $(window).height() + "px");
 				$("#demoGratis").css("display" , "none");
+                $("#escojeIdioma").css("display" , "none");
 				$("#fadeRow").fadeIn();
 			
 			}
@@ -129,7 +130,7 @@
 				});
 			}
 	  </script>
-      <div class="row" style="display:block; padding:20px; color:#404041;" id="escojeIdioma" >
+      <div class="row" style="display:none; padding:20px; color:#404041;" id="escojeIdioma" >
         <h1>Select your language / Seleccione su idioma</h1>
         <div class="row">
         <div class="col-xs-1"></div>
@@ -165,7 +166,47 @@
             <div class="form-group">
               <input onkeydown="isalphanumeric(event);" type="form-control input-lg" name="empresa"  class="form-control input-lg trans_companyname" id="newEmpresa" placeholder="Nombre de tu Negocio" tabindex="1" required="" autocomplete="off">
             </div>
-
+            <div class="form-group">
+              <select class="form-control input-lg" id="newPais" name="pais" size="1" required="" placeholder="País">
+                  <option value="0" style="color: #E0DEDE">País</option>
+                  <option value="1">Ecuador</option>
+                  <option value="2">Estados Unidos</option>
+                  <option value="3">Antigua y Barbuda</option>
+                  <option value="4">Argentina</option>
+                  <option value="5">Bahamas</option>
+                  <option value="6">Barbados</option>
+                  <option value="7">Bélice</option>
+                  <option value="8">Bolivia</option>
+                  <option value="9">Brasil</option>
+                  <option value="10">Canadá</option>
+                  <option value="11">Chile</option>
+                  <option value="12">Colombia</option>
+                  <option value="13">Costa Rica</option>
+                  <option value="14">Cuba</option>
+                  <option value="15">Dominica</option>
+                  <option value="16">El Salvador</option>
+                  <option value="17">Granada</option>
+                  <option value="18">Guatemala</option>
+                  <option value="19">Guyana</option>
+                  <option value="20">Haití</option>
+                  <option value="21">Honduras</option>
+                  <option value="22">Jamaica</option>
+                  <option value="23">México</option>
+                  <option value="24">Nicaragua</option>
+                  <option value="25">Panamá</option>
+                  <option value="26">Paraguay</option>
+                  <option value="27">Perú</option>
+                  <option value="28">Puerto Rico</option>
+                  <option value="29">República Dominicana</option>
+                  <option value="30">San Cristóbal y Nevis</option>
+                  <option value="31">San Vicente y las Granadinas</option>
+                  <option value="32">Santa Lucía</option>
+                  <option value="33">Surinam</option>
+                  <option value="34">Trinidad y Tobago</option>
+                  <option value="35">Uruguay</option>
+                  <option value="36">Venezuela</option>
+              </select>
+            </div>
             <div class="form-group">
               <input class="form-control input-lg trans_email" type="email" tabindex="2" name="email" id="newEmail" placeholder="E-mail" required="" onkeydown="isalphanumeric(event);" autocomplete="off">
             </div>
@@ -385,7 +426,7 @@ $(document).ready(function(){
 	$('#mensajeperso').html(localStorage.getItem('msj'));
 	
 	if(procesocount==0){
-		$('#fadeRow,#contentStepSincro,#cuentaactiva,#mensajeperso,#demoGratis').css("display","none");
+		$('#fadeRow,#contentStepSincro,#cuentaactiva,#mensajeperso,#demoGratis,#escojeIdioma').css("display","none");
 		if(localStorage.getItem("idbarra")==null){
 			//$('#demoGratis').fadeIn();
             $('#escojeIdioma').fadeIn();
@@ -394,9 +435,10 @@ $(document).ready(function(){
 		}else{
 			$('#finalizado,#cuentaactiva,#mensajeperso').fadeIn();
 			$('#demoGratis').css("display","none");
+            $('#escojeIdioma').css("display","none");
 		}
 	}else{
-		$('#finalizado,#demoGratis,#fadeRow').css("display","none");
+		$('#finalizado,#demoGratis,#fadeRow,#escojeIdioma').css("display","none");
 		$('#contentStepSincro,#cuentaactiva,#mensajeperso').fadeIn();
 	}
 });

@@ -335,9 +335,11 @@ function SincronizadorNormal(){
 
 function registrarUser(){
 	newEmpresa=$("#newEmpresa").val();
+    newPais=$("#newPais").val();
 	newEmail=$("#newEmail").val();
 	newPass=$("#newPass").val();
 	newConfirm=$("#newConfirm").val();
+    newIdioma = $("#id_idioma").val();
     var expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     if(newEmpresa==''){
         $('.alert-danger').fadeIn('slow');
@@ -347,6 +349,13 @@ function registrarUser(){
 			$(".alert-danger").html('Please, enter a business name.');
 		
         $("#newEmpresa").val('');
+        setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
+     }else if(newPais=='' || newPais=='0'){
+        $('.alert-danger').fadeIn('slow');
+        if(localStorage.getItem("idioma")==1)
+			$(".alert-danger").html('Debe ingresar su país para tu negocio.');
+		else if(localStorage.getItem("idioma")==2)
+			$(".alert-danger").html('Please, enter a country.');
         setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
      }else if(newEmail=='' || !expr.test(newEmail)){
         $('.alert-danger').fadeIn('slow');
@@ -369,12 +378,13 @@ function registrarUser(){
     		var nTerminales=1;
     		var sistema=0;
     		var franquicia=0;
-    		var pais=1;
+    		var pais=newPais;
     		var versiones=7;
 			var plan=0;
+            var id_idioma = 1;
 			var iddevice=$('#deviceid').html();
-			//alert(iddevice+'/'+nombre+'/'+email+'/'+nombre);
-    		$("#btnNewEmp").html('<img src="images/loader.gif"  width="50%" />');
+			//alert(iddevice+'/'+nombre+'/'+id_idioma+'/'+nombre);
+    		//$("#btnNewEmp").html('<img src="images/loader.gif"  width="50%" />');
     		$.post("https://practisis.net/registro/registroNubePOS.php", {
     			nombre : nombre,
     			celular : celular,
@@ -388,6 +398,7 @@ function registrarUser(){
     			pais : pais,
     			franquicia : franquicia,
     			versiones : versiones,
+                id_idioma : newIdioma,
 				deviceid:iddevice
     		}).done(function(data){
 				//alert(data);

@@ -66,10 +66,10 @@
 					display: block;
 					margin: 20px;
 				}
-				.popover {
+				/*.popover {
 					max-width:75% !important;
 					height:50% !important;
-				}
+				}*/
 			</style>
 		</head>
 		<body>
@@ -151,7 +151,7 @@
 						<tr>
 							<td valign='top' align='center'>
 								<div class="popover-example">
-									<div class="popover bottom">
+									<div class="popover bottom" style='max-width:75% !important; height:50% !important;'>
 										<div class="arrow" style='left:8%;'></div>
 										<!--1-->
 										<div  id='resumenInicia'>
@@ -349,7 +349,7 @@
 				</div>
 			</div>-->
 		</div>
-		<div style='display:none;' id='jsonprint'>{"Cierre": [{"fecha_caja":"2016-03-08","fecha_imp":"2016-03-08 17:06:36","num_facts":"4","fact_anuladas":"0","subtotal":"28.75","iva":"0.00","servicio":"1.91","descuento":"1.00","subdesc":"27.75","total":"31.13","formaspago":[{"Efectivo":"31.13","Tarjetas":"0.00","Cheques":"0.00","CxC":"0.00"}],"impuestos":[{"SERVICIO":"1.475"},{"Iva":"0.21"}]}]}</div>
+		<div style='display:none;' id='jsonprint'>{"Pagar": [{ "cliente": {"id_cliente": "1","cedula": "9999999999999","nombre": "Consumidor Final","telefono": "2222222","email": "","direccion": "Av. Test 101","listaDePrecio": ""},"producto": [{"id_producto" : "708331454520391276","timespanproducto" : "708331454520391276","timespanconsumo" : "14593432603987829","nombre_producto" : "PIZZA","cant_prod" : "2","precio_orig" : "8","precio_prod" : "8","impuesto_prod" : "","precio_total" : "16.00","precio_descuento_justificacion" : "","agregados" : "0","detalle_agregados" : ""}],"factura" : {"subtotal_sin_iva" : "16","timespanfactura" : "14593432603962978","idbarrascajas" : "a383bc4552bfb701f96a17a4541b5565","fecha" : "1459343260398","anulada" : "false","subtotal_iva" : "0","impuestos" : "","iva" : "0","servicio" : "0","descuento" : "0","total" : "16","numerofact" : "001-001-000000170","encabezado" : "3","largo" : "18","impuestosdata" : "","ordername" : "null","lang" : "1","propina" : "0"},"empresa":{"nombre":"Test","direccion":"Av. Test"},"pagos":[{"forma":"efectivo","valor":"16.00","tipotarjeta":"","lote":"","numerocheque":"","banco":""}]}]}</div>
 		<div id="JSONproductosLocal" style="color:red;display:none;"></div>
 		<div id="JSONproductosNube"  style="color:blue;display:none;" ></div>
 		<div id="JSONCategoriasLocal"  style="color:green;display:none;"></div>

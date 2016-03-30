@@ -433,24 +433,48 @@ function impresionMovil(mijson){
 		var now=new Date().getTime();
 		tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Envia a Imprimir Factura",mijson],function(tx,results){});
 				
-		tx.executeSql('SELECT printer FROM CONFIG where id=1',[],
+		tx.executeSql('SELECT printer,printercom FROM CONFIG where id=1',[],
 		function(tx,res){
 			if(res.rows.length>0){
 				var miprint=res.rows.item(0);
-				//alert(miprint.printer);
-				StarIOAdapter.rawprint(mijson,miprint.printer, function() {
-					var now=new Date().getTime();
-					tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
+				if(miprint.printer!=null){
+					//alert(miprint.printer);
+					StarIOAdapter.rawprint(mijson,miprint.printer, function() {
+						var now=new Date().getTime();
+						tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
+						if(localStorage.getItem("idioma")==1)
+							showalert("Imprimiendo Factura.");
+						else if(localStorage.getItem("idioma")==2)
+							showalert("Printing Invoice.");
+					});
+				}else{
 					if(localStorage.getItem("idioma")==1)
-						showalert("Imprimiendo Factura.");
+						showalert("No se ha configurado una impresora.");
 					else if(localStorage.getItem("idioma")==2)
-						showalert("Printing Invoice.");
-				});
-			}else{
-				if(localStorage.getItem("idioma")==1)
-					showalert("No se ha configurado una impresora.");
-				else if(localStorage.getItem("idioma")==2)
-					showalert("There is no configured printer.");
+						showalert("There is no configured printer.");
+				}
+				
+				//comanderas
+				if(localStorage.getItem("con_comandas")=="true"){
+					if(miprint.printercom!=null){
+					//alert(miprint.printer);
+						mijson=mijson.replace("Pagar","Comandar");
+						StarIOAdapter.rawprint(mijson,miprint.printercom, function() {
+						var now=new Date().getTime();
+						tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
+						if(localStorage.getItem("idioma")==1)
+							showalert("Imprimiendo Comandas.");
+						else if(localStorage.getItem("idioma")==2)
+							showalert("Printing Kitchen Commands.");
+							});
+					}else{
+							if(localStorage.getItem("idioma")==1)
+								showalert("No se ha configurado una impresora para comandas.");
+							else if(localStorage.getItem("idioma")==2)
+								showalert("There is no configured a command printer.");
+					}
+				}
+				//fin comanderas
 			}
 		});
 	},errorCB,successCB);

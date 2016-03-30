@@ -104,6 +104,8 @@ public class PrinterFunctions
         return arrayPortName;
     }
 	
+	
+	
 	private static ArrayList<String> BuscarBluetooth(){
 		List<PortInfo> portListBT;
 		ArrayList<String> arrayPortName=new ArrayList<String>();

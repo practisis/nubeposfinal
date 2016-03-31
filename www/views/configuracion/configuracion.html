@@ -36,6 +36,14 @@
             <td  style='text-align:right;' id="trans_label_52">Con Shop:</td>
             <td align='left'><input data-size='small' type='checkbox' id='con_shop' class='switch' /></td>
         </tr>
+        <tr>
+            <td  style='text-align:right;' id="trans_label_52">Con Notas en Pedido:</td>
+            <td align='left'><input data-size='small' type='checkbox' id='con_notas' class='switch' /></td>
+        </tr>
+        <tr>
+            <td  style='text-align:right;' id="trans_label_52">Con Impresion para Comanderas:</td>
+            <td align='left'><input data-size='small' type='checkbox' id='con_comanderas' class='switch' /></td>
+        </tr>
 	</table>
 </div>
 <div class='row'>
@@ -117,6 +125,16 @@
                             }else{
                     			$('#con_shop').bootstrapSwitch('state', false, true);
                     		}
+                            if(results1.rows.item(0).con_notas=='true'){
+                                $('#con_notas').bootstrapSwitch('state', true, true);
+                            }else{
+                    			$('#con_notas').bootstrapSwitch('state', false, true);
+                    		}
+                            if(results1.rows.item(0).con_comanderas=='true'){
+                                $('#con_comanderas').bootstrapSwitch('state', true, true);
+                            }else{
+                    			$('#con_comanderas').bootstrapSwitch('state', false, true);
+                    		}
 						}
 					}
 				});}
@@ -172,11 +190,15 @@
                 localStorage.setItem('con_shop',con_shop);
                 localStorage.setItem('idioma',idioma);
                 localStorage.setItem('propina',con_propina);
+                var con_notas = $('#con_notas').bootstrapSwitch('state');
+                var con_comanderas = $('#con_comanderas').bootstrapSwitch('state');
+                localStorage.setItem('con_notas',con_notas);
+                localStorage.setItem('con_comandas',con_comanderas);
 				
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					
-				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop],
+				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas],
 				function(tx1,results1){
 					
 					

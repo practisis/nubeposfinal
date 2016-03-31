@@ -250,8 +250,8 @@ function ExtraeDatosApi(donde){
             localStorage.setItem("propina",ext[0].propina);
             localStorage.setItem("con_tarjeta",ext[0].tarjeta);
 			
-			localStorage.setItem("con_notas",true);
-			localStorage.setItem("con_comandas",true);
+			localStorage.setItem("con_notas",ext[0].notas);
+			localStorage.setItem("con_comandas",ext[0].comanderas);
 
             var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
@@ -878,8 +878,8 @@ function DatosRecurrentes(cual){
 					localStorage.setItem("con_shop",item.shop);
 					localStorage.setItem("con_nombre_orden",item.orden);
 					localStorage.setItem("con_tarjeta",item.tarjeta);
-					localStorage.setItem("con_notas",true);
-					localStorage.setItem("con_comandas",true);
+					localStorage.setItem("con_notas",item.notas);
+					localStorage.setItem("con_comandas",item.comanderas);
 					
 
 					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'" WHERE id=1',[],function(tx,results){

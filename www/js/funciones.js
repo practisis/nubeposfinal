@@ -2180,6 +2180,11 @@ function Ready(){
     $('#productosnew').fadeIn();*/
     document.getElementById('productos').style.display='none';
     document.getElementById('productosnew').style.display='block';
+  }else if(localStorage.getItem("con_mesas")=='true'){
+		/*if(sessionStorage.getItem("mesa_activa")==""){
+			$('#divmesas').show();
+		}
+		CargarMesas();*/
   }else{
     /*$('#productosnew').fadeOut();
     $('#productos').fadeIn();*/
@@ -3300,5 +3305,25 @@ function MostrarNota(span){
 	//alert(dataid[1]);
 	$('#notaid').val(dataid[1]);
 	$('#popupNota').modal("show");
+}
+
+function CargarMesas(){
+	$('#contentmesas').html("");
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(	function (tx){
+		tx.executeSql("SELECT m.top,m.left,m.nombre,m.activo,m.timespan,t.imagen_activa as act,t.imagen_inactiva as inact FROM MESAS m, TIPO_MESA t WHERE t.timespan=m.id_tipomesa",[],function(tx,results3){
+			if(results3.rows.length>0){
+				for(var k=0;k<results3.rows.length;k++){
+					var item=results3.rows.item(k);
+					var img=item.act;
+					if(item.activo=="false")
+						img=item.inact;
+					
+					var html="<div style='position:absolute; top:"+item.top+"px; left:"+item.left+"px;'><div>"+item.nombre+"</div><img class='imgmesa' src='images/mesas/"+img+"'/></div>";
+					$('#contentmesas').append(html);
+				}
+			}
+		});
+	},errorCB,successCB);
 }
 

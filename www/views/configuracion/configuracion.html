@@ -193,7 +193,11 @@
                 var con_notas = $('#con_notas').bootstrapSwitch('state');
                 var con_comanderas = $('#con_comanderas').bootstrapSwitch('state');
                 localStorage.setItem('con_notas',con_notas);
+				
                 localStorage.setItem('con_comandas',con_comanderas);
+				
+                localStorage.setItem('con_mesas',true);
+				
 				
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();

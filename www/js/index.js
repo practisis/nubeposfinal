@@ -31,7 +31,7 @@ campos["TIPO_MESA"]=['id|integer primary key AUTOINCREMENT','imagen_activa|text 
 		
 campos["MESAS"]=['id|integer primary key AUTOINCREMENT','left|real default 0','top|real default 0','id_tipomesa|integer default 1','activo|boolean default "true"','nombre|text default ""','timespan|text default "" UNIQUE'];
 
-
+campos["MESAS_DATOS"]=['id integer primary key AUTOINCREMENT','id_mesa text default ""','cliente text default ""','id_cliente text default ""','activo boolean default "true"','id_factura text default ""','hora_activacion text default ""','hora_desactivacion text default ""','pax integer default 0','timespan text default "" UNIQUE'];
 
 //console.log(campos);
 
@@ -375,10 +375,14 @@ var app = {
 		
 		VerificarCampos('MESAS');
 		
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[100, 120 ,1,"Mesa 1",1]);
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[200, 350 ,2,"Mesa 2",2]);
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[250, 500 ,3,"Mesa 3",3]);
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[20, 380 ,1,"Mesa 4",4]);
+		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[100, 120 ,1,"Mesa 1","1"]);
+		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[200, 350 ,2,"Mesa 2","2"]);
+		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[250, 500 ,3,"Mesa 3","3"]);
+		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[20, 380 ,1,"Mesa 4","4"]);
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MESAS_DATOS (id integer primary key AUTOINCREMENT,id_mesa text default "",cliente text default "",id_cliente text default "",activo boolean default "true",id_factura text default "",hora_activacion integer default 0,hora_desactivacion integer default 0,pax integer default 0,timespan text default "" UNIQUE);');
+		
+		VerificarCampos('MESAS_DATOS');
 		
 		//setea el session storage de la mesa
 		sessionStorage.setItem("mesa_activa","");

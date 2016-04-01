@@ -2174,6 +2174,34 @@ function ClickNumeroD(numd){
 			$('.cantidadd').html('0');
 }
 
+function ClickNumeroM(numd){
+		var accion = $.trim($(numd).attr('cual'));
+		console.log(accion);
+		if(accion == 'p'){
+			if($('.cantidadm').html().indexOf('.') == -1){
+				if($('.cantidadm').html() == '0'){
+					$('.cantidadm').append('.');
+					}
+				else{
+					$('.cantidadm').append('.');
+					}
+				}
+			return false;
+			}
+		else if($.isNumeric(accion) === true){
+			if($('.cantidadm').html()=='0')
+					$('.cantidadm').html(accion);
+			else
+					$('.cantidadm').append(accion);
+			return false;
+			}
+			
+		var fetchHTML = $.trim($('.cantidadm').html());
+		$('.cantidadm').html(fetchHTML.substring(0,(fetchHTML.length-1)));
+		if($('.cantidadm').html()=='')
+			$('.cantidadm').html('0');
+}
+
 function Ready(){
   if(localStorage.getItem("con_shop")=='true'){
     /*$('#productos').fadeOut();
@@ -2181,10 +2209,10 @@ function Ready(){
     document.getElementById('productos').style.display='none';
     document.getElementById('productosnew').style.display='block';
   }else if(localStorage.getItem("con_mesas")=='true'){
-		/*if(sessionStorage.getItem("mesa_activa")==""){
+		if(sessionStorage.getItem("mesa_activa")==""){
 			$('#divmesas').show();
 		}
-		CargarMesas();*/
+		CargarMesas();
   }else{
     /*$('#productosnew').fadeOut();
     $('#productos').fadeIn();*/
@@ -2287,6 +2315,7 @@ function Ready(){
     $('.numero').on('click',function(){ClickNumero($(this));});
 	$('.numeroc').on('click',function(){ClickNumeroC($(this));});
 	$('.numerod').on('click',function(){ClickNumeroD($(this));});
+	$('.numerom').on('click',function(){ClickNumeroM($(this));});
     $('.numerocnew').on('click',function(){ClickNumeroCnew($(this));});
 	vertarjetas();
 }
@@ -3316,14 +3345,66 @@ function CargarMesas(){
 				for(var k=0;k<results3.rows.length;k++){
 					var item=results3.rows.item(k);
 					var img=item.act;
-					if(item.activo=="false")
+					var clase="mesaactiva";
+					if(item.activo=="false"){
 						img=item.inact;
+						clase="mesainactiva";
+					}
 					
-					var html="<div style='position:absolute; top:"+item.top+"px; left:"+item.left+"px;'><div>"+item.nombre+"</div><img class='imgmesa' src='images/mesas/"+img+"'/></div>";
+					var html="<div id='divmesa_"+item.timespan+"' style='position:absolute; top:"+item.top+"px; left:"+item.left+"px;' timespan='"+item.timespan+"' class='"+clase+"' onclick='AccionMesa(this);' ><div id='mesaname_"+item.timespan+"'>"+item.nombre+"</div><img id='mesaimg_"+item.timespan+"' class='imgmesa' src='images/mesas/"+img+"'/></div>";
 					$('#contentmesas').append(html);
 				}
+				
 			}
 		});
 	},errorCB,successCB);
+}
+
+function AccionMesa(div){
+	var clase=$(div).attr('class');
+	if(clase=='mesaactiva'){
+		VerConsumos($(div).attr("timespan"));
+	}else{
+		VerActivarMesa($(div).attr("timespan"));
+	}
+}
+
+function VerActivarMesa(cual){
+	$('#popupActivarMesa').modal("show");
+	$('#mesaid').val(cual);
+	$('.cantidadm').html("1");
+	$('#itemmesa').html($('#mesaname_'+cual).html());
+}
+
+function ActivarMesa(){
+	//alert($('#mesaid').val());
+	if(parseInt($('.cantidadm').html())>=1){
+		var id=$('#mesaid').val();
+		var cant=$('.cantidadm').html();
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(	function (tx){
+			var fecha= new Date().getTime();
+			var timespan=getTimeSpan();
+			tx.executeSql("SELECT t.imagen_activa as act,m.* FROM TIPO_MESA t,MESAS m WHERE m.timespan=? and m.id_tipomesa=t.timespan",[id],function(tx,results){
+				
+					var item=results.rows.item(0);
+					
+					tx.executeSql("INSERT INTO MESAS_DATOS (id_mesa,hora_activacion,pax,timespan) values (?,?,?,?);",[id,fecha,cant,timespan],function(tx,results1){
+						console.log("Mesa Activada: "+results1.insertId);
+					});
+				
+					tx.executeSql("UPDATE MESAS SET activo=? WHERE timespan=?",["true",id],function(tx,results2){
+						$('#mesaimg_'+id).attr("src","images/mesas/"+item.act);
+						$('#divmesa_'+id).attr("class","mesaactiva");
+					});
+			});
+			
+			$('#popupActivarMesa').modal("hide");
+		},errorCB,successCB);
+	}
+}
+
+function VerConsumos(){
+	alert("Ver Consumos");
 }
 

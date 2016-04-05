@@ -2997,12 +2997,12 @@ function PagoAvanzado(){
 	$('.simple').css('display','none');
 	$('.columna2').fadeIn();
 	$('.tipopago,.basurero').fadeIn();
-	$('.categoryChosen').click();
 	$('#pagoavan').css('display','none');
 	$('.paymentMethods').val('0.00');
 	$('#valortarjeta,#valorcheque1,#valorcxc').val('0.00');
 	$('.card').attr("data-value","0");
 	$('.cardv').html("");
+	//$('.categoryChosen').click();
 	var pagado=0;
 	$('.paymentMethods').each(function(){
 		if($(this).val()!='')

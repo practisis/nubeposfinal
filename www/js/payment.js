@@ -320,15 +320,30 @@ function performPurchase(restaurant){
 				var now=new Date().getTime();
 				tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Inserta Factura",fetchJson],function(tx,results){});
 				
-				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact,dataimpuestos,propina,order_id)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc,dataimpuestos,propina,order_id],function(){
+				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact,dataimpuestos,propina,order_id)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc,dataimpuestos,propina,order_id],function(tx,results){
 					console.log("Nueva Factura Ingresada");
 					var mijsonprod=JSON.parse(fetchJson);
 					var misprod = mijsonprod.Pagar[0].producto;
+						
+						if(localStorage.getItem("con_mesas")=="true"){
+							var mesaactiva=sessionStorage.getItem("mesa_activa");
+							var idfact=results.insertId;
+							var idcli=RUC;
+							var nombrecli=clientName;
+							tx.executeSql("UPDATE MESAS_DATOS SET cliente=?,id_cliente=?,id_factura=?,hora_desactivacion=?,activo=? WHERE id_mesa=?",[nombrecli,idcli,mitimespan,now,"false",mesaactiva]);
+							
+							tx.executeSql("UPDATE MESAS SET activo=? WHERE timespan=?",["false",mesaactiva]);
+							
+							tx.executeSql("DELETE FROM MESAS_CONSUMOS WHERE id_mesa=?",[mesaactiva]);
+							
+							sessionStorage.setItem("mesa_activa","");
+						}
+						
 						for(var j in misprod){
 							var item = misprod[j];
 							IngresaDetalles(item,mitimespan);
 						}
-
+						
 					//$('#pay').fadeOut('fast');
 					// envia('nubepos/nubepos/');
 				});
@@ -352,7 +367,9 @@ function performPurchase(restaurant){
 				
 				tx2.executeSql("INSERT INTO FACTURAS_FORMULADOS(timespan_factura,timespan_formulado,cantidad,precio_unitario)VALUES(?,?,?,?)",[mifactura,item.id_producto,item.cant_prod,miprecio],function(){
 					console.log("Nuevo Detalle Factura Ingresado");
+				
 				});
+				
 			});
 		}
 			

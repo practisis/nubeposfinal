@@ -259,7 +259,6 @@ function ExtraeDatosApi(donde){
 			localStorage.setItem("con_comandas",ext[0].comanderas);
 			//localStorage.setItem("con_mesas",ext[0].comanderas);
 			localStorage.setItem("con_mesas",true);
-            localStorage.setItem("con_localhost",ext[0].localhost);
 
             var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
@@ -611,10 +610,10 @@ function DatosRecurrentes(cual){
 		deviceid:$("#deviceid").html()
 		}).done(function(response){
 			if(response!='block' && response!='Desactivado'){
-				console.log(response);
+				//console.log(response);
 				jsonSync=JSON.parse(response);
 				recurrenteJsonEmpresa=jsonSync.BigJson[0].Empresa;
-				console.log(response);
+				//console.log(response);
 				$('#JSONproductosNube').html(JSON.stringify(jsonSync.BigJson[1].Productos));
 				$('#JSONclientesNube').html(JSON.stringify(jsonSync.BigJson[2].Clientes));
 				$('#JSONCategoriasNube').html(JSON.stringify(jsonSync.BigJson[3].Categorias));
@@ -889,10 +888,9 @@ function DatosRecurrentes(cual){
 					localStorage.setItem("con_notas",item.notas);
 					localStorage.setItem("con_comandas",item.comanderas);
 					localStorage.setItem("con_mesas",true);
-                    localStorage.setItem("con_localhost",item.localhost);
+					
 
-
-					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'",con_notasorden="'+item.notas+'",con_comanderas="'+item.comanderas+'",con_localhost="'+item.localhost+'" WHERE id=1',[],function(tx,results){
+					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'" WHERE id=1',[],function(tx,results){
 						console.log("actualizada empresa");
 					});
 				}

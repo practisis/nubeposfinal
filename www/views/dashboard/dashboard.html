@@ -321,7 +321,7 @@ function ObtenerDatosDashboard(){
 	//query para presupuesto
 	db.transaction(
 		function (tx5){
-			tx5.executeSql('SELECT valor as suma , transacciones as trans FROM presupuesto WHERE fecha >=? AND fecha <=?',[fdesde.getTime(),fhasta.getTime()],
+			tx5.executeSql('SELECT valor as suma,transacciones as trans FROM presupuesto WHERE fecha >=? AND fecha <=?',[fdesde.getTime(),fhasta.getTime()],
 			function(tx5,res){
 				if(res.rows.length>0){
 					var vendido=res.rows.item(0);

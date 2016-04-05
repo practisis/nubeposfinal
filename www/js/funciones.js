@@ -1248,7 +1248,7 @@ function pagar(){
 		json += '"impuestosdata" : "'+ dataimpuestos +'",';
 		json += '"ordername" : "'+ localStorage.getItem("nameorder") +'",';
 		json += '"lang" : "'+ localStorage.getItem("idioma") +'",';
-		json += '"propina" : "'+propina+'"';
+		json += '"propina" : "'+propina+'",';
 		json += '"mesa" : "'+mesa+'"';
 		json += '},';
 		json +=$('#JSONempresaLocal').html()+'"pagos":[';

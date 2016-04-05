@@ -44,6 +44,10 @@
             <td  style='text-align:right;' id="trans_label_57">Con Impresion para Comanderas:</td>
             <td align='left'><input data-size='small' type='checkbox' id='con_comanderas' class='switch' /></td>
         </tr>
+        <tr>
+            <td  style='text-align:right;'>LocalHost</td>
+            <td align='left'><input id='con_localhost' class='form-control' readonly /></td>
+        </tr>
 	</table>
 </div>
 <div class='row'>
@@ -94,7 +98,7 @@
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT nombreterminal as c,id_idioma,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop from CONFIG where id=1",[],function(tx1,results1){
+				tx1.executeSql("SELECT nombreterminal as c,id_idioma,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost from CONFIG where id=1",[],function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c!=''){
 							$('#tablet_name').val(results1.rows.item(0).c);
@@ -125,7 +129,7 @@
                             }else{
                     			$('#con_shop').bootstrapSwitch('state', false, true);
                     		}
-                            if(results1.rows.item(0).con_notas=='true'){
+                            if(results1.rows.item(0).con_notasorden=='true'){
                                 $('#con_notas').bootstrapSwitch('state', true, true);
                             }else{
                     			$('#con_notas').bootstrapSwitch('state', false, true);
@@ -135,6 +139,8 @@
                             }else{
                     			$('#con_comanderas').bootstrapSwitch('state', false, true);
                     		}
+                            //alert(results1.rows.item(0).con_localhost);
+                            $('#con_localhost').val(results1.rows.item(0).con_localhost);
 						}
 					}
 				});}
@@ -147,6 +153,9 @@
         $('#con_propina').bootstrapSwitch();
         $('#con_tarjeta').bootstrapSwitch();
         $('#con_shop').bootstrapSwitch();
+        $('#con_notas').bootstrapSwitch();
+        $('#con_comanderas').bootstrapSwitch();
+
 		if(localStorage.getItem("diseno")==1){
 			$('#tablet_menu').bootstrapSwitch('state', true, true);
 		}else{
@@ -163,9 +172,9 @@
 		
 		$('#tablet_cuenta').val(localStorage.getItem("userRegister"));
 
-		/*cordova.getAppVersion.getVersionNumber().then(function (version) {
+		cordova.getAppVersion.getVersionNumber().then(function (version) {
 			$('#tablet_version').val(version);
-		});*/
+		});
 	});
 	
 	

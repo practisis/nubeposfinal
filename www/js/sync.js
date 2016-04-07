@@ -11,18 +11,19 @@ function SyncStart(){
 	var menucategoriasya = localStorage.getItem('menucategoriasya');
 	var menuya = localStorage.getItem('menuya');
 	var permisosya = localStorage.getItem('permisosya');
+	var mesasya = localStorage.getItem('mesasya');
 	
 	//setea el session storage de la mesa
-		sessionStorage.setItem("mesa_activa","");
+	sessionStorage.setItem("mesa_activa","");
 	//
 	
 	//console.log(idbarra+'*'+categoriasya+'*'+productosya+'*'+clientesya);
-	if((clientesya||productosya||categoriasya||presupuestoya||menucategoriasya||menuya||idbarra)&&permisosya==false){
+	if((clientesya||productosya||categoriasya||presupuestoya||menucategoriasya||menuya||permisosya||idbarra)&&mesasya==false){
 		envia('cloud');
 		localStorage.setItem("idioma",2);
 		$('.navbar').slideDown();
 	}
-	if(permisosya){
+	if(mesasya){
 		$('#fadeRow,#demoGratis').css("display","none");
 		yaesta=true;
 		$('.navbar').slideDown();
@@ -42,6 +43,8 @@ function SyncStart(){
 		});
 		setTimeout(function(){SincronizadorNormal();},60000);
 		//setInterval(function(){SincronizadorNormal();},3000);
+	}else if(permisosya){
+		ExtraeDatosApi(8);
 	}else if(menuya){
 		ExtraeDatosApi(7);
 	}else if(menucategoriasya){
@@ -268,74 +271,71 @@ function ExtraeDatosApi(donde){
               tx.executeSql('UPDATE CONFIG SET pais="'+ext[0].pais+'",id_idioma = "'+ext[0].idioma+'",sin_documento="'+ext[0].documento+'",con_nombre_orden="'+ext[0].orden+'",con_propina="'+ext[0].propina+'",con_tarjeta="'+ext[0].tarjeta+'",con_shop="'+ext[0].shop+'",ip_servidor="'+ext[0].ipservidor+'" WHERE id=1',[],function(tx,results){
   				console.log("actualizada empresa permisos");
   			  });
-            },errorCB,successCB);
-
+            },errorCB,function(){
+				localStorage.setItem("permisosya",true);
+				$("#theProgress").css("width" , "98%");
+				ExtraeDatosApi(8);
+			});
+		}
+	}else if(donde==8){
+			
+		console.log("Datos API 8: Mesas");
+		//$(".navbar").slideUp();
+		$("#demoGratis").css("display","none");
+		$("#contentStepSincro").fadeIn();
+		$("#txtSincro").html("98%");
+		//alert($('#JSONPermisosNube').html());
+		
+		/*json tipos de mesa extra*/
+		if($('#JSONTipoMesasNube').html()!=''){
+			var jsontipomesa=JSON.parse($('#JSONTipoMesasNube').html());
+			var jsontipodemesas=jsontipomesa.tipomesas;
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){
+					tx.executeSql('delete from TIPO_MESA',[],function(tx,results){});
+					tx.executeSql("delete from sqlite_sequence where name='TIPO_MESA'",[],function(tx,results){});
+					for(var n=0;n<jsontipodemesas.length;n++){
+						var item=jsontipodemesas[n];
+						
+						//tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan,activo) VALUES('+(parseInt(item.fila)+1)+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
+						tx.executeSql('INSERT INTO TIPO_MESA(imagen_activa,imagen_inactiva,es_mesa,timespan) SELECT "'+item.imagen_activa+'","'+item.imagen_inactiva+'","'+item.es_mesa+'","'+item.id+'" WHERE NOT EXISTS(SELECT 1 FROM TIPO_MESA WHERE timespan like "'+item.id+'")',[],function(tx,results){
+								console.log("insertado tipo de mesa inicio:"+results.insertId);
+						});
+						//console.log("insertado producto de menu:"+results.insertId);
+						//});
+					}
+			},errorCB,successCB);
 		}
 		/**/
 		
-		if($('#JSONImpuestosNube').html()!=''){
-			var jsonimp=JSON.parse($('#JSONImpuestosNube').html());
-			var imp=jsonimp.impuestos;
-				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-				db.transaction(function(tx){
-					tx.executeSql('delete from IMPUESTOS',[],function(tx,results){});
-					tx.executeSql("delete from sqlite_sequence where name='IMPUESTOS'",[],function(tx,results){});
-					//$('#idiva').html('0');
-					for(var t in imp){
-						var itemi=imp[t];
-						tx.executeSql('INSERT OR IGNORE INTO IMPUESTOS (nombre,porcentaje,activo,timespan) values (?,?,?,?)',[itemi.nombre,itemi.porcentaje,itemi.activo,itemi.id],function(tx,results){
-						console.log("Insertado impuesto: "+results.insertId);
-						if($.trim(itemi.nombre.toLowerCase())=='iva')
-							$('#idiva').html(itemi.id);
-
-						if($('#impuesto-'+itemi.id).length==0){
-							$('#taxes').append('<input id="impuesto-'+itemi.id+'" type="text" value="'+itemi.id+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100)+'">');
-						}else{
-							$("impuesto-"+itemi.id).val(itemi.id+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100))
-						}
+		/*json mesas*/
+		if($('#JSONMesasNube').html()!=''){
+			var jsonmesa=JSON.parse($('#JSONMesasNube').html());
+			var jsondemesas=jsonmesa.mesas;
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){
+					tx.executeSql('delete from MESAS',[],function(tx,results){});
+					tx.executeSql("delete from sqlite_sequence where name='MESAS'",[],function(tx,results){});
+					for(var n=0;n<jsondemesas.length;n++){
+						var item=jsondemesas[n];
+						
+						//tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan,activo) VALUES('+(parseInt(item.fila)+1)+','+item.columna+',"'+item.idcatmenu+'","'+item.idproducto+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
+						tx.executeSql('INSERT INTO MESAS(left,top,id_tipomesa,activo,nombre,timespan) SELECT '+item.left+','+item.top+',"'+item.tipo_mesa+'","'+item.activo+'","'+item.nombre+'","'+item.id+'" WHERE NOT EXISTS(SELECT 1 FROM MESAS WHERE timespan like "'+item.id+'")',[],function(tx,results){
+								console.log("insertado mesa inicio:"+results.insertId);
 						});
+						//console.log("insertado producto de menu:"+results.insertId);
+						//});
 					}
-				},errorCB,successCB);
-		}
-
-		//inserta propinas
-		if($('#JSONPropinasNube').html()!=''){
-			var jsonprop=JSON.parse($('#JSONPropinasNube').html());
-			var prop=jsonprop.propinas;
-				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-				db.transaction(function(tx){
-					tx.executeSql('delete from PROPINAS',[],function(tx,results){});
-					tx.executeSql("delete from sqlite_sequence where name='PROPINAS'",[],function(tx,results){});
-					//$('#idiva').html('0');
-					for(var t in prop){
-						var itemi=prop[t];
-						tx.executeSql('INSERT OR IGNORE INTO PROPINAS (valor,es_porcentaje,activo,timespan) values (?,?,?,?)',[itemi.valor,itemi.porcentaje,itemi.activo,itemi.id],function(tx,results){
-						console.log("Insertada propina: "+results.insertId);
-						});
-					}
-				},errorCB,successCB);
-		}
-		//propinas
-			
-		
-		var jsonpres=JSON.parse($('#JSONPermisosNube').html());
-		var jsonpresupuestos=jsonpres.permisos;
-		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-		db.transaction(function(tx){
-				tx.executeSql('delete from PERMISOS',[],function(tx,results){});
-				tx.executeSql("delete from sqlite_sequence where name='PERMISOS'",[],function(tx,results){});
-				for(var n=0;n<jsonpresupuestos.length;n++){
-					var item=jsonpresupuestos[n];
-					tx.executeSql('INSERT OR IGNORE INTO PERMISOS (clave,historial,configuracion,anular,impcierre,productos,activo,vertotales,irnube) VALUES("'+item.clave+'","'+item.historial+'","'+item.configuracion+'","'+item.anular+'","'+item.imprimircierre+'","'+item.productos+'","'+item.activo+'","'+item.vertotales+'","'+item.irnube+'")',[],function(tx,results){
-					console.log("insertado permiso:"+results.insertId);
-					});
-				}
-		},errorCB,function(){
-				localStorage.setItem("permisosya",true);
+			},errorCB,function(){
+				localStorage.setItem("mesasya",true);
 				$("#theProgress").css("width" , "100%");
 				setTimeout(function(){SyncStart()},1500);
-		});
-	}
+			});
+		}
+		/**/
+		
+		
+		}
 }
 
 function SincronizadorNormal(){
@@ -438,6 +438,7 @@ function registrarUser(){
 						localStorage.setItem("menucategoriasya",true);
 						localStorage.setItem("menuya",true);
 						localStorage.setItem("permisosya",true);
+						localStorage.setItem("mesasya",true);
 						
 						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','','',false);});
@@ -562,7 +563,14 @@ function DatosIniciales(cual){
     		JSONextraNube=arraydatos.extras;
     		JSONimpuestosNube=arraydatos.impuestos;
     		JSONmodificadoresNube=arraydatos.modificadores;
-			JSONpropinasNube=arraydatos.propinas;//JSONpropinasNube='{"propinas":[{"id":"1","porcentaje":"true","valor":"5","activo":"true"},{"id":"2","porcentaje":"false","valor":"10","activo":"true"}]}';
+			JSONpropinasNube=arraydatos.propinas;
+			JSONTipoMesasNube=arraydatos.tipomesas;
+			JSONMesasNube=arraydatos.mesas;
+			//JSONTipoMesasNube='{"tipomesas":[{"id":"1","imagen_activa":"mesagrandeanchaa.png","imagen_inactiva":"mesagrandeanchai.png","es_mesa":"true"},	{"id":"2","imagen_activa":"mesagrandealtaa.png","imagen_inactiva":"mesagrandealtai.png","es_mesa":"true"}]}';
+			
+			//JSONMesasNube='{"mesas":[{"id":"1","left":"780","top":"120","tipo_mesa":"1","nombre":"Mesa 1","activo":"true"},{"id":"2","left":"100","top":"120","tipo_mesa":"2","nombre":"Mesa 2","activo":"true"}]}';
+			
+			
 			//JSONmodificadoresNube=arraydatos.propinas;
     		//JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"1245"},{"id":"2","nombre":"Servicio","porcentaje":"10","activo":"true","timespan":"1246"}]}';
 
@@ -580,6 +588,8 @@ function DatosIniciales(cual){
     		$('#JSONImpuestosNube').html(JSONimpuestosNube);
     		$('#JSONModifNube').html(JSONmodificadoresNube);
     		$('#JSONPropinasNube').html(JSONpropinasNube);
+    		$('#JSONTipoMesasNube').html(JSONTipoMesasNube);
+    		$('#JSONMesasNube').html(JSONMesasNube);
 
     		ExtraeDatosApi(cual);
         }else if(response=='Desactivado'){
@@ -631,6 +641,13 @@ function DatosRecurrentes(cual){
 				$('#JSONImpuestosNube').html(JSON.stringify(jsonSync.BigJson[9].Impuestos));
 				$('#JSONModifNube').html(JSON.stringify(jsonSync.BigJson[10].Modificadores));
 				$('#JSONPropinasNube').html(JSON.stringify(jsonSync.BigJson[11].Propinas));
+				
+				//$('#JSONTipoMesasNube').html(JSON.stringify(jsonSync.BigJson[12].Tipomesas));
+				//$('#JSONMesasNube').html(JSON.stringify(jsonSync.BigJson[13].Mesas));
+				
+				$('#JSONTipoMesasNube').html('{"tipomesas":[{"id":"1","imagen_activa":"mesagrandeanchaa.png","imagen_inactiva":"mesagrandeanchai.png","es_mesa":"true"},	{"id":"2","imagen_activa":"mesagrandealtaa.png","imagen_inactiva":"mesagrandealtai.png","es_mesa":"true"}]}');
+			
+				$('#JSONMesasNube').html('{"mesas":[{"id":"1","left":"780","top":"120","tipo_mesa":"1","nombre":"Mesa 1","activo":"true"},{"id":"2","left":"100","top":"120","tipo_mesa":"2","nombre":"Mesa 2","activo":"true"}]}');
 				//$('#JSONPropinasNube').html('{"propinas":[{"id":"1","porcentaje":"true","valor":"5","activo":"true"},{"id":"2","porcentaje":"false","valor":"10","activo":"true"}]}');
 				//$('#JSONimpuestosNube').html('{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"1245"},{"id":"2","nombre":"Servicio","porcentaje":"10","activo":"true","timespan":"1246"}]}');
 				
@@ -1018,7 +1035,7 @@ function DatosRecurrentes(cual){
 	else if(cual==8){
 		console.log("recurrentes 8: Permisos Usuario");
 		$("#contentStepSincro").fadeIn();
-		$("#txtSincro").html("100%");
+		$("#txtSincro").html("95%");
 		
 		if($('#JSONImpuestosNube').html()!=''){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -1098,7 +1115,7 @@ function DatosRecurrentes(cual){
 					});
 				}
 				},errorCB,function(){
-					$("#theProgress").css("width" , "100%");
+					$("#theProgress").css("width" , "98%");
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -1109,15 +1126,106 @@ function DatosRecurrentes(cual){
 					}).done(function(response){
 						console.log(response);
 						localStorage.setItem("dataupdate","");
-						SubirDatosaNube(0);
 						updateOnlineStatus('ONLINE');
+						DatosRecurrentes(9);
 					}).fail(function(){
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){$("#theProgress").css("width" , "0%"); SincronizadorNormal()},180000);
 					});
 				});
 		}
+	}else if(cual==9){
+		console.log("recurrentes 9: Tipos de Mesas");
+		$("#contentStepSincro").fadeIn();
+		$("#txtSincro").html("98%");
+		if($('#JSONTipoMesasNube').html().length>0){
+			var jsontiposmesas=JSON.parse($('#JSONTipoMesasNube').html());
+			console.log(jsontiposmesas);
+			localStorage.setItem('dataupdate','');
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){
+					for(var n=0;n<jsontiposmesas.length;n++){
+						var item=jsontiposmesas[n];
+						localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
+						
+						tx.executeSql('INSERT INTO TIPO_MESA(imagen_activa,imagen_inactiva,es_mesa,timespan) SELECT "'+item.imagen_activa+'","'+item.imagen_inactiva+'","'+item.es_mesa+'","'+item.id+'" WHERE NOT EXISTS(SELECT 1 FROM TIPO_MESA WHERE timespan like "'+item.id+'")',[],function(tx,results){
+								console.log("insertado tipo de mesa:"+results.insertId);
+						});
+						
+						tx.executeSql('UPDATE TIPO_MESA SET imagen_activa=?,imagen_inactiva=?,es_mesa=? WHERE timespan=?',[item.imagen_activa,item.imagen_inactiva,item.es_mesa,item.id],function(tx,results){
+							console.log("actualizado tipo mesa");
+						});
+					}
+				},errorCB,function(){
+					$("#txtSincro").html("98%");
+					$.post(apiURL,{
+							id_emp: localStorage.getItem("empresa"),
+							action: 'DeleteSinc',
+							id_barra: localStorage.getItem("idbarra"),
+							tabla: "('tipomesa')",
+							idreal:localStorage.getItem("dataupdate"),
+							deviceid:$("#deviceid").html()
+					}).done(function(response){
+						console.log(response);
+						localStorage.setItem("dataupdate","");
+						setTimeout(function(){
+							$("#theProgress").css("width" , "98%");
+						},1500);
+						updateOnlineStatus('ONLINE');
+						DatosRecurrentes(10);
+					}).fail(function(){
+						updateOnlineStatus("OFFLINE");
+						setTimeout(function(){SincronizadorNormal()},180000);
+					});
+				});
+		}
 	}
+	else if(cual==10){
+		console.log("recurrentes 10: Mesas");
+		$("#contentStepSincro").fadeIn();
+		$("#txtSincro").html("98%");
+		if($('#JSONMesasNube').html().length>0){
+			var jsonmesas=JSON.parse($('#JSONMesasNube').html());
+			console.log(jsonmesas);
+			localStorage.setItem('dataupdate','');
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){
+					for(var n=0;n<jsonmesas.length;n++){
+						var item=jsonmesas[n];
+						localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
+						
+						tx.executeSql('INSERT INTO MESAS(left,top,id_tipomesa,activo,nombre,timespan) SELECT '+item.left+','+item.top+',"'+item.tipo_mesa+'","'+item.activo+'","'+item.nombre+'","'+item.id+'" WHERE NOT EXISTS(SELECT 1 FROM MESAS WHERE timespan like "'+item.id+'")',[],function(tx,results){
+								console.log("insertada mesa:"+results.insertId);
+						});
+						
+						tx.executeSql('UPDATE MESAS SET left=?,top=?,id_tipomesa=?,activo=?,nombre=? WHERE timespan=?',[item.left,item.top,item.tipo_mesa,'false',item.nombre,item.id],function(tx,results){
+							console.log("actualizada mesa.");
+						});
+					}
+				},errorCB,function(){
+					$("#txtSincro").html("100%");
+					$.post(apiURL,{
+							id_emp: localStorage.getItem("empresa"),
+							action: 'DeleteSinc',
+							id_barra: localStorage.getItem("idbarra"),
+							tabla: "('disenomesas')",
+							idreal:localStorage.getItem("dataupdate"),
+							deviceid:$("#deviceid").html()
+					}).done(function(response){
+						console.log(response);
+						localStorage.setItem("dataupdate","");
+						SubirDatosaNube(0);
+						setTimeout(function(){
+							$("#theProgress").css("width" , "100%");
+						},1500);
+						updateOnlineStatus('ONLINE');
+					}).fail(function(){
+						updateOnlineStatus("OFFLINE");
+						setTimeout(function(){SincronizadorNormal()},180000);
+					});
+				});
+			}
+		}
 }
 
 function SubirDatosaNube(cual){

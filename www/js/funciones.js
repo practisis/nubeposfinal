@@ -1612,13 +1612,15 @@ function AntesDePagar(){
 		//$('#paymentEfectivo').val($('#total').html().substring(1));
 		//$('#simple_1').html($('#total').html().substring(1));
 		//changePaymentCategory('1','Efectivo');
-    if(localStorage.getItem("con_nombre_orden")=='true'){
+	 if(localStorage.getItem("con_nombre_orden")=='true'){
           document.getElementById('nombre_orden').style.display='block';
      }else{
           document.getElementById('nombre_orden').style.display='none';
      }
-		$('#justo').click();
 		$('#paymentModule').slideDown();
+		$('#paymentEfectivo').val($('#justo').html());
+		changePaymentCategory('1','Efectivo');
+		//$('#paymentCategory-1').click();
 		$('#cedulaP').val('9999999999999');
 		BuscarCliente(13);
 		//$("#cuadroClientes").css('display','none');
@@ -1660,7 +1662,7 @@ function ColocarFormasPago(){
 			//alert(evalJson[k][j]+id);
 				mihtml+= '<tr>';
 				mihtml+= '<td class="columna1">';
-				mihtml+= '<div id="paymentCategory-'+evalJson[k][j].id+'" class="paymentCategories" onclick="changePaymentCategory(\''+evalJson[k][j].id+'\',\''+evalJson[k][j].imagen+'\'); return false;" style="height:100%; background-color: #D2D2D2; border-radius:5px; border: 1px solid #cccccc;">';
+				mihtml+= '<div id="paymentCategory-'+evalJson[k][j].id+'" class="paymentCategories" onclick="changePaymentCategory(\''+evalJson[k][j].id+'\',\''+evalJson[k][j].imagen+'\');" style="height:100%; background-color: #D2D2D2; border-radius:5px; border: 1px solid #cccccc;">';
 				mihtml+= '<table style="width: 100%; height: 100%;" cellspacing="0px" cellpadding="0px">';
 			    mihtml+= '<tr style="cursor:pointer;">';
 				mihtml+= '<td style="width:10%; height:100% text-align: right; font-size: 12px; font-weight:400; padding-left:10px;"><span class="glyphicon glyphicon-ok-circle"></span></td>';
@@ -1776,6 +1778,7 @@ function Init31(){
 	var hd=$(document).height();
 	if(h/w>=0.725) vertical=true;
 	else vertical=false;
+	console.log(vertical);
 	$('#main').height(h-parseFloat($('.navbar').css('height')));
 	$('#main').width(w*98/100);
 	$('#contentdetalle').css("height",(3*h/5));
@@ -2996,13 +2999,13 @@ function PagoAvanzado(){
 	pagonormal=false;
 	$('.simple').css('display','none');
 	$('.columna2').fadeIn();
-	$('.tipopago,.basurero').fadeIn();
+	$('.basurero').fadeIn();
 	$('#pagoavan').css('display','none');
 	$('.paymentMethods').val('0.00');
 	$('#valortarjeta,#valorcheque1,#valorcxc').val('0.00');
 	$('.card').attr("data-value","0");
 	$('.cardv').html("");
-	//$('.categoryChosen').click();
+	$('.categoryChosen').click();
 	var pagado=0;
 	$('.paymentMethods').each(function(){
 		if($(this).val()!='')
@@ -3347,13 +3350,14 @@ function CargarMesas(){
 	$('#contentmesas').html("");
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(	function (tx){
-		tx.executeSql("SELECT m.top,m.left,m.nombre,m.activo,m.timespan,t.imagen_activa as act,t.imagen_inactiva as inact FROM MESAS m, TIPO_MESA t WHERE t.timespan=m.id_tipomesa",[],function(tx,results3){
+		tx.executeSql("SELECT m.top,m.left,m.nombre,m.timespan,t.imagen_activa as act,t.imagen_inactiva as inact,m.enuso FROM MESAS m, TIPO_MESA t WHERE t.timespan=m.id_tipomesa and m.activo=?",["true"],function(tx,results3){
 			if(results3.rows.length>0){
 				for(var k=0;k<results3.rows.length;k++){
 					var item=results3.rows.item(k);
 					var img=item.act;
+					
 					var clase="mesaactiva";
-					if(item.activo=="false"){
+					if(item.enuso=="false"){
 						img=item.inact;
 						clase="mesainactiva";
 					}
@@ -3403,7 +3407,7 @@ function ActivarMesa(){
 						console.log("Mesa Activada: "+results1.insertId);
 					});
 				
-					tx.executeSql("UPDATE MESAS SET activo=? WHERE timespan=?",["true",id],function(tx,results2){
+					tx.executeSql("UPDATE MESAS SET enuso=? WHERE timespan=?",["true",id],function(tx,results2){
 						$('#mesaimg_'+id).attr("src","images/mesas/"+item.act);
 						$('#divmesa_'+id).attr("class","mesaactiva");
 					});

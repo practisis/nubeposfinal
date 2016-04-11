@@ -3,17 +3,12 @@
 		<div class='col-lg-12'>
 			<div class="panel" style='padding-top:10px; padding-bottom:10px; padding-left:5px;'>
 				<div class='row'>
-					<!---<div class='col-lg-1 col-md-1 col-xs-1'>
-						<div style='text-align:right; margin-top:5px;'>Fecha:</div>
-					</div>--->
 					<div class='col-lg-4 col-md-4 col-xs-4' style='margin-left:10px;'>
 					<table align='left'><tr><td>
 						<div class="input-group"> 
 						<span class="input-group-addon glyphicon glyphicon-calendar" id="basic-addon1"></span>
 						<input type='text' class='form-control' id='desde' readonly style="min-width:100px;"/>
 						<input type='text' class='form-control' id='hasta' style='display:none;'/></div>
-					<!--</div>
-					<div class='col-lg-2 col-md-2 col-xs-2' style='text-align:left;'>-->
 					</td><td>
 						<button class='btn btn-primary trans_filter' type='button' style='margin-top:0px;' onclick='ObtenerDatosDashboard();'>Filtrar</button>
 						</td>
@@ -70,17 +65,7 @@
             </div>
         </div>
     </div>
-    <!-- end stats -->
-
     <div class="row">
-        <!--<div class="col-md-6">
-            <section class="panel panel-default" style='text-align:left;'>
-                <div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span data-i18n="Ventas">Ventas</span></strong></div>
-				<div class="panel-body" data-ng-controller="morrisChartCtrl">
-                        <div id="chartventas"></div>
-                </div>
-            </section> 
-        </div>-->
 		<div class='col-md-6'>
 			<section class="panel panel-box info-box">
 					<div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span id='trans_label_5' data-i18n="ventascateg">Ventas por Categoria</span></strong></div>
@@ -124,11 +109,7 @@
 </div>
 <div id='jsoncats'></div>
 <script>
-$(document).ready(function(){ 
-  //obtener datos para el dashboard
-  /*"SELECT COUNT(*) AS number_rows FROM facturacion join locales on facturacion.id_locales = locales.id WHERE ".$plazafact." and (fecha >=? AND fecha <=?) AND anulada = FALSE".$localFact." and facturacion.id not in (select f.id from facturacion f,pagos p where p.idfactura=f.idreal and p.idformapago in(7,12) and f.id_locales=p.id_locales)"*/
-  
-  	//idioma
+$(document).ready(function(){
 					var linklang="es";
 					if(localStorage.getItem("idioma")==2)
 						linklang="en";
@@ -179,7 +160,7 @@ $(document).ready(function(){
 		});
 				//fin idioma
   
-  $('#desde,#hasta').datepicker();
+  $('#desde,#hasta').datepicker({"dateFormat":"yy-mm-dd"});
  //colocar fechas
   var ahora=new Date();
 			
@@ -208,7 +189,7 @@ $(document).ready(function(){
   $('#desde').change(function(){
 		$('#hasta').val($(this).val());
   });
-  
+
    ObtenerDatosDashboard();
 });
 
@@ -225,6 +206,101 @@ function ObtenerDatosDashboard(){
 	fhasta=new Date(fhasta);
 	categoriasvector= new Array();
 	var misubtotal=0;
+    var trans=0;
+
+    if(localStorage.getItem("con_localhost") == 'true'){
+       var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+       $.post(apiURL,{
+  		id_emp : localStorage.getItem("empresa"),
+  		action : 'VerDashboard',
+  		id_barra : localStorage.getItem("idbarra"),
+  		deviceid:$("#deviceid").html(),
+          fecha : $('#desde').val()
+  		}).done(function(response){
+  			if(response!='block' && response!='Desactivado'){
+  				console.log(response);
+                  var res = response.split("||");
+                  misubtotal = parseFloat(res[0]);
+                  trans = parseFloat(res[1]);
+                  $('#transacciones').html(res[1]);
+                  $('#totalventas').html(res[0]);
+                  if(trans != 0){
+                    $('#ticketpromedio').html((misubtotal/trans).toFixed(2));
+                  }else{
+                    $('#ticketpromedio').html('0.00');
+                  }
+                  var ventast=parseFloat(res[0]);
+      			  var porcen=(ventast)*100/(res[2]);
+                  if(res[2] != '0.00' && res[2] != '0'){
+      			    $('#cumplimiento').html(porcen.toFixed(2));
+                  }else{
+                    $('#cumplimiento').html('0.00');
+                  }
+      			  $('#mipres').html(res[2]);
+                  var ventasprodu = res[4];
+                  var resvp = ventasprodu.split("$$");
+                  var datap = new google.visualization.DataTable();
+					var titlev="Ranking de ventas por Producto"
+					if(localStorage.getItem("idioma")==2)
+						titlev="Ranking Sales per Product";
+					datap.addColumn('string', 'Producto');
+					datap.addColumn('number', 'Ventas $USD');
+					for(var n=0;n<resvp.length;n++){
+					  var resvpaux = resvp[n].split("@@");
+					  var entot=parseFloat(resvpaux[1]).toFixed(2);
+					  datap.addRow([resvpaux[0],Number(entot)]);
+					var optionsp = {
+						title: titlev
+					};
+					var chartp = new google.visualization.ColumnChart(document.getElementById('productosten'));
+					chartp.draw(datap,optionsp);
+					}
+                    var ventascat = res[5];
+                    var resvc = ventascat.split("$$");
+                    var data = new google.visualization.DataTable();
+					data.addColumn('string', 'Categoria');
+					data.addColumn('number', 'Ventas USD');
+					var titlev="Ventas por Categoría"
+					if(localStorage.getItem("idioma")==2)
+						titlev="Sales per Category";
+					for(var t=0;t<resvc.length;t++){
+					  var resvcaux = resvc[t].split("@@");
+						var entot=parseFloat(resvcaux[1]).toFixed(2);
+						data.addRow([resvcaux[0]+' USD',Number(entot)]);
+					}
+					var options = {
+						title:titlev
+					};
+
+					var chart = new google.visualization.PieChart(document.getElementById('ventascategoria'));
+					chart.draw(data,options);
+
+
+
+  			}else if(response=='Desactivado'){
+  			    envia('cloud');
+  				setTimeout(function(){
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#desactivo').fadeIn();
+  				},100);
+  			}else{
+  				envia('cloud');
+  				setTimeout(function(){
+  					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#bloqueo').fadeIn();
+  				},100);
+
+  			}
+
+  		}).fail(function(){
+  			updateOnlineStatus("OFFLINE");
+  			setTimeout(function(){SincronizadorNormal()},180000);
+  		});
+      }else{
+    //***************************inico normal*********************************************
 	var db = window.openDatabase("Database","1.0","PractisisMobile", 200000);
 	db.transaction(
 		function (tx){
@@ -236,13 +312,10 @@ function ObtenerDatosDashboard(){
 				$('#transacciones').html(res.rows.item(0).number_rows);
 			});				
 	},errorCB,successCB);
-	
-	//querysubtotal
-    //console.log(fdesde.getTime()+'*12*'+fhasta.getTime());
+
 	db.transaction(
 		function (tx){
-			//tx.executeSql('select sum(f.cantidad*f.precio_unitario) as total from facturas_formulados f,facturas p where f.timespan_factura=p.timespan and p.anulada=0 and p.fecha>=? and p.fecha<=? ',[fdesde.getTime(),fhasta.getTime()],
-            tx.executeSql('select sum(subconiva+subsiniva) as total from facturas where anulada=0 and fecha>=? and fecha<=? ',[fdesde.getTime(),fhasta.getTime()],
+			tx.executeSql('select sum(subconiva+subsiniva) as total from facturas where anulada=0 and fecha>=? and fecha<=? ',[fdesde.getTime(),fhasta.getTime()],
 			function(tx,res){
 				if(res.rows.length>0){
 					console.log(res);
@@ -252,23 +325,18 @@ function ObtenerDatosDashboard(){
 						misubtotal=parseFloat(res.rows.item(0).total);
 					$('#totalventas').html(parseFloat(misubtotal).toFixed(2));
 				}
-				
-				//$('#totalventas').html(misubtotal.toFixed(2));
+
 				var trans=parseFloat($('#transacciones').html());
 				
 				if(trans>0)
 				$('#ticketpromedio').html((misubtotal/trans).toFixed(2));
 				else
 				$('#ticketpromedio').html((0).toFixed(2));
-				//console.log(JSON.parse(cadenamorris));
-				//$('#chartventas,#ventascategoria,#productosten').html('');
 			});				
 	},errorCB,successCB);
 
-	
 	db.transaction(
 		function (tx){
-			//console.log('SELECT s.formulado as formu,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, productos s WHERE f.fecha >='+fdesde.getTime()+' AND s.timespan=p.timespan_formulado AND f.fecha <='+fhasta.getTime()+' and f.timespan=p.timespan_factura group by timespan_formulado order by tot desc limit 10');
 			tx.executeSql('SELECT s.formulado as formu,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, productos s WHERE f.anulada=0 and f.fecha >=? AND s.timespan=p.timespan_formulado AND f.fecha <=? and f.timespan=p.timespan_factura group by timespan_formulado order by tot desc limit 10',[fdesde.getTime(),fhasta.getTime()],
 			function(tx,res){
 				if(res.rows.length>0){
@@ -293,7 +361,6 @@ function ObtenerDatosDashboard(){
 	
 	db.transaction(
 		function (tx){
-			//console.log('SELECT s.categoria as categ,sum(p.cantidad)*max(p.precio_unitario) as tot FROM facturas f, facturas_formulados p, categorias s,productos pr WHERE f.fecha >='+fdesde.getTime()+' AND s.timespan=pr.categoriaid AND p.timespan_formulado=pr.timespan AND f.fecha <='+fhasta.getTime()+' and f.timespan=p.timespan_factura group by categoriaid order by tot desc');
 			tx.executeSql('SELECT s.categoria as categ,sum(p.cantidad*p.precio_unitario) as tot FROM facturas f, facturas_formulados p, categorias s,productos pr WHERE f.anulada=0 and f.fecha >=? AND s.timespan=pr.categoriaid AND p.timespan_formulado=pr.timespan AND f.fecha <=? and f.timespan=p.timespan_factura group by categoriaid order by tot desc',[fdesde.getTime(),fhasta.getTime()],
 			function(tx,res){
 				if(res.rows.length>0){
@@ -317,11 +384,10 @@ function ObtenerDatosDashboard(){
 			});				
 	},errorCB,successCB);
 
-	
 	//query para presupuesto
 	db.transaction(
 		function (tx5){
-			tx5.executeSql('SELECT valor as suma,transacciones as trans FROM presupuesto WHERE fecha >=? AND fecha <=?',[fdesde.getTime(),fhasta.getTime()],
+			tx5.executeSql('SELECT valor as suma , transacciones as trans FROM presupuesto WHERE fecha >=? AND fecha <=?',[fdesde.getTime(),fhasta.getTime()],
 			function(tx5,res){
 				if(res.rows.length>0){
 					var vendido=res.rows.item(0);
@@ -333,6 +399,8 @@ function ObtenerDatosDashboard(){
 				}
 			});
 		},errorCB,successCB);
+    //************************************fin normal**************************************
+    }
 }
 </script>
   

@@ -15,7 +15,7 @@ function receiveJson(){
 }
 
 //changePaymentCategory(0);
-	
+
 function changePaymentCategory(index,nombre){
 
     $('#valortarjeta').prop("readonly",false);
@@ -298,7 +298,7 @@ function performPurchase(restaurant){
 				
 				if(c>0){
 					dataimpuestos+="@";
-				}	
+				}
 				dataimpuestos+=getId+"|"+getName+"|"+getValue+"|"+$(this).val();
 				c++;
 			});
@@ -311,8 +311,44 @@ function performPurchase(restaurant){
             if($('#order_id').val()!=''){
               var order_id = $('#order_id').val();
             }
-			
-			
+
+       if(localStorage.getItem("con_localhost") == 'true'){
+         console.log(fetchJson);
+       var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+       $.post(apiURL,{
+  		id_emp : localStorage.getItem("empresa"),
+  		action : 'Facturas',
+  		id_barra : localStorage.getItem("idbarra"),
+  		deviceid:$("#deviceid").html(),
+        json : fetchJson
+  		}).done(function(response){
+  			if(response!='block' && response!='Desactivado'){
+  				console.log(response);
+                console.log("Nueva Factura Ingresada LocalHost");
+  			}else if(response=='Desactivado'){
+  			    envia('cloud');
+  				setTimeout(function(){
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#desactivo').fadeIn();
+  				},100);
+  			}else{
+  				envia('cloud');
+  				setTimeout(function(){
+  					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#bloqueo').fadeIn();
+  				},100);
+
+  			}
+
+  		}).fail(function(){
+  			updateOnlineStatus("OFFLINE");
+  			setTimeout(function(){SincronizadorNormal()},180000);
+  		});
+      }else{
+		//**********************comienza aqui guarda local***********************************
 			/*FIN VALORES PARA LA FACTURA*/
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(Ingresafacturas, errorCB, successCB);
@@ -320,30 +356,15 @@ function performPurchase(restaurant){
 				var now=new Date().getTime();
 				tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Inserta Factura",fetchJson],function(tx,results){});
 				
-				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact,dataimpuestos,propina,order_id)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc,dataimpuestos,propina,order_id],function(tx,results){
+				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact,dataimpuestos,propina,order_id)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc,dataimpuestos,propina,order_id],function(){
 					console.log("Nueva Factura Ingresada");
 					var mijsonprod=JSON.parse(fetchJson);
 					var misprod = mijsonprod.Pagar[0].producto;
-						
-						if(localStorage.getItem("con_mesas")=="true"){
-							var mesaactiva=sessionStorage.getItem("mesa_activa");
-							var idfact=results.insertId;
-							var idcli=RUC;
-							var nombrecli=clientName;
-							tx.executeSql("UPDATE MESAS_DATOS SET cliente=?,id_cliente=?,id_factura=?,hora_desactivacion=?,activo=? WHERE id_mesa=?",[nombrecli,idcli,mitimespan,now,"false",mesaactiva]);
-							
-							tx.executeSql("UPDATE MESAS SET activo=? WHERE timespan=?",["false",mesaactiva]);
-							
-							tx.executeSql("DELETE FROM MESAS_CONSUMOS WHERE id_mesa=?",[mesaactiva]);
-							
-							sessionStorage.setItem("mesa_activa","");
-						}
-						
 						for(var j in misprod){
 							var item = misprod[j];
 							IngresaDetalles(item,mitimespan);
 						}
-						
+
 					//$('#pay').fadeOut('fast');
 					// envia('nubepos/nubepos/');
 				});
@@ -367,12 +388,12 @@ function performPurchase(restaurant){
 				
 				tx2.executeSql("INSERT INTO FACTURAS_FORMULADOS(timespan_factura,timespan_formulado,cantidad,precio_unitario)VALUES(?,?,?,?)",[mifactura,item.id_producto,item.cant_prod,miprecio],function(){
 					console.log("Nuevo Detalle Factura Ingresado");
-				
 				});
-				
 			});
 		}
-			
+        //**********************hasta aqui guarda local***********************************
+      }
+
 			// $('#subtotalSinIva,#subtotalIva,#descuentoFactura,#totalmiFactura').val('0');
 			
 			
@@ -532,17 +553,73 @@ function cancelPayment(){
 	ResetPagos(4);
 }
 
-		  
+
 function BuscarCliente(e){
 	var valor=$('#cedulaP').val();
 	$('#descripcionD input').each(function(){
 		if($(this).attr('id')!='cedulaP')
 			$(this).val('');
 	});
-	
+
 	if(e==13){
-		mostrarClientes();
-		//$('#opaco').fadeIn();
+    mostrarClientes();
+
+    if(localStorage.getItem("con_localhost") == 'true'){
+         var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+         if(valor){
+         $.post(apiURL,{
+    		id_emp : localStorage.getItem("empresa"),
+    		action : 'BuscarCliente',
+    		id_barra : localStorage.getItem("idbarra"),
+    		deviceid:$("#deviceid").html(),
+            ruc : valor
+    		}).done(function(response){
+    			if(response!='block' && response!='Desactivado'){
+    				console.log(response);
+                    var res = response.split("||");
+                    if(res[5] == 'si'){
+                      $('#cedulaP').val(res[1]);
+                    }
+                    $('#idCliente').val(res[0]);
+					$('#clientID').val(res[0]);
+					$('#nombreP').val(res[2]);
+					$('#clientefind').html(res[2]);
+					$('#telefonoP').val(res[3]);
+					$('#direccionP').val(res[4]);
+					$('#emailP').val(res[5]);
+					$('#payClientName').html(res[2]);
+					$('.tipoClienteP').val(1);
+                    $("#busquedacliente").html(res[1]);
+					if($('#insideShop').length > 0){
+						continueShopping(res[0]);
+					}
+
+
+    			}else if(response=='Desactivado'){
+    			    envia('cloud');
+    				setTimeout(function(){
+    					$('.navbar').slideUp();
+    					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+    					$('#desactivo').fadeIn();
+    				},100);
+    			}else{
+    				envia('cloud');
+    				setTimeout(function(){
+    					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+    					$('.navbar').slideUp();
+    					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+    					$('#bloqueo').fadeIn();
+    				},100);
+
+    			}
+
+    		}).fail(function(){
+    			updateOnlineStatus("OFFLINE");
+    			setTimeout(function(){SincronizadorNormal()},180000);
+    		});
+         }
+        }else{
+		//********************************inicio normal***********************************
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(
 		function (tx){
@@ -567,6 +644,8 @@ function BuscarCliente(e){
 					}
 			}});	
 		},errorCB,successCB);
+        //*********************************fin normal*************************************
+        }
 		
 		$('#descripcionD input').each(function(){
 			if(valor=='9999999999999'){
@@ -715,17 +794,17 @@ function jsonNuevoCliente(){
 	var cedulatemp=$('#cedulaP').val();
 	var cedula;
 	
-	//console.log("voy a grabar:"+$('#cedulaP').val());          
+	//console.log("voy a grabar:"+$('#cedulaP').val());
 	if(localStorage.getItem("sin_documento")=='true' && cedulatemp=='9999999999'){
 		var minombre=$('#nombreP').val();
 		minombre=minombre.replace(/ /g,'');
 		cedula='p00'+minombre;
 		//console.log("cambiando cedula:"+cedula);
 	}else{
-		cedula=$('#cedulaP').val();	
+		cedula=$('#cedulaP').val();
 		//console.log("cedula igual:"+cedula);
 	}
-	
+
 	var nombreP=$('#nombreP').val();
 	var tipoP=$('#tipoP').val();
 	var direccionP=$('#direccionP').val();
@@ -741,12 +820,65 @@ function jsonNuevoCliente(){
 	$(".direccion").html( direccionP );
 	$("#tipoCliente").html( tipoP );
 
-	
-	
+
+
 	// alert("Ana"+nombreP+'-'+cedula);
-	
+
 	if( !nombreP) return; if( !cedula) return;
 	//console.log(email);
+
+    if(localStorage.getItem("con_localhost") == 'true'){
+       var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+       $.post(apiURL,{
+  		id_emp : localStorage.getItem("empresa"),
+  		action : 'NuevoCliente',
+  		id_barra : localStorage.getItem("idbarra"),
+  		deviceid:$("#deviceid").html(),
+        cedulaCliente : cedula,
+        nombreCliente : nombreP,
+        telefonoCliente : telefonoP,
+        direccion : direccionP,
+        email : $("#emailP").val()
+  		}).done(function(response){
+  			if(response!='block' && response!='Desactivado'){
+  				console.log(response);
+                  var res = response.split("||");
+                  if(res[0] == 'ok'){
+                    $('#idCliente').val(res[1]);
+					$("#clientefind").html(nombreP);
+					$("#busquedacliente").html(cedula);
+					$("#newCliente,#opaco").fadeOut();
+                  }else{
+                    $('#idCliente').val(1);
+					$("#clientefind").html('Consumidor Final');
+					$("#busquedacliente").html('9999999999999');
+					$("#newCliente,#opaco").fadeOut();
+                  }
+
+  			}else if(response=='Desactivado'){
+  			    envia('cloud');
+  				setTimeout(function(){
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#desactivo').fadeIn();
+  				},100);
+  			}else{
+  				envia('cloud');
+  				setTimeout(function(){
+  					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#bloqueo').fadeIn();
+  				},100);
+
+  			}
+
+  		}).fail(function(){
+  			updateOnlineStatus("OFFLINE");
+  			setTimeout(function(){SincronizadorNormal()},180000);
+  		});
+      }else{
+    //************************************inicio normal***********************************
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(
 	function (tx){
@@ -772,12 +904,18 @@ function jsonNuevoCliente(){
 				});	
 			}
 			
-		});				
+		});
 	},errorCB,successCB);
+    //*******************************fin normal*******************************************
+    }
 }
 
 function noCliente(){
 	if($('#cedulaP').val()==''){
+		$('#cedulaP').val('9999999999999');
+		BuscarCliente(13);
+	}
+    if($('#idCliente').val()==''){
 		$('#cedulaP').val('9999999999999');
 		BuscarCliente(13);
 	}
@@ -965,6 +1103,7 @@ function noCliente(){
 		$('#idCliente').val('0');
 		var idcli=$(this).val();
 		if(idcli.length==10){
+		  //alert(idcli);
 			$('#busquedacliente').val(idcli);
 			$('#clientefind').html('');
 			$('#cedulaP').css('background-color', 'white');

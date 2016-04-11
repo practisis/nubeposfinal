@@ -1,7 +1,7 @@
 //inicio nuevo
 var procesocount=0;
 var yaesta=false;
-var apiURL='https://practisis.net/connectnubepos/api2.php';
+
 function SyncStart(){
 	var idbarra = localStorage.getItem('idbarra');
 	var categoriasya = localStorage.getItem('categoriasya');
@@ -258,8 +258,7 @@ function ExtraeDatosApi(donde){
 			localStorage.setItem("con_notas",ext[0].notas);
 			localStorage.setItem("con_comandas",ext[0].comanderas);
 			//localStorage.setItem("con_mesas",ext[0].comanderas);
-			localStorage.setItem("con_mesas",true);
-
+			localStorage.setItem("con_mesas",false);
             localStorage.setItem("con_localhost",ext[0].localhost);
             localStorage.setItem("ip_servidor",ext[0].ipservidor);
 
@@ -516,6 +515,7 @@ function UserLogin(){
     auxuser = quien;
     auxpass = pass;
 	$('#btnvalida2').html("<img src='images/loader.gif' width='20px'/>");
+    var apiURL='https://practisis.net/connectnubepos/api2.php';
 	$.post(apiURL,{action:"login", user : quien , pass : pass, deviceid : iddevice}).done(function(data){
 		//alert(quien+'/'+pass+'/'+iddevice);
 		//alert(data);
@@ -542,6 +542,7 @@ function UserLogin(){
 }
 
 function DatosIniciales(cual){
+var apiURL='https://practisis.net/connectnubepos/api2.php';
 	$.post(apiURL,{
 		id_emp: localStorage.getItem("empresa"),
 		action: 'SincStart',
@@ -605,6 +606,13 @@ function DatosIniciales(cual){
 }
 
 function DatosRecurrentes(cual){
+  if(localStorage.getItem("con_localhost") == 'true'){
+    //alert(localStorage.getItem("con_localhost")+'**'+cual);
+   var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+  }else{
+    //alert('no'+'**'+cual);
+   var apiURL='https://practisis.net/connectnubepos/api2.php';
+  }
 	if(cual==0){
 		$.post(apiURL,{
 		id_emp : localStorage.getItem("empresa"),
@@ -613,10 +621,10 @@ function DatosRecurrentes(cual){
 		deviceid:$("#deviceid").html()
 		}).done(function(response){
 			if(response!='block' && response!='Desactivado'){
-				//console.log(response);
+				console.log(response);
 				jsonSync=JSON.parse(response);
 				recurrenteJsonEmpresa=jsonSync.BigJson[0].Empresa;
-				//console.log(response);
+				console.log(response);
 				$('#JSONproductosNube').html(JSON.stringify(jsonSync.BigJson[1].Productos));
 				$('#JSONclientesNube').html(JSON.stringify(jsonSync.BigJson[2].Clientes));
 				$('#JSONCategoriasNube').html(JSON.stringify(jsonSync.BigJson[3].Categorias));
@@ -633,9 +641,9 @@ function DatosRecurrentes(cual){
 				$('#JSONPropinasNube').html(JSON.stringify(jsonSync.BigJson[11].Propinas));
 				//$('#JSONPropinasNube').html('{"propinas":[{"id":"1","porcentaje":"true","valor":"5","activo":"true"},{"id":"2","porcentaje":"false","valor":"10","activo":"true"}]}');
 				//$('#JSONimpuestosNube').html('{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"1245"},{"id":"2","nombre":"Servicio","porcentaje":"10","activo":"true","timespan":"1246"}]}');
-				
+
 				//$('#JSONModifNube').html('{"modificadores":[{"id":"1","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal2","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"3","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal3","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"4","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal4","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"5","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal5","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"6","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal6","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"7","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal7","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"8","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal8","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"2","id_formulado":"708331454520391001","nombre":"Con Limon","valor":"0.10","activo":"true","id_form_desc":"0"}]}');
-				
+
 				localStorage.setItem("dias",jsonSync.BigJson[7].Extra[0].dias);
 				localStorage.setItem("msj",jsonSync.BigJson[7].Extra[0].msj);
 				//localStorage.setItem("permisos",jsonSync.BigJson[5].Extra[0].constrasenia);
@@ -666,7 +674,7 @@ function DatosRecurrentes(cual){
 				},100);
 
 			}
-			
+
 		}).fail(function(){
 			updateOnlineStatus("OFFLINE");
 			setTimeout(function(){SincronizadorNormal()},180000);
@@ -697,6 +705,11 @@ function DatosRecurrentes(cual){
 				}
 				},errorCB,function(){
 					$("#theProgress").css("width" , "15%");
+                    if(localStorage.getItem("con_localhost") == 'true'){
+                     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+                    }else{
+                     var apiURL='https://practisis.net/connectnubepos/api2.php';
+                    }
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -761,6 +774,11 @@ function DatosRecurrentes(cual){
 				}
 				},errorCB,function(){
 					$("#theProgress").css("width" , "30%");
+                    if(localStorage.getItem("con_localhost") == 'true'){
+                     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+                    }else{
+                     var apiURL='https://practisis.net/connectnubepos/api2.php';
+                    }
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -804,6 +822,11 @@ function DatosRecurrentes(cual){
 				}
 				},errorCB,function(){
 					$("#theProgress").css("width" , "45%");
+                    if(localStorage.getItem("con_localhost") == 'true'){
+                     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+                    }else{
+                     var apiURL='https://practisis.net/connectnubepos/api2.php';
+                    }
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -846,6 +869,11 @@ function DatosRecurrentes(cual){
 				}
 				},errorCB,function(){
 					$("#theProgress").css("width" , "60%");
+                    if(localStorage.getItem("con_localhost") == 'true'){
+                     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+                    }else{
+                     var apiURL='https://practisis.net/connectnubepos/api2.php';
+                    }
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -879,27 +907,36 @@ function DatosRecurrentes(cual){
 				for(var n=0;n<jsonpresup.length;n++){
 					var item=jsonpresup[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+'1,');
-					localStorage.setItem('idioma',item.idioma);
-					localStorage.setItem('propina',item.propina);
 
-						
 					/*tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'" WHERE id=1',[],function(tx,results){*/
-					localStorage.setItem('sin_documento',item.documento);
-					localStorage.setItem("con_shop",item.shop);
-					localStorage.setItem("con_nombre_orden",item.orden);
-					localStorage.setItem("con_tarjeta",item.tarjeta);
-					localStorage.setItem("con_notas",item.notas);
-					localStorage.setItem("con_comandas",item.comanderas);
-					localStorage.setItem("con_mesas",true);
-					localStorage.setItem("con_localhost",item.localhost);
-                    localStorage.setItem("ip_servidor",item.ipservidor);
-
-					tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'",con_notasorden="'+item.notas+'",con_comanderas="'+item.comanderas+'",con_localhost="'+item.localhost+'",ip_servidor="'+item.ipservidor+'" WHERE id=1',[],function(tx,results){
+                    if(localStorage.getItem("con_localhost") == 'true'){
+                      tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'" WHERE id=1',[],function(tx,results){
 						console.log("actualizada empresa");
-					});
+					  });
+                    }else{
+                      localStorage.setItem('idioma',item.idioma);
+					  localStorage.setItem('propina',item.propina);
+                      localStorage.setItem('sin_documento',item.documento);
+  					  localStorage.setItem("con_shop",item.shop);
+  					  localStorage.setItem("con_nombre_orden",item.orden);
+  					  localStorage.setItem("con_tarjeta",item.tarjeta);
+  					  localStorage.setItem("con_notas",item.notas);
+  					  localStorage.setItem("con_comandas",item.comanderas);
+  					  localStorage.setItem("con_mesas",false);
+                      localStorage.setItem("con_localhost",item.localhost);
+                      localStorage.setItem("ip_servidor",item.ipservidor);
+                      tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'",con_notasorden="'+item.notas+'",con_comanderas="'+item.comanderas+'",con_localhost="'+item.localhost+'",ip_servidor="'+item.ipservidor+'" WHERE id=1',[],function(tx,results){
+						console.log("actualizada empresa");
+					  });
+                    }
 				}
 				},errorCB,function(){
 					$("#theProgress").css("width" , "75%");
+                    if(localStorage.getItem("con_localhost") == 'true'){
+                     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+                    }else{
+                     var apiURL='https://practisis.net/connectnubepos/api2.php';
+                    }
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -943,6 +980,11 @@ function DatosRecurrentes(cual){
 				}
 				},errorCB,function(){
 					$("#theProgress").css("width" , "90%");
+                    if(localStorage.getItem("con_localhost") == 'true'){
+                     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+                    }else{
+                     var apiURL='https://practisis.net/connectnubepos/api2.php';
+                    }
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -990,6 +1032,11 @@ function DatosRecurrentes(cual){
 					}
 				},errorCB,function(){
 					$("#txtSincro").html("95%");
+                    if(localStorage.getItem("con_localhost") == 'true'){
+                     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+                    }else{
+                     var apiURL='https://practisis.net/connectnubepos/api2.php';
+                    }
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -1099,6 +1146,11 @@ function DatosRecurrentes(cual){
 				}
 				},errorCB,function(){
 					$("#theProgress").css("width" , "100%");
+                    if(localStorage.getItem("con_localhost") == 'true'){
+                     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+                    }else{
+                     var apiURL='https://practisis.net/connectnubepos/api2.php';
+                    }
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -1202,13 +1254,18 @@ function PostaLaNube(arraydatos,cual,accion,t){
 		jsonc='{  "id" : "'+item.id+'" , "cedula" : "'+item.cedula+'" , "nombre" : "'+item.nombre+'"  , "email" : "'+item.email+'" , "direccion" : "'+item.direccion+'" , "telefono" : "'+item.telefono+'" }';
 	}else if(accion=='Facturas'){
 		jsonc=item.fetchJson;
+        //alert(jsonc);
 	}else if(accion=='Config'){
 		jsonc='{"nombreempresa":"'+item.nombre+'","razon":"'+item.razon+'","telefono":"'+item.telefono+'","ruc":"'+item.ruc+'","direccion":"'+item.direccion+'","email":"'+item.email+'","serie":"'+item.serie+'","establecimiento":"'+item.establecimiento+'","nombreterminal":"'+item.nombreterminal+'","idioma":"'+item.id_idioma+'","documento":"'+item.sin_documento+'","orden":"'+item.con_nombre_orden+'","propina":"'+item.con_propina+'","tarjeta":"'+item.con_tarjeta+'","shop":"'+item.con_shop+'"}';
 
 	}
 	
 	console.log(jsonc);
-	
+	if(localStorage.getItem("con_localhost") == 'true'){
+     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+    }else{
+     var apiURL='https://practisis.net/connectnubepos/api2.php';
+    }
 	$.post(apiURL,{
 		id_emp: localStorage.getItem("empresa"),
 		action: accion,

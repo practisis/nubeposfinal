@@ -31,12 +31,7 @@ campos["TIPO_MESA"]=['id|integer primary key AUTOINCREMENT','imagen_activa|text 
 		
 campos["MESAS"]=['id|integer primary key AUTOINCREMENT','left|real default 0','top|real default 0','id_tipomesa|integer default 1','activo|boolean default "true"','nombre|text default ""','timespan|text default "" UNIQUE'];
 
-campos["MESAS_DATOS"]=['id|integer primary key AUTOINCREMENT','id_mesa|text default ""','cliente|text default ""','id_cliente|text default ""','activo|boolean default "true"','id_factura|text default ""','hora_activacion|integer default 0','hora_desactivacion|integer default 0','pax|integer default 0','timespan|text default "" UNIQUE'];
-
-campos["MESAS_CONSUMOS"]=['id|integer primary key AUTOINCREMENT','id_mesa|text default ""','details|text default ""','agregados|text default ""','notas|text default ""','hora|integer default 0','id_real|integer default 0'];
-		
-
-
+campos["MESAS_DATOS"]=['id integer primary key AUTOINCREMENT','id_mesa text default ""','cliente text default ""','id_cliente text default ""','activo boolean default "true"','id_factura text default ""','hora_activacion text default ""','hora_desactivacion text default ""','pax integer default 0','timespan text default "" UNIQUE'];
 
 //console.log(campos);
 
@@ -260,7 +255,9 @@ var app = {
         tx.executeSql('CREATE TABLE IF NOT EXISTS PRODUCTOS (id_local integer primary key AUTOINCREMENT,id integer, formulado text, codigo text, precio real, categoriaid text,cargaiva integer,productofinal integer,materiaprima integer,timespan text UNIQUE,ppq real default 0,color text,servicio integer default 0,estado integer default 1, sincronizar boolean default "true",tieneimpuestos boolean default "true")');
 		
 		VerificarCampos('PRODUCTOS');
+
 		
+
 		tx.executeSql('CREATE TABLE IF NOT EXISTS CONFIG (id integer primary key AUTOINCREMENT, nombre text, razon text , ruc integer, telefono integer , email text , direccion text, printer text,serie text default "001",establecimiento text default "001",sincronizar boolean default "false",encabezado integer default 3,largo integer default 18, nombreterminal text default "Tablet 1",pais text default "",id_idioma integer default 1,sin_documento boolean default "false",con_nombre_orden boolean default "false",con_propina boolean default "false",con_tarjeta boolean default "false",con_shop boolean default "false",con_notasorden boolean default "true", con_comanderas boolean default "true", printercom text default "", con_localhost boolean default "true",ip_servidor text default "")');
 
 		VerificarCampos('CONFIG');
@@ -378,20 +375,14 @@ var app = {
 		
 		VerificarCampos('MESAS');
 		
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[780, 120 ,1,"Mesa 1","1"]);
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[600, 350 ,2,"Mesa 2","2"]);
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[450, 50 ,3,"Mesa 3","3"]);
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[20, 40 ,1,"Mesa 4","4"]);
-		
+		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[100, 120 ,1,"Mesa 1","1"]);
+		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[200, 350 ,2,"Mesa 2","2"]);
+		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[250, 500 ,3,"Mesa 3","3"]);
+		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[20, 380 ,1,"Mesa 4","4"]);
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS MESAS_DATOS (id integer primary key AUTOINCREMENT,id_mesa text default "",cliente text default "",id_cliente text default "",activo boolean default "true",id_factura text default "",hora_activacion integer default 0,hora_desactivacion integer default 0,pax integer default 0,timespan text default "" UNIQUE);');
 		
 		VerificarCampos('MESAS_DATOS');
-		
-		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS MESAS_CONSUMOS (id integer primary key AUTOINCREMENT,id_mesa text default "",details text default "",agregados text default "",notas text default "",hora integer default 0,id_real integer default 0)');
-		
-		VerificarCampos('MESAS_CONSUMOS');
 		
 		//setea el session storage de la mesa
 		sessionStorage.setItem("mesa_activa","");
@@ -804,8 +795,59 @@ var app = {
         },errorCB,successCB);
         });
     }
-    
+
     function VerDatosFactura(id){
+
+      if(localStorage.getItem("con_localhost") == 'true'){
+       var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+       $.post(apiURL,{
+  		id_emp : localStorage.getItem("empresa"),
+  		action : 'VerFactura',
+  		id_barra : localStorage.getItem("idbarra"),
+  		deviceid:$("#deviceid").html(),
+          idfactura : id
+  		}).done(function(response){
+  			if(response!='block' && response!='Desactivado'){
+  				console.log(response);
+                  var res = response.split("||");
+                  $('#idfactura').val(id);
+                  $('#numerofactura').html(res[0]);
+                  $('#cliente').val(res[1]);
+                  $('#fecha').val(res[2]);
+                  $('#itemsfacturados').html(" "+res[4]);
+                  $('#total').html(res[3]);
+                  $('#invoiceTotal').html(res[3]);
+                  $('#cuerpodetalle').html(res[5]);
+                  $('#subtotales').html(res[6]);
+                  $('#tabladetformaspago').html(res[7]);
+                  if(res[8]=='1' || res[8]==1){
+					$('#btnanularf,#reimprimir').css('display','none');
+                    $('#factanulada').fadeIn();
+				  }
+
+  			}else if(response=='Desactivado'){
+  			    envia('cloud');
+  				setTimeout(function(){
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#desactivo').fadeIn();
+  				},100);
+  			}else{
+  				envia('cloud');
+  				setTimeout(function(){
+  					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#bloqueo').fadeIn();
+  				},100);
+
+  			}
+
+  		}).fail(function(){
+  			updateOnlineStatus("OFFLINE");
+  			setTimeout(function(){SincronizadorNormal()},180000);
+  		});
+      }else{
         var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
         db.transaction(function(tx){
         tx.executeSql('SELECT * FROM FACTURAS WHERE id='+id+';',[],function(tx,results){
@@ -815,7 +857,7 @@ var app = {
                 //console.log(row);
                 $('#idfactura').val(row.id);
                 $('#cliente').val(row.clientName);
-				
+
 				//si no tiene permisos
 				if(localStorage.getItem("permisos")=="true"){
 					tx.executeSql("SELECT id from permisos where clave like ? and anular=? and activo=?",[localStorage.getItem("claveuser"),"true","true"],function(tx,results2){
@@ -996,6 +1038,7 @@ var app = {
             }
         },errorCB,successCB);
         });
+      }
     }
     
     function CambiarFormaPagoFactura(){

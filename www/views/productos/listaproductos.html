@@ -147,7 +147,7 @@
     border-radius: 0 5px 5px 0;        
 }
 
-/* --------------- */   
+/* --------------- */
 
 .pricing-table h3 {
     font-size: 20px;
@@ -535,6 +535,9 @@ function LlenarTablaProd(datos){
 		$('#recibeTodosLosProductos').append(datos);
 		$("[name='my-checkbox']").bootstrapSwitch();
 		//consulta permisos
+        if(localStorage.getItem("con_localhost") == 'true'){
+          document.getElementById('nuevoProducto').style.display='none';
+        }else{
 		//si no tiene permisos
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
@@ -556,6 +559,7 @@ function LlenarTablaProd(datos){
 		}
 		});
 	//permisos
+        }
 		///
 }
 

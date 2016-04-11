@@ -141,6 +141,59 @@
 </div>
 <script>
 	$(document).ready(function(){
+
+		//idioma
+		var linklang="es";
+		if(localStorage.getItem("idioma")==2)
+			linklang="en";
+			var xmlidioma=$.get("lang/"+linklang+".html",function(datos){
+			d=JSON.parse(datos);
+			var itemestructura=d.estructura;
+			//console.log(itemestructura);
+			var itemmen=itemestructura.menu;
+			var itemplaceholder=itemestructura.placeholder;
+			var itemtitles=itemestructura.titles;
+			var itembuttons=itemestructura.botones;
+			var itemlabels=itemestructura.labels;
+			var todostitles=itemtitles.item;
+			var todosbuttons=itembuttons.item;
+			var todoslabels=itemlabels.item;
+			var todositems=itemmen.item;
+			var todosplaceholder=itemplaceholder.item;
+
+			for(var k=0;k<todosplaceholder.length;k++){
+				var miitemname=todosplaceholder[k].name;
+				//alert(miitemname);
+				$('.'+miitemname).attr("placeholder",todosplaceholder[k].text);
+			}
+
+			for(var k=0;k<todositems.length;k++){
+					var miitem=todositems[k];
+					$('#lab_menu_'+(k+1)).html(miitem);
+			}
+
+				for(var k=0;k<todostitles.length;k++){
+					var miitemname=todostitles[k].name;
+					//alert(miitemname);
+					$('.'+miitemname).html(todostitles[k].text);
+				}
+
+				for(var k=0;k<todosbuttons.length;k++){
+					var miitemname=todosbuttons[k].name;
+					//alert(miitemname);
+					$('.'+miitemname).html(todosbuttons[k].text);
+				}
+
+				for(var k=0;k<todoslabels.length;k++){
+					//console.log(todoslabels[k].name+"/"+todoslabels[k].name);
+					var miitemname=todoslabels[k].name;
+					$('#'+miitemname).html(todoslabels[k].text);
+				}
+
+		});
+
+		/*idioma*/
+
 		$('#contentdetail').css("height",parseInt($(window).height())*67/100);
 		ColocarFormasPago();
 	});
@@ -191,7 +244,7 @@ function changePaymentCategory(index,nombre){
 			$(this).click();
 		}
 	});
-	
+
 	var value = 0;
 	$('.paymentMethods').each(function(){
 		if($(this).val() != 0 && $(this).val() != '' && $(this).val() != null){
@@ -206,7 +259,7 @@ function updateForm(value){
 	value = parseFloat(value);
 	var total = parseFloat($('#invoiceTotal').html());
 	var change = (value - total);
-	
+
 	if(value < total){
 		$('#invoiceDebt').html('FALTANTE');
 		change = Math.abs(change);
@@ -268,7 +321,7 @@ function CambiarMetodo(cual){
 		faltante-=partepago;
 		pagado+=partepago;
 	});
-	
+
 	if(faltante>0){
 		if($('#payment'+nombre).val()=='')
 			$('#payment'+nombre).val(faltante.toFixed(2));
@@ -280,19 +333,56 @@ function CambiarMetodo(cual){
 					$('#payment'+nombre).select();
 				}
 			}
-			
+
 	}
 	$('#payment'+cual).select();
 }
 
 function AnularFactura(){
 	var id=$('#idfactura').val();
+    if(localStorage.getItem("con_localhost") == 'true'){
+     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+     $.post(apiURL,{
+		id_emp : localStorage.getItem("empresa"),
+		action : 'AnularFactura',
+		id_barra : localStorage.getItem("idbarra"),
+		deviceid:$("#deviceid").html(),
+        idfactura : id
+		}).done(function(response){
+			if(response!='block' && response!='Desactivado'){
+				console.log(response);
+                if(localStorage.getItem("idioma")==1)
+        			showalert("Factura anulada con éxito.");
+        		else if(localStorage.getItem("idioma")==2)
+        			showalert("Invoice canceled.");
+
+        		$('#factanulada').fadeIn('slow');
+        		$('#btnanularf,#reimprimir').fadeOut('slow');
+
+			}else if(response=='Desactivado'){
+			    envia('cloud');
+				setTimeout(function(){
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#desactivo').fadeIn();
+				},100);
+			}else{
+				envia('cloud');
+				setTimeout(function(){
+					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#bloqueo').fadeIn();
+				},100);
+
+			}
+
+		}).fail(function(){
+			updateOnlineStatus("OFFLINE");
+			setTimeout(function(){SincronizadorNormal()},180000);
+		});
+    }else{
     var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-    /*db.transaction(function(tx){
-    tx.executeSql('SELECT c.* FROM CARDEX c WHERE c.idfactura=?',[id],function(tx,results){
-		db.transaction(function(tx2){
-			console.log(results);		*/
-			/**/
 			db.transaction(function(tx3){
 				tx3.executeSql('select fetchJson as j from facturas where id=?',[id],function(tx3,results){
 					var mijson=results.rows.item(0).j;
@@ -300,26 +390,18 @@ function AnularFactura(){
 					//console.log(mijson);
 					tx3.executeSql('UPDATE FACTURAS SET anulada=?,sincronizar="true",fetchJson=? where id=?',[1,mijson,id],function(tx3,results3){
 						console.log(results3);
-						showalert("Factura anulada con éxito.");
+						if(localStorage.getItem("idioma")==1)
+							showalert("Factura anulada con éxito.");
+						else if(localStorage.getItem("idioma")==2)
+							showalert("Invoice canceled.");
+
 						$('#factanulada').fadeIn('slow');
 						$('#btnanularf,#reimprimir').fadeOut('slow');
 						//location.reload(true);
 					});
 				});
 			},errorCB,successCB);
-			/**/
-			/*for(var n=0;n<results.rows.lenght;n++){
-				var itemr=results.rows.item(n);
-				var times=getTimeSpan();
-				db.transaction(function(tx){
-				tx2.executeSql('INSERT INTO CARDEX c (id_formulado,cantidad,descripcion,precio_unidad,fecha,ppq_real,iva,timespan)VALUES (?,?,?,?,?,?,?,?) ',[itemr.id_formulado,itemr.cantidad,'Anulacion factura',itemr.precio_unidad,new Date().getTime(),itemr.ppq_real,itemr.iva,times],function(tx2,results2){
-					console.log(results2);
-				},errorCB,successCB);
-				});
-			}*/
-		/*});
-        },errorCB,successCB);*/
-    /*});*/
+    }
 }
 
 function ReimprimirFactura(){
@@ -334,9 +416,63 @@ function ReimprimirFactura(){
 				if(idprinter.printer!=null){
 					laprint=idprinter.printer;
 				}else{
-					showalert("No se ha configurado una impresora.");
+					if(localStorage.getItem("idioma")==1)
+						showalert("No se ha configurado una impresora.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("There is no configured printer.");
 				}
-				
+
+                if(localStorage.getItem("con_localhost") == 'true'){
+                 var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+                 $.post(apiURL,{
+            		id_emp : localStorage.getItem("empresa"),
+            		action : 'ReimprimirFactura',
+            		id_barra : localStorage.getItem("idbarra"),
+            		deviceid:$("#deviceid").html(),
+                    idfactura : elid
+            		}).done(function(response){
+            			if(response!='block' && response!='Desactivado'){
+            				console.log(response);
+                            var res = response.split("||");
+                            var jsonfact=res[0];
+    						if(jsonfact!=''){
+    							StarIOAdapter.rawprint(jsonfact+"reimpr",laprint, function() {
+    								if(localStorage.getItem("idioma")==1)
+    								showalert("Imprimiendo Factura.");
+    								else if(localStorage.getItem("idioma")==2)
+    									showalert("Printing Invoice.");
+    							},function(error) {
+    								if(localStorage.getItem("idioma")==1)
+    									showalert("Ocurrió un problema: " + error);
+    								else if(localStorage.getItem("idioma")==2)
+    									showalert("There is a problem: " + error);
+
+    							});
+    						}
+
+            			}else if(response=='Desactivado'){
+            			    envia('cloud');
+            				setTimeout(function(){
+            					$('.navbar').slideUp();
+            					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+            					$('#desactivo').fadeIn();
+            				},100);
+            			}else{
+            				envia('cloud');
+            				setTimeout(function(){
+            					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+            					$('.navbar').slideUp();
+            					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+            					$('#bloqueo').fadeIn();
+            				},100);
+
+            			}
+
+            		}).fail(function(){
+            			updateOnlineStatus("OFFLINE");
+            			setTimeout(function(){SincronizadorNormal()},180000);
+            		});
+                }else{
 				/*si existe la impresora*/
 				if(laprint!=''){
 					db.transaction(function(tx2){
@@ -346,19 +482,30 @@ function ReimprimirFactura(){
 								var jsonfact=results2.rows.item(0);
 								if(jsonfact.j!=''){
 									StarIOAdapter.rawprint(jsonfact.j+"reimpr",laprint, function() {
-										showalert("Imprimiendo Factura");
+										if(localStorage.getItem("idioma")==1)
+										showalert("Imprimiendo Factura.");
+										else if(localStorage.getItem("idioma")==2)
+											showalert("Printing Invoice.");
 									},function(error) {
-										showalert("Ocurrió un problema: " + error);
+										if(localStorage.getItem("idioma")==1)
+											showalert("Ocurrió un problema: " + error);
+										else if(localStorage.getItem("idioma")==2)
+											showalert("There is a problem: " + error);
+
 									});
 								}
 							}
 						});
 					},errorCB,successCB);
 				}
+                }
 			}else{
-				showalert("No se ha configurado una impresora.");
+				if(localStorage.getItem("idioma")==1)
+						showalert("No se ha configurado una impresora.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("There is no configured printer.");
 			}
 		});
-	},errorCB,successCB);	
+	},errorCB,successCB);
 }
 </script>

@@ -1210,8 +1210,9 @@ margin-top:10px;
 	position:absolute;
 	top:0px;
 	left:0px;
-	padding:10px;
+	/*padding:10px;*/
 	z-index:2;
 	display:none;
 	background-image:url("../images/piso.jpg");
+	
 }

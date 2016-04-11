@@ -395,7 +395,7 @@
 		
 			<button type='button' class='btn btn-default' style='margin-bottom:5px; margin-right:5px;' id='' onclick="SaveMesa();">GUARDAR PEDIDO</button>
 			
-			<button type='button' class='btn btn-default trans_mesas' style='margin-bottom:5px; margin-right:5px;' id='btn_mesas' onclick="$('#divmesas').show();">MESA</button>
+			<button type='button' class='btn btn-default trans_mesas' style='margin-bottom:5px; margin-right:5px;' id='btn_mesas' onclick="ImprimirPrecuenta();">PRECUENTA</button>
 			<!--<div class='row'>
 				<div class='col-xs-6'>
 					<center>-->
@@ -651,7 +651,8 @@
 			</div>
 			<div class='row'>
 				<div class='col-lg-12'>
-					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-danger btn-lg' onclick="ActivarMesa();">ACTIVAR</button>
+					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-success btn-lg' onclick="ActivarMesa();">ACTIVAR</button>
+					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-default btn-lg' onclick="$('#popupActivarMesa').modal('hide');">CANCELAR</button>
 				</div>
 			</div>
 		</div>
@@ -1239,13 +1240,34 @@
 
 <!--div para diseño de mesas---->
 <div id='divmesas' class='divmesas'>
-	<div class='row'>
+	<div class='row' style='background-color:white;'>
 		<div class='col-lg-12'>
 			<h3>MESAS</h3>
 		</div>
 	</div>
+	<div class='row'  style='background-color:white;'>
+		<div class='col-lg-12'>
+		<!-- Centered Tabs -->
+		<ul class="nav nav-tabs nav-left">
+		  <li class="active"><a href="#contentmesas_1" data-toggle="tab" >Tab 1</a></li>
+		  <li><a href="#contentmesas_2" data-toggle="tab" >Tab 2</a></li>
+		  <li><a href="#contentmesas_3" data-toggle="tab" >Tab 3</a></li>
+		  <li><a href="#contentmesas_4" data-toggle="tab" >Tab 4</a></li>
+		</ul>
+		</div>
+	</div>
 	<div class='row'>
-		<div class='col-lg-12' style='position:relative;' id='contentmesas'>
+		<div class='col-lg-12' style='position:relative; background-image:url("images/piso.jpg");' id='colmesas'>
+		<div class="tab-content">
+		<div id='contentmesas_1' class='contentmesas tab-pane fade in active'>
+		</div>
+		<div id='contentmesas_2' class='contentmesas tab-pane fade'>
+		</div>
+		<div id='contentmesas_3' class='contentmesas tab-pane fade'>
+		</div>
+		<div id='contentmesas_4' class='contentmesas tab-pane fade'>
+		</div>
+		</div>
 		</div>
 	</div>
 </div>

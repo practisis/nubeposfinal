@@ -29,7 +29,7 @@ campos["MODIFICADORES"]=['id|integer primary key AUTOINCREMENT','no_modificador|
 
 campos["TIPO_MESA"]=['id|integer primary key AUTOINCREMENT','imagen_activa|text default "mesapequenaanchaa.png"','imagen_inactiva|text default "mesapequenaanchai.png"','es_mesa|boolean default "true"','timespan|text default "" UNIQUE'];
 		
-campos["MESAS"]=['id|integer primary key AUTOINCREMENT','left|real default 0','top|real default 0','id_tipomesa|integer default 1','activo|boolean default "true"','nombre|text default ""','timespan|text default "" UNIQUE'];
+campos["MESAS"]=['id|integer primary key AUTOINCREMENT','left|real default 0','top|real default 0','id_tipomesa|text default ""','activo|boolean default "true"','nombre|text default ""','timespan|text default "" UNIQUE','enuso|boolean default "false"','tab|integer default 1'];
 
 campos["MESAS_DATOS"]=['id integer primary key AUTOINCREMENT','id_mesa text default ""','cliente text default ""','id_cliente text default ""','activo boolean default "true"','id_factura text default ""','hora_activacion text default ""','hora_desactivacion text default ""','pax integer default 0','timespan text default "" UNIQUE'];
 
@@ -366,19 +366,10 @@ var app = {
 		
 		VerificarCampos('TIPO_MESA');
 		
-		 tx.executeSql('INSERT OR IGNORE INTO TIPO_MESA (imagen_activa,imagen_inactiva,timespan) VALUES (?,?,?);',["mesagrandeanchaa.png", "mesagrandeanchai.png" ,"1"]); 
-		 tx.executeSql('INSERT OR IGNORE INTO TIPO_MESA (imagen_activa,imagen_inactiva,timespan) VALUES (?,?,?);',["mesagrandealtaa.png", "mesagrandealtai.png" ,"2"]); 
-		 tx.executeSql('INSERT OR IGNORE INTO TIPO_MESA (imagen_activa,imagen_inactiva,timespan) VALUES (?,?,?);',["mesapequenaaltaa.png", "mesapequenaaltai.png" ,"3"]);
-		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS MESAS (id integer primary key AUTOINCREMENT,left real default 0,top real default 0, id_tipomesa integer default 1,activo boolean default "false",nombre text default "",timespan text default "" UNIQUE);');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MESAS (id integer primary key AUTOINCREMENT,left real default 0,top real default 0, id_tipomesa text default "",activo boolean default "false",nombre text default "",timespan text default "" UNIQUE,enuso boolean default "false",tab integer default 1);');
 		
 		
 		VerificarCampos('MESAS');
-		
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[100, 120 ,1,"Mesa 1","1"]);
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[200, 350 ,2,"Mesa 2","2"]);
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[250, 500 ,3,"Mesa 3","3"]);
-		tx.executeSql('INSERT  OR IGNORE INTO MESAS(left,top,id_tipomesa,nombre,timespan) VALUES (?,?,?,?,?);',[20, 380 ,1,"Mesa 4","4"]);
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS MESAS_DATOS (id integer primary key AUTOINCREMENT,id_mesa text default "",cliente text default "",id_cliente text default "",activo boolean default "true",id_factura text default "",hora_activacion integer default 0,hora_desactivacion integer default 0,pax integer default 0,timespan text default "" UNIQUE);');
 		

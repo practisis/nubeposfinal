@@ -24,7 +24,7 @@ function changePaymentCategory(index,nombre){
 	
 	if(pagonormal==true){
 		$('.paymentMethods').each(function(){
-			if($(this).attr('idpaymentmethod')!=index){
+				if($(this).attr('idpaymentmethod')!=index){
 				$(this).val('0.00');
 				if(index==3)$('#valorcxc').val('0.00');
 				if(index==4)$('#valorcheque1').val('0.00');
@@ -42,12 +42,14 @@ function changePaymentCategory(index,nombre){
 		}
 	});
 
+	
 	var value = 0;
 	$('.paymentMethods').each(function(){
 		if($(this).val() != 0 && $(this).val() != '' && $(this).val() != null){
 			value += parseFloat($(this).val());
-			}
+		}
 	});
+	
 	updateForm(value);
 }
 
@@ -360,6 +362,21 @@ function performPurchase(restaurant){
 					console.log("Nueva Factura Ingresada");
 					var mijsonprod=JSON.parse(fetchJson);
 					var misprod = mijsonprod.Pagar[0].producto;
+						
+						if(localStorage.getItem("con_mesas")=="true"){
+							var mesaactiva=sessionStorage.getItem("mesa_activa");
+							var idfact=results.insertId;
+							var idcli=RUC;
+							var nombrecli=clientName;
+							tx.executeSql("UPDATE MESAS_DATOS SET cliente=?,id_cliente=?,id_factura=?,hora_desactivacion=?,activo=? WHERE id_mesa=?",[nombrecli,idcli,mitimespan,now,"false",mesaactiva]);
+							
+							tx.executeSql("UPDATE MESAS SET enuso=? WHERE timespan=?",["false",mesaactiva]);
+							
+							tx.executeSql("DELETE FROM MESAS_CONSUMOS WHERE id_mesa=?",[mesaactiva]);
+							
+							sessionStorage.setItem("mesa_activa","");
+						}
+
 						for(var j in misprod){
 							var item = misprod[j];
 							IngresaDetalles(item,mitimespan);
@@ -525,16 +542,16 @@ function cancelPayment(){
 	//$('#referenceToReset')[0].reset();
 	$('.paymentMethods').val('');
 	$('#justification').val('');
-	$('.passwordCheck').val('');
+	//$('.passwordCheck').val('');
 	$('.payOverview').html(0);
-	$('.cardRow').remove();
-	$('.chequeRow').remove();
+	//$('.cardRow').remove();
+	//$('.chequeRow').remove();
 	//changePaymentCategory(0);
 	//$('#pay').hide();
 	
-	$('#printFactura').hide();
-	$('#functionality-1').show();
-	$('#paymentCategory-1').addClass('categoryChosen');
+	//$('#printFactura').hide();
+	//$('#functionality-1').show();
+	//$('#paymentCategory-1').addClass('categoryChosen');
 	$('#invoicePaid').html('0.00');
 	$('#changeFromPurchase').html('0.00');
 	//$('#paymentModule').modal('hide');
@@ -663,7 +680,8 @@ function CambiarMetodo(cual){
 	//console.log('viene aqui');
 	var nombre=$('#payment'+cual).attr('paymentMethod');
 	var index=$('#payment'+cual).attr('idPaymentMethod');
-	if(pagonormal==true) $('.touchpago').hide();
+	$('#touchefectivo,#touchtarjetas,#touchcheques,#touchcxc').css('display','none');
+	
 	
 	if(pagonormal==true&&cual!='Tarjetas'){
 		$('.cardv').html('');
@@ -675,45 +693,47 @@ function CambiarMetodo(cual){
 	//alert(pagonormal+"/"+cual);
 	
 	if(cual=='Efectivo'){
+		$('#touchefectivo').fadeIn();
 		if(pagonormal==true){
 			$('#valorcxc,#paymentCxC,#valorcheque1,#paymentCheques').val("0.00");
 			$('#simple_2,#simple_3,#simple_4').html('0.00');
 			//$('#paymentEfectivo').val(parseFloat($('#total').html().substring(1)).toFixed(2));
 			//$('#simple_1').html(parseFloat($('#total').html().substring(1)).toFixed(2));
-			$('#touchefectivo').slideDown();
 		}else{
 			$('#paymentEfectivo').select();
-			if($('#touchefectivo').css('display')=='none')
-				$('.touchpago').hide();
-			$('#touchefectivo').slideDown();
+			//if($('#touchefectivo').css('display')=='none')
+				//$('.touchpago').hide();
+			
 		}
 		
 	}
 	if(cual=='Tarjetas'){
-	
+		$('#touchtarjetas').fadeIn();
+		//alert("hola tarjetas");
 		if(pagonormal==true){
 			//alert("entra tarjetas");
 			$('#valorcxc,#paymentCxC,#valorcheque1,#paymentCheques').val("0.00");
 			$('#simple_1,#simple_3,#simple_4').html('0.00');
 			//$('.touchpago').hide();
-			$('#touchtarjetas').slideDown();
-		}else if($('#touchtarjetas').css('display')=='none'){
-				$('.touchpago').hide();
-			$('#touchtarjetas').slideDown();
+			//$('#touchtarjetas').slideDown();
+		}else{
+			//$('.touchpago').hide();
+			
 		}
 	}
 	
 	if(cual=='Cheques'){
+		$('#touchcheques').fadeIn();
 		if(pagonormal==true){
 			$('#simple_1,#simple_2,#simple_4').html('0.00');
 			$('#valorcxc,#paymentCxC').val("0.00");
 			$('#valorcheque1,#paymentCheques').val(parseFloat($('#total').html().substring(1)).toFixed(2));
 			$('#simple_3').html(parseFloat($('#total').html().substring(1)).toFixed(2));
-			$('#touchcheques').slideDown();
+			
 			//valorchequechange();
 		}else{
-			    $('.touchpago').hide();
-				$('#touchcheques').slideDown();
+			    //$('.touchpago').hide();
+				//$('#touchcheques').slideDown();
 				if(parseFloat($('#valorcheque1').val())==0||$('#valorcheque1').val()==""){
 					if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
 					$('#valorcheque1,#paymentCheques').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
@@ -726,17 +746,19 @@ function CambiarMetodo(cual){
 		
 	}
 	if(cual=='CxC'){
+		$('#touchcxc').fadeIn();
 		if(pagonormal==true){
 			$('#valorcheque1,#paymentCheques').val("0.00");
 			$('#simple_1,#simple_2,#simple_3').html('0.00');
 			$('#valorcxc,#paymentCxC').val(parseFloat($('#total').html().substring(1)).toFixed(2));
 			$('#simple_4').html(parseFloat($('#total').html().substring(1)).toFixed(2));
-			$('#touchcxc').slideDown();
+			
 			//changePaymentCategory('4','Cheques');
 			//valorcxcchange();
 		}else{
-				if($('#touchcxc').css('display')=='none')
-					{$('.touchpago').hide();$('#touchcxc').slideDown();}
+				/*if($('#touchcxc').css('display')=='none')
+					{$('.touchpago').hide();}*/
+				//$('#touchcxc').slideDown();
 				if(parseFloat($('#valorcxc').val())==0){
 				if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
 					$('#valorcxc,#paymentCxC').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
@@ -744,13 +766,15 @@ function CambiarMetodo(cual){
 			}
 		}
 	}
+	
+	
 	$('.columna1 div').each(function(){
 		$(this).attr('class','paymentCategories');
 		$(this).css('backgroundColor','');
 	});
 	
-	
 	$('#paymentCategory-'+ index).attr('class','categoryChosen');
+	
 	//alert($('#invoiceTotal').html());
 	var faltante=parseFloat($('#total').html().substring(1));
 	var pagado=0;

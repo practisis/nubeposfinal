@@ -370,7 +370,7 @@
 									</table>
 								</th>
 								<th style="width:50%; text-align:left; padding-left:20px;"  class='trans_prod'>Producto</th>
-								<th style="text-align:right; padding-right:20px;">$ Total</th>
+								<th style="text-align:right; padding-right:20px;">$Total</th>
 							</tr>
 						</table>
 					</td>
@@ -395,7 +395,7 @@
 		
 			<button type='button' class='btn btn-default' style='margin-bottom:5px; margin-right:5px;' id='' onclick="SaveMesa();">GUARDAR PEDIDO</button>
 			
-			<button type='button' class='btn btn-default trans_mesas' style='margin-bottom:5px; margin-right:5px;' id='btn_mesas' onclick="$('#divmesas').show();">MESA</button>
+			<button type='button' class='btn btn-default trans_mesas' style='margin-bottom:5px; margin-right:5px;' id='btn_mesas' onclick="ImprimirPrecuenta();">PRECUENTA</button>
 			<!--<div class='row'>
 				<div class='col-xs-6'>
 					<center>-->
@@ -651,7 +651,8 @@
 			</div>
 			<div class='row'>
 				<div class='col-lg-12'>
-					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-danger btn-lg' onclick="ActivarMesa();">ACTIVAR</button>
+					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-success btn-lg' onclick="ActivarMesa();">ACTIVAR</button>
+					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-default btn-lg' onclick="$('#popupActivarMesa').modal('hide');">CANCELAR</button>
 				</div>
 			</div>
 		</div>
@@ -846,7 +847,7 @@
 				</div>
 				</div>
 				<div class='row' style="background-color:#fff;">
-				<div class='col-md-5'>
+				<div class='col-md-5 col-xs-5 col-lg-5'>
 					<div style="vertical-align:top; width:100%;" colspan='2'>
 						<div class="ventanaformapago" style='overflow-y:auto; overflow-x:hidden; width=100%;'>
 							<table style="width:100%;" cellspacing="0" cellpadding="0" id='tablaformaspago'>
@@ -858,8 +859,10 @@
 						<!--<div style='padding-top:10px; text-align:right; margin-bottom:10px;'><button class='btn btn-xs btn-success'>Pago Avanzado</button></div>-->
 					</div>
 				</div>
-				<div class='col-md-7'>
-						<div class='tipopago panel'>
+				<div class='col-md-7 col-xs-7 col-lg-7' style=''>
+						<div class='tipopago'  style=''>
+							<input id="order_id" name="order_id" type="hidden" value="" readonly="readonly" style='display:none;'>
+							<input id="respuestatarjeta" name="respuestatarjeta" type="hidden" value="" readonly="readonly" style='display:none;'>
 							<div class='touchpago' id='touchefectivo'>
 								<span id='trans_label_34'>Elige tu pago en efectivo</span>
 								<div class='' style='margin-bottom:3px; margin-top:15px; text-align:left;'>
@@ -916,9 +919,8 @@
 								<button onclick='subirefectivo(this);' id='prox20' class='btn btn-lg btn-primary den' data-value='' type='button'></button>
 								</div>
 								</div>
-								
 							</div>
-							<div class="touchpago col-xs-12" id='touchtarjetas' style='display:none;'>
+							<div class="touchpago" id='touchtarjetas' style='display:none;'>
 								<span id='trans_label_35'>Elige la tarjeta con la que vas a pagar</span>
 								<div class='col-lg-12 col-md-12 col-xs-12' style='padding:0px;'>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; display:none;' id='cardgroup'>
@@ -969,12 +971,6 @@
 						
 				</div>
 				</div>
-                <div class="row">
-					<div class='col-xs-12'>
-                        <input id="order_id" name="order_id" type="hidden" value="" readonly="readonly">
-                        <input id="respuestatarjeta" name="respuestatarjeta" type="hidden" value="" readonly="readonly">
-                    </div>
-                </div>
 				<div class="row">
 					<div class='col-xs-12'>
 						<div class='row' style='background-color:#DDD; padding-top:20px; padding-bottom:20px;'>
@@ -1244,13 +1240,34 @@
 
 <!--div para diseño de mesas---->
 <div id='divmesas' class='divmesas'>
-	<div class='row'>
+	<div class='row' style='background-color:white;'>
 		<div class='col-lg-12'>
 			<h3>MESAS</h3>
 		</div>
 	</div>
+	<div class='row'  style='background-color:white;'>
+		<div class='col-lg-12'>
+		<!-- Centered Tabs -->
+		<ul class="nav nav-tabs nav-left">
+		  <li class="active"><a href="#contentmesas_1" data-toggle="tab" >Tab 1</a></li>
+		  <li><a href="#contentmesas_2" data-toggle="tab" >Tab 2</a></li>
+		  <li><a href="#contentmesas_3" data-toggle="tab" >Tab 3</a></li>
+		  <li><a href="#contentmesas_4" data-toggle="tab" >Tab 4</a></li>
+		</ul>
+		</div>
+	</div>
 	<div class='row'>
-		<div class='col-lg-12' style='position:relative;' id='contentmesas'>
+		<div class='col-lg-12' style='position:relative; background-image:url("images/piso.jpg");' id='colmesas'>
+		<div class="tab-content">
+		<div id='contentmesas_1' class='contentmesas tab-pane fade in active'>
+		</div>
+		<div id='contentmesas_2' class='contentmesas tab-pane fade'>
+		</div>
+		<div id='contentmesas_3' class='contentmesas tab-pane fade'>
+		</div>
+		<div id='contentmesas_4' class='contentmesas tab-pane fade'>
+		</div>
+		</div>
 		</div>
 	</div>
 </div>

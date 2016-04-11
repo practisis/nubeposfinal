@@ -393,9 +393,9 @@
 		</div>
 		<div class='col-lg-12 col-xs-12 col-md-12' style='text-align:right; background-color:white;'>
 		
-			<button type='button' class='btn btn-default' style='margin-bottom:5px; margin-right:5px;' id='' onclick="SaveMesa();">GUARDAR PEDIDO</button>
+			<button type='button' class='btn btn-default trans_pedido' style='margin-bottom:5px; margin-right:5px; display:none;' id='btn_gperdidos' onclick="SaveMesa();">GUARDAR PEDIDO</button>
 			
-			<button type='button' class='btn btn-default trans_mesas' style='margin-bottom:5px; margin-right:5px;' id='btn_mesas' onclick="ImprimirPrecuenta();">PRECUENTA</button>
+			<button type='button' class='btn btn-default trans_mesas' style=' display:none; margin-bottom:5px; margin-right:5px;' id='btn_mesas' onclick="ImprimirPrecuenta();">PRECUENTA</button>
 			<!--<div class='row'>
 				<div class='col-xs-6'>
 					<center>-->
@@ -609,7 +609,7 @@
 		<div class="modal-body" style='color:#404041; position:relative;'>
 			<div class='row'>
 				<div class='col-lg-12' style='text-align:left;'>
-					<label>Número de PAX:</label>
+					<label id='trans_label_60'>Número de PAX:</label>
 				</div>
 				<div class='col-lg-12'>
 					<div class='row'>
@@ -651,8 +651,8 @@
 			</div>
 			<div class='row'>
 				<div class='col-lg-12'>
-					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-success btn-lg' onclick="ActivarMesa();">ACTIVAR</button>
-					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-default btn-lg' onclick="$('#addPax').attr('cambio','false'); $('#popupActivarMesa').modal('hide');">CANCELAR</button>
+					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-success btn-lg trans_active' onclick="ActivarMesa();">ACTIVAR</button>
+					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-default btn-lg trans_cancel' onclick="$('#addPax').attr('cambio','false'); $('#popupActivarMesa').modal('hide');">CANCELAR</button>
 				</div>
 			</div>
 		</div>
@@ -1242,17 +1242,17 @@
 <div id='divmesas' class='divmesas'>
 	<div class='row' style='background-color:white;'>
 		<div class='col-lg-12'>
-			<h3 style='margin-top:10px;'>MESAS</h3>
+			<h3 style='margin-top:10px;' id='trans_label_61'>MESAS</h3>
 		</div>
 	</div>
 	<div class='row'  style='background-color:white;'>
 		<div class='col-lg-12'>
 		<!-- Centered Tabs -->
 		<ul class="nav nav-tabs nav-left">
-		  <li class="active"><a href="#contentmesas_1" data-toggle="tab" >Tab 1</a></li>
-		  <li><a href="#contentmesas_2" data-toggle="tab" >Tab 2</a></li>
-		  <li><a href="#contentmesas_3" data-toggle="tab" >Tab 3</a></li>
-		  <li><a href="#contentmesas_4" data-toggle="tab" >Tab 4</a></li>
+		  <li class="active"><a href="#contentmesas_1" data-toggle="tab" >Area 1</a></li>
+		  <li><a href="#contentmesas_2" data-toggle="tab" >Area 2</a></li>
+		  <li><a href="#contentmesas_3" data-toggle="tab" >Area 3</a></li>
+		  <li><a href="#contentmesas_4" data-toggle="tab" >Area 4</a></li>
 		</ul>
 		</div>
 	</div>

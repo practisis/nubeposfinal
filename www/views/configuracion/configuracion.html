@@ -2,6 +2,7 @@
 <h2 id='trans_label_24'>Configuración General</h2>
 <div style='margin-top:25px; font-size:16px;'>
 	<table class='table'>
+		<tr><td  style='text-align:right;' id="trans_label_62">País:</td><td><input id='tablet_pais' class='form-control' readonly /></td></tr>
 		<tr><td  style='text-align:right;' id="trans_label_25">Nombre Dispositivo:</td><td><input id='tablet_name' class='form-control' /></td></tr>
 		<tr><td  style='text-align:right;' id="trans_label_26">Ver Diseño Menú:</td><td align='left'><input data-size='small' type='checkbox' id='tablet_menu' class='switch' /></td></tr>
 		<tr><td  style='text-align:right;' id="trans_label_27">Version:</td><td><input id='tablet_version' class='form-control' readonly /></td></tr>
@@ -55,7 +56,7 @@
 	</table>
 </div>
 <div class='row'>
-	<div class='col-lg-12' style='margin-bottom:25px;'>
+	<div class='col-lg-12' style='margin-bottom:35px;'>
 		<button type='button' class='btn btn-success trans_save' onclick='GuardarNombre();'>Guardar</button>
 	</div>
 </div>
@@ -102,10 +103,12 @@
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT nombreterminal as c,id_idioma,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas from CONFIG where id=1",[],function(tx1,results1){
+				tx1.executeSql("SELECT nombreterminal as c,id_idioma,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais from CONFIG where id=1",[],function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c!=''){
 							$('#tablet_name').val(results1.rows.item(0).c);
+							$('#tablet_pais').val(results1.rows.item(0).pais);
+							
                             //alert(results1.rows.item(0).con_nombre_orden);
                             $('#idioma > option[value="'+results1.rows.item(0).id_idioma+'"]').attr('selected', 'selected');
                             if(results1.rows.item(0).sin_documento=='true'){
@@ -165,6 +168,7 @@
         $('#con_shop').bootstrapSwitch();
         $('#con_notas').bootstrapSwitch();
         $('#con_comanderas').bootstrapSwitch();
+        $('#con_mesas').bootstrapSwitch();
 
 		if(localStorage.getItem("diseno")==1){
 			$('#tablet_menu').bootstrapSwitch('state', true, true);

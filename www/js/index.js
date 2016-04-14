@@ -916,9 +916,15 @@ var app = {
 						}
 					}
 					
-					subtotal+=parseFloat(variosprods[n].cant_prod)*(parseFloat(variosprods[n].precio_prod)+valoragregados);
+					var sublinea=parseFloat(variosprods[n].cant_prod)*(parseFloat(variosprods[n].precio_prod)+valoragregados);
+					subtotal+=sublinea;
 					
-                    intabla+="<tr><td style='text-align:left;'>"+variosprods[n].nombre_producto+agregados+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].cant_prod)+"</td><td style='text-align:right;'>"+(parseFloat(variosprods[n].precio_prod)+valoragregados).toFixed(2)+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].precio_total).toFixed(2)+"</td></tr>";
+					var lineaimp='';
+					if(variosprods[n].impuesto_prod!=''&&variosprods[n].impuesto_prod!=null){
+						lineaimp='(*i)';
+					}
+					
+                    intabla+="<tr><td style='text-align:left;'>"+variosprods[n].nombre_producto+lineaimp+agregados+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].cant_prod)+"</td><td style='text-align:right;'>"+(parseFloat(variosprods[n].precio_prod)+valoragregados).toFixed(2)+"</td><td style='text-align:right;'>"+parseFloat(sublinea).toFixed(2)+"</td></tr>";
 					itemsfact+=parseInt(parseInt(variosprods[n].cant_prod));
                 }
 				
@@ -933,7 +939,7 @@ var app = {
 					var vdetagregados=detagregados.split('@');
 					for(var t=0;t<vdetagregados.length;t++){
 						var dataagr=vdetagregados[t].split('|');
-						subs+="<tr><td style='text-align:right;'>"+dataagr[1]+"</td><td style='text-align:right;'> $"+parseFloat(dataagr[3]).toFixed(2)+"</td></tr>";
+						subs+="<tr><td style='text-align:right;'>"+dataagr[1]+" ("+(parseFloat(dataagr[2])*100).toFixed(2)+"%)</td><td style='text-align:right;'> $"+parseFloat(dataagr[3]).toFixed(2)+"</td></tr>";
 					}
 				}
 				
@@ -1244,4 +1250,170 @@ function VerificarPermiso(donde){
 			}
 		}
         
+}
+
+function VerificarColombiaNit(numero){
+	var primos=[71,67,59,53,47,43,41,37,29,23,19,17,13,7,3];
+	var numero=numero.replace("-","");
+	//console.log(numero);
+	if(!numero.length==10){
+		//console.log("no 10");
+		return false;
+	}else{
+		var validar=numero.substring(0,9);
+		validar="000000"+validar;
+		//console.log(validar);
+		var suma=0;
+		for(var i=0;i<=14;i++){
+			suma+=parseInt(validar[i])*primos[i];
+		}
+		//console.log(suma);
+		var res=suma%11;
+		var digitocheck=0;
+		if(res==0||res==1){
+			digitocheck=res;
+		}else{
+			digitocheck=11-res;
+		}
+	
+		if(digitocheck==numero[9]){
+			return true;
+		}
+		else{
+			//console.log(res+"/"+numero[9]);
+			return false;
+		}
+	}
+}
+		
+function VerificarChileRut(numero){
+	var rutLimpio='';
+    var digitoVerificador='';
+    var suma=0;
+    var contador= 2;
+	var valida=false;
+	var retorno=false;
+     
+	rutLimpio =numero.replace(/-/g,"");
+    rutLimpio =rutLimpio.replace(/ /g,"");
+    rutLimpio =rutLimpio.replace(/[.]/g,"");
+    
+	rutLimpio = rutLimpio.substring(0,rutLimpio.length-1);
+    digitoVerificador = numero.substring(numero.length - 1,numero.length);
+	
+	console.log(rutLimpio+"/"+digitoVerificador);
+	
+	for(var i=rutLimpio.length-1;i>=0;i--){
+		if(contador>7){
+			contador=2;
+		}
+		
+		suma+=parseInt(rutLimpio[i])*contador;
+		contador++;
+		valida=true;
+	}
+	
+	if(valida){
+		var dv=11-(suma%11);
+		var digVer=dv.toString();
+		if(dv==10)
+			digVer="K";
+		if(dv==11)
+			digVer="0";
+		
+		console.log(digVer);
+		if(digVer==digitoVerificador.toUpperCase())
+			return true;
+		else
+			return false;
+	}
+}
+
+function VerificarArgentinaCuit(numero){
+	cuitLimpio =numero.replace(/-/g,"");
+    cuitLimpio =cuitLimpio.replace(/ /g,"");
+    cuitLimpio =cuitLimpio.replace(/[.]/g,"");
+	console.log(cuitLimpio);
+	
+	var n=cuitLimpio[0]*6+cuitLimpio[1]*7+cuitLimpio[2]*8+cuitLimpio[3]*9+cuitLimpio[4]*4+cuitLimpio[5]*5+cuitLimpio[6]*6+cuitLimpio[7]*7+cuitLimpio[8]*8+cuitLimpio[9]*9;
+	
+	console.log(n);
+	
+	n = n%11;
+	
+	console.log(n);
+
+	if(parseInt(n) == parseInt(cuitLimpio[10]))
+		return true;
+	else
+		return false;
+}
+
+
+function VerificarPeruSunat(numero){
+	
+	rucLimpio =numero.replace(/-/g,"");
+    rucLimpio =rucLimpio.replace(/ /g,"");
+    rucLimpio =rucLimpio.replace(/[.]/g,"");
+	console.log(rucLimpio);
+	
+	var dos=rucLimpio.substring(0,2);
+	if(!(dos==10||dos==15||dos==17||dos==20)){
+		return false;
+	}
+	
+	var suma=rucLimpio[0]*5+rucLimpio[1]*4+rucLimpio[2]*3+rucLimpio[3]*2+rucLimpio[4]*7+rucLimpio[5]*6+rucLimpio[6]*5+rucLimpio[7]*4+rucLimpio[8]*3+rucLimpio[9]*2;
+	
+	console.log(suma);
+	
+	n = suma/11;
+	console.log(n);
+	
+	n=11-(suma-(parseInt(n)*11));
+	console.log(n);
+
+	if(parseInt(n) == parseInt(rucLimpio[10]))
+		return true;
+	else
+		return false;
+	return true;
+}
+
+function VerificarMexicoRfc(cadena){
+	var i = 0;
+    var confirmacion = true;
+	cadena =cadena.replace(/-/g,"");
+    cadena =cadena.replace(/ /g,"");
+    cadena =cadena.replace(/[.]/g,"");
+    if (cadena.length > 11 && cadena.length < 14)
+    {
+        if (cadena.length == 12)
+        {
+            cadena = "-" + cadena;
+            i = 1;
+        }
+        for (var j = i; j <= 3; j++)
+        {
+            if (parseInt(cadena[j])>0)
+                confirmacion = false;
+        }
+        for (var j = 4; j <= 9; j++)
+        {
+            if (!(parseInt(cadena[j])>=0&&parseInt(cadena[j])<=9))
+                confirmacion = false;
+        }
+        if (!confirmacion)
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+    
+	if (confirmacion)
+        return true;
+    else
+        return false;
 }

@@ -257,6 +257,7 @@ function ExtraeDatosApi(donde){
             localStorage.setItem("con_nombre_orden",ext[0].orden);
             localStorage.setItem("propina",ext[0].propina);
             localStorage.setItem("con_tarjeta",ext[0].tarjeta);
+            localStorage.setItem("pais",ext[0].pais);
 			
 			localStorage.setItem("con_notas",ext[0].notas);
 			localStorage.setItem("con_comandas",ext[0].comanderas);
@@ -481,7 +482,7 @@ function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direcc
 				setTimeout(function() {
 					$('#msjOk').fadeOut('slow');
 				}, 3000);
-				});
+			});
 				
 		},errorCB,function(){$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+nombre+'","direccion":"'+direccion+"-"+celular+'"},');});
 		
@@ -933,6 +934,7 @@ function DatosRecurrentes(cual){
                       localStorage.setItem('idioma',item.idioma);
 					  localStorage.setItem('propina',item.propina);
                       localStorage.setItem('sin_documento',item.documento);
+                      localStorage.setItem('pais',item.pais);
   					  localStorage.setItem("con_shop",item.shop);
   					  localStorage.setItem("con_nombre_orden",item.orden);
   					  localStorage.setItem("con_tarjeta",item.tarjeta);
@@ -1357,7 +1359,7 @@ function PostaLaNube(arraydatos,cual,accion,t){
 		var boolactivo='true';
 		if(item.estado==0)
 			boolactivo='false';
-		jsonc='{  "id" : "'+item.id_local+'" , "formulado" : "'+item.formulado+'" , "timespan" : "'+item.timespan+'" , "codigo" : "'+item.codigo+'" , "precio" : "'+item.precio+'" , "cargaiva" : "'+item.cargaiva+'" , "categoriaid" : "'+item.categoriaid+'" , "productofinal" : "'+item.productofinal+'" , "materiaprima" : "'+item.materiaprima+'" , "servicio" : "'+item.servicio+'" , "activo" : "'+boolactivo+'","color":"'+item.color+'" }';
+		jsonc='{  "id" : "'+item.id_local+'" , "formulado" : "'+item.formulado+'" , "timespan" : "'+item.timespan+'" , "codigo" : "'+item.codigo+'" , "precio" : "'+item.precio+'" , "cargaiva" : "'+item.cargaiva+'" , "categoriaid" : "'+item.categoriaid+'" , "productofinal" : "'+item.productofinal+'" , "materiaprima" : "'+item.materiaprima+'" , "servicio" : "'+item.servicio+'" , "activo" : "'+boolactivo+'","color":"'+item.color+'","tieneimpuestos":"'+item.tieneimpuestos+'"}';
 	}else if(accion=='Clientes'){
 		jsonc='{  "id" : "'+item.id+'" , "cedula" : "'+item.cedula+'" , "nombre" : "'+item.nombre+'"  , "email" : "'+item.email+'" , "direccion" : "'+item.direccion+'" , "telefono" : "'+item.telefono+'" }';
 	}else if(accion=='Facturas'){

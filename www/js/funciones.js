@@ -3462,6 +3462,67 @@ function MostrarNota(span){
 
 function CargarMesas(){
 	$('#contentmesas').html("");
+
+    if(localStorage.getItem("con_localhost") == 'true'){
+     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+     $.post(apiURL,{
+		id_emp : localStorage.getItem("empresa"),
+		action : 'VerMesas',
+		id_barra : localStorage.getItem("idbarra"),
+		deviceid:$("#deviceid").html(),
+		}).done(function(response){
+			if(response!='block' && response!='Desactivado'){
+				//console.log(response);
+                var resp = response.split("||");
+                if(resp[0] != ''){
+                  var tab1 = resp[0].split("@@");
+                  for(var i=0;i<tab1.length;i++){
+                    $('#contentmesas_1').append(tab1[i]);
+                  }
+                }
+                if(resp[1] != ''){
+                  var tab2 = resp[1].split("@@");
+                  for(var j=0;j<tab2.length;j++){
+                    $('#contentmesas_2').append(tab2[j]);
+                  }
+                }
+                if(resp[2] != ''){
+                  var tab3 = resp[2].split("@@");
+                  for(var k=0;k<tab3.length;k++){
+                    $('#contentmesas_3').append(tab3[j]);
+                  }
+                }
+                if(resp[3] != ''){
+                  var tab4 = resp[4].split("@@");
+                  for(var l=0;l<tab4.length;l++){
+                    $('#contentmesas_4').append(tab4[l]);
+                  }
+                }
+
+			}else if(response=='Desactivado'){
+			    envia('cloud');
+				setTimeout(function(){
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#desactivo').fadeIn();
+				},100);
+			}else{
+				envia('cloud');
+				setTimeout(function(){
+					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#bloqueo').fadeIn();
+				},100);
+
+			}
+
+		}).fail(function(){
+			updateOnlineStatus("OFFLINE");
+			setTimeout(function(){SincronizadorNormal()},180000);
+		});
+    }else{
+    //**********************************inicio normal*************************************
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(	function (tx){
 		tx.executeSql("SELECT m.top,m.left,m.nombre,m.timespan,t.imagen_activa as act,t.imagen_inactiva as inact,m.enuso,m.tab,t.es_mesa FROM MESAS m, TIPO_MESA t WHERE t.timespan=m.id_tipomesa and m.activo=?",["true"],function(tx,results3){
@@ -3475,11 +3536,11 @@ function CargarMesas(){
 						img=item.inact;
 						clase="mesainactiva";
 					}
-					
+
 					var onclick="";
 					if(item.es_mesa=='true')
 						onclick="AccionMesa(this);";
-					
+
 					var html="<div id='divmesa_"+item.timespan+"' style='position:absolute; top:"+(item.top-96)+"px; left:"+item.left+"px;' timespan='"+item.timespan+"' class='"+clase+"' onclick='"+onclick+"' ><div id='mesaname_"+item.timespan+"'>"+item.nombre+"</div><img id='mesaimg_"+item.timespan+"' class='imgmesa' src='images/mesas/"+img+"'/></div>";
 					$('#contentmesas_'+item.tab).append(html);
 				}
@@ -3487,6 +3548,8 @@ function CargarMesas(){
 			}
 		});
 	},errorCB,successCB);
+    //***********************************fin normal***************************************
+    }
 }
 
 function AccionMesa(div){
@@ -3514,6 +3577,64 @@ function ActivarMesa(){
 	if(cant>=1){
 		var id=$('#mesaid').val();
 		//var cant=$('.cantidadm').html();
+        if(localStorage.getItem("con_localhost") == 'true'){
+         var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+         $.post(apiURL,{
+    		id_emp : localStorage.getItem("empresa"),
+    		action : 'ActivaMesa',
+    		id_barra : localStorage.getItem("idbarra"),
+    		deviceid:$("#deviceid").html(),
+            cantidad : cant,
+            idmesa : id
+    		}).done(function(response){
+    			if(response!='block' && response!='Desactivado'){
+    				console.log(response);
+                    var resp = response.split("||");
+                    if(resp[0] != '0'){
+                      console.log("Mesa Activada: "+resp[0]);
+
+                      $('#mesaimg_'+id).attr("src","images/mesas/"+resp[1]);
+  					  $('#divmesa_'+id).attr("class","mesaactiva");
+
+                      $('#btn_mesas').html("PRECUENTA "+resp[2]);
+    				  $('#btn_mesas').attr("class","btn btn-info");
+    				  $('#tablaCompra').html('');
+    				  $('#subtotalIva').val('0');
+    				  $('#subtotalSinIva').val('0');
+    				  $('#totalmiFactura').val('0');
+    				  $('#descuentoFactura ').val('0');
+    				  $('.esImpuesto').val('0');
+    				  sessionStorage.setItem("mesa_activa",id);
+    				  sessionStorage.setItem("mesa_name",resp[2]);
+
+                      $('#popupActivarMesa').modal("hide");
+                      $('#divmesas').hide();
+                    }
+
+    			}else if(response=='Desactivado'){
+    			    envia('cloud');
+    				setTimeout(function(){
+    					$('.navbar').slideUp();
+    					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+    					$('#desactivo').fadeIn();
+    				},100);
+    			}else{
+    				envia('cloud');
+    				setTimeout(function(){
+    					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+    					$('.navbar').slideUp();
+    					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+    					$('#bloqueo').fadeIn();
+    				},100);
+
+    			}
+
+    		}).fail(function(){
+    			updateOnlineStatus("OFFLINE");
+    			setTimeout(function(){SincronizadorNormal()},180000);
+    		});
+        }else{
+        //******************************inicio normal*************************************
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(	function (tx){
 			var fecha= new Date().getTime();
@@ -3548,6 +3669,8 @@ function ActivarMesa(){
 			$('#popupActivarMesa').modal("hide");
       $('#divmesas').hide();
 		},errorCB,successCB);
+      //********************************fin normal****************************************
+      }
 	}
 }
 
@@ -3562,123 +3685,107 @@ function VerConsumos(idmesa){
 		$('.esImpuesto').val('0');
 		sessionStorage.setItem("mesa_activa",idmesa);
 		sessionStorage.setItem("mesa_name",$('#mesaname_'+idmesa).html());
-	/**/
-	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-	
-	
-	$('#tablaCompra').html('');
-	
-	//Leo los consumos guardados para esa mesa
-	
-	db.transaction(	function (tx){
-			tx.executeSql("SELECT * FROM MESAS_CONSUMOS WHERE id_mesa=?",[idmesa],function(tx,results1){
-				var total = 0;
-				var sumTotal = 0;
-				var taxTotal = 0;
-				
-			if(results1.rows.length>0){
-				var cantidadcom=0;
-				for(var k=0;k<results1.rows.length;k++){
+	    $('#tablaCompra').html('');
+
+    if(localStorage.getItem("con_localhost") == 'true'){
+     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+     var total = 0;
+     var sumTotal = 0;
+     var taxTotal = 0;
+     $.post(apiURL,{
+		id_emp : localStorage.getItem("empresa"),
+		action : 'BuscarConsumos',
+		id_barra : localStorage.getItem("idbarra"),
+		deviceid:$("#deviceid").html(),
+        con_notas : localStorage.getItem("con_notas"),
+        id_mesa : idmesa
+		}).done(function(response){
+			if(response!='block' && response!='Desactivado'){
+				console.log(response);
+                var resp = response.split("||");
+
+                if(resp[0] != '0'){
+
+                var cantidadcom=0;
+				//for(var k=0;k<results1.rows.length;k++){
 					var subtotalSinIva = $('#subtotalSinIva').val();
 					var subtotalIva = $('#subtotalIva').val();
 					var subtotalSinIvaCompra = 0;
 					var subtotalIvaCompra = 0;
-					var item=results1.rows.item(k);
-					console.log(item.details);
-					var dataitem=item.details.split("|");
-					cantidadcom+=parseInt(dataitem[2]);
-					var html="<tr class='printed' style='background-color:#DDD;' id='cant_"+k+"'><td class='lineadetalle' data-borrarcantidad='"+dataitem[2]+"' data-borrarimpuesto='"+dataitem[5]+"' data-borrarimpuestoindexes='"+dataitem[7]+"' data-borrarprecio='"+dataitem[3]+"' data-agregados='"+dataitem[8]+"' onclick='borrarCompra(this);' style='width:5%;'><button type='button' class='btn btn-danger btn-xs product_del'><span class='glyphicon glyphicon-remove'></span></button><input type='hidden' style='display:none;' class='totales' value='"+dataitem[6]+"'/></td>";
-					html+="<td onclick='modificarCantidad("+k+","+item.id_real+");' style='border-right:1px solid #909192; text-align: center; width:20%;' class='lineadetalle'><input type='hidden' class='productDetails' value='"+item.details+"' data-detagregados='"+item.agregados+"' data-notes='"+item.notas+"' data-id_real='"+item.id_real+"' /><input type='hidden' class='cantidadproductoscomandados' value='"+dataitem[2]+"'/>"+dataitem[2]+"</td>";
-					html+="<td style='border-right:1px solid #909192; padding:5px;text-align: left; width:50%; text-transform:capitalize;' class='lineadetalle'><span class='lineanota' data-id='"+k+"' onclick='";
-					var click="";
-					if(localStorage.getItem("con_notas")=="true")
-						click="MostrarNota(this); "
-					html+=click+"'>"+dataitem[1]+"</span>";
-					if(item.agregados!=null&&item.agregados!=""){
-						html+="<table style='width:100%; font-size:10px; color:#808081;'>";
-						var agregado=item.agregados.split("@");
-						for(var t=0;t<agregado.length;t++){
-							var dataagr=agregado[t].split('|');
-							html+="<tr><td>"+dataagr[0]+"</td><td style='text-align:right;'>$"+parseFloat(dataagr[1]).toFixed(2)+"</td></tr>";
-						}
-						html+="</table>";
-					}
-					
-					if(item.notas!=null&&item.notas!=""){
-						html+="<div class='noteprod' style='font-size:11px;'>"+item.notas+"*</div>";
-					}
-					
-					html+="</td>";
-					html+="<td style='padding-right:20px; text-align: right; border-right:2px solid red;' class='lineadetalle'>"+parseFloat(dataitem[6]).toFixed(2)+"</td>";
-					html+="</tr>";
-					$('#tablaCompra').append(html);
-					
-					var productoImpuestosIndexes=dataitem[7];
-					var productoCantidad=dataitem[2];
-					var productoPrecio=dataitem[3];
-					var sumaagregados=parseFloat(dataitem[8]);
-					
-					//alert(productoImpuestosIndexes+"/"+productoCantidad+"/"+productoPrecio+"/"+sumaagregados);
-				
-				if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
-					if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
-						$.each(productoImpuestosIndexes.split('@'), function(index,value){
-							if(productoImpuestosIndexes.indexOf(parseInt($('#idiva').html())) !== -1){
-								subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
-								}
-							else{
-								subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
-								}
 
-							if($('#impuestoFactura-'+ value).length == 0){
+					$('#tablaCompra').append(resp[1]);
 
-								var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
-								var currentimp=(parseFloat(productoCantidad) *( parseFloat(productoPrecio)+sumaagregados) * parseFloat(impuestoDetalles[2]));
-								taxTotal+= currentimp;
+                    var datos = resp[2].split("@@");
 
-								$('#factura').append('<input type="hidden" id="impuestoFactura-'+ value +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ currentimp +'"/>');
-								}
-							else{
-								var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
-								var currentTax = $('#impuestoFactura-'+ value).val();
-								var calcimp=((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
-								taxTotal += calcimp;
+                    for(var k=0;k<datos.length-1;k++){
+                      var datosin = datos[k].split("@|");
 
-								$('#impuestoFactura-'+ value).val(parseFloat(currentTax) + parseFloat(calcimp));
-								}
-							});
-						}
-					else{
-						productoImpuestosIndexes == parseInt($('#idiva').html()) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+    					var productoImpuestosIndexes=datosin[0];
+    					var productoCantidad=datosin[1];
+    					var productoPrecio=datosin[2];
+    					var sumaagregados=parseFloat(datosin[3]);
 
-						if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
-							var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
-							taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
-							$('#factura').append('<input type="hidden" id="impuestoFactura-'+ productoImpuestosIndexes +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ taxTotal +'"/>');
-							}
-						else{
-							var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
-							var currentTax = $('#impuestoFactura-'+ productoImpuestosIndexes).val();
-							taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
-							$('#impuestoFactura-'+ productoImpuestosIndexes).val(parseFloat(currentTax) + parseFloat(taxTotal));
-							}
-						}
-					}else{
-						subtotalSinIvaCompra=(parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
-					}
-				//impuestos end
-					$('#subtotalSinIva').val(parseFloat(subtotalSinIva) + parseFloat(subtotalSinIvaCompra));
-					$('#subtotalIva').val(parseFloat(subtotalIva) + parseFloat(subtotalIvaCompra));
-				}
-				
+    					//alert(productoImpuestosIndexes+"/"+productoCantidad+"/"+productoPrecio+"/"+sumaagregados);
+
+    				if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
+    					if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
+    						$.each(productoImpuestosIndexes.split('@'), function(index,value){
+    							if(productoImpuestosIndexes.indexOf(parseInt($('#idiva').html())) !== -1){
+    								subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+    								}
+    							else{
+    								subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+    								}
+
+    							if($('#impuestoFactura-'+ value).length == 0){
+
+    								var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
+    								var currentimp=(parseFloat(productoCantidad) *( parseFloat(productoPrecio)+sumaagregados) * parseFloat(impuestoDetalles[2]));
+    								taxTotal+= currentimp;
+
+    								$('#factura').append('<input type="hidden" id="impuestoFactura-'+ value +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ currentimp +'"/>');
+    								}
+    							else{
+    								var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
+    								var currentTax = $('#impuestoFactura-'+ value).val();
+    								var calcimp=((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
+    								taxTotal += calcimp;
+
+    								$('#impuestoFactura-'+ value).val(parseFloat(currentTax) + parseFloat(calcimp));
+    								}
+    							});
+    						}
+    					else{
+    						productoImpuestosIndexes == parseInt($('#idiva').html()) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+
+    						if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
+    							var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
+    							taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
+    							$('#factura').append('<input type="hidden" id="impuestoFactura-'+ productoImpuestosIndexes +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ taxTotal +'"/>');
+    							}
+    						else{
+    							var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
+    							var currentTax = $('#impuestoFactura-'+ productoImpuestosIndexes).val();
+    							taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
+    							$('#impuestoFactura-'+ productoImpuestosIndexes).val(parseFloat(currentTax) + parseFloat(taxTotal));
+    							}
+    						}
+    					}else{
+    						subtotalSinIvaCompra=(parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+    					}
+    				//impuestos end
+    					$('#subtotalSinIva').val(parseFloat(subtotalSinIva) + parseFloat(subtotalSinIvaCompra));
+    					$('#subtotalIva').val(parseFloat(subtotalIva) + parseFloat(subtotalIvaCompra));
+
+                        //alert($('#subtotalSinIva').val()+'**'+$('#subtotalIva').val());
+    				}
+
+                /*Calculos*/
 				$('#itemsVendidos').html(cantidadcom);
-				
-				/*Calculos*/
-							
 				$('.totales').each(function(){
 					sumTotal += parseFloat($.trim($(this).val()));
 				});
-				
+
 				$('#totalmiFactura').val(sumTotal);
 				$('#total').html('$'+ parseFloat(sumTotal).toFixed(2))
 				//$('#total').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2))
@@ -3729,7 +3836,207 @@ function VerConsumos(idmesa){
 					$('#prox20').parent().css('display','inline');
 				else
 					$('#prox20').parent().css('display','none');
+
+
+				//alert(subtotalSinIva+"/"+subtotalSinIvaCompra);
+
+				$('.cantidad').html('0');
+				$('#tableresults').html('');
+				$('#inputbusc').val('');
+				$('.cantidadnew').html('0');
+				$('#tableresultsnew').html('');
+				$('#inputbuscnew').val('');
+				$('#contentdetalle').animate({
+					scrollTop: $('#contentdetalle')[0].scrollHeight
+				}, 1000).clearQueue();
+
+                }
+
+
+			}else if(response=='Desactivado'){
+			    envia('cloud');
+				setTimeout(function(){
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#desactivo').fadeIn();
+				},100);
+			}else{
+				envia('cloud');
+				setTimeout(function(){
+					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#bloqueo').fadeIn();
+				},100);
+
+			}
+
+		}).fail(function(){
+			updateOnlineStatus("OFFLINE");
+			setTimeout(function(){SincronizadorNormal()},180000);
+		});
+    }else{
+    //**********************************inicio normal*************************************
+	//Leo los consumos guardados para esa mesa
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(	function (tx){
+			tx.executeSql("SELECT * FROM MESAS_CONSUMOS WHERE id_mesa=?",[idmesa],function(tx,results1){
+				var total = 0;
+				var sumTotal = 0;
+				var taxTotal = 0;
 				
+			if(results1.rows.length>0){
+				var cantidadcom=0;
+				for(var k=0;k<results1.rows.length;k++){
+					var subtotalSinIva = $('#subtotalSinIva').val();
+					var subtotalIva = $('#subtotalIva').val();
+					var subtotalSinIvaCompra = 0;
+					var subtotalIvaCompra = 0;
+					var item=results1.rows.item(k);
+					console.log(item.details);
+					var dataitem=item.details.split("|");
+					cantidadcom+=parseInt(dataitem[2]);
+					var html="<tr class='printed' style='background-color:#DDD;' id='cant_"+k+"'><td class='lineadetalle' data-borrarcantidad='"+dataitem[2]+"' data-borrarimpuesto='"+dataitem[5]+"' data-borrarimpuestoindexes='"+dataitem[7]+"' data-borrarprecio='"+dataitem[3]+"' data-agregados='"+dataitem[8]+"' onclick='borrarCompra(this);' style='width:5%;'><button type='button' class='btn btn-danger btn-xs product_del'><span class='glyphicon glyphicon-remove'></span></button><input type='hidden' style='display:none;' class='totales' value='"+dataitem[6].toFixed(2)+"'/></td>";
+					html+="<td onclick='modificarCantidad("+k+","+item.id_real+");' style='border-right:1px solid #909192; text-align: center; width:20%;' class='lineadetalle'><input type='hidden' class='productDetails' value='"+item.details+"' data-detagregados='"+item.agregados+"' data-notes='"+item.notas+"' data-id_real='"+item.id_real+"' /><input type='hidden' class='cantidadproductoscomandados' value='"+dataitem[2]+"'/>"+dataitem[2]+"</td>";
+					html+="<td style='border-right:1px solid #909192; padding:5px;text-align: left; width:50%; text-transform:capitalize;' class='lineadetalle'><span class='lineanota' data-id='"+k+"' onclick='";
+					var click="";
+					if(localStorage.getItem("con_notas")=="true")
+						click="MostrarNota(this); "
+					html+=click+"'>"+dataitem[1]+"</span>";
+					if(item.agregados!=null&&item.agregados!=""){
+						html+="<table style='width:100%; font-size:10px; color:#808081;'>";
+						var agregado=item.agregados.split("@");
+						for(var t=0;t<agregado.length;t++){
+							var dataagr=agregado[t].split('|');
+							html+="<tr><td>"+dataagr[0]+"</td><td style='text-align:right;'>$"+parseFloat(dataagr[1]).toFixed(2)+"</td></tr>";
+						}
+						html+="</table>";
+					}
+					
+					if(item.notas!=null&&item.notas!=""){
+						html+="<div class='noteprod' style='font-size:11px;'>"+item.notas+"*</div>";
+					}
+
+					html+="</td>";
+					html+="<td style='padding-right:20px; text-align: right; border-right:2px solid red;' class='lineadetalle'>"+parseFloat(dataitem[6]).toFixed(2)+"</td>";
+					html+="</tr>";
+					$('#tablaCompra').append(html);
+					
+					var productoImpuestosIndexes=dataitem[7];
+					var productoCantidad=dataitem[2];
+					var productoPrecio=dataitem[3];
+					var sumaagregados=parseFloat(dataitem[8]);
+					
+					//alert(productoImpuestosIndexes+"/"+productoCantidad+"/"+productoPrecio+"/"+sumaagregados);
+
+				if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
+					if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
+						$.each(productoImpuestosIndexes.split('@'), function(index,value){
+							if(productoImpuestosIndexes.indexOf(parseInt($('#idiva').html())) !== -1){
+								subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+								}
+							else{
+								subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+								}
+
+							if($('#impuestoFactura-'+ value).length == 0){
+
+								var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
+								var currentimp=(parseFloat(productoCantidad) *( parseFloat(productoPrecio)+sumaagregados) * parseFloat(impuestoDetalles[2]));
+								taxTotal+= currentimp;
+
+								$('#factura').append('<input type="hidden" id="impuestoFactura-'+ value +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ currentimp +'"/>');
+								}
+							else{
+								var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
+								var currentTax = $('#impuestoFactura-'+ value).val();
+								var calcimp=((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
+								taxTotal += calcimp;
+
+								$('#impuestoFactura-'+ value).val(parseFloat(currentTax) + parseFloat(calcimp));
+								}
+							});
+						}
+					else{
+						productoImpuestosIndexes == parseInt($('#idiva').html()) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+
+						if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
+							var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
+							taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
+							$('#factura').append('<input type="hidden" id="impuestoFactura-'+ productoImpuestosIndexes +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ taxTotal +'"/>');
+							}
+						else{
+							var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
+							var currentTax = $('#impuestoFactura-'+ productoImpuestosIndexes).val();
+							taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
+							$('#impuestoFactura-'+ productoImpuestosIndexes).val(parseFloat(currentTax) + parseFloat(taxTotal));
+							}
+						}
+					}else{
+						subtotalSinIvaCompra=(parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+					}
+				//impuestos end
+					$('#subtotalSinIva').val(parseFloat(subtotalSinIva) + parseFloat(subtotalSinIvaCompra));
+					$('#subtotalIva').val(parseFloat(subtotalIva) + parseFloat(subtotalIvaCompra));
+				}
+
+				/*Calculos*/
+				$('#itemsVendidos').html(cantidadcom);
+				$('.totales').each(function(){
+					sumTotal += parseFloat($.trim($(this).val()));
+				});
+
+				$('#totalmiFactura').val(sumTotal);
+				$('#total').html('$'+ parseFloat(sumTotal).toFixed(2))
+				//$('#total').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2))
+				$('#justo').html(sumTotal.toFixed(2));
+				$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
+				$('#redondeado').html(Math.ceil(sumTotal).toFixed(2));
+				$('#redondeado').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
+				var alta=0;
+				for( var t in misdenominaciones){
+					if(misdenominaciones[t]>sumTotal)
+					{
+						alta=misdenominaciones[t];
+						break;
+					}
+				}
+				$('#altaden').html(alta.toFixed(2));
+				$('#altaden').attr('data-value',-1*alta.toFixed(2));
+				if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
+					$('#altaden').parent().css('display','inline');
+				else
+					$('#altaden').parent().css('display','none');
+
+				var prox10=0;
+				var iter=1;
+				var p10=iter*10;
+				while(p10<sumTotal){
+					iter++;
+					p10=iter*10;
+				}
+				$('#prox10').html(p10.toFixed(2));
+				$('#prox10').attr('data-value',-1*p10.toFixed(2));
+				//console.log(p10+'/'+alta);
+				if(p10>0&&p10!=alta)
+					$('#prox10').parent().css('display','inline');
+				else
+					$('#prox10').parent().css('display','none');
+
+				var prox20=0;
+				var iter=1;
+				var p20=iter*20;
+				while(p20<sumTotal){
+					iter++;
+					p20=iter*20;
+				}
+				$('#prox20').html(p20.toFixed(2));
+				$('#prox20').attr('data-value',-1*p20.toFixed(2));
+				if(p20>0&&p20!=p10)
+					$('#prox20').parent().css('display','inline');
+				else
+					$('#prox20').parent().css('display','none');
+
 
 				//alert(subtotalSinIva+"/"+subtotalSinIvaCompra);
 
@@ -3746,11 +4053,76 @@ function VerConsumos(idmesa){
 			}
 		});
 	},errorCB,successCB);
+    //*********************************fin normal*****************************************
+    }
 	$('#divmesas').hide();
 }
 
 function SaveMesa(){
-	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+  var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+    if(localStorage.getItem("con_localhost") == 'true'){
+     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+     var query = '';
+     var mesaactiva=sessionStorage.getItem("mesa_activa");
+     $('#tablaCompra>tbody>tr').each(function(){
+		var inputdata=$(this).find('.productDetails');
+		if(inputdata!=null){
+			var details=inputdata.val();
+			var agreg=""
+			if(inputdata.attr('data-detagregados')!=null&&inputdata.attr('data-detagregados')!=""&&inputdata.attr('data-detagregados')!="undefined")
+				agreg=inputdata.attr('data-detagregados');
+			var notes="";
+			if(inputdata.attr('data-notes')!=null&&inputdata.attr('data-notes')!=""&&inputdata.attr('data-notes')!="undefined")
+				notes=inputdata.attr('data-notes');
+			var idreal="";
+			if(inputdata.attr('data-id_real')!=null&&inputdata.attr('data-id_real')!=""&&inputdata.attr('data-id_real')!="undefined")
+				idreal=inputdata.attr('data-id_real');
+			var fecha= new Date().getTime();
+            query += "INSERT INTO mesas_consumos (id_mesa,hora,details,agregados,notas,id_real) values ('"+mesaactiva+"','"+fecha+"','"+details+"','"+agreg+"','"+notes+"','"+idreal+"')||@"
+		}
+	});
+
+     $.post(apiURL,{
+		id_emp : localStorage.getItem("empresa"),
+		action : 'GuardaPedido',
+		id_barra : localStorage.getItem("idbarra"),
+		deviceid:$("#deviceid").html(),
+        id_mesa : mesaactiva,
+        query : query
+		}).done(function(response){
+			if(response!='block' && response!='Desactivado'){
+				console.log(response);
+                var resp = response.split("||");
+                if(resp[0] == 'ok'){
+                  console.log("consumo insertados"+query);
+                }else{
+                  envia('puntodeventa');
+                }
+
+			}else if(response=='Desactivado'){
+			    envia('cloud');
+				setTimeout(function(){
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#desactivo').fadeIn();
+				},100);
+			}else{
+				envia('cloud');
+				setTimeout(function(){
+					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#bloqueo').fadeIn();
+				},100);
+
+			}
+
+		}).fail(function(){
+			updateOnlineStatus("OFFLINE");
+			setTimeout(function(){SincronizadorNormal()},180000);
+		});
+    }else{
+    //*********************************inicio normal**************************************
 	var mesaactiva=sessionStorage.getItem("mesa_activa");
 	db.transaction(	function (tx){
 		tx.executeSql("DELETE FROM MESAS_CONSUMOS WHERE id_mesa=?",[mesaactiva],function(tx,results){});
@@ -3777,6 +4149,8 @@ function SaveMesa(){
 			},errorCB,successCB);
 		}
 	});
+    //*******************************fin normal*******************************************
+    }
 	
 	/*imprimir comandas*/
 	var json = '{"ComandasMesas": [{';

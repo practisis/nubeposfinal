@@ -322,11 +322,14 @@ function performPurchase(restaurant){
   		action : 'Facturas',
   		id_barra : localStorage.getItem("idbarra"),
   		deviceid:$("#deviceid").html(),
+        con_mesas : localStorage.getItem("con_mesas"),
+        id_mesa : sessionStorage.getItem("mesa_activa"),
         json : fetchJson
   		}).done(function(response){
   			if(response!='block' && response!='Desactivado'){
   				console.log(response);
                 console.log("Nueva Factura Ingresada LocalHost");
+                sessionStorage.setItem("mesa_activa","");
   			}else if(response=='Desactivado'){
   			    envia('cloud');
   				setTimeout(function(){
@@ -365,15 +368,15 @@ function performPurchase(restaurant){
 						
 						if(localStorage.getItem("con_mesas")=="true"){
 							var mesaactiva=sessionStorage.getItem("mesa_activa");
-							var idfact=results.insertId;
+							//var idfact=results.insertId;
 							var idcli=RUC;
 							var nombrecli=clientName;
-							tx.executeSql("UPDATE MESAS_DATOS SET cliente=?,id_cliente=?,id_factura=?,hora_desactivacion=?,activo=? WHERE id_mesa=?",[nombrecli,idcli,mitimespan,now,"false",mesaactiva]);
-							
+							tx.executeSql("UPDATE MESAS_DATOS SET cliente=?,id_cliente=?,id_factura=?,hora_desactivacion=?,activo=? WHERE id_mesa=? and activo=?",[nombrecli,idcli,mitimespan,now,"false",mesaactiva,"true"]);
+
 							tx.executeSql("UPDATE MESAS SET enuso=? WHERE timespan=?",["false",mesaactiva]);
-							
+
 							tx.executeSql("DELETE FROM MESAS_CONSUMOS WHERE id_mesa=?",[mesaactiva]);
-							
+
 							sessionStorage.setItem("mesa_activa","");
 						}
 

@@ -258,6 +258,8 @@ function ExtraeDatosApi(donde){
             localStorage.setItem("propina",ext[0].propina);
             localStorage.setItem("con_tarjeta",ext[0].tarjeta);
             localStorage.setItem("pais",ext[0].pais);
+            localStorage.setItem("encabezado","3");
+            localStorage.setItem("largo","18");
 			
 			localStorage.setItem("con_notas",ext[0].notas);
 			localStorage.setItem("con_comandas",ext[0].comanderas);

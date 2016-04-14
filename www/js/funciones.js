@@ -30,7 +30,7 @@ function ActivarCategoria(cual,categoria){
 	db.transaction(
 	function (tx){
 		//console.log('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc');
-		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? order by id",["true"],function(tx,results3){
+		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? group by nombre order by id",["true"],function(tx,results3){
 							console.log(results3);
 							var impuestos='';
 							var impuestosid='';
@@ -1213,12 +1213,15 @@ function pagar(){
 		idimpuestos += getId+'@';
 		if(getId==parseInt($('#idiva').html()))
 			ivavalor=$(this).val();
-		
-		if(c>0){
+
+        if(dataimpuestos.indexOf(getName) == -1){
+          if(c>0){
 			dataimpuestos+="@";
-		}	
-		dataimpuestos+=getId+"|"+getName+"|"+getValue+"|"+$(this).val();
-		c++;
+		  }
+          //alert('si');
+          dataimpuestos+=getId+"|"+getName+"|"+getValue+"|"+$(this).val();
+          c++;
+        }
 	});
 	
 	idimpuestos = idimpuestos.substring(0,idimpuestos.length -1);
@@ -3013,7 +3016,7 @@ function ActivarCategoriaMenu(cual,categoria){
 	function (tx){
 		
 		/*impuestos activos */
-		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? order by id",["true"],function(tx,results3){
+		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? group by nombre order by id",["true"],function(tx,results3){
 							console.log(results3);
 							var impuestos='';
 							var impuestosid='';
@@ -3342,6 +3345,56 @@ function VerPropinas(){
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	var mitot=parseFloat($('#total').html());
 	if(localStorage.getItem("con_mesas")=="true"&&mitot==0){
+
+    if(localStorage.getItem("con_localhost") == 'true'){
+       var mesaactiva=sessionStorage.getItem("mesa_activa");
+       var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+       $.post(apiURL,{
+  		id_emp : localStorage.getItem("empresa"),
+  		action : 'DesactivarMesa',
+  		id_barra : localStorage.getItem("idbarra"),
+  		deviceid:$("#deviceid").html(),
+        idcli : '9999999999999',
+        nombrecli : '',
+        mitimespan : '0',
+        idmesa : mesaactiva
+  		}).done(function(response){
+  			if(response!='block' && response!='Desactivado'){
+
+    			console.log(response);
+                var res = response.split("||");
+                if(res[0] == 'ok'){
+        			sessionStorage.setItem("mesa_activa","");
+        			sessionStorage.setItem("mesa_name","");
+        			sessionStorage.setItem("mesa_pax",0);
+        			$('#nombre_mesa').html('');
+        			envia("puntodeventa");
+                }
+
+  			}else if(response=='Desactivado'){
+  			    envia('cloud');
+  				setTimeout(function(){
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#desactivo').fadeIn();
+  				},100);
+  			}else{
+  				envia('cloud');
+  				setTimeout(function(){
+  					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#bloqueo').fadeIn();
+  				},100);
+
+  			}
+
+  		}).fail(function(){
+  			updateOnlineStatus("OFFLINE");
+  			setTimeout(function(){SincronizadorNormal()},180000);
+  		});
+      }else{
+    //*******************************inicio normal****************************************
 			db.transaction(function (tx){
 			var mesaactiva=sessionStorage.getItem("mesa_activa");
 			//var idfact=results.insertId;
@@ -3349,7 +3402,7 @@ function VerPropinas(){
 			var nombrecli="";
 			var mitimespan=0;
 			var now=new Date().getTime();
-			
+
 			tx.executeSql("UPDATE MESAS_DATOS SET cliente=?,id_cliente=?,id_factura=?,hora_desactivacion=?,activo=? WHERE id_mesa=? and activo=?",[nombrecli,idcli,mitimespan,now,"false",mesaactiva,"true"]);
 			tx.executeSql("UPDATE MESAS SET enuso=? WHERE timespan=?",["false",mesaactiva]);
 			tx.executeSql("DELETE FROM MESAS_CONSUMOS WHERE id_mesa=?",[mesaactiva]);
@@ -3359,6 +3412,8 @@ function VerPropinas(){
 			$('#nombre_mesa').html('');
 			envia("puntodeventa");
 			});
+    //*********************************fin normal*****************************************
+    }
 		
 	}
 	else{
@@ -3673,16 +3728,20 @@ function ActivarMesa(){
                       $('#mesaimg_'+id).attr("src","images/mesas/"+resp[1]);
   					  $('#divmesa_'+id).attr("class","mesaactiva");
 
-                      $('#btn_mesas').html("PRECUENTA "+resp[2]);
-    				  $('#btn_mesas').attr("class","btn btn-info");
-    				  $('#tablaCompra').html('');
-    				  $('#subtotalIva').val('0');
-    				  $('#subtotalSinIva').val('0');
-    				  $('#totalmiFactura').val('0');
-    				  $('#descuentoFactura ').val('0');
-    				  $('.esImpuesto').val('0');
-    				  sessionStorage.setItem("mesa_activa",id);
-    				  sessionStorage.setItem("mesa_name",resp[2]);
+                      //$('#btn_mesas').html("PRECUENTA "+resp[2]);
+    				  //$('#btn_mesas').attr("class","btn btn-info");
+    				    $('#btn_gpedidos,#btn_mesas').attr("title",resp[2]);
+    					$('#nombre_mesa').html(resp[2]);
+    					$('[data-toggle="tooltip"]').tooltip();
+    					$('#tablaCompra').html('');
+    					$('#subtotalIva').val('0');
+    					$('#subtotalSinIva').val('0');
+    					$('#totalmiFactura').val('0');
+    					$('#descuentoFactura ').val('0');
+    					$('.esImpuesto').val('0');
+    					sessionStorage.setItem("mesa_activa",id);
+    					sessionStorage.setItem("mesa_name",resp[2]);
+    					sessionStorage.setItem("mesa_pax",cant);
 
                       $('#popupActivarMesa').modal("hide");
                       $('#divmesas').hide();
@@ -3791,17 +3850,16 @@ function VerConsumos(idmesa){
                 if(resp[0] != '0'){
 
                 var cantidadcom=0;
-				//for(var k=0;k<results1.rows.length;k++){
-					var subtotalSinIva = $('#subtotalSinIva').val();
-					var subtotalIva = $('#subtotalIva').val();
-					var subtotalSinIvaCompra = 0;
-					var subtotalIvaCompra = 0;
 
 					$('#tablaCompra').append(resp[1]);
 
                     var datos = resp[2].split("@@");
 
                     for(var k=0;k<datos.length-1;k++){
+                    var subtotalSinIva = $('#subtotalSinIva').val();
+					var subtotalIva = $('#subtotalIva').val();
+					var subtotalSinIvaCompra = 0;
+					var subtotalIvaCompra = 0;
                       var datosin = datos[k].split("@|");
 
     					var productoImpuestosIndexes=datosin[0];
@@ -3858,6 +3916,7 @@ function VerConsumos(idmesa){
     						subtotalSinIvaCompra=(parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
     					}
     				//impuestos end
+                    //alert(subtotalSinIvaCompra+'**'+subtotalIvaCompra);
     					$('#subtotalSinIva').val(parseFloat(subtotalSinIva) + parseFloat(subtotalSinIvaCompra));
     					$('#subtotalIva').val(parseFloat(subtotalIva) + parseFloat(subtotalIvaCompra));
 
@@ -4323,6 +4382,7 @@ function SaveMesa(){
 
 function  ImprimirPrecuenta(){
 	var mesaactiva=sessionStorage.getItem("mesa_activa");
+    //alert(mesaactiva);
 	if(mesaactiva!=null&&mesaactiva!=""){
 		
 		var subtotalSinIva = $('#subtotalSinIva').val();

@@ -276,7 +276,7 @@ function performPurchase(restaurant){
 			var mitimespan=$('#timespanFactura').val();
 			
 			echo=parseFloat(invoicePaid-invoiceTotal);
-			
+
 			/*VALORES PARA LA FACTURA*/
 			var mitotal=$('#total').html().substring(1);
 			var subconiva=$('#subtotalIva').val();
@@ -297,12 +297,15 @@ function performPurchase(restaurant){
 				var getName = $(this).data('nombre');
 				var getId = $(this).data('id');
 				var getValue = $(this).data('valor');
-				
+
 				if(c>0){
 					dataimpuestos+="@";
 				}
-				dataimpuestos+=getId+"|"+getName+"|"+getValue+"|"+$(this).val();
-				c++;
+                //if(dataimpuestos.indexOf(getName) == -1){
+  				  dataimpuestos+=getId+"|"+getName+"|"+getValue+"|"+$(this).val();
+                  c++;
+                //}
+
 			});
 			
 			var propina=0;
@@ -313,6 +316,9 @@ function performPurchase(restaurant){
             if($('#order_id').val()!=''){
               var order_id = $('#order_id').val();
             }
+
+        /*console.log(fetchJson);
+        return false;*/
 
        if(localStorage.getItem("con_localhost") == 'true'){
          console.log(fetchJson);

@@ -356,7 +356,7 @@ function performPurchase(restaurant){
 			db.transaction(Ingresafacturas, errorCB, successCB);
 			function Ingresafacturas(tx){
 				var now=new Date().getTime();
-				tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Inserta Factura",fetchJson],function(tx,results){});
+				tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Inserta Factura",fetchJson]);
 				
 				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact,dataimpuestos,propina,order_id)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc,dataimpuestos,propina,order_id],function(){
 					console.log("Nueva Factura Ingresada");
@@ -365,10 +365,11 @@ function performPurchase(restaurant){
 						
 						if(localStorage.getItem("con_mesas")=="true"){
 							var mesaactiva=sessionStorage.getItem("mesa_activa");
-							var idfact=results.insertId;
+							//var idfact=results.insertId;
 							var idcli=RUC;
 							var nombrecli=clientName;
-							tx.executeSql("UPDATE MESAS_DATOS SET cliente=?,id_cliente=?,id_factura=?,hora_desactivacion=?,activo=? WHERE id_mesa=?",[nombrecli,idcli,mitimespan,now,"false",mesaactiva]);
+							
+							tx.executeSql("UPDATE MESAS_DATOS SET cliente=?,id_cliente=?,id_factura=?,hora_desactivacion=?,activo=? WHERE id_mesa=? and activo=?",[nombrecli,idcli,mitimespan,now,"false",mesaactiva,"true"]);
 							
 							tx.executeSql("UPDATE MESAS SET enuso=? WHERE timespan=?",["false",mesaactiva]);
 							
@@ -381,6 +382,8 @@ function performPurchase(restaurant){
 							var item = misprod[j];
 							IngresaDetalles(item,mitimespan);
 						}
+						
+						$('#nombre_mesa').html('');
 
 					//$('#pay').fadeOut('fast');
 					// envia('nubepos/nubepos/');
@@ -572,6 +575,24 @@ function cancelPayment(){
 
 
 function BuscarCliente(e){
+	
+	/*cambiar letrero de ID*/
+	var mipais=localStorage.getItem("pais");
+	if(mipais=="Ecuador")
+		$('.trans_cedula').html("ID Number: CI/RUC");
+	else if(mipais=="Colombia")
+		$('.trans_cedula').html("ID Number: NIT");
+	else if(mipais=="Chile")
+		$('.trans_cedula').html("ID Number: RUT");
+	else if(mipais=="Argentina")
+		$('.trans_cedula').html("ID Number: CUIT");
+	else if(mipais=="Peru")
+		$('.trans_cedula').html("ID Number: SUNAT");
+	else if(mipais=="Mexico")
+		$('.trans_cedula').html("ID Number: RFC");
+	/*fin*/
+	
+	
 	var valor=$('#cedulaP').val();
 	$('#descripcionD input').each(function(){
 		if($(this).attr('id')!='cedulaP')
@@ -1113,7 +1134,7 @@ function noCliente(){
 				}
 		}else{
 			if(localStorage.getItem("idioma")==1)
-				showalert("La cédula ingresada no es correcta.");
+				showalert("La identificación ingresada no es correcta.");
 			else if(localStorage.getItem("idioma")==2)
 				showalert("The id number is not correct.");
 			
@@ -1210,127 +1231,142 @@ function noCliente(){
 
 function cedula() {
 	numero = document.getElementById("cedulaP").value;
-	if(numero=='9999999999999')
-		return true;
+	
 	if(numero.indexOf("p")>=0||numero.indexOf("P")>=0)
 		return true;
+	else if(numero=='9999999999999')
+		return true;
+	else{
+		var elpais=localStorage.getItem("pais");
+		if(elpais=="Colombia"){
+			return VerificarColombiaNit(numero);
+		}else if(elpais=="Chile"){
+			return VerificarChileRut(numero);
+		}else if(elpais=="Argentina"){
+			return VerificarArgentinaCuit(numero);
+		}else if(elpais=="Peru"){
+			return VerificarPeruSunat(numero);
+		}else if(elpais=="Mexico"){
+			return VerificarMexicoRfc(numero);
+		}else{
+			var suma = 0;
+			var residuo = 0;
+			var pri = false;
+			var pub = false;
+			var nat = false;
+			var numeroProvincias = 24;
+			var modulo = 11;
 
-	var suma = 0;
-	var residuo = 0;
-	var pri = false;
-	var pub = false;
-	var nat = false;
-	var numeroProvincias = 24;
-	var modulo = 11;
+			/* Verifico que el campo no contenga letras */
+			var ok=1;
+			/* Aqui almacenamos los digitos de la cedula en variables. */
+			d1 = numero.substr(0,1);
+			d2 = numero.substr(1,1);
+			d3 = numero.substr(2,1);
+			d4 = numero.substr(3,1);
+			d5 = numero.substr(4,1);
+			d6 = numero.substr(5,1);
+			d7 = numero.substr(6,1);
+			d8 = numero.substr(7,1);
+			d9 = numero.substr(8,1);
+			d10 = numero.substr(9,1);
 
-	/* Verifico que el campo no contenga letras */
-	var ok=1;
-	/* Aqui almacenamos los digitos de la cedula en variables. */
-	d1 = numero.substr(0,1);
-	d2 = numero.substr(1,1);
-	d3 = numero.substr(2,1);
-	d4 = numero.substr(3,1);
-	d5 = numero.substr(4,1);
-	d6 = numero.substr(5,1);
-	d7 = numero.substr(6,1);
-	d8 = numero.substr(7,1);
-	d9 = numero.substr(8,1);
-	d10 = numero.substr(9,1);
+			/* El tercer digito es: */
+			/* 9 para sociedades privadas y extranjeros */
+			/* 6 para sociedades publicas */
+			/* menor que 6 (0,1,2,3,4,5) para personas naturales */
 
-	/* El tercer digito es: */
-	/* 9 para sociedades privadas y extranjeros */
-	/* 6 para sociedades publicas */
-	/* menor que 6 (0,1,2,3,4,5) para personas naturales */
+			if (d3==7 || d3==8){
+			console.log('El tercer d?gito ingresado es inv?lido');
+			return false;
+			}
 
-	if (d3==7 || d3==8){
-	console.log('El tercer d?gito ingresado es inv?lido');
-	return false;
-	}
+			/* Solo para personas naturales (modulo 10) */
+			if (d3 < 6){
+			nat = true;
+			p1 = d1 * 2; if (p1 >= 10) p1 -= 9;
+			p2 = d2 * 1; if (p2 >= 10) p2 -= 9;
+			p3 = d3 * 2; if (p3 >= 10) p3 -= 9;
+			p4 = d4 * 1; if (p4 >= 10) p4 -= 9;
+			p5 = d5 * 2; if (p5 >= 10) p5 -= 9;
+			p6 = d6 * 1; if (p6 >= 10) p6 -= 9;
+			p7 = d7 * 2; if (p7 >= 10) p7 -= 9;
+			p8 = d8 * 1; if (p8 >= 10) p8 -= 9;
+			p9 = d9 * 2; if (p9 >= 10) p9 -= 9;
+			modulo = 10;
+			}
 
-	/* Solo para personas naturales (modulo 10) */
-	if (d3 < 6){
-	nat = true;
-	p1 = d1 * 2; if (p1 >= 10) p1 -= 9;
-	p2 = d2 * 1; if (p2 >= 10) p2 -= 9;
-	p3 = d3 * 2; if (p3 >= 10) p3 -= 9;
-	p4 = d4 * 1; if (p4 >= 10) p4 -= 9;
-	p5 = d5 * 2; if (p5 >= 10) p5 -= 9;
-	p6 = d6 * 1; if (p6 >= 10) p6 -= 9;
-	p7 = d7 * 2; if (p7 >= 10) p7 -= 9;
-	p8 = d8 * 1; if (p8 >= 10) p8 -= 9;
-	p9 = d9 * 2; if (p9 >= 10) p9 -= 9;
-	modulo = 10;
-	}
+			/* Solo para sociedades publicas (modulo 11) */
+			/* Aqui el digito verficador esta en la posicion 9, en las otras 2 en la pos. 10 */
+			else if(d3 == 6){
+			pub = true;
+			p1 = d1 * 3;
+			p2 = d2 * 2;
+			p3 = d3 * 7;
+			p4 = d4 * 6;
+			p5 = d5 * 5;
+			p6 = d6 * 4;
+			p7 = d7 * 3;
+			p8 = d8 * 2;
+			p9 = 0;
+			}
 
-	/* Solo para sociedades publicas (modulo 11) */
-	/* Aqui el digito verficador esta en la posicion 9, en las otras 2 en la pos. 10 */
-	else if(d3 == 6){
-	pub = true;
-	p1 = d1 * 3;
-	p2 = d2 * 2;
-	p3 = d3 * 7;
-	p4 = d4 * 6;
-	p5 = d5 * 5;
-	p6 = d6 * 4;
-	p7 = d7 * 3;
-	p8 = d8 * 2;
-	p9 = 0;
-	}
+			/* Solo para entidades privadas (modulo 11) */
+			else if(d3 == 9) {
+			pri = true;
+			p1 = d1 * 4;
+			p2 = d2 * 3;
+			p3 = d3 * 2;
+			p4 = d4 * 7;
+			p5 = d5 * 6;
+			p6 = d6 * 5;
+			p7 = d7 * 4;
+			p8 = d8 * 3;
+			p9 = d9 * 2;
+			}
 
-	/* Solo para entidades privadas (modulo 11) */
-	else if(d3 == 9) {
-	pri = true;
-	p1 = d1 * 4;
-	p2 = d2 * 3;
-	p3 = d3 * 2;
-	p4 = d4 * 7;
-	p5 = d5 * 6;
-	p6 = d6 * 5;
-	p7 = d7 * 4;
-	p8 = d8 * 3;
-	p9 = d9 * 2;
-	}
+			suma = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
+			residuo = suma % modulo;
 
-	suma = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
-	residuo = suma % modulo;
+			/* Si residuo=0, dig.ver.=0, caso contrario 10 - residuo*/
+			digitoVerificador = residuo==0 ? 0: modulo - residuo;
 
-	/* Si residuo=0, dig.ver.=0, caso contrario 10 - residuo*/
-	digitoVerificador = residuo==0 ? 0: modulo - residuo;
+			/* ahora comparamos el elemento de la posicion 10 con el dig. ver.*/
+			if (pub==true){
+			if (digitoVerificador != d9){
+			console.log('El ruc de la empresa del sector público es incorrecto.');
+			return false;
+			}
+			/* El ruc de las empresas del sector publico terminan con 0001*/
+			if ( numero.substr(9,4) != '0001' ){
+			console.log('El ruc de la empresa del sector público debe terminar con 0001');
+			return false;
+			}
+			}
+			else if(pri == true){
+			if (digitoVerificador != d10){
+			console.log('El ruc de la empresa del sector privado es incorrecto.');
+			return false;
+			}
+			if ( numero.substr(10,3) != '001' ){
+			console.log('El ruc de la empresa del sector privado debe terminar con 001');
+			return false;
+			}
+			}
 
-	/* ahora comparamos el elemento de la posicion 10 con el dig. ver.*/
-	if (pub==true){
-	if (digitoVerificador != d9){
-	console.log('El ruc de la empresa del sector público es incorrecto.');
-	return false;
+			else if(nat == true){
+			if (digitoVerificador != d10){
+			console.log('El n?mero de cédula de la persona natural es incorrecto.');
+			return false;
+			}
+			if (numero.length >10 && numero.substr(10,3) != '001' ){
+			console.log('El ruc de la persona natural debe terminar con 001');
+			return false;
+			}
+			}
+			return true;
+		}
 	}
-	/* El ruc de las empresas del sector publico terminan con 0001*/
-	if ( numero.substr(9,4) != '0001' ){
-	console.log('El ruc de la empresa del sector público debe terminar con 0001');
-	return false;
-	}
-	}
-	else if(pri == true){
-	if (digitoVerificador != d10){
-	console.log('El ruc de la empresa del sector privado es incorrecto.');
-	return false;
-	}
-	if ( numero.substr(10,3) != '001' ){
-	console.log('El ruc de la empresa del sector privado debe terminar con 001');
-	return false;
-	}
-	}
-
-	else if(nat == true){
-	if (digitoVerificador != d10){
-	console.log('El n?mero de cédula de la persona natural es incorrecto.');
-	return false;
-	}
-	if (numero.length >10 && numero.substr(10,3) != '001' ){
-	console.log('El ruc de la persona natural debe terminar con 001');
-	return false;
-	}
-	}
-	return true;
 }
 
 

@@ -3340,9 +3340,8 @@ function AsignarNombre(){
 
 function VerPropinas(){
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-	if(localStorage.getItem("con_mesas")=="true"){
-		var mitot=parseFloat($('#total').html());
-		if(mitot==0){
+	var mitot=parseFloat($('#total').html());
+	if(localStorage.getItem("con_mesas")=="true"&&mitot==0){
 			db.transaction(function (tx){
 			var mesaactiva=sessionStorage.getItem("mesa_activa");
 			//var idfact=results.insertId;
@@ -3360,7 +3359,7 @@ function VerPropinas(){
 			$('#nombre_mesa').html('');
 			envia("puntodeventa");
 			});
-		}
+		
 	}
 	else{
 		if(localStorage.getItem("propina")=="true"){

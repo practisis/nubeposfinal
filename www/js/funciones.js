@@ -3355,7 +3355,7 @@ function VerPropinas(){
 			tx.executeSql("DELETE FROM MESAS_CONSUMOS WHERE id_mesa=?",[mesaactiva]);
 			sessionStorage.setItem("mesa_activa","");
 			sessionStorage.setItem("mesa_name","");
-			sessionStorage.setItem("mesa_pax",0);
+			sessionStorage.setItem("mesa_pax","0");
 			$('#nombre_mesa').html('');
 			envia("puntodeventa");
 			});

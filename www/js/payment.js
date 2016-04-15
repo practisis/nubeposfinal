@@ -378,7 +378,7 @@ function performPurchase(restaurant){
 							var idcli=RUC;
 							var nombrecli=clientName;
 							
-							tx.executeSql("UPDATE MESAS_DATOS SET cliente=?,id_cliente=?,id_factura=?,hora_desactivacion=?,activo=? WHERE id_mesa=? and activo=?",[nombrecli,idcli,mitimespan,now,"false",mesaactiva,"true"]);
+							tx.executeSql("UPDATE MESAS_DATOS SET cliente=?,id_cliente=?,id_factura=?,hora_desactivacion=?,activo=? ,sincronizar=? WHERE id_mesa=? and activo=?",[nombrecli,idcli,mitimespan,now,"false","true",mesaactiva,"true"]);
 							tx.executeSql("UPDATE MESAS SET enuso=? WHERE timespan=?",["false",mesaactiva]);
 							tx.executeSql("DELETE FROM MESAS_CONSUMOS WHERE id_mesa=?",[mesaactiva]);
 

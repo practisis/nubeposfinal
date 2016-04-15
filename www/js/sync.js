@@ -1346,6 +1346,17 @@ function SubirDatosaNube(cual){
 		},errorCB,successCB);
 	}
 	if(cual==4){
+		db.transaction(function(tx){
+			console.log("subida de MESAS");
+			tx.executeSql('SELECT * FROM mesas_datos WHERE sincronizar="true"',[],function(tx,results){
+				if(results.rows.length>0){
+					var itemsasubir=results.rows;
+					PostaLaNube(itemsasubir,cual,"MESAS_DATOS",0);
+				}else{SubirDatosaNube(5)}
+			});
+		},errorCB,successCB);
+	}
+	if(cual==5){
 		procesocount=0;
 		setTimeout(function(){SincronizadorNormal();},60000);
 	}
@@ -1370,6 +1381,8 @@ function PostaLaNube(arraydatos,cual,accion,t){
 	}else if(accion=='Config'){
 		jsonc='{"nombreempresa":"'+item.nombre+'","razon":"'+item.razon+'","telefono":"'+item.telefono+'","ruc":"'+item.ruc+'","direccion":"'+item.direccion+'","email":"'+item.email+'","serie":"'+item.serie+'","establecimiento":"'+item.establecimiento+'","nombreterminal":"'+item.nombreterminal+'","idioma":"'+item.id_idioma+'","documento":"'+item.sin_documento+'","orden":"'+item.con_nombre_orden+'","propina":"'+item.con_propina+'","tarjeta":"'+item.con_tarjeta+'","shop":"'+item.con_shop+'","mesas":"'+item.con_mesas+'"}';
 
+	}else if(accion=='MESAS_DATOS'){
+		jsonc='{"id_mesa":"'+item.id_mesa+'","cliente":"'+item.cliente+'","id_cliente":"'+item.id_cliente+'","activo":"'+item.activo+'","id_factura":"'+item.id_factura+'","hora_activacion":"'+item.hora_activacion+'","hora_desactivacion":"'+item.hora_desactivacion+'","pax":"'+item.pax+'","timespan":"'+item.timespan+'"}';
 	}
 	
 	console.log(jsonc);

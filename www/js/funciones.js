@@ -3870,6 +3870,7 @@ function VerConsumos(idmesa){
     					//alert(productoImpuestosIndexes+"/"+productoCantidad+"/"+productoPrecio+"/"+sumaagregados);
 
     				if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
+
     					if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
     						$.each(productoImpuestosIndexes.split('@'), function(index,value){
     							if(productoImpuestosIndexes.indexOf(parseInt($('#idiva').html())) !== -1){
@@ -3899,10 +3900,10 @@ function VerConsumos(idmesa){
     						}
     					else{
     						productoImpuestosIndexes == parseInt($('#idiva').html()) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
-
     						if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
     							var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
     							taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
+                                //alert('si'+taxTotal);
     							$('#factura').append('<input type="hidden" id="impuestoFactura-'+ productoImpuestosIndexes +'" class="esImpuesto" data-id="'+ impuestoDetalles[0] +'" data-nombre="'+ impuestoDetalles[1] +'" data-valor="'+ impuestoDetalles[2] +'" value="'+ taxTotal +'"/>');
     							}
     						else{
@@ -3920,7 +3921,8 @@ function VerConsumos(idmesa){
     					$('#subtotalSinIva').val(parseFloat(subtotalSinIva) + parseFloat(subtotalSinIvaCompra));
     					$('#subtotalIva').val(parseFloat(subtotalIva) + parseFloat(subtotalIvaCompra));
 
-                        //alert($('#subtotalSinIva').val()+'**'+$('#subtotalIva').val());
+                        $('#impuestoFactura-'+productoImpuestosIndexes).val(taxTotal);
+                        //alert($('#impuestoFactura-'+productoImpuestosIndexes).val()+'**'+$('#subtotalIva').val());
     				}
 
                 /*Calculos*/

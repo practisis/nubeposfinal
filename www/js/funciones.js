@@ -301,7 +301,7 @@ function agregarCompra(item,origen){
 	$('#espacioavisador').html("Tienes "+sumcantidadComandada+" pedidos. <a onclick='window.scrollTo(0,document.body.scrollHeight);'>Ver Cuenta al final.</a>");
 
 
-	alert(sumTotal+'/');
+	//alert(sumTotal+'/');
 	$('#totalmiFactura').val(sumTotal);
 	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2))
 	//$('#total').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2))
@@ -3845,7 +3845,7 @@ function VerConsumos(idmesa){
 		}).done(function(response){
 			if(response!='block' && response!='Desactivado'){
 				console.log(response);
-                var resp = response.split("||");
+                var resp = response.split("/@|");
 
                 if(resp[0] != '0'){
 

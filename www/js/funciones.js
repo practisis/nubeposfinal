@@ -3854,7 +3854,7 @@ function VerConsumos(idmesa){
 		}).done(function(response){
 			if(response!='block' && response!='Desactivado'){
 				console.log(response);
-                var resp = response.split("||");
+                var resp = response.split("/@|");
 
                 if(resp[0] != '0'){
 

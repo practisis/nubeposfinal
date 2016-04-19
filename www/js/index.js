@@ -200,9 +200,9 @@ var app = {
 		
 		window.StarIOAdapter = {};
 		var handle_error_callback = function(error_message) {
-			//alert(error_message);
+			alert(error_message);
 			//showalert(error_message);
-			console.log(error_message);
+			//console.log(error_message);
 		};
 		
 	
@@ -234,6 +234,15 @@ var app = {
 				error_callback = handle_error_callback;
 			}
 			return cordova.exec(success_callback, error_callback, "StarIOAdapter", "searchall", [port_search]);
+		};
+		
+		/*Search the availables printers*/
+		window.StarIOAdapter.printlogo=function(port_search, success_callback, error_callback){
+			//alert("todas buscar");
+			if(error_callback == null) {
+				error_callback = handle_error_callback;
+			}
+			return cordova.exec(success_callback, error_callback, "StarIOAdapter", "printlogo", [port_search]);
 		};
 		
         /*var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);

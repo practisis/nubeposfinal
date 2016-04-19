@@ -11,7 +11,7 @@ function receiveJson(){
 		$('#chequeValue').val(jsonObject.Pagar[0].factura.total);
 		$('#valueCxX').val(jsonObject.Pagar[0].factura.total);
 		$('#printTotal').html(jsonObject.Pagar[0].factura.total);
-		}
+	}
 }
 
 //changePaymentCategory(0);

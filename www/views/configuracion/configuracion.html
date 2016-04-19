@@ -309,9 +309,22 @@ function downloadImage(url, fileName){
             //console.log("download complete: " + entry.fullPath);
 			//alert("download complete: " + entry.fullPath);
 			var miimg="<img src='"+cordova.file.dataDirectory+entry.fullPath+"' />";
-			//alert(miimg);
+			alert(miimg);
 			$('#logofull').html(miimg);
-			
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function (tx){		
+			tx.executeSql('SELECT printer,printercom FROM CONFIG where id=1',[],
+			function(tx,res){
+				if(res.rows.length>0){
+					var miprint=res.rows.item(0);
+					if(miprint.printer!=null){
+						StarIOAdapter.printlogo(miprint.printer, function() {
+							alert("imprime");
+						});
+					}
+				}
+			});
+			},errorCB,successCB);
 
         },
         function(error) {

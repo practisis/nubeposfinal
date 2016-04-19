@@ -107,6 +107,23 @@ public class StarIOAdapter extends CordovaPlugin {
                 }
             });
             return true;
+        } else if (action.equals("printlogo")) {
+            cordova.getThreadPool().execute(new Runnable() {
+                public void run() {
+                    try {
+						String portSettings = "";
+						
+						if(Arguments.length() < 1) {
+                            throw new Exception("You must specify a portName search parameter");
+                        }
+						
+                        currentPluginInstance.printImage(currentCallbackContext,Arguments.getString(0),portSettings);
+                    } catch (Exception e) {
+                        currentCallbackContext.error(e.getMessage());
+                    }
+                }
+            });
+            return true;
         }
         return false;
     }
@@ -174,6 +191,7 @@ public class StarIOAdapter extends CordovaPlugin {
 		String servicio="0.00";
 		String descuento="0.00";
 		String ordername="";
+		String mesa="";
 		String nofact="";
 		SimpleDateFormat hoyformat=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 		String hoy= hoyformat.format(new Date());
@@ -190,6 +208,7 @@ public class StarIOAdapter extends CordovaPlugin {
 		String ivaCierre="0.00";
 		String cadimpuestos="";
 		String propina="";
+		String pax="";
 		Integer lang=1;
 		JSONArray cierreImpuestos= new JSONArray();
 		Integer lineastotales=30; //18cm-2lineas
@@ -246,6 +265,11 @@ public class StarIOAdapter extends CordovaPlugin {
 				
 			}
 			
+			if(objfactura.has("mesa")){
+				if(!(objfactura.getString("mesa").equals(JSONObject.NULL)))
+				mesa=objfactura.getString("mesa");
+			}
+			
 			if(objfactura.has("lang")){
 				if(!(objfactura.getString("lang").equals(JSONObject.NULL)))
 				lang=objfactura.getInt("lang");
@@ -254,6 +278,11 @@ public class StarIOAdapter extends CordovaPlugin {
 			if(objfactura.has("propina")){
 				if(!(objfactura.getString("propina").equals(JSONObject.NULL)))
 				propina=objfactura.getString("propina");
+			}
+			
+			if(objfactura.has("pax")){
+				if(!(objfactura.getString("pax").equals(JSONObject.NULL)))
+				pax=objfactura.getString("pax");
 			}
 			
 			tipo="pagar";
@@ -314,6 +343,60 @@ public class StarIOAdapter extends CordovaPlugin {
 				}
 			
 				tipo="comandar";
+			}else if(nombres.toString().contains("Precuenta")){
+				JSONArray jsonArray = jsonobject.getJSONArray("Precuenta");
+				JSONObject expjson=jsonArray.getJSONObject(0);
+				JSONObject objfactura=expjson.getJSONObject("factura");
+				expprod=expjson.getJSONArray("producto");
+				//expprod=objproducto.getJSONArray("0");
+				
+				subconiva=DoubleFormat(objfactura.getDouble("subtotal_iva"));
+				//iva=DoubleFormat(objfactura.getDouble("subtotal_iva")*0.12);
+				iva=DoubleFormat(objfactura.getDouble("iva"));
+				servicio=DoubleFormat(objfactura.getDouble("servicio"));
+				subsiniva=DoubleFormat(objfactura.getDouble("subtotal_sin_iva"));
+				subtotal=DoubleFormat(objfactura.getDouble("subtotal_sin_iva")+objfactura.getDouble("subtotal_iva"));
+				descuento=DoubleFormat(objfactura.getDouble("descuento"));
+				totalfact=DoubleFormat(objfactura.getDouble("total"));
+				fechanumber=(long)objfactura.getDouble("fecha");
+				lineastotales=(2*objfactura.getInt("largo"))-6;
+				lineasencabezado=(2*objfactura.getInt("encabezado"))-6;
+				if(objfactura.has("impuestosdata")){
+					if(!(objfactura.getString("impuestosdata").equals(JSONObject.NULL)))
+						cadimpuestos=objfactura.getString("impuestosdata");
+				}
+				
+				if(objfactura.has("ordername")){
+					if(!(objfactura.getString("ordername").equals(JSONObject.NULL))){
+						if(!(objfactura.getString("ordername").equals("")||objfactura.getString("ordername").equals("null")))
+						ordername=objfactura.getString("ordername");
+					}
+					
+				}
+				
+				if(objfactura.has("mesa")){
+					if(!(objfactura.getString("mesa").equals(JSONObject.NULL)))
+					mesa=objfactura.getString("mesa");
+				}
+				
+				if(objfactura.has("lang")){
+					if(!(objfactura.getString("lang").equals(JSONObject.NULL)))
+					lang=objfactura.getInt("lang");
+				}
+				
+				if(objfactura.has("propina")){
+					if(!(objfactura.getString("propina").equals(JSONObject.NULL)))
+					propina=objfactura.getString("propina");
+				}
+				
+				tipo="precuenta";
+			}else if(nombres.toString().contains("ComandasMesas")){
+				JSONArray jsonArray = jsonobject.getJSONArray("ComandasMesas");
+				JSONObject expjson=jsonArray.getJSONObject(0);
+				expprod=expjson.getJSONArray("producto");
+				mesa=expjson.getString("mesa");
+				lang=expjson.getInt("lang");
+				tipo="comandasmesas";
 			}
 			
 		}catch(JSONException ex){
@@ -973,24 +1056,441 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				
 				//list.add(createCp1252("--------------------------------\r\n"));
+			}else if(tipo.equals("precuenta")){ 
+			
+				if(lang.equals(1)){
+					list.add(createCp1252("PRECUENTA\r\n"));
+				}else{
+					list.add(createCp1252("CHECK\r\n"));
+				}
+				
+				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
+				list.add(new byte[] { 0x1b, 0x44, 0x02, 0x10, 0x22, 0x00 }); // Set horizontal tab
+
+				
+				
+				//list.add(createCp1252("MESA: 100 P: - FECHA: YYYY-MM-DD\r\n"));
+			
+				Date fechafact=new Date(fechanumber);
+				//String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
+				String fechaf=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(fechafact);
+				if(lang.equals(1)){
+					list.add(createCp1252("FECHA:"+fechaf+"                   \r\n"));
+				}else if(lang.equals(2)){
+					list.add(createCp1252("DATE:"+fechaf+"                    \r\n"));
+				}
+				
+				
+
+				
+				
+				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 }); // Alignment (center)
+				list.add(createCp1252("--------------------------------\r\n"));
+				if(lang.equals(1)){
+					list.add(createCp1252("  # DESCRIPCION             SUMA\r\n"));
+				}else if(lang.equals(2)){
+					list.add(createCp1252("  # DESCRIPTION          AMMOUNT\r\n"));
+				}
+				if(expprod.length()>0){
+					for(int i=0;i<expprod.length();i++){
+						try{
+						JSONObject linea=expprod.getJSONObject(i);
+						String cantidad=linea.getString("cant_prod");
+						if(cantidad.length()<3){
+							int tam=3-cantidad.length();
+							for(int n=0;n<tam;n++){
+								cantidad=" "+cantidad;
+							}
+						}
+						
+						String totc=DoubleFormat((linea.getDouble("precio_orig")+linea.getDouble("agregados"))*linea.getDouble("cant_prod"));
+						//String totc=String.valueOf(total);
+						if(totc.length()<6){
+							int tam=6-totc.length();
+							for(int n=0;n<tam;n++){
+								totc=" "+totc;
+							}
+						}
+						
+						String desc=linea.getString("nombre_producto");
+						if(desc.length()>21)
+							desc=desc.substring(0,21);
+						else if(desc.length()<21){
+							int tam=21-desc.length();
+							for(int n=0;n<tam;n++){
+								desc=desc+" ";
+							}
+						}
+												
+						
+						list.add(createCp1252(String.valueOf(cantidad)+" "+String.valueOf(desc)+" "+String.valueOf(totc)+"\r\n"));
+						
+						/**/
+						if(!(linea.getString("detalle_agregados").equals(JSONObject.NULL))){
+							if(!(linea.getString("detalle_agregados").equals(""))){
+								String [] agregadosv=linea.getString("detalle_agregados").split("@");
+								for(int s=0;s<agregadosv.length;s++){
+									String [] detalleagr=agregadosv[s].split("\\|");
+									String valorag=DoubleFormat(Double.parseDouble(detalleagr[1]));
+									String cadena="    "+detalleagr[0]+": $"+valorag;
+									if(cadena.length()<32){
+										int tam=32-cadena.length();
+										for(int n=0;n<tam;n++){
+											cadena=cadena+" ";
+										}
+									}
+									list.add(createCp1252(cadena+"\r\n"));
+								}
+							}
+						}
+						/**/
+						
+						//list.add(createCp1252(" 4  3,00  JARRA  CERVESA   12,00\r\n"));
+						//list.add(createCp1252(" 1  1,60  COPA DE CERVESA   1,60\r\n"));
+						}catch(JSONException ex){
+							ex.printStackTrace();
+						}
+					}
+					
+				}
+				
+				list.add(createCp1252("--------------------------------\r\n"));
+				
+						if(subconiva.length()<6){
+							int tam=6-subconiva.length();
+							for(int n=0;n<tam;n++){
+								subconiva=" "+subconiva;
+							}
+						}
+				
+						if(subsiniva.length()<6){
+							int tam=6-subsiniva.length();
+							for(int n=0;n<tam;n++){
+								subsiniva=" "+subsiniva;
+							}
+						}
+						
+						if(subtotal.length()<6){
+							int tam=6-subtotal.length();
+							for(int n=0;n<tam;n++){
+								subtotal=" "+subtotal;
+							}
+						}
+						
+						if(iva.length()<6){
+							int tam=6-iva.length();
+							for(int n=0;n<tam;n++){
+								iva=" "+iva;
+							}
+						}
+						
+						if(totalfact.length()<6){
+							int tam=6-totalfact.length();
+							for(int n=0;n<tam;n++){
+								totalfact=" "+totalfact;
+							}
+						}
+						
+						if(iva.length()<6){
+							int tam=6-iva.length();
+							for(int n=0;n<tam;n++){
+								iva=" "+iva;
+							}
+						}
+						
+						if(servicio.length()<6){
+							int tam=6-servicio.length();
+							for(int n=0;n<tam;n++){
+								servicio=" "+servicio;
+							}
+						}
+						
+						if(descuento.length()<6){
+							int tam=6-descuento.length();
+							for(int n=0;n<tam;n++){
+								descuento=" "+descuento;
+							}
+						}
+						
+						if(propina.length()<6){
+							int tam=6-propina.length();
+							for(int n=0;n<tam;n++){
+								propina=" "+propina;
+							}
+						}
+						
+				if(Double.parseDouble(subtotal.replace(",","."))>0){
+					list.add(createCp1252("                 SUBTOTAL:"+String.valueOf(subtotal)+"\r\n"));
+				}
+				
+				
+				/*imprime impuestos*/
+				if(!cadimpuestos.equals("")){
+					String[] imps = cadimpuestos.split("@");
+					for(int k=0;k<imps.length;k++){
+						if(!(imps[k].equals(""))){
+							String [] dataimp=imps[k].split("\\|");
+							if(Double.parseDouble(dataimp[3].replace(",","."))>0.00){
+								String porcen=DoubleFormat(Double.parseDouble(dataimp[2])*100);
+								String nombreimp=dataimp[1]+" "+porcen+"%:";
+								String valorimp=DoubleFormat(Double.parseDouble(dataimp[3].replace(",",".")));
+								if(valorimp.length()<6){
+									int tam=6-valorimp.length();
+									for(int n=0;n<tam;n++){
+										valorimp=" "+valorimp;
+									}
+								}
+								
+								if(nombreimp.length()<26){
+									int tam=26-nombreimp.length();
+									for(int n=0;n<tam;n++){
+										nombreimp=" "+nombreimp;
+									}
+								}
+								
+								list.add(createCp1252(String.valueOf(nombreimp)+String.valueOf(valorimp)+"\r\n"));
+								//lineasescritas=lineasescritas+1;
+							}
+						}
+						
+					}
+				}else{
+					if(Double.parseDouble(iva.replace(",","."))>0){
+						list.add(createCp1252("                      IVA:"+String.valueOf(iva)+"\r\n"));
+						//lineasescritas=lineasescritas+1;
+					}
+					if(Double.parseDouble(servicio.replace(",","."))>0){
+						list.add(createCp1252("                 SERVICIO:"+String.valueOf(servicio)+"\r\n"));
+						//lineasescritas=lineasescritas+1;
+					}
+				}
+				/*fin impuestos*/
+
+				/*if(Double.parseDouble(iva.replace(",","."))>0){
+					list.add(createCp1252("                      IVA:"+String.valueOf(iva)+"\r\n"));
+				}
+				if(Double.parseDouble(servicio.replace(",","."))>0){
+					list.add(createCp1252("                 SERVICIO:"+String.valueOf(servicio)+"\r\n"));
+				}*/
+				if(Double.parseDouble(descuento.replace(",","."))>0){
+					if(lang.equals(1)){
+						list.add(createCp1252("                DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
+					}else if(lang.equals(2)){
+						list.add(createCp1252("                 DISCOUNT:"+String.valueOf(descuento)+"\r\n"));
+					}
+					
+				}
+				
+				if(!(propina.equals("")||Double.parseDouble(propina)==0)){
+					if(lang.equals(1)){
+						list.add(createCp1252("                  PROPINA:"+String.valueOf(propina)+"\r\n"));
+					}else{
+						list.add(createCp1252("                      TIP:"+String.valueOf(propina)+"\r\n"));
+					}
+				}
+				
+				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
+				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x02 });
+
+				// Character expansion
+				list.add(new byte[] { 0x06, 0x09, 0x1b, 0x69, 0x01, 0x01 });
+				list.add(createCp1252("                TOTAL:"+String.valueOf(totalfact)+"\r\n"));
+				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
+				
+			}else if(tipo.equals("comandasmesas")){ 
+					
+				if(lang.equals(1)){
+					list.add(createCp1252("Mesa: "+mesa+"\r\n"));
+				}else{
+					list.add(createCp1252("Table: "+mesa+"\r\n"));
+				}
+				
+				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
+				//list.add(createCp1252("08029 BARCELONA\r\n\r\n"));	
+					
+				list.add(createCp1252("--------------------------------\r\n"));
+
+				//list.add(createCp1252("TEL :934199465\r\n"));
+				
+				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
+
+				//list.add(new byte[] { 0x1b, 0x44, 0x02, 0x10, 0x22, 0x00 }); // Set horizontal tab
+
+				
+				
+				//list.add(createCp1252("MESA: 100 P: - FECHA: YYYY-MM-DD\r\n"));
+			
+				//Date fechafact=new Date(fechanumber);
+				//String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
+				//String fechaf=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(fechafact);
+				if(lang.equals(1)){
+					list.add(createCp1252("FECHA:"+hoy+"                   \r\n"));
+				}else if(lang.equals(2)){
+					list.add(createCp1252("DATE:"+hoy+"                    \r\n"));
+				}
+				
+				
+
+				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 }); // Alignment (center)
+				list.add(createCp1252("--------------------------------\r\n"));
+				
+				// Character expansion
+				list.add(new byte[] { 0x06, 0x09, 0x1b, 0x69, 0x01, 0x01 });
+				
+				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
+
+				
+				if(expprod.length()>0){
+					for(int i=0;i<expprod.length();i++){
+						try{
+						JSONObject linea=expprod.getJSONObject(i);
+						String cantidad=linea.getString("cant_prod");
+						/*if(cantidad.length()<3){
+							int tam=3-cantidad.length();
+							for(int n=0;n<tam;n++){
+								cantidad=" "+cantidad;
+							}
+						}*/
+						
+						
+						String desc=linea.getString("nombre_producto");
+						/*if(desc.length()>21)
+							desc=desc.substring(0,21);
+						else if(desc.length()<21){
+							int tam=21-desc.length();
+							for(int n=0;n<tam;n++){
+								desc=desc+" ";
+							}
+						}*/
+												
+						
+						list.add(createCp1252(String.valueOf(cantidad)+" "+String.valueOf(desc)+"\r\n"));
+						
+						/**/
+						if(!(linea.getString("detalle_agregados").equals(JSONObject.NULL))){
+							if(!(linea.getString("detalle_agregados").equals(""))){
+								String [] agregadosv=linea.getString("detalle_agregados").split("@");
+								for(int s=0;s<agregadosv.length;s++){
+									String [] detalleagr=agregadosv[s].split("\\|");
+									String cadena=" "+detalleagr[0];
+									/*if(cadena.length()<32){
+										int tam=32-cadena.length();
+										for(int n=0;n<tam;n++){
+											cadena=cadena+" ";
+										}
+									}*/
+									list.add(createCp1252(cadena+"\r\n"));
+								}
+							}
+						}
+						/**/
+						
+						
+						/*notas*/
+						if(!(linea.getString("detalle_notas").equals(JSONObject.NULL))){
+							if(!(linea.getString("detalle_notas").equals(""))){
+								String notasv=linea.getString("detalle_notas");
+								String cadena=" "+notasv+"*";
+									/*if(cadena.length()<32){
+										int tam=32-cadena.length();
+										for(int n=0;n<tam;n++){
+											cadena=cadena+" ";
+										}
+									}*/
+									list.add(createCp1252(cadena+"\r\n"));
+								}
+						}
+						/**/
+						
+						//list.add(createCp1252(" 4  3,00  JARRA  CERVESA   12,00\r\n"));
+						//list.add(createCp1252(" 1  1,60  COPA DE CERVESA   1,60\r\n"));
+						
+						
+						}catch(JSONException ex){
+							ex.printStackTrace();
+						}
+					}
+					
+				}
+				
+				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
+				
+				//list.add(createCp1252("--------------------------------\r\n"));
 			}
 				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x00, 0x00 });
-				
-
 				//list.add(createCp1252("NO: 000018851     IVA IXNCLUIDO\r\n"));
 				list.add(createCp1252("--------------------------------\r\n"));
+				
 
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });
-				if(tipo.equals("pagar")||tipo.equals("comandar")){
+				
+				if(tipo.equals("precuenta")){
+					if(lang.equals(1)){
+						list.add(createCp1252("Datos de la Factura:\r\n"));
+						list.add(createCp1252("Propina:________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Nombre:_________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("CI:_____________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Dirección:______________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Teléfono:_______________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Email:__________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Fecha Cumpleaños:_______________\r\n"));	
+						list.add(createCp1252("                                \r\n"));
+					}else if(lang.equals(2)){
+						list.add(createCp1252("Invoice Data:\r\n"));
+						list.add(createCp1252("Tip:____________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Name:___________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("ID No.:_________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Address:________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Phone:__________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Email:__________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Birthday:_______________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+					}
+					
+				}
+				
+				if(tipo.equals("pagar")||tipo.equals("comandar")||tipo.equals("precuenta")){
 					if(lang.equals(1)){
 						if(!ordername.equals("")){
 							list.add(createCp1252("*Orden para: "+ordername+"*\r\n"));
 						}
+						String conmesas="";
+						if(!mesa.equals("")){
+							conmesas="*Mesa: "+mesa;
+						}
+						String conpax="*";
+						if(!pax.equals(""))
+							conpax="- Pax: "+pax+conpax;
+						
+						list.add(createCp1252(conmesas+conpax+"\r\n"));
+					
 					}else if(lang.equals(2)){
 						if(!ordername.equals("")){
 							list.add(createCp1252("*Name Order: "+ordername+"*\r\n"));
 						}
+						String conmesas="";
+						if(!mesa.equals("")){
+							conmesas="*Table: "+mesa;
+							
+						}
+						String conpax="*";
+						if(!pax.equals(""))
+							conpax="- Pax: "+pax+conpax;
+						
+						list.add(createCp1252(conmesas+conpax+"\r\n"));
 					}
 				}
 				
@@ -1286,12 +1786,38 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });				
 				list.add(new byte[] { 0x1b, 0x68, 0x01 });	
 				if(lang.equals(1)){
-					if(!ordername.equals(""))
+					if(!ordername.equals("")){
 						list.add(createCp1252("*Orden para: "+ordername+"*\r\n"));
+						lineasescritas=lineasescritas+1;
+					}
+					String conmesas="";
+					if(!mesa.equals("")){
+						conmesas="*Mesa: "+mesa;
+						
+					}
+					String conpax="*";
+					if(!pax.equals(""))
+						conpax="- Pax: "+pax+conpax;
+					
+					list.add(createCp1252(conmesas+conpax+"\r\n"));
+					lineasescritas=lineasescritas+1;
 				}
 				else if(lang.equals(2)){
-					if(!ordername.equals(""))	
+					if(!ordername.equals("")){
 						list.add(createCp1252("*Order Name: "+ordername+"*\r\n"));
+						lineasescritas=lineasescritas+1;
+					}
+					String conmesas="";
+					if(!mesa.equals("")){
+						conmesas="*Table: "+mesa;
+						
+					}
+					String conpax="*";
+					if(!pax.equals(""))
+						conpax="- Pax: "+pax+conpax;
+					
+					list.add(createCp1252(conmesas+conpax+"\r\n"));
+					lineasescritas=lineasescritas+1;
 				}
 				
 				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
@@ -1647,10 +2173,31 @@ public class StarIOAdapter extends CordovaPlugin {
 				if(lang.equals(1)){
 					if(!ordername.equals(""))
 						list.add(createCp1252("*Orden para: "+ordername+"*\r\n"));
+					String conmesas="";
+					if(!mesa.equals("")){
+						conmesas="*Mesa: "+mesa;
+						
+					}
+					String conpax="*";
+					if(!pax.equals(""))
+						conpax="- Pax: "+pax+conpax;
+					
+					list.add(createCp1252(conmesas+conpax+"\r\n"));
 				}
 				else if(lang.equals(2)){
 					if(!ordername.equals(""))	
 						list.add(createCp1252("*Order Name: "+ordername+"*\r\n"));
+					
+					String conmesas="";
+					if(!mesa.equals("")){
+						conmesas="*Table: "+mesa;
+						
+					}
+					String conpax="*";
+					if(!pax.equals(""))
+						conpax="- Pax: "+pax+conpax;
+					
+					list.add(createCp1252(conmesas+conpax+"\r\n"));
 				}
 				
 				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
@@ -1658,6 +2205,294 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(new byte[] { 0x1b, 0x68, 0x00 });
 				list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Cut
 				list.add(new byte[] { 0x07 }); // Kick cash draweR
+				
+			}else if(tipo.equals("precuenta")==true){
+				
+				Integer lineasescritas=0;
+				
+				list.add(new byte[] { 0x1b, 0x1d, 0x74, 0x20 }); // Code Page #1252 (Windows Latin-1)
+
+				list.add(new byte[] { 0x1b, 0x44, 0x02, 0x06, 0x0a, 0x10, 0x14, 0x1a, 0x22, 0x24, 0x28, 0x00 }); // Set horizontal tab
+
+				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 }); // Alignment (center)
+				
+				while(lineasescritas<lineasencabezado){
+					list.add(createCp1252("\r\n"));
+					lineasescritas=lineasescritas+1;
+				}
+				
+				if(lang.equals(1)){
+					list.add(createCp1252("PRECUENTA\r\n"));lineasescritas=lineasescritas+1;
+				}else{
+					list.add(createCp1252("CHECK\r\n"));lineasescritas=lineasescritas+1;
+				}
+				
+				list.add(createCp1252("------------------------------------------\r\n"));lineasescritas=lineasescritas+1;
+				Date fechafact=new Date(fechanumber);
+				String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);lineasescritas=lineasescritas+1;
+				if(lang.equals(1)){
+					list.add(createCp1252("FECHA:"+fechaf+"                      \r\n"));
+				}else if(lang.equals(2)){
+					list.add(createCp1252("DATE:"+fechaf+"                       \r\n"));
+				}
+				lineasescritas=lineasescritas+1;
+				if(lang.equals(1)){
+					list.add(createCp1252("  # DESCRIPCION                       SUMA\r\n"));
+				}else if(lang.equals(1)){
+					list.add(createCp1252("  # DESCRIPTION                    AMMOUNT\r\n"));
+				}
+				lineasescritas=lineasescritas+1;
+				
+				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
+				list.add(createCp1252("------------------------------------------\r\n"));lineasescritas=lineasescritas+1;
+				
+				if(expprod.length()>0){
+					for(int i=0;i<expprod.length();i++){
+						try{
+						JSONObject linea=expprod.getJSONObject(i);
+						String cantidad=linea.getString("cant_prod");
+						if(cantidad.length()<3){
+							int tam=3-cantidad.length();
+							for(int n=0;n<tam;n++){
+								cantidad=" "+cantidad;
+							}
+						}
+						
+						String totc=DoubleFormat((linea.getDouble("precio_orig")+linea.getDouble("agregados"))*linea.getDouble("cant_prod"));
+						//String totc=String.valueOf(total);
+						if(totc.length()<7){
+							int tam=7-totc.length();
+							for(int n=0;n<tam;n++){
+								totc=" "+totc;
+							}
+						}
+						
+						String desc=linea.getString("nombre_producto");
+						if(desc.length()>31)
+							desc=desc.substring(0,30);
+						else if(desc.length()<31){
+							int tam=30-desc.length();
+							for(int n=0;n<tam;n++){
+								desc=desc+" ";
+							}
+						}
+												
+						
+						list.add(createCp1252(String.valueOf(cantidad)+" "+String.valueOf(desc)+" "+String.valueOf(totc)+"\r\n"));
+						lineasescritas=lineasescritas+1;
+						//list.add(createCp1252(" 4  3,00  JARRA  CERVESA   12,00\r\n"));
+						//list.add(createCp1252(" 1  1,60  COPA DE CERVESA   1,60\r\n"));
+						
+						/**/
+						if(!(linea.getString("detalle_agregados").equals(JSONObject.NULL))){
+							if(!(linea.getString("detalle_agregados").equals(""))){
+								String [] agregadosv=linea.getString("detalle_agregados").split("@");
+								for(int s=0;s<agregadosv.length;s++){
+									String [] detalleagr=agregadosv[s].split("\\|");
+									list.add(createCp1252("    "+detalleagr[0]+"\r\n"));
+									lineasescritas=lineasescritas+1;
+								}
+							}
+						}
+						/**/
+						}catch(JSONException ex){
+							ex.printStackTrace();
+						}
+					}
+					
+				}
+				
+				list.add(createCp1252("------------------------------------------\r\n"));lineasescritas=lineasescritas+1;
+				
+						if(subconiva.length()<6){
+							int tam=6-subconiva.length();
+							for(int n=0;n<tam;n++){
+								subconiva=" "+subconiva;
+							}
+						}
+				
+						if(subsiniva.length()<6){
+							int tam=6-subsiniva.length();
+							for(int n=0;n<tam;n++){
+								subsiniva=" "+subsiniva;
+							}
+						}
+						
+						if(subtotal.length()<6){
+							int tam=6-subtotal.length();
+							for(int n=0;n<tam;n++){
+								subtotal=" "+subtotal;
+							}
+						}
+						
+						if(iva.length()<6){
+							int tam=6-iva.length();
+							for(int n=0;n<tam;n++){
+								iva=" "+iva;
+							}
+						}
+						
+						if(totalfact.length()<6){
+							int tam=6-totalfact.length();
+							for(int n=0;n<tam;n++){
+								totalfact=" "+totalfact;
+							}
+						}
+						
+						if(descuento.length()<6){
+							int tam=6-descuento.length();
+							for(int n=0;n<tam;n++){
+								descuento=" "+descuento;
+							}
+						}
+						
+						if(servicio.length()<6){
+							int tam=6-servicio.length();
+							for(int n=0;n<tam;n++){
+								servicio=" "+servicio;
+							}
+						}
+						
+						if(propina.length()<6){
+							int tam=6-propina.length();
+							for(int n=0;n<tam;n++){
+								propina=" "+propina;
+							}
+						}
+
+				if(Double.parseDouble(subtotal.replace(",","."))>0){
+					list.add(createCp1252("                           SUBTOTAL:"+String.valueOf(subtotal)+"\r\n"));
+					lineasescritas=lineasescritas+1;
+				}
+				
+				/*imprime impuestos*/
+				if(!cadimpuestos.equals("")){
+					String[] imps = cadimpuestos.split("@");
+					for(int k=0;k<imps.length;k++){
+						if(!imps[k].equals("")){
+							String [] dataimp=imps[k].split("\\|");
+							if(Double.parseDouble(dataimp[3].replace(",","."))>0.00){
+								String porcen=DoubleFormat(Double.parseDouble(dataimp[2])*100);
+								String nombreimp=dataimp[1]+" "+porcen+"%:";
+								String valorimp=DoubleFormat(Double.parseDouble(dataimp[3].replace(",",".")));
+								if(valorimp.length()<6){
+									int tam=6-valorimp.length();
+									for(int n=0;n<tam;n++){
+										valorimp=" "+valorimp;
+									}
+								}
+								
+								if(nombreimp.length()<36){
+									int tam=36-nombreimp.length();
+									for(int n=0;n<tam;n++){
+										nombreimp=" "+nombreimp;
+									}
+								}
+								
+								list.add(createCp1252(String.valueOf(nombreimp)+String.valueOf(valorimp)+"\r\n"));
+								lineasescritas=lineasescritas+1;
+							}
+						}
+					}
+				}else{
+					if(Double.parseDouble(iva.replace(",","."))>0){
+						list.add(createCp1252("                                IVA:"+String.valueOf(iva)+"\r\n"));
+						lineasescritas=lineasescritas+1;
+					}
+					if(Double.parseDouble(servicio.replace(",","."))>0){
+						list.add(createCp1252("                           SERVICIO:"+String.valueOf(servicio)+"\r\n"));
+						lineasescritas=lineasescritas+1;
+					}
+				}
+				/*fin impuestos*/
+				
+				
+				
+				
+				if(Double.parseDouble(descuento.replace(",","."))>0){
+					if(lang.equals(1)){
+						list.add(createCp1252("                          DESCUENTO:"+String.valueOf(descuento)+"\r\n"));
+					}else{
+						list.add(createCp1252("                           DISCOUNT:"+String.valueOf(descuento)+"\r\n"));
+					}
+					
+					lineasescritas=lineasescritas+1;
+				}
+				
+				if(!(propina.equals("")||Double.parseDouble(propina.replace(",","."))==0)){
+					
+					if(lang.equals(1)){
+						list.add(createCp1252("                            PROPINA:"+String.valueOf(propina)+"\r\n"));
+					}else{
+						list.add(createCp1252("                                TIP:"+String.valueOf(propina)+"\r\n"));
+					}
+					lineasescritas=lineasescritas+1;
+				}
+				
+				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
+				list.add(new byte[] { 0x1b, 0x57, 0x01});
+				list.add(new byte[] { 0x1b, 0x1d, 0x61,0x02});
+				list.add(createCp1252("TOTAL:	"+String.valueOf(totalfact)+"\r\n"));
+				lineasescritas=lineasescritas+1;
+				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
+				list.add(new byte[] { 0x1b, 0x57, 0x00 });
+				
+				
+				
+				list.add(createCp1252("------------------------------------------\r\n"));lineasescritas=lineasescritas+1;
+				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });				
+				list.add(new byte[] { 0x1b, 0x68, 0x01 });	
+				if(lang.equals(1)){
+					if(!ordername.equals("")){
+						list.add(createCp1252("*Orden para: "+ordername+"*\r\n"));
+						lineasescritas=lineasescritas+1;
+					}
+					String conmesas="";
+					if(!mesa.equals("")){
+						conmesas="*Mesa: "+mesa;
+						
+					}
+					String conpax="*";
+					if(!pax.equals(""))
+						conpax="- Pax: "+pax+conpax;
+					
+					list.add(createCp1252(conmesas+conpax+"\r\n"));
+					lineasescritas=lineasescritas+1;
+				}
+				
+				else if(lang.equals(2)){
+					if(!ordername.equals("")){
+						list.add(createCp1252("*Order Name: "+ordername+"*\r\n"));
+						lineasescritas=lineasescritas+1;
+					}
+					String conmesas="";
+					if(!mesa.equals("")){
+						conmesas="*Table: "+mesa;
+						
+					}
+					String conpax="*";
+					if(!pax.equals(""))
+						conpax="- Pax: "+pax+conpax;
+					
+					list.add(createCp1252(conmesas+conpax+"\r\n"));
+					lineasescritas=lineasescritas+1;
+				}
+				
+				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
+				lineasescritas=lineasescritas+1;
+				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });	
+				list.add(new byte[] { 0x1b, 0x68, 0x00 });
+				//list.add(new byte[] { 0x1b, 0x68, 0x00 });
+				//aumentar filas si faltan
+				if(lineasescritas<lineastotales){
+					while(lineasescritas<lineastotales){
+						list.add(createCp1252("\r\n"));
+						lineasescritas=lineasescritas+1;
+					}
+				}
+				list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Cut
+				list.add(new byte[] { 0x07 }); // Kick cash draweR
+				
 			}
 			
 				PrinterFunctions.SendCommand(context, portName, portSettings, list);
@@ -1728,6 +2563,41 @@ public class StarIOAdapter extends CordovaPlugin {
 				callbackContext.error("No printers found.");
 			}
         } catch (StarIOPortException e) {
+            callbackContext.error(e.getMessage());
+        }
+	}
+	
+	 /**
+     * This method print an image given the path
+     * @param callbackContext the callback context of the action
+     * @param portName the string containing the printer name
+     * @param portSettings the port settings for the connection to the printer ("mini" if you are printing on star portable printers)
+     */
+	private void printImage(CallbackContext callbackContext, String portName, String portSettings)throws StarIOPortException {
+		try{
+			int maxWidth=384;
+			Context context = this.cordova.getActivity().getApplicationContext();
+			boolean compressionEnable=false;
+			RasterCommand rasterType = RasterCommand.Standard;
+			ArrayList<byte[]> commands = new ArrayList<byte[]>();
+			RasterDocument rasterDoc = new RasterDocument(RasSpeed.Medium,RasPageEndMode.FeedAndFullCut, RasPageEndMode.FeedAndFullCut, RasTopMargin.Standard, 0, 0, 0);
+			
+			//Bitmap bm = BitmapFactory.decodeResource(res, source);
+			Bitmap bm =BitmapFactory.decodeFile("file:///data/data/com.practisis.practipos/files/logo.png");
+			
+			StarBitmap starbitmap = new StarBitmap(bm, false, maxWidth);
+
+			if (rasterType == RasterCommand.Standard) {
+				commands.add(rasterDoc.BeginDocumentCommandData());
+				commands.add(starbitmap.getImageRasterDataForPrinting_Standard(compressionEnable));
+				commands.add(rasterDoc.EndDocumentCommandData());
+				
+			} else {
+				commands.add(starbitmap.getImageRasterDataForPrinting_graphic(compressionEnable));
+				commands.add(new byte[] { 0x1b, 0x64, 0x02 }); // Feed to cutter position
+			}
+			PrinterFunctions.SendCommand(context, portName, portSettings, commands);
+		}catch (StarIOPortException e) {
             callbackContext.error(e.getMessage());
         }
 	}

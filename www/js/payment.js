@@ -22,25 +22,90 @@ function changePaymentCategory(index,nombre){
     $('#payButton').fadeIn("fast");
     $('#order_id').val('');
 	
+	$('.touchpago').css('display','none');
+	
+	$('.columna1 div').each(function(){
+			$(this).attr('class','paymentCategories');
+			$(this).css('backgroundColor','');
+	});
+	
+	$('#paymentCategory-'+index).attr('class','categoryChosen');
+	if(nombre=="Efectivo") $('#touchefectivo').fadeIn();
+	if(nombre=="Tarjetas") $('#touchtarjetas').fadeIn();
+	if(nombre=="Cheques") $('#touchcheques').fadeIn();
+	if(nombre=="CxC") $('#touchcxc').fadeIn();
+	
+	//alert($('#touchcheques').html()+'/'+$('#touchcheques').css('display'));
+	
 	if(pagonormal==true){
 		$('.paymentMethods').each(function(){
 				if($(this).attr('idpaymentmethod')!=index){
-				$(this).val('0.00');
-				if(index==3)$('#valorcxc').val('0.00');
-				if(index==4)$('#valorcheque1').val('0.00');
-				
+				 $(this).val('0.00');
+				 if(index==3)$('#valorcxc').val('0.00');
+				 if(index==4)$('#valorcheque1').val('0.00');
 				//$('#simple_'+index).html('0.00');
 			}
-
 		});
 	}
 		
 	
-	$('.paymentMethods').each(function(){
+	/*$('.paymentMethods').each(function(){
 		if($(this).attr('idPaymentMethod')==index){
 			$(this).click();
 		}
-	});
+	});*/
+	
+	if(pagonormal==true&&nombre!='Tarjetas'){
+		$('.cardv').html('');
+		$('#valortarjeta').val('0.00');
+		$('.card').attr('data-value','0');
+		$('#simple_2').html('0.00');
+	}
+	
+	//alert(pagonormal+"/"+cual);
+	
+	if(nombre=='Efectivo'){
+		if(pagonormal==true){
+			$('#valorcxc,#paymentCxC,#valorcheque1,#paymentCheques').val("0.00");
+		}else{
+			$('#paymentEfectivo').select();
+		}
+		
+	}
+	if(nombre=='Tarjetas'){
+		if(pagonormal==true){
+			$('#valorcxc,#paymentCxC,#valorcheque1,#paymentCheques').val("0.00");
+		}else{
+			
+		}
+	}
+	
+	//alert(nombre);
+	
+	if(nombre=='Cheques'){
+		if(pagonormal==true){
+			$('#valorcxc,#paymentCxC').val("0.00");
+			$('#valorcheque1,#paymentCheques').val(parseFloat($('#total').html().substring(1)).toFixed(2));
+		}else{
+				if(parseFloat($('#valorcheque1').val())==0||$('#valorcheque1').val()==""){
+					if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
+						$('#valorcheque1,#paymentCheques').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
+				}
+		}
+		
+	}
+	if(nombre=='CxC'){
+		$('#touchcxc').fadeIn();
+		if(pagonormal==true){
+			$('#valorcheque1,#paymentCheques').val("0.00");
+			$('#valorcxc,#paymentCxC').val(parseFloat($('#total').html().substring(1)).toFixed(2));
+		}else{
+				if(parseFloat($('#valorcxc').val())==0){
+				if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
+					$('#valorcxc,#paymentCxC').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
+			}
+		}
+	}
 
 	
 	var value = 0;
@@ -174,8 +239,8 @@ function performPurchase(restaurant){
 			return false;
 		}
 			
-		$('#payButton').hide();
-		$('#payButtonActivated').show();
+		//$('#payButton').hide();
+		//$('#payButtonActivated').show();
 		
 		//figure out what payments types were used and store them into an array
 		var paymentsUsed = new Array();
@@ -548,24 +613,13 @@ function impresionMovil(mijson){
 
 function cancelPayment(){
 	$('#payButton').show();
-	$('#payButtonActivated').hide();
-	//$('#referenceToReset')[0].reset();
 	$('.paymentMethods').val('');
 	$('#justification').val('');
-	//$('.passwordCheck').val('');
 	$('.payOverview').html(0);
-	//$('.cardRow').remove();
-	//$('.chequeRow').remove();
-	//changePaymentCategory(0);
-	//$('#pay').hide();
-	
-	//$('#printFactura').hide();
-	//$('#functionality-1').show();
-	//$('#paymentCategory-1').addClass('categoryChosen');
 	$('#invoicePaid').html('0.00');
 	$('#changeFromPurchase').html('0.00');
 	//$('#paymentModule').modal('hide');
-	$('#paymentModule').slideUp();
+	$('#paymentModule').fadeOut();
 	var propina=parseFloat($('#invoiceprop').html());
 	$('#total').html("$"+(parseFloat($('#total').html().substring(1))-propina).toFixed(2));
 	//$('#totalmiFactura').val(parseFloat(totales));
@@ -701,141 +755,6 @@ function BuscarCliente(e){
 			}
 		});
 	
-	}
-}
-
-function CambiarMetodo(cual){
-	//console.log('viene aqui');
-	var nombre=$('#payment'+cual).attr('paymentMethod');
-	var index=$('#payment'+cual).attr('idPaymentMethod');
-	$('#touchefectivo,#touchtarjetas,#touchcheques,#touchcxc').css('display','none');
-	
-	
-	if(pagonormal==true&&cual!='Tarjetas'){
-		$('.cardv').html('');
-		$('#valortarjeta').val('0.00');
-		$('.card').attr('data-value','0');
-		$('#simple_2').html('0.00');
-	}
-	
-	//alert(pagonormal+"/"+cual);
-	
-	if(cual=='Efectivo'){
-		$('#touchefectivo').fadeIn();
-		if(pagonormal==true){
-			$('#valorcxc,#paymentCxC,#valorcheque1,#paymentCheques').val("0.00");
-			$('#simple_2,#simple_3,#simple_4').html('0.00');
-			//$('#paymentEfectivo').val(parseFloat($('#total').html().substring(1)).toFixed(2));
-			//$('#simple_1').html(parseFloat($('#total').html().substring(1)).toFixed(2));
-		}else{
-			$('#paymentEfectivo').select();
-			//if($('#touchefectivo').css('display')=='none')
-				//$('.touchpago').hide();
-			
-		}
-		
-	}
-	if(cual=='Tarjetas'){
-		$('#touchtarjetas').fadeIn();
-		//alert("hola tarjetas");
-		if(pagonormal==true){
-			//alert("entra tarjetas");
-			$('#valorcxc,#paymentCxC,#valorcheque1,#paymentCheques').val("0.00");
-			$('#simple_1,#simple_3,#simple_4').html('0.00');
-			//$('.touchpago').hide();
-			//$('#touchtarjetas').slideDown();
-		}else{
-			//$('.touchpago').hide();
-			
-		}
-	}
-	
-	if(cual=='Cheques'){
-		$('#touchcheques').fadeIn();
-		if(pagonormal==true){
-			$('#simple_1,#simple_2,#simple_4').html('0.00');
-			$('#valorcxc,#paymentCxC').val("0.00");
-			$('#valorcheque1,#paymentCheques').val(parseFloat($('#total').html().substring(1)).toFixed(2));
-			$('#simple_3').html(parseFloat($('#total').html().substring(1)).toFixed(2));
-			
-			//valorchequechange();
-		}else{
-			    //$('.touchpago').hide();
-				//$('#touchcheques').slideDown();
-				if(parseFloat($('#valorcheque1').val())==0||$('#valorcheque1').val()==""){
-					if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
-					$('#valorcheque1,#paymentCheques').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
-					/*var falta=parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html());
-					if(falta<0)
-						$('#valorcheque1,#paymentCheques').val(parseFloat(falta*-1).toFixed(2));*/
-				//valorchequechange();
-			}
-		}
-		
-	}
-	if(cual=='CxC'){
-		$('#touchcxc').fadeIn();
-		if(pagonormal==true){
-			$('#valorcheque1,#paymentCheques').val("0.00");
-			$('#simple_1,#simple_2,#simple_3').html('0.00');
-			$('#valorcxc,#paymentCxC').val(parseFloat($('#total').html().substring(1)).toFixed(2));
-			$('#simple_4').html(parseFloat($('#total').html().substring(1)).toFixed(2));
-			
-			//changePaymentCategory('4','Cheques');
-			//valorcxcchange();
-		}else{
-				/*if($('#touchcxc').css('display')=='none')
-					{$('.touchpago').hide();}*/
-				//$('#touchcxc').slideDown();
-				if(parseFloat($('#valorcxc').val())==0){
-				if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
-					$('#valorcxc,#paymentCxC').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
-				//valorcxcchange();
-			}
-		}
-	}
-	
-	
-	$('.columna1 div').each(function(){
-		$(this).attr('class','paymentCategories');
-		$(this).css('backgroundColor','');
-	});
-	
-	$('#paymentCategory-'+ index).attr('class','categoryChosen');
-	
-	//alert($('#invoiceTotal').html());
-	var faltante=parseFloat($('#total').html().substring(1));
-	var pagado=0;
-	$('.paymentMethods').each(function(){
-		var partepago=0;
-		if($(this).val()!=''){
-			//if(nombre=='Efectivo')
-				//$(this).val('0.00');
-			partepago=parseFloat($(this).val());
-		}
-		faltante-=partepago;
-		pagado+=partepago;
-	});
-	
-	updateForm(pagado);
-	
-	//alert('falt'+faltante);
-	if(faltante==0){
-		//alert(faltante);
-		$('#invoiceDebt').html('VUELTO');
-		if(localStorage.getItem("idioma")==2)
-			$('#invoiceDebt').html("CHANGE");
-		$('#changeFromPurchase').html('0.00');
-	}else if(faltante<0){
-		$('#invoiceDebt').html('VUELTO');
-		if(localStorage.getItem("idioma")==2)
-			$('#invoiceDebt').html("CHANGE");
-		$('#changeFromPurchase').html((-1*faltante).toFixed(2));
-	}else{
-		$('#invoiceDebt').html('FALTANTE');
-		if(localStorage.getItem("idioma")==2)
-			$('#invoiceDebt').html("TO PAY");
-		$('#changeFromPurchase').html(faltante.toFixed(2));
 	}
 }
 	

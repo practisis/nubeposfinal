@@ -1,6 +1,6 @@
 <div id='console' class='table-responsive' style='padding:20px; font-size:12px; color:#404041; background-color:white;'>
 <h2 id='trans_label_24'>Configuración General</h2>
-<button type='button' class='btn btn-success' onclick='BajarLogo();'>Logo</button>
+<!--<button type='button' class='btn btn-success' onclick='BajarLogo();'>Logo</button>-->
 <div style='margin-top:25px; font-size:16px;'>
 	<div id='logofull'></div>
 	<table class='table'>
@@ -282,7 +282,7 @@
 function BajarLogo(){
 	//window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
     //window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-	downloadImage(encodeURI("https://www.practisis.net/practipos2/logos/logo1.png"),"logo.png");
+	downloadImage(encodeURI("https://www.practisis.net/practipos2/logos/practipos.png"),"logo.png");
 }
 
 function fail() {
@@ -307,7 +307,7 @@ function downloadImage(url, fileName){
     ft.download(url,cordova.file.dataDirectory+fileName,
         function(entry) {
             //console.log("download complete: " + entry.fullPath);
-			//alert("download complete: " + entry.fullPath);
+			alert("download complete: "+cordova.file.dataDirectory+'+'+entry.fullPath);
 			var miimg="<img src='"+cordova.file.dataDirectory+entry.fullPath+"' />";
 			alert(miimg);
 			$('#logofull').html(miimg);

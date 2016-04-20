@@ -2578,12 +2578,13 @@ public class StarIOAdapter extends CordovaPlugin {
 			int maxWidth=384;
 			Context context = this.cordova.getActivity().getApplicationContext();
 			boolean compressionEnable=false;
-			RasterCommand rasterType = RasterCommand.Standard;
+			RasterCommand rasterType = RasterCommand.Graphics;
 			ArrayList<byte[]> commands = new ArrayList<byte[]>();
 			RasterDocument rasterDoc = new RasterDocument(RasSpeed.Medium,RasPageEndMode.FeedAndFullCut, RasPageEndMode.FeedAndFullCut, RasTopMargin.Standard, 0, 0, 0);
 			
 			//Bitmap bm = BitmapFactory.decodeResource(res, source);
-			Bitmap bm =BitmapFactory.decodeFile("file:///data/data/com.practisis.practipos/files/logo.png");
+			
+			Bitmap bm =BitmapFactory.decodeFile("/data/data/com.practisis.practipos/files//logo.png");
 			
 			StarBitmap starbitmap = new StarBitmap(bm, false, maxWidth);
 

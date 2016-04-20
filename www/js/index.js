@@ -442,12 +442,14 @@ var app = {
     //
     function errorCB(err){
         console.log("Error processing SQL: "+err.message);
+       //alert("Error processing SQL: "+err.message);
     }
 
     // Transaction success callback
     //
     function successCB() {
         console.log("success!");
+        //alert("success!");
     }
   
     /*Funciones Ana:*/

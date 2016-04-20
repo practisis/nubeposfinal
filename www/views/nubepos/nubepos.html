@@ -725,8 +725,8 @@
 					<input type='hidden' id='recibeIdentificadorTr' />
 					<input type='hidden' id='productoIDAcambiar'  />
 					<div class='btn btn-default trans_cancel' onclick="closePopup2(); return false;" id='btn_cancelar' style='margin:10px;'>Cancelar</div>
-					<div id='btn_agregar1' class='btn btn-success trans_change' onclick='cambiarCantidad()' style='margin:10px;'>Cambiar</div>
-					<div id='btn_agregar2' class='btn btn-success trans_change' onclick='cambiarCantidad2()' style='margin:10px;display:none;'>Cambiar</div>
+					<div id='btn_agregar1' class='btn btn-success trans_cantchange' onclick='cambiarCantidad()' style='margin:10px;'>Cambiar</div>
+					<div id='btn_agregar2' class='btn btn-success trans_cantchange' onclick='cambiarCantidad2()' style='margin:10px;display:none;'>Cambiar</div>
 					
 				</div>
 			</div>
@@ -864,50 +864,13 @@
 						<!--<div style='padding-top:10px; text-align:right; margin-bottom:10px;'><button class='btn btn-xs btn-success'>Pago Avanzado</button></div>-->
 					</div>
 				</div>
-				<div class='col-md-7 col-xs-7 col-lg-7' style=''>
-						<div class='tipopago'  style=''>
+				<div class='col-md-7 col-xs-7 col-lg-7' style='position:relative;'>
+						<div class='row' style='position:absolute; width:97%;'>
 							<input id="order_id" name="order_id" type="hidden" value="" readonly="readonly" style='display:none;'>
 							<input id="respuestatarjeta" name="respuestatarjeta" type="hidden" value="" readonly="readonly" style='display:none;'>
-							<div class='touchpago' id='touchefectivo'>
+							<div class='touchpago col-lg-12' id='touchefectivo'>
 								<span id='trans_label_34'>Elige tu pago en efectivo</span>
-								<div class='' style='margin-bottom:3px; margin-top:15px; text-align:left;'>
-								<!---<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='100' type='button'>100</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='50' type='button'>50</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='20' type='button'>20</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='10' type='button'>10</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='5' type='button'>5</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='1' type='button'>1</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='0.50' type='button'>0.50</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='0.25' type='button'>0.25</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='0.10' type='button'>0.10</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='0.05' type='button'>0.05</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='0.01' type='button'>0.01</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-danger' data-value='-1' type='button'>Borrar</button>
-								</div>--->
-							
+								<div style='margin-bottom:3px; margin-top:15px; text-align:left;'>
 								<div class='' style='text-align:left; display:inline;'>
 								<button onclick='subirefectivo(this);' id='justo' class='btn btn-lg btn-primary den' data-value='' type='button'></button>
 								</div>
@@ -925,7 +888,7 @@
 								</div>
 								</div>
 							</div>
-							<div class="touchpago" id='touchtarjetas' style='display:none;'>
+							<div class="touchpago col-lg-12" id='touchtarjetas' style='display:none;'>
 								<span id='trans_label_35'>Elige la tarjeta con la que vas a pagar</span>
 								<div class='col-lg-12 col-md-12 col-xs-12' style='padding:0px;'>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; display:none;' id='cardgroup'>
@@ -936,7 +899,7 @@
 									<div id='lastarjetas' style='margin-top:15px;'>
 								    </div>
 							</div>
-							<div class="touchpago" id='touchcheques'  style='display:none;'>
+							<div class="touchpago col-lg-12" id='touchcheques'  style='display:none;'>
 								<span id='trans_label_36'>Ingresa el monto del cheque</span>
 								<table width='100%' style='margin-top:15px;'>
 								<tr><td>
@@ -954,7 +917,7 @@
 								</td></tr>
 								</table>
 							</div>
-							<div class="touchpago" id='touchcxc'  style='display:none;'>
+							<div class="touchpago col-lg-12" id='touchcxc'  style='display:none;'>
 								<span id='trans_label_37'>Ingresa el monto que se va a cancelar</span>
 								<table width='100%' style='margin-top:15px;'>
 								<tr><td>
@@ -971,9 +934,6 @@
 								</td></tr></table>
 							</div>
 						</div>
-						
-						
-						
 				</div>
 				</div>
 				<div class="row">
@@ -1021,11 +981,6 @@
         						<button style="float:right; margin-right:3px;" id="payButton" class="btn btn-success btn-lg" onclick="antesperformPurchase('table'); return false;"><span class='trans_pay'>PAGAR</span> $<span id="invoiceTotal" class="payOverview">
 									0.00</span></button>
 								</td>
-                                <td>
-        						    <div style="display:none; min-width:80px; width:80px; height:30px; min-height:30px; padding-top:5px;" id="payButtonActivated" class='actiongreenbutton'><span class='trans_pay'>PAGAR</span> <span id="invoiceTotal" class="payOverview">
-									0.00</span></div>
-                                </td>
-                                
     						</tr>
 						</table>
 						 </div>

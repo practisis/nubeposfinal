@@ -200,9 +200,9 @@ var app = {
 		
 		window.StarIOAdapter = {};
 		var handle_error_callback = function(error_message) {
-			alert(error_message);
+			//alert(error_message);
 			//showalert(error_message);
-			//console.log(error_message);
+			console.log(error_message);
 		};
 		
 	

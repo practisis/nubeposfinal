@@ -3039,10 +3039,10 @@ function ActivarCategoriaMenu(cual,categoria){
 								var cuan=0;
 								for(var r=0;r<results3.rows.length;r++){
 									var imp=results3.rows.item(r);
-									if(cuan>0){
-										impuestos+="@";
-										impuestosid+="@";
-									}
+										if(cuan>0){
+											impuestos+="@";
+											impuestosid+="@";
+										}
 									impuestos+=parseFloat(imp.porcentaje)/100;
 									impuestosid+=imp.timespan;
 									cuan++;
@@ -3173,6 +3173,12 @@ function PagoAvanzado(){
 	$('.card').attr("data-value","0");
 	$('.cardv').html("");
 	$('.categoryChosen').click();
+	
+	$('.columna1 div').each(function(){
+		$(this).attr('class','paymentCategories');
+		$(this).css('backgroundColor','');
+	});
+	
 	var pagado=0;
 	$('.paymentMethods').each(function(){
 		if($(this).val()!='')

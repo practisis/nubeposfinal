@@ -384,6 +384,12 @@ function agregarCompra(item,origen){
 			PlaySound(4);
 	});
 
+	if(localStorage.getItem("con_mesas")=="true"){
+		$('#btn_gpedidos').html('guardar '+$('#total').html());
+		$('#btn_gpedidos').show();
+		$('#btn_pagar').hide();
+	}
+	
 	//init2();
 }
 
@@ -598,6 +604,12 @@ function agregarCompranew(item,origen){
 	$('.product_del').on('click',function(){
 			PlaySound(4);
 	});
+	
+	if(localStorage.getItem("con_mesas")=="true"){
+		$('#btn_gpedidos').html('guardar '+$('#total').html());
+		$('#btn_gpedidos').show();
+		$('#btn_pagar').hide();
+	}
 
 	//init2();
 }
@@ -2289,7 +2301,6 @@ function ClickNumeroM(numd){
 
 function Ready(){
 	
-	
   if(localStorage.getItem("con_shop")=='true'){
     /*$('#productos').fadeOut();
     $('#productosnew').fadeIn();*/
@@ -2297,13 +2308,17 @@ function Ready(){
     document.getElementById('productosnew').style.display='block';
 	$('#btn_descuento').attr("class","btn btn-default trans_desc");
 	$('#btn_pagar').attr("class","btn btn-success");
+	$('#btn_pagar').show();
+	$('#btn_gpedidos').hide();
   }else if(localStorage.getItem("con_mesas")=='true'){
 			/*if(sessionStorage.getItem("mesa_activa")==""){
 			$('#divmesas').show();
   		}*/
-		$('#btn_descuento').attr("class","btn btn-default trans_desc btn_lg");
-		$('#btn_pagar').attr("class","btn btn-success btn_lg");
-  		$('#divmesas,#btn_gpedidos,#btn_mesas').show();
+		$('#btn_descuento').attr("class","btn btn-default trans_desc btn-lg");
+		$('#btn_pagar').attr("class","btn btn-success btn-lg");
+		$('#btn_gpedidos').attr("class","btn btn-success btn-lg trans_save");
+  		$('#divmesas,#btn_mesas').show();
+  		$('#btn_pagar').hide();
 		CargarMesas();
   }else{
     /*$('#productosnew').fadeOut();
@@ -2312,6 +2327,9 @@ function Ready(){
     document.getElementById('productos').style.display='block';
 	$('#btn_descuento').attr("class","btn btn-default trans_desc");
 	$('#btn_pagar').attr("class","btn btn-success");
+	$('#btn_gpedidos').attr("class","btn btn-success trans_save");
+	$('#btn_pagar').show();
+	$('#btn_gpedidos').hide();
   }
 	
 	if(localStorage.getItem("propina")=='false'){
@@ -2334,6 +2352,17 @@ function Ready(){
 					$("impuesto-"+itemi.timespan).val(itemi.timespan+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100))
 				}
 			}
+		});
+		
+
+		tx.executeSql('SELECT printercom,printer FROM CONFIG where id=1',[],
+			function(tx,res){
+				if(res.rows.length>0){
+					var miprint=res.rows.item(0);
+					localStorage.setItem("print",miprint.printer);
+					localStorage.setItem("printc",miprint.printercom);
+					
+				}
 		});
 	},errorCB,successCB);
 	
@@ -4223,6 +4252,7 @@ function VerConsumos(idmesa){
     //*********************************fin normal*****************************************
     }
 	$('#divmesas').hide();
+	$('#btn_pagar').show();
 }
 
 function SaveMesa(){

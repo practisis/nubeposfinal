@@ -384,7 +384,8 @@ function performPurchase(restaurant){
 
         /*console.log(fetchJson);
         return false;*/
-
+		
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
        if(localStorage.getItem("con_localhost") == 'true'){
          console.log(fetchJson);
        var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
@@ -426,7 +427,6 @@ function performPurchase(restaurant){
       }else{
 		//**********************comienza aqui guarda local***********************************
 			/*FIN VALORES PARA LA FACTURA*/
-			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(Ingresafacturas, errorCB, successCB);
 			function Ingresafacturas(tx){
 				var now=new Date().getTime();
@@ -481,7 +481,7 @@ function performPurchase(restaurant){
 				tx2.executeSql("INSERT INTO FACTURAS_FORMULADOS(timespan_factura,timespan_formulado,cantidad,precio_unitario)VALUES(?,?,?,?)",[mifactura,item.id_producto,item.cant_prod,miprecio],function(){
 					console.log("Nuevo Detalle Factura Ingresado");
 				});
-			});
+			},errorCB,successCB);
 		}
         //**********************hasta aqui guarda local***********************************
       }
@@ -548,7 +548,6 @@ function performPurchase(restaurant){
 
 
 function impresionMovil(mijson){
-	envia('puntodeventa');
 	$('.productosComprados').remove();
 	$('#subsiniva').html('');
 	$('#subconiva').html('');
@@ -559,19 +558,16 @@ function impresionMovil(mijson){
 	$('#printFactura').hide();
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function (tx){
-		
 		var now=new Date().getTime();
-		tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Envia a Imprimir Factura",mijson],function(tx,results){});
-				
-		tx.executeSql('SELECT printer,printercom FROM CONFIG where id=1',[],
-		function(tx,res){
-			if(res.rows.length>0){
-				var miprint=res.rows.item(0);
-				if(miprint.printer!=null){
+		tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Envia a Imprimir Factura",mijson]);
+	},errorCB,successCB);
+	
+				if(localStorage.getItem("print")!=null&&localStorage.getItem("print")!=""){
+					//alert(localStorage.getItem("print"));
 					//alert(miprint.printer);
-					StarIOAdapter.rawprint(mijson,miprint.printer, function() {
+					StarIOAdapter.rawprint(mijson,localStorage.getItem("print"), function() {
 						var now=new Date().getTime();
-						tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
+						//tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
 						if(localStorage.getItem("idioma")==1)
 							showalert("Imprimiendo Factura.");
 						else if(localStorage.getItem("idioma")==2)
@@ -585,18 +581,18 @@ function impresionMovil(mijson){
 				}
 				
 				//comanderas
-				if(localStorage.getItem("con_comandas")=="true"){
-					if(miprint.printercom!=null){
+				if(localStorage.getItem("con_comandas")=="true"&&localStorage.getItem("con_mesas")=="false"){
+					if(localStorage.getItem("printc")!=null&&localStorage.getItem("printc")!=""){
 					//alert(miprint.printer);
 						mijson=mijson.replace("Pagar","Comandar");
-						StarIOAdapter.rawprint(mijson,miprint.printercom, function() {
+						StarIOAdapter.rawprint(mijson,localStorage.getItem("printc"), function() {
 						var now=new Date().getTime();
-						tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
+						//tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
 						if(localStorage.getItem("idioma")==1)
 							showalert("Imprimiendo Comandas.");
 						else if(localStorage.getItem("idioma")==2)
 							showalert("Printing Kitchen Commands.");
-							});
+						});
 					}else{
 							if(localStorage.getItem("idioma")==1)
 								showalert("No se ha configurado una impresora para comandas.");
@@ -605,9 +601,10 @@ function impresionMovil(mijson){
 					}
 				}
 				//fin comanderas
-			}
-		});
-	},errorCB,successCB);
+		//});
+		
+
+	envia('puntodeventa');
     localStorage.setItem("nameorder","");
 }
 
@@ -1458,4 +1455,83 @@ function validarpago(){
     alert('The transaction was canceled, please choose another card or change your payment method.');
     $('#respuestatarjeta').val('');
   }
+}
+
+function VerificarComandas(){
+	if(localStorage.getItem("con_mesas")=="true"){
+		 /*imprimir comandas*/
+		var json = '{"ComandasMesas": [{';
+			json += '"producto": [';
+		var cuan=0;
+		$('.productDetails').each(function(){
+			if(!$(this).parent().parent().hasClass("printed")){
+				var splitDetails = $(this).val().split('|');
+				var detalleagregados="";
+				var detallenotas="";
+				if($(this).attr("data-detagregados")!=''&&$(this).attr("data-detagregados")!=null&&$(this).attr("data-detagregados")!='undefined')
+				   detalleagregados=$(this).attr("data-detagregados");
+			   
+			   if($(this).attr("data-notes")!=''&&$(this).attr("data-notes")!=null&&$(this).attr("data-notes")!='undefined')
+				   detallenotas=$(this).attr("data-notes");
+			   
+			   if(cuan>0){
+				   json+=",";
+			   }
+			   
+				json += '{';
+					json += '"id_producto" : "'+ splitDetails[0] +'",';
+					json += '"timespanproducto" : "'+ splitDetails[0] +'",';
+					json += '"timespanconsumo" : "'+getTimeSpan()+'",';
+					json += '"nombre_producto" : "'+ splitDetails[1] +'",';
+					json += '"cant_prod" : "'+ splitDetails[2] +'",';
+					json += '"precio_orig" : "'+ splitDetails[3] +'",';
+					json += '"precio_prod" : "'+ splitDetails[4] +'",';
+					json += '"impuesto_prod" : "'+ splitDetails[7] +'",';
+					json += '"precio_total" : "'+ splitDetails[6] +'",';
+					json += '"precio_descuento_justificacion" : "",';
+					json += '"agregados" : "'+splitDetails[8]+'",';
+					json += '"detalle_agregados" : "'+detalleagregados+'",';
+					json += '"detalle_notas" : "'+detallenotas+'"';
+				json += '}';
+				
+				cuan++;
+			}
+		});
+				
+		//json = json.substring(0,json.length -1);	
+		json += '],"mesa":"'+sessionStorage.getItem("mesa_name")+'",';
+		json += '"lang":"'+localStorage.getItem("idioma")+'"';
+		json += '}]}';
+			
+		
+		console.log(json);
+
+		if(localStorage.getItem("lang")==1)
+			showalert("Pedido Guardado con éxito");
+		else
+			showalert("Order Saved Successfully");
+		
+		if(cuan>0){
+			//comanderas
+			if(localStorage.getItem("printc")!=null&&localStorage.getItem("printc")!=""){
+				StarIOAdapter.rawprint(json,localStorage.getItem("printc"), function() {
+				if(localStorage.getItem("idioma")==1)
+					showalert("Imprimiendo Comandas.");
+				else if(localStorage.getItem("idioma")==2)
+					showalert("Printing Kitchen Commands.");
+				});
+			}else{
+				if(localStorage.getItem("idioma")==1)
+					showalert("No se ha configurado una impresora para comandas.");
+				else if(localStorage.getItem("idioma")==2)
+					showalert("There is no configured a command printer.");
+			}
+			//fin comanderas
+		}
+		antesperformPurchase('table');
+		
+	}else{
+		antesperformPurchase('table');
+	}
+	/*imprimir comandas no comandadas*/
 }

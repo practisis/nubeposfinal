@@ -398,18 +398,19 @@
 		</div>
 		<div class='col-lg-12 col-xs-12 col-md-12' style='text-align:right; background-color:white;'>
 		
-			<button type='button' class='btn btn-default' style='margin-bottom:5px; margin-right:5px; display:none;' data-toggle="tooltip" data-placement="top" title="" id='btn_gpedidos' onclick="SaveMesa();"><span class="fa fa-save fa-2x"></span></button>
 			
 			<button type='button' class='btn btn-default trans_mesas' style=' display:none; margin-bottom:5px; margin-right:5px;' id='btn_mesas' data-toggle="tooltip" data-placement="top" title="" onclick="ImprimirPrecuenta();"><span class="fa fa-print fa-2x"></span></button>
 			<!--<div class='row'>
 				<div class='col-xs-6'>
 					<center>-->
-						<button type='button' class='btn btn-default btn-lg trans_desc' style='margin-bottom:5px; margin-right:5px;' id='btn_descuento' onclick="showPopup(); return false;">DESCUENTO</button>
+			<button type='button' class='btn btn-default btn-lg trans_desc' style='margin-bottom:5px; margin-right:5px;' id='btn_descuento' onclick="showPopup(); return false;">DESCUENTO</button>
 					<!--</center>
 				</div>
 				<div class='col-xs-6'>
 					<center>	-->
-						<button type='button' class='btn btn-success btn-lg' id='btn_pagar' style='margin-bottom:5px;  margin-right:5px;' onclick="VerPropinas(); return false;"><span class='trans_pay'>PAGAR</span>&nbsp;<span id='total'>0.00</span></button>
+			<button type='button' class='btn btn-success btn-lg trans_save' style='margin-bottom:5px; margin-right:5px; display:none; text-transform:uppercase;' data-toggle="tooltip" data-placement="top" title="" id='btn_gpedidos' onclick="SaveMesa();">GUARDAR</button>
+			
+			<button type='button' class='btn btn-success btn-lg' id='btn_pagar' style='margin-bottom:5px;  margin-right:5px;' onclick="VerPropinas(); return false;"><span class='trans_pay'>PAGAR</span>&nbsp;<span id='total'>0.00</span></button>
 					<!--</center>
 				</div>
 			</div>-->
@@ -978,7 +979,7 @@
 									<button id="nombre_orden" class='btn btn-lg btn-primary trans_ordern' onclick="$('#popupNameorder').modal('show');" style='margin-right:5px;display: none;' type='button'>Nombre Orden</button>
 								</td>
                                 <td>
-        						<button style="float:right; margin-right:3px;" id="payButton" class="btn btn-success btn-lg" onclick="antesperformPurchase('table'); return false;"><span class='trans_pay'>PAGAR</span> $<span id="invoiceTotal" class="payOverview">
+        						<button style="float:right; margin-right:3px;" id="payButton" class="btn btn-success btn-lg" onclick="VerificarComandas();"><span class='trans_pay'>PAGAR</span> $<span id="invoiceTotal" class="payOverview">
 									0.00</span></button>
 								</td>
     						</tr>

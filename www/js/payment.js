@@ -565,14 +565,17 @@ function impresionMovil(mijson){
 				if(localStorage.getItem("print")!=null&&localStorage.getItem("print")!=""){
 					//alert(localStorage.getItem("print"));
 					//alert(miprint.printer);
-					StarIOAdapter.rawprint(mijson,localStorage.getItem("print"), function() {
-						var now=new Date().getTime();
-						//tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
-						if(localStorage.getItem("idioma")==1)
-							showalert("Imprimiendo Factura.");
-						else if(localStorage.getItem("idioma")==2)
-							showalert("Printing Invoice.");
-					});
+					var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+					if ( app ) {
+						StarIOAdapter.rawprint(mijson,localStorage.getItem("print"), function() {
+							var now=new Date().getTime();
+							//tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
+							if(localStorage.getItem("idioma")==1)
+								showalert("Imprimiendo Factura.");
+							else if(localStorage.getItem("idioma")==2)
+								showalert("Printing Invoice.");
+						});
+					}
 				}else{
 					if(localStorage.getItem("idioma")==1)
 						showalert("No se ha configurado una impresora.");
@@ -585,14 +588,17 @@ function impresionMovil(mijson){
 					if(localStorage.getItem("printc")!=null&&localStorage.getItem("printc")!=""){
 					//alert(miprint.printer);
 						mijson=mijson.replace("Pagar","Comandar");
-						StarIOAdapter.rawprint(mijson,localStorage.getItem("printc"), function() {
-						var now=new Date().getTime();
-						//tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
-						if(localStorage.getItem("idioma")==1)
-							showalert("Imprimiendo Comandas.");
-						else if(localStorage.getItem("idioma")==2)
-							showalert("Printing Kitchen Commands.");
-						});
+						var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+						if ( app ) {
+							StarIOAdapter.rawprint(mijson,localStorage.getItem("printc"), function() {
+							var now=new Date().getTime();
+							//tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
+							/*if(localStorage.getItem("idioma")==1)
+								showalert("Imprimiendo Comandas.");
+							else if(localStorage.getItem("idioma")==2)
+								showalert("Printing Kitchen Commands.");*/
+							});
+						}
 					}else{
 							if(localStorage.getItem("idioma")==1)
 								showalert("No se ha configurado una impresora para comandas.");
@@ -1506,19 +1512,19 @@ function VerificarComandas(){
 		
 		console.log(json);
 
-		if(localStorage.getItem("lang")==1)
+		/*if(localStorage.getItem("lang")==1)
 			showalert("Pedido Guardado con éxito");
 		else
-			showalert("Order Saved Successfully");
+			showalert("Order Saved Successfully");*/
 		
 		if(cuan>0){
 			//comanderas
 			if(localStorage.getItem("printc")!=null&&localStorage.getItem("printc")!=""){
 				StarIOAdapter.rawprint(json,localStorage.getItem("printc"), function() {
-				if(localStorage.getItem("idioma")==1)
+				/*if(localStorage.getItem("idioma")==1)
 					showalert("Imprimiendo Comandas.");
 				else if(localStorage.getItem("idioma")==2)
-					showalert("Printing Kitchen Commands.");
+					showalert("Printing Kitchen Commands.");*/
 				});
 			}else{
 				if(localStorage.getItem("idioma")==1)

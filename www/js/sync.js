@@ -264,14 +264,24 @@ function ExtraeDatosApi(donde){
 			localStorage.setItem("con_notas",ext[0].notas);
 			localStorage.setItem("con_comandas",ext[0].comanderas);
 			localStorage.setItem("con_mesas",ext[0].mesas);
+			localStorage.setItem("logo",ext[0].logo);
 			//localStorage.setItem("con_mesas",false);
             localStorage.setItem("con_localhost",ext[0].localhost);
             localStorage.setItem("ip_servidor",ext[0].ipservidor);
+			
+			
 
             var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
-              tx.executeSql('UPDATE CONFIG SET pais="'+ext[0].pais+'",id_idioma = "'+ext[0].idioma+'",sin_documento="'+ext[0].documento+'",con_nombre_orden="'+ext[0].orden+'",con_propina="'+ext[0].propina+'",con_tarjeta="'+ext[0].tarjeta+'",con_shop="'+ext[0].shop+'",ip_servidor="'+ext[0].ipservidor+'",con_mesas="'+ext[0].mesas+'" WHERE id=1',[],function(tx,results){
+              tx.executeSql('UPDATE CONFIG SET pais="'+ext[0].pais+'",id_idioma = "'+ext[0].idioma+'",sin_documento="'+ext[0].documento+'",con_nombre_orden="'+ext[0].orden+'",con_propina="'+ext[0].propina+'",con_tarjeta="'+ext[0].tarjeta+'",con_shop="'+ext[0].shop+'",ip_servidor="'+ext[0].ipservidor+'",con_mesas="'+ext[0].mesas+'",logo="'+ext[0].logo+'" WHERE id=1',[],function(tx,results){
   				console.log("actualizada empresa permisos");
+				if(ext[0].logo!=''&&ext[0].logo!=null){
+					var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+					if ( app ) {
+						downloadImage(encodeURI("https://www.practisis.net/practipos2/logos/"+ext[0].logo),ext[0].logo);
+					}
+				}
+				
   			  });
             },errorCB,function(){
 				localStorage.setItem("permisosya",true);
@@ -331,6 +341,12 @@ function ExtraeDatosApi(donde){
 			},errorCB,function(){
 				localStorage.setItem("mesasya",true);
 				$("#theProgress").css("width" , "100%");
+				$("#txtSincro").html("100%");
+				setTimeout(function(){
+					$("#theProgress").css("width","0%");
+					$("#txtSincro").html("");
+				},1000);
+				
 				setTimeout(function(){SyncStart()},1500);
 			});
 		}
@@ -945,9 +961,16 @@ function DatosRecurrentes(cual){
   					  localStorage.setItem("con_mesas",item.mesas);
                       localStorage.setItem("con_localhost",item.localhost);
                       localStorage.setItem("ip_servidor",item.ipservidor);
+                      localStorage.setItem("logo",item.logo);
 					  
-                      tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'",con_notasorden="'+item.notas+'",con_comanderas="'+item.comanderas+'",con_localhost="'+item.localhost+'",ip_servidor="'+item.ipservidor+'",con_mesas="'+item.mesas+'" WHERE id=1',[],function(tx,results){
+                      tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'",con_notasorden="'+item.notas+'",con_comanderas="'+item.comanderas+'",con_localhost="'+item.localhost+'",ip_servidor="'+item.ipservidor+'",con_mesas="'+item.mesas+'",logo="'+item.logo+'" WHERE id=1',[],function(tx,results){
 						console.log("actualizada empresa");
+						if(item.logo!=''&&item.logo!=null){
+							var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+							if ( app ) {
+								downloadImage(encodeURI("https://www.practisis.net/practipos2/logos/"+item.logo),item.logo);
+							}
+						}
 					  });
                     }
 				}
@@ -1433,6 +1456,42 @@ function PostaLaNube(arraydatos,cual,accion,t){
 			updateOnlineStatus("OFFLINE");
 			setTimeout(function(){SincronizadorNormal()},180000);
 	});
+}
+
+function downloadImage(url, fileName){
+	//alert("Entra a funcion download antes del new");
+	//alert(url);
+    var ft = new FileTransfer();
+	//alert("Entra a funcion download");
+    //ft.download(url,window.rootFS.fullPath + "/" + fileName,
+    ft.download(url,cordova.file.dataDirectory+fileName,
+        function(entry) {
+            //console.log("download complete: " + entry.fullPath);
+			console.log("download complete: "+cordova.file.dataDirectory+'+'+entry.fullPath);
+        },
+        function(error) {
+           // console.log("download error" + error.code);
+			console.log("download error" + JSON.stringify(error));
+        }
+    );
 } 
+
+function ImprimirLogo(){
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function (tx){		
+			tx.executeSql('SELECT printer,printercom FROM CONFIG where id=1',[],
+			function(tx,res){
+				if(res.rows.length>0){
+					var milogo=localStorage.getItem("logo");
+					var miprint=res.rows.item(0);
+					if(miprint.printer!=null){
+						StarIOAdapter.printlogo(milogo,miprint.printer, function() {
+							alert("imprime");
+						});
+					}
+				}
+			});
+			},errorCB,successCB);
+}
 
 //-----------------------------------Fin nuevo---------------

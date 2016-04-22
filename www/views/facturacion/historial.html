@@ -654,9 +654,17 @@ function getSearch(){
 			inhtml+='<tr><td  style="width:20%; text-align:left;">'+fechaformat+'</td><td style="width:20%;  text-align:left;">'+row.clientName+'</td><td style="width:20%;  text-align:left;">'+row.RUC+'</td><td style="width:20%;  text-align:left;">'+row.nofact+'</td><td style="width:5%;">'+anulada+'</td><td style="text-align:right; width:10%;">'+totalf+'</td><td style="width:5%;"><button class="btn btn-default btn-sm" onclick="'+mifunc+'"><span class="glyphicon glyphicon-pencil"></span></button></td></tr>';
 		}
 		LlenarTablaFacturas(inhtml);
-		$('#totalencabezado').html(totalfinal.toFixed(2));
+		//$('#totalencabezado').html(totalfinal.toFixed(2));
 	});
 	
+	var querytot="SELECT SUM(TOTAL) as totalf FROM FACTURAS WHERE ANULADA=? AND FECHA>=? AND FECHA<=?";
+		tx.executeSql(querytot,[0,filtrodesde,filtrohasta],function(tx,results){
+			console.log(results);
+			if(results.rows.length>0){
+				var miitem=results.rows.item(0).totalf;
+				$('#totalencabezado').html(parseFloat(miitem).toFixed(2));
+			}
+		});
 	},errorCB,successCB);
 
     }

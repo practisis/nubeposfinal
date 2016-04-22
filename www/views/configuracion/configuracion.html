@@ -2,7 +2,7 @@
 <h2 id='trans_label_24'>Configuración General</h2>
 <!--<button type='button' class='btn btn-success' onclick='BajarLogo();'>Logo</button>-->
 <div style='margin-top:25px; font-size:16px;'>
-	<div id='logofull'></div>
+	<div style='text-align:center;'><img id='logofull' width='150px'/></div>
 	<table class='table'>
 		<tr><td  style='text-align:right;' id="trans_label_62">País:</td><td><input id='tablet_pais' class='form-control' readonly /></td></tr>
 		<tr><td  style='text-align:right;' id="trans_label_25">Nombre Dispositivo:</td><td><input id='tablet_name' class='form-control' /></td></tr>
@@ -101,7 +101,8 @@
 				
 		});
 	
-	
+		if(localStorage.getItem("logo")!='')
+			$('#logofull').attr('src','file:///data/data/com.practisis.practipos/files//'+localStorage.getItem("logo"));
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
@@ -190,9 +191,12 @@
 		
 		$('#tablet_cuenta').val(localStorage.getItem("userRegister"));
 
-		cordova.getAppVersion.getVersionNumber().then(function (version) {
-			$('#tablet_version').val(version);
-		});
+		var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+		if ( app ) {
+			cordova.getAppVersion.getVersionNumber().then(function (version) {
+				$('#tablet_version').val(version);
+			});
+		}
 	});
 	
 	
@@ -281,12 +285,6 @@
 			,errorCB,successCB);
 	}
 	
-function BajarLogo(){
-	//window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-    //window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-	downloadImage(encodeURI("https://www.practisis.net/practipos2/logos/practipos.png"),"logo.png");
-}
-
 function fail() {
     alert("failed to get filesystem");
 }
@@ -298,41 +296,5 @@ function gotFS(fileSystem) {
     window.rootFS = fileSystem.root;
 	alert(fileSystem.root.fullPath);
 	alert( cordova.file.dataDirectory);
-}
-
-function downloadImage(url, fileName){
-	//alert("Entra a funcion download antes del new");
-	//alert(url);
-    var ft = new FileTransfer();
-	//alert("Entra a funcion download");
-    //ft.download(url,window.rootFS.fullPath + "/" + fileName,
-    ft.download(url,cordova.file.dataDirectory+fileName,
-        function(entry) {
-            //console.log("download complete: " + entry.fullPath);
-			alert("download complete: "+cordova.file.dataDirectory+'+'+entry.fullPath);
-			var miimg="<img src='"+cordova.file.dataDirectory+entry.fullPath+"' />";
-			alert(miimg);
-			$('#logofull').html(miimg);
-			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-			db.transaction(function (tx){		
-			tx.executeSql('SELECT printer,printercom FROM CONFIG where id=1',[],
-			function(tx,res){
-				if(res.rows.length>0){
-					var miprint=res.rows.item(0);
-					if(miprint.printer!=null){
-						StarIOAdapter.printlogo(miprint.printer, function() {
-							alert("imprime");
-						});
-					}
-				}
-			});
-			},errorCB,successCB);
-
-        },
-        function(error) {
-           // console.log("download error" + error.code);
-			alert("download error" + JSON.stringify(error));
-        }
-    );
 }
 </script>

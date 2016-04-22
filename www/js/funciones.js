@@ -4411,10 +4411,10 @@ function SaveMesa(){
 				if(localStorage.getItem("con_mesas")=="true"){
 					if(miprint.printercom!=null){
 						StarIOAdapter.rawprint(json,miprint.printercom, function() {
-						if(localStorage.getItem("idioma")==1)
+						/*if(localStorage.getItem("idioma")==1)
 							showalert("Imprimiendo Comandas.");
 						else if(localStorage.getItem("idioma")==2)
-							showalert("Printing Kitchen Commands.");
+							showalert("Printing Kitchen Commands.");*/
 						});
 					}else{
 						if(localStorage.getItem("idioma")==1)

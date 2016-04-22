@@ -726,9 +726,10 @@ var app = {
 				if(formaDePago == '1'){
 					$('#detaFormPago').html('Efectivo');
 					$('#detaFormPagoValor').html(parseFloat(row.cash).toFixed(2));
-					totalpagof+=parseFloat(row.cash);
+					totalpagof+=Math.abs(parseFloat(row.cash));
 					$('#detaFormPago').parent().fadeIn();
 				}
+				
 				if(formaDePago == '2'){
 					var datocard=row.cards.split('|');
 					$('#detaFormPago').html('Tarjeta');
@@ -977,7 +978,7 @@ var app = {
 				if(formaDePago == '1'){
 					$('#detaFormPago').html('Efectivo');
 					$('#detaFormPagoValor').html(parseFloat(row.cash).toFixed(2));
-					totalpagof+=parseFloat(row.cash);
+					totalpagof+=Math.abs(parseFloat(row.cash));
 					$('#detaFormPago').parent().fadeIn();
 				}
 				if(formaDePago == '2'){
@@ -1015,6 +1016,7 @@ var app = {
 							$('#detaFormPago').html('Efectivo');
 							$('#detaFormPagoValor').html(parseFloat(row.cash).toFixed(2));
 							$('#detaFormPago').parent().fadeIn();
+							totalpagof+=parseFloat(row.cash);
 						}
 						if(fpago[t]==2){
 							var datocard=row.cards.split('|');
@@ -1022,6 +1024,7 @@ var app = {
 							//console.log(datocard);
 							$('#detaFormPagoValor1').html(parseFloat(datocard[2].substring(0,datocard[2].length - 1)).toFixed(2));
 							$('#detaFormPago1').parent().fadeIn();
+							totalpagof+=parseFloat(datocard[2].substring(0,datocard[2].length - 1));
 						}
 						
 						if(fpago[t]==3){
@@ -1030,6 +1033,7 @@ var app = {
 							//console.log(datocard);
 							$('#detaFormPagoValor2').html(parseFloat(datocheque[2].substring(0,datocheque[2].length - 1)).toFixed(2));
 							$('#detaFormPago2').parent().fadeIn();
+							totalpagof+=parseFloat(datocheque[2].substring(0,datocheque[2].length - 1));
 						}
 
 						if(fpago[t]==4){
@@ -1038,11 +1042,13 @@ var app = {
 							//console.log(datocard);
 							$('#detaFormPagoValor3').html(parseFloat(datocheque).toFixed(2));
 							$('#detaFormPago3').parent().fadeIn();
+							totalpagof+=parseFloat(datocheque);
 						}
 					}
                 }
 				
 				var tot=parseFloat($('#total').html());
+				//alert(tot+"/"+totalpagof);
 				if((tot-totalpagof)<0){
 					$('#tabladetformaspago').append('<tr><td><b>Vuelto</b></td><td style="text-align:right;">'+(-1*(tot-totalpagof)).toFixed(2)+'</td></tr>');
 				}

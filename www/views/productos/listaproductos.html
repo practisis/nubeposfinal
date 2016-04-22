@@ -452,7 +452,11 @@ function getSearch(){
 		//console.log(resulta);
 		var inhtml='<table class="table table-striped"><tbody>';
 		if(resulta.rows.length==0){
-			$('#recibeTodosLosProductos').append('<center><div class="alert alert-success" role="alert"><h3>No Tiene Productos Ingresados</h3></div></center>');
+			if(localStorage.getItem("idioma")==1)
+				$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p></div>');
+			else
+				$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>No products</h1><p>Please, enter all your products to begin.</p></div>');
+				
 			setTimeout(function() {
 				$('#nuevoProducto').effect('highlight');
 			}, 3000);
@@ -564,8 +568,6 @@ function LlenarTablaProd(datos){
         }
 		///
 }
-
-
 
 function editProduct(id){
 	editarProductoID=id;

@@ -1047,7 +1047,10 @@ function formarCategorias(){
 				console.log(objcategoria);
 				ActivarCategoria(objcategoria,categoriaSelected);
 			}else{
-				$("#menuproductos").html("<b>Ingrese Productos o Sincronice</b>");
+				if(localStorage.getItem("idioma")==1)
+					$("#menuproductos").html('<div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Ingresar Productos</button></p></div>');
+				else if(localStorage.getItem("idioma")==2)
+					$("#menuproductos").html('<div class="jumbotron"><h1>No Products yet</h1><p>Please, enter all your products to begin.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Enter Products</button></p></div>');
 			}
 		});				
 	},errorCB,successCB);
@@ -1185,6 +1188,9 @@ function pagar(){
     var total = $('#totalmiFactura').val();
 	var propina=parseFloat($('#invoiceprop').html());
     var nofactura = $('#invoiceNrComplete').val();
+	var logo="";
+	if(localStorage.getItem("logo")!=''&&localStorage.getItem("logo")!=null)
+		logo=localStorage.getItem("logo");
 	
 	//if($('#timespanFactura').val()=='')
 	$('#timespanFactura').val(getTimeSpan());
@@ -1260,7 +1266,7 @@ function pagar(){
 			json +=	'"telefono": "'+$('#telefonoP').val()+'",';
 			json +=	'"email": "'+$('#emailP').val()+'",';
 			json +=	'"direccion": "'+$('#direccionP').val()+'",';
-			json +=	'"listaDePrecio": ""';
+			json +=	'"logo": "'+logo+'"';
 			json +=	'},';
 			json += '"producto": [';
 	$('.productDetails').each(function(){

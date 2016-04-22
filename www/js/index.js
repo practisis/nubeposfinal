@@ -625,9 +625,10 @@ var app = {
             var inhtml='';
             for (var i=0; i < results.rows.length; i++){
                 var row = results.rows.item(i);
-                //console.log(row);
                 $('#idfactura').val(row.id);
                 $('#cliente').val(row.clientName);
+                $('#order_id').val(row.order_id);
+                //alert(row.order_id);
 
 				//si no tiene permisos
 				if(localStorage.getItem("permisos")=="true"){
@@ -827,6 +828,7 @@ var app = {
                   $('#cuerpodetalle').html(res[5]);
                   $('#subtotales').html(res[6]);
                   $('#tabladetformaspago').html(res[7]);
+                  $('#order_id').val(res[9]);
                   if(res[8]=='1' || res[8]==1){
 					$('#btnanularf,#reimprimir').css('display','none');
                     $('#factanulada').fadeIn();
@@ -864,6 +866,7 @@ var app = {
                 //console.log(row);
                 $('#idfactura').val(row.id);
                 $('#cliente').val(row.clientName);
+                $('#order_id').val(row.order_id);
 
 				//si no tiene permisos
 				if(localStorage.getItem("permisos")=="true"){

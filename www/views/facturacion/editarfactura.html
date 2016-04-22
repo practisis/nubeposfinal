@@ -83,11 +83,13 @@
 		</tr>
 		<tr>
 			<td colspan='2' style='text-align:center;'>
-			<button class='btn btn-default btn-sm trans_null' id='btnanularf' onclick='AnularFactura();'>Anular Factura</button>
+			<button class='btn btn-default btn-sm trans_null' id='btnanularf' onclick='AnularFacturaAux();'>Anular Factura</button>
 			<button class='btn btn-success btn-sm trans_print' id='reimprimir' onclick='ReimprimirFactura();'>Reimprimir Factura</button>
 			</td>
 		</tr>
 	</table>
+    <input id="respuestatarjeta" name="respuestatarjeta" type="hidden">
+    <input id="order_id" name="order_id" type="hidden">
 	</div>
 	</div>
 	</div>
@@ -196,6 +198,7 @@
 	
 		$('#contentdetail').css("height",parseInt($(window).height())*67/100);
 		ColocarFormasPago();
+
 	});
 	function MostrarFormasPago(){
 		$('#forma_1').click();
@@ -336,6 +339,68 @@ function CambiarMetodo(cual){
 			
 	}
 	$('#payment'+cual).select();
+}
+
+var iabRefa = null;
+function iabLoadStarta(event){
+  //alert(event);
+}
+function iabLoadStopa(event){
+  //alert(event.type + ' - ' + event.url);
+  var link = event.url;
+  var res = link.split("?");
+  if(res[0]=='https://www.practisis.net/pagos_tarjetas_void_back.php'){
+    var datos = res[1].split("&");
+    var order_idaux = datos[5].split("order_id=");
+    var order_id = order_idaux[1]
+    var response_codeaux = datos[0].split("response_code=");
+    var response_code = response_codeaux[1];
+    var response_code_textaux = datos[1].split("response_code_text=");
+    var response_code_text = response_code_textaux[1].replace(/%20/gi, " ");
+    document.getElementById('respuestatarjeta').value=order_id+'||'+response_code+'||'+response_code_text;
+    iabRefa.close();
+    //alert(event.type);
+  }
+}
+function iabClosea(event) {
+  validaranulada();
+    //alert(event.type + ' - ' + event.code);
+    iabRefa.removeEventListener('loadstart', iabLoadStarta);
+    iabRefa.removeEventListener('loadstop', iabLoadStopa);
+    iabRefa.removeEventListener('exit', iabClosea);
+}
+
+function validaranulada(){
+  var respuesta = $('#respuestatarjeta').val();
+  if(respuesta!=''){
+    var resp = respuesta.split("||");
+    if(resp[0] != 'null' && resp[0] != '' && resp[1] == '1'){
+      AnularFactura();
+    }else{
+      if(resp[2] != ''){
+        alert('The transaction could not be executed successfully.\nError: '+resp[2]+'.\n');
+        $('#respuestatarjeta').val('');
+      }
+    }
+  }else{
+    alert('The transaction was canceled.');
+    $('#respuestatarjeta').val('');
+  }
+}
+
+function AnularFacturaAux(){
+
+ if(localStorage.getItem("con_tarjeta")=='true'){
+    $('#respuestatarjeta').val('');
+    var order_id =  $('#order_id').val();
+    var myURL=encodeURI('https://www.practisis.net/pagos_tarjetas_void.php?order_id='+order_id);
+          iabRefa = window.open(myURL,'_blank', 'location=yes');
+          iabRefa.addEventListener('loadstart', iabLoadStarta);
+          iabRefa.addEventListener('loadstop', iabLoadStopa);
+          iabRefa.addEventListener('exit', iabClosea);
+  }else{
+    AnularFactura();
+  }
 }
 
 function AnularFactura(){

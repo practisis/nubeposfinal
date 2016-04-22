@@ -382,6 +382,9 @@ function performPurchase(restaurant){
               var order_id = $('#order_id').val();
             }
 
+           /*alert($('#order_id').val());
+           return false;*/
+
         /*console.log(fetchJson);
         return false;*/
 		
@@ -396,6 +399,7 @@ function performPurchase(restaurant){
   		deviceid:$("#deviceid").html(),
         con_mesas : localStorage.getItem("con_mesas"),
         id_mesa : sessionStorage.getItem("mesa_activa"),
+        order_id : $('#order_id').val(),
         json : fetchJson
   		}).done(function(response){
   			if(response!='block' && response!='Desactivado'){

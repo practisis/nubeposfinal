@@ -197,8 +197,12 @@ function agregarCompra(item,origen){
 		tablaagregados+="<table style='width:100%; font-size:10px; color:#808081;'>";
 		for(var k in vectoragregados){
 			var dataagregados=vectoragregados[k].split('|');
-			tablaagregados+="<tr><td>"+dataagregados[0]+"</td><td style='text-align:right;'>$"+parseFloat(dataagregados[1]).toFixed(2)+"</td></tr>";
-			sumaagregados+=parseFloat(dataagregados[1]);
+			var precioagr=parseFloat(dataagregados[1])*parseFloat(dataagregados[3]);
+			var micant="1 ";
+			if(parseFloat(dataagregados[3])<1)
+				micant="1/2 ";
+			tablaagregados+="<tr><td style='text-align:right;'>"+micant+"</td><td>"+dataagregados[0]+"</td><td style='text-align:right;'>$"+precioagr.toFixed(2)+"</td></tr>";
+			sumaagregados+=precioagr;
 		}
 		tablaagregados+="</table>";
 	}
@@ -1189,8 +1193,11 @@ function pagar(){
 	var propina=parseFloat($('#invoiceprop').html());
     var nofactura = $('#invoiceNrComplete').val();
 	var logo="";
-	if(localStorage.getItem("logo")!=''&&localStorage.getItem("logo")!=null)
-		logo=localStorage.getItem("logo");
+	if(localStorage.getItem("logo")!=''&&localStorage.getItem("logo")!=null){
+		if(localStorage.getItem("imprimelogo")=="true")
+		   logo=localStorage.getItem("logo");
+	}
+		
 	
 	//if($('#timespanFactura').val()=='')
 	$('#timespanFactura').val(getTimeSpan());
@@ -3241,7 +3248,10 @@ function PagoAvanzado(){
 	}
 }
 
+var mitades=false;
+var contadormitades=0;
 function VerificarAgregados(btnprod,origen){
+	mitades=false;
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	var mitimespan=$(btnprod).attr("id");
 	if(mitimespan.indexOf('busc_')>=0)
@@ -3251,10 +3261,12 @@ function VerificarAgregados(btnprod,origen){
 		tx.executeSql('SELECT * from MODIFICADORES WHERE id_formulado LIKE ? and activo=? order by no_modificador asc',[mitimespan,"true"],function(tx,res1){
 			var mods= new Array();
 			if(res1.rows.length>0){
+				
 				if(localStorage.getItem("idioma")==1)
 					$('#titlemodificador').html("Modificadores de "+$(btnprod).attr("data-formulado"));
 				else
 					$('#titlemodificador').html("Aggregates of "+$(btnprod).attr("data-formulado"));
+				
 				$('#id_formulado_modificadores').val(mitimespan);
 				for(var m=0;m<res1.rows.length;m++){
 					var miobj=res1.rows.item(m);
@@ -3275,16 +3287,28 @@ function VerificarAgregados(btnprod,origen){
 						display='display:none';
 
 					var inhtml="<div class='grupobotones' id='mod_"+s.replace(/"/g,'')+"' data-orden="+c+" style='margin:5px;"+display+"'>";
-					for(var t in mods[s]){
-						inhtml+=mods[s][t];
-					}
+					
+					if(localStorage.getItem("idioma")==1)
+						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Mitad</button>";
+					else if(localStorage.getItem("idioma")==1)
+						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Half</button>";						
+					
 					if(localStorage.getItem("idioma")==1)
 						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
 					else
 						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>NONE</button></div>";
+					inhtml+="<hr></hr>";
+					
+					for(var t in mods[s]){
+						inhtml+=mods[s][t];
+					}
+					
+					inhtml+="</div>";
+					
 					$('#divmodificadores').append(inhtml);
 					c++;
 				}
+				
 				$('#popupModificadores').modal("show");
 
 			}else{
@@ -3319,19 +3343,35 @@ function VerificarAgregadosnew(btnprod,origen){
 				console.log(mods);
 				var c=1;
 				$('#divmodificadores').html('');
+				
 				for(var s in mods){
 					var display='';
 					if(c>1)
 						display='display:none';
 
 					var inhtml="<div class='grupobotones' id='mod_"+s.replace(/"/g,'')+"' data-orden="+c+" style='margin:5px;"+display+"'>";
+					
+					if(localStorage.getItem("idioma")==1)
+						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Mitad</button>";
+					else if(localStorage.getItem("idioma")==1)
+						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Half</button>";						
+					
+					if(localStorage.getItem("idioma")==1)
+						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
+					else
+						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>NONE</button></div>";
+					inhtml+="<hr></hr>";
+					
 					for(var t in mods[s]){
 						inhtml+=mods[s][t];
 					}
-					inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
+					
+					inhtml+="</div>";
+					
 					$('#divmodificadores').append(inhtml);
 					c++;
 				}
+				
 				$('#popupModificadores').modal("show");
 
 			}else{
@@ -3341,15 +3381,30 @@ function VerificarAgregadosnew(btnprod,origen){
 	},errorCB,successCB);
 }
 
+
 function SiguienteModificador(divid,idmod,origen){
 	var div=$('#mod_'+divid);
 	var orden=div.attr("data-orden");
+	var cantidad=1;
+	if(mitades==true){
+		$('#btnmodif_'+idmod).attr("class","btn btn-success btn-lg");
+		if(contadormitades==0){
+			orden=parseInt(orden)-1;
+		}else{
+			mitades=false;
+		}
+		cantidad=0.5;
+		contadormitades++;
+	}
+	
 	$('.grupobotones').css('display','none');
 	var ya=false;
+	
 	$('.grupobotones').each(function(){
 		if($(this).attr('data-orden')>orden){
 			if(ya==false){
 				$(this).fadeIn();
+				//if(mitades==false)
 				ya=true;
 			}
 			
@@ -3366,9 +3421,9 @@ function SiguienteModificador(divid,idmod,origen){
 			dataagreg=$('#busc_'+$('#id_formulado_modificadores').val()).attr("data-modificadores");
 		var agregadoschain="";
 		if(dataagreg!=null&&dataagreg!=''&&dataagreg!='undefined')
-			agregadoschain=dataagreg+"@"+nombrem+"|"+valormas+"|"+valortime;
+			agregadoschain=dataagreg+"@"+nombrem+"|"+valormas+"|"+valortime+"|"+cantidad;
 		else
-			agregadoschain=nombrem+"|"+valormas+"|"+valortime;
+			agregadoschain=nombrem+"|"+valormas+"|"+valortime+"|"+cantidad;
 		
 		//alert(agregadoschain);
 		
@@ -3380,7 +3435,10 @@ function SiguienteModificador(divid,idmod,origen){
 	
 	if(ya==false){
 		$('#popupModificadores').modal("hide");
-    $( "#inputbuscnew" ).focus();
+		mitades=false;
+		contadormitades=0;
+		
+		$( "#inputbuscnew" ).focus();
 		if(origen==2)
 		agregarCompra($('#busc_'+$('#id_formulado_modificadores').val()),origen);
 		else
@@ -3596,9 +3654,9 @@ function GuardarPropina(){
 function AgregarNota(){
 	var linea=$('#notaid').val();
 	var note=$('#textonota').val();
-	var tr=$('#cant_'+linea);
-	var td=tr.find('td:nth-child(3)');
-	var detail=tr.find('.productDetails');
+	var tr=document.getElementById('cant_'+linea);
+	var td=tr.cells[2];
+	var detail=$(tr).find('.productDetails');
 	var noteprod=$(td).find('.noteprod');
 	console.log(noteprod);
 	if(note!=''){
@@ -3606,8 +3664,8 @@ function AgregarNota(){
 			$(noteprod).html(note+'*');
 		}
 		else{
-			console.log(td);
-			td.append('<div class="noteprod" style="font-size:11px;">'+note+'*</div>');
+			console.log($(td));
+			$(td).append('<div class="noteprod" style="font-size:11px;">'+note+'*</div>');
 		}
 	}else{
 		if(noteprod.length>0){
@@ -4566,5 +4624,11 @@ function  ImprimirPrecuenta(){
 		});
 		},errorCB,successCB);
 	}
+}
+
+function ActivarMitades(id){
+	contadormitades=0;
+	mitades=true;
+	$('#mid_'+id).attr("class","btn btn-success btn-lg");
 }
 

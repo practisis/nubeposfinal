@@ -103,6 +103,7 @@
 	
 		if(localStorage.getItem("logo")!='')
 			$('#logofull').attr('src','file:///data/data/com.practisis.practipos/files//'+localStorage.getItem("logo"));
+			
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){

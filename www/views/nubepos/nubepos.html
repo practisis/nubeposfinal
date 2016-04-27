@@ -375,7 +375,7 @@
 									</table>
 								</th>
 								<th style="width:50%; text-align:left; padding-left:20px;"  class='trans_prod'>Producto</th>
-								<th style="text-align:right; padding-right:20px;">$Total</th>
+								<th style="text-align:right; padding-right:20px;"><span onclick='AbrirDrawer();'>$Total</span></th>
 							</tr>
 						</table>
 					</td>
@@ -460,7 +460,7 @@
 <div  class="modal fade" id="popupDiscount" role="dialog" data-backdrop="static">
 	<div class="modal-dialog modal-sm">
 	<div class='modal-content text-center'>
-		<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupDiscount").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>
+		<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' ><i class="fa fa-chevron-circle-left fa-2x"  onclick='$("#popupDiscount").modal("hide");' title='Volver...'></i></div>
 		<div class='modal-header'><h2 class='trans_desc'>DESCUENTO</h2></div>
 		<span id='msjDescuentoError'></span>
 		<div class="modal-body divdescuento" style='color:#404041; position:relative;'>
@@ -524,7 +524,9 @@
 	<div class="modal-dialog">
 	<div class='modal-content text-center'>
 		<!--<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupModificadores").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>-->
-		<div class='modal-header'><h4 id='titlemodificador'>Modificadores</h4></div>
+		<div class='modal-header'>
+		<div style='width:100%; text-align:right; padding-right:5px; padding-top:10px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;'><i onclick='$("#popupModificadores").modal("hide");' class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>
+		<h4 id='titlemodificador'>Modificadores</h4></div>
 		<span id='msjDescuentoError'></span>
 		<input type='hidden' style='display:none;' id='id_formulado_modificadores'/>
 		<div class="modal-body" style='color:#404041; position:relative;'>
@@ -673,7 +675,7 @@
 		<div class="modal-dialog modal-sm">
 			<div class='modal-content text-center'>
 				<div class='modal-header'>
-						<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupCantidad").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>
+						<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' ><i onclick='$("#popupCantidad").modal("hide");' class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>
 					<h3 class='trans_cantc'>Nueva Cantidad</h3>
 				</div>
 				<span id='msjCantidadError'></span>

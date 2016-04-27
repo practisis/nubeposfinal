@@ -1545,3 +1545,10 @@ function VerificarComandas(){
 	}
 	/*imprimir comandas no comandadas*/
 }
+
+function AbrirDrawer(){
+	if(localStorage.getItem("print")!=null&&localStorage.getItem("print")!=""){
+		//alert(localStorage.getItem("print"));
+		StarIOAdapter.opendrawer(localStorage.getItem("print"), function(){showalert("Abriendo caja");});
+	}
+}

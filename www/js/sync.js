@@ -265,6 +265,7 @@ function ExtraeDatosApi(donde){
 			localStorage.setItem("con_comandas",ext[0].comanderas);
 			localStorage.setItem("con_mesas",ext[0].mesas);
 			localStorage.setItem("logo",ext[0].logo);
+			localStorage.setItem("imprimelogo",ext[0].imprlogo);
 			//localStorage.setItem("con_mesas",false);
             localStorage.setItem("con_localhost",ext[0].localhost);
             localStorage.setItem("ip_servidor",ext[0].ipservidor);
@@ -962,6 +963,7 @@ function DatosRecurrentes(cual){
                       localStorage.setItem("con_localhost",item.localhost);
                       localStorage.setItem("ip_servidor",item.ipservidor);
                       localStorage.setItem("logo",item.logo);
+                      localStorage.setItem("imprimelogo",item.imprlogo);
 					  
                       tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'",con_notasorden="'+item.notas+'",con_comanderas="'+item.comanderas+'",con_localhost="'+item.localhost+'",ip_servidor="'+item.ipservidor+'",con_mesas="'+item.mesas+'",logo="'+item.logo+'" WHERE id=1',[],function(tx,results){
 						console.log("actualizada empresa");
@@ -1477,6 +1479,7 @@ function downloadImage(url, fileName){
 } 
 
 function ImprimirLogo(){
+	//alert("va imprimir");
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function (tx){		
 			tx.executeSql('SELECT printer,printercom FROM CONFIG where id=1',[],
@@ -1486,7 +1489,7 @@ function ImprimirLogo(){
 					var miprint=res.rows.item(0);
 					if(miprint.printer!=null){
 						StarIOAdapter.printlogo(milogo,miprint.printer, function() {
-							alert("imprime");
+							//alert("imprime");
 						});
 					}
 				}

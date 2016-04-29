@@ -400,6 +400,7 @@ function performPurchase(restaurant){
         con_mesas : localStorage.getItem("con_mesas"),
         id_mesa : sessionStorage.getItem("mesa_activa"),
         order_id : $('#order_id').val(),
+        con_menu : localStorage.getItem("diseno"),
         json : fetchJson
   		}).done(function(response){
   			if(response!='block' && response!='Desactivado'){

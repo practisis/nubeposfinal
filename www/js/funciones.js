@@ -3072,7 +3072,7 @@ function ActivarCategoriaMenu(cual,categoria){
 	function (tx){
 		
 		/*impuestos activos */
-		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? group by nombre order by id",["true"],function(tx,results3){
+		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? group by upper(nombre) order by id",["true"],function(tx,results3){
 							console.log(results3);
 							var impuestos='';
 							var impuestosid='';
@@ -3096,20 +3096,22 @@ function ActivarCategoriaMenu(cual,categoria){
 		});
 		/**/
 		
-		tx.executeSql("SELECT MAX(fila) as max from menu where activo='true'",[],function(tx,res1){
-			var maxfilas=0;
-			if(res1.rows.length>0){
-				if(res1.rows.item(0).max!=null&&res1.rows.item(0).max>0){
-					maxfilas=res1.rows.item(0).max;
-					for(var r=1;r<=maxfilas;r++){
-						
-						console.log('SELECT p.*, m.idcatmenu as idc,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" and fila='+m+' ORDER BY m.columna asc');
-						tx.executeSql('SELECT p.*, m.idcatmenu as idc,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" and fila='+r+' ORDER BY m.columna asc',[],function(tx,res){
+		//tx.executeSql("SELECT MAX(fila) as max from menu where activo='true'",[],function(tx,res1){
+			//var maxfilas=0;
+			//if(res1.rows.length>0){
+				//if(res1.rows.item(0).max!=null&&res1.rows.item(0).max>0){
+					//maxfilas=res1.rows.item(0).max;
+					//for(var r=1;r<=maxfilas;r++){
+
+						console.log('SELECT p.*, m.idcatmenu as idc,m.timespan as mtimespan,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" ORDER BY p.formulado asc');
+                        //tx.executeSql('SELECT p.*, m.idcatmenu as idc,m.timespan as mtimespan,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" and fila='+r+' ORDER BY m.columna asc',[],function(tx,res){
+						tx.executeSql('SELECT p.*, m.idcatmenu as idc,m.timespan as mtimespan,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" ORDER BY p.formulado asc',[],function(tx,res){
 							console.log(res);
 							if(res.rows.length>0){
 								//alert('prods');
 								var t=1;
-							var vectorpos=['<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>','<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>','<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria +'"></div>'];
+							//var vectorpos=['<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>','<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>','<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria +'"></div>'];
+                            var vectorpos=[];
 								for(m=0;m<res.rows.length;m++){
 									var row=res.rows.item(m);
 									if(isNaN(row.precio)){row.precio = 0;}
@@ -3136,7 +3138,14 @@ function ActivarCategoriaMenu(cual,categoria){
 									var lineHeight='';
 									if(row.formulado.length>12)
 										lineHeight='line-height:18px;';
-									vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
+                                    if(localStorage.getItem("con_localhost") == 'true'){
+                                      //alert(row.formulado+'**'+row.col);
+									  //vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.mtimespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
+                                      vectorpos[t]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.mtimespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
+                                    }else{
+                                      //vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
+                                      vectorpos[t]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
+                                    }
 									/*if(row.formulado.length>12)
 										lineHeight='line-height:18px;';
 									var resto=parseInt(row.col)-t;
@@ -3178,10 +3187,10 @@ function ActivarCategoriaMenu(cual,categoria){
 							//para mostrar productos por pagina
 							showProducts(categoria);
 						});	
-					}
-				}
-			}
-		});			
+					//}
+				//}
+			//}
+		//});
 	},errorCB,successCB);
 	$('.producto').hide();
 	
@@ -3251,11 +3260,115 @@ function PagoAvanzado(){
 var mitades=false;
 var contadormitades=0;
 function VerificarAgregados(btnprod,origen){
-	mitades=false;
-	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-	var mitimespan=$(btnprod).attr("id");
+  mitades=false;
+  var mitimespan=$(btnprod).attr("id");
 	if(mitimespan.indexOf('busc_')>=0)
 		mitimespan=mitimespan.substring(5);
+  //alert(mitimespan+'**'+origen);
+
+  if(localStorage.getItem("con_localhost") == 'true'){
+       var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+       $.post(apiURL,{
+  		id_emp : localStorage.getItem("empresa"),
+  		action : 'MenuPeticion',
+  		id_barra : localStorage.getItem("idbarra"),
+  		deviceid:$("#deviceid").html(),
+        timespanmenu : mitimespan
+  		}).done(function(response){
+  			if(response!='block' && response!='Desactivado'){
+  				console.log(response);
+                  //var res = response.split("||");
+
+                    var y = JSON.parse(response);
+            		var mods= new Array();
+            		if (y.length>0){
+            			if(localStorage.getItem("idioma")==1)
+            				$('#titlemodificador').html("Modificadores de "+$(btnprod).attr("data-formulado"));
+            			else
+            				$('#titlemodificador').html("Aggregates of "+$(btnprod).attr("data-formulado"));
+            			$('#id_formulado_modificadores').val(mitimespan);
+            			for(var m=0;m<y.length;m++){
+            				var miobj=y[m];
+            				var objmod=miobj.num_modificador;
+            				if(!('"'+objmod+'"' in mods))
+            					mods['"'+objmod+'"']= new Array();
+            				mods['"'+objmod+'"'].push("<button style='margin:3px;' class='btn btn-primary btn-lg' id='btnmodif_"+miobj.id+"' data-valor='"+miobj.valor+"' data-time='"+miobj.id+"'  onclick='SiguienteModificador("+objmod+","+miobj.id+","+origen+");' type='button'>"+miobj.nombre+"</button>");
+            			}
+            			console.log(mods);
+            			var c=1;
+            			$('#divmodificadores').html('');
+            			for(var s in mods){
+            				var display='';
+            				if(c>1)
+            					display='display:none';
+
+            				/*var inhtml="<div class='grupobotones' id='mod_"+s.replace(/"/g,'')+"' data-orden="+c+" style='margin:5px;"+display+"'>";
+            				for(var t in mods[s]){
+            					inhtml+=mods[s][t];
+            				}
+            				if(localStorage.getItem("idioma")==1)
+            				{
+            					inhtml+="</div>";
+            					miboton="<button style='margin:3px;' id='btn_mod_"+s.replace(/"/g,'')+"' class='btn btn-default btn-lg' type='button' onclick='ActivarHalf("+s.replace(/"/g,'')+");'>Mitad</button><button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button>";
+            				}
+            				else{
+            					inhtml+="</div>";
+            					miboton="<button style='margin:3px;' id='btn_mod_"+s.replace(/"/g,'')+"' class='btn btn-default btn-lg' type='button' onclick='ActivarHalf("+s.replace(/"/g,'')+");'>Half</button><button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>None</button>";
+            				}*/
+                            var inhtml="<div class='grupobotones' id='mod_"+s.replace(/"/g,'')+"' data-orden="+c+" style='margin:5px;"+display+"'>";
+
+        					if(localStorage.getItem("idioma")==1)
+        						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Mitad</button>";
+        					else if(localStorage.getItem("idioma")==1)
+        						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Half</button>";
+
+        					if(localStorage.getItem("idioma")==1)
+        						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
+        					else
+        						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>NONE</button></div>";
+        					inhtml+="<hr></hr>";
+
+        					for(var t in mods[s]){
+        						inhtml+=mods[s][t];
+        					}
+
+        					inhtml+="</div>";
+
+            				$('#divmodificadores').append(inhtml);
+            				//$('#btnabajo').html(miboton);
+            				c++;
+            			}
+            			$('#popupModificadores').modal("show");
+
+            			}else{
+            				agregarCompra($(btnprod),origen);
+            			}
+
+  			}else if(response=='Desactivado'){
+  			    envia('cloud');
+  				setTimeout(function(){
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#desactivo').fadeIn();
+  				},100);
+  			}else{
+  				envia('cloud');
+  				setTimeout(function(){
+  					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#bloqueo').fadeIn();
+  				},100);
+
+  			}
+
+  		}).fail(function(){
+  			updateOnlineStatus("OFFLINE");
+  			setTimeout(function(){SincronizadorNormal()},180000);
+  		});
+      }else{
+  //***************************************inicio normal**********************************
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(
 	function (tx){
 		tx.executeSql('SELECT * from MODIFICADORES WHERE id_formulado LIKE ? and activo=? order by no_modificador asc',[mitimespan,"true"],function(tx,res1){
@@ -3266,7 +3379,7 @@ function VerificarAgregados(btnprod,origen){
 					$('#titlemodificador').html("Modificadores de "+$(btnprod).attr("data-formulado"));
 				else
 					$('#titlemodificador').html("Aggregates of "+$(btnprod).attr("data-formulado"));
-				
+
 				$('#id_formulado_modificadores').val(mitimespan);
 				for(var m=0;m<res1.rows.length;m++){
 					var miobj=res1.rows.item(m);
@@ -3287,22 +3400,22 @@ function VerificarAgregados(btnprod,origen){
 						display='display:none';
 
 					var inhtml="<div class='grupobotones' id='mod_"+s.replace(/"/g,'')+"' data-orden="+c+" style='margin:5px;"+display+"'>";
-					
+
 					if(localStorage.getItem("idioma")==1)
 						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Mitad</button>";
 					else if(localStorage.getItem("idioma")==1)
-						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Half</button>";						
-					
+						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Half</button>";
+
 					if(localStorage.getItem("idioma")==1)
 						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
 					else
 						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>NONE</button></div>";
 					inhtml+="<hr></hr>";
-					
+
 					for(var t in mods[s]){
 						inhtml+=mods[s][t];
 					}
-					
+
 					inhtml+="</div>";
 					
 					$('#divmodificadores').append(inhtml);
@@ -3316,6 +3429,8 @@ function VerificarAgregados(btnprod,origen){
 			}
 		});
 	},errorCB,successCB);
+    //*************************************fin normal*************************************
+    }
 }
 
 function VerificarAgregadosnew(btnprod,origen){
@@ -4342,6 +4457,8 @@ function SaveMesa(){
             query += "INSERT INTO mesas_consumos (id_mesa,hora,details,agregados,notas,id_real) values ('"+mesaactiva+"','"+fecha+"','"+details+"','"+agreg+"','"+notes+"','"+idreal+"')||@"
 		}
 	});
+
+    //alert(query);
 
      $.post(apiURL,{
 		id_emp : localStorage.getItem("empresa"),

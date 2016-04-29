@@ -1276,15 +1276,15 @@ function pagar(){
 			json +=	'"logo": "'+logo+'"';
 			json +=	'},';
 			json += '"producto": [';
-	$('.productDetails').each(function(){
-		var splitDetails = $(this).val().split('|');
-		var detalleagregados="";
-		var detallenotas="";
-		if($(this).attr("data-detagregados")!=''&&$(this).attr("data-detagregados")!=null&&$(this).attr("data-detagregados")!='undefined')
-		   detalleagregados=$(this).attr("data-detagregados");
+		$('.productDetails').each(function(){
+			var splitDetails = $(this).val().split('|');
+			var detalleagregados="";
+			var detallenotas="";
+			if($(this).attr("data-detagregados")!=''&&$(this).attr("data-detagregados")!=null&&$(this).attr("data-detagregados")!='undefined')
+				detalleagregados=$(this).attr("data-detagregados");
 	   
-	   if($(this).attr("data-notes")!=''&&$(this).attr("data-notes")!=null&&$(this).attr("data-notes")!='undefined')
-		   detallenotas=$(this).attr("data-notes");
+			if($(this).attr("data-notes")!=''&&$(this).attr("data-notes")!=null&&$(this).attr("data-notes")!='undefined')
+			detallenotas=$(this).attr("data-notes");
 	   
 		json += '{';
 			json += '"id_producto" : "'+ splitDetails[0] +'",';
@@ -1780,7 +1780,7 @@ function ColocarFormasPago(){
 				}
 					
 				mihtml+= '<div style="height:100%; background-color:'+inputfondo+'; border:1px solid #CCCCCC; text-align:center; padding-right:10px;">';
-				mihtml+= '<input class="paymentMethods" paymentMethod="'+evalJson[k][j].nombre+'" idPaymentMethod="'+evalJson[k][j].id+'" id="payment'+evalJson[k][j].nombre.replace(" ","")+'" style="height:100%; width:100%; background:'+fondo+'; border:0px; text-align:right;" placeholder="0.00" value="" type="number" min="0.00" step="0.10" onfocus="this+select();" onchange="changePaymentCategory(\''+evalJson[k][j].id+'\',\''+evalJson[k][j].nombre+'\');" onkeypress="isalphanumeric(event);" '+read+' />';
+				mihtml+= '<input class="paymentMethods" pattern="[0-9]*" paymentMethod="'+evalJson[k][j].nombre+'" idPaymentMethod="'+evalJson[k][j].id+'" id="payment'+evalJson[k][j].nombre.replace(" ","")+'" style="height:100%; width:100%; background:'+fondo+'; border:0px; text-align:right;" placeholder="0.00" value="" type="number" min="0.00" step="0.10" onfocus="this.select();" onchange="changePaymentCategory(\''+evalJson[k][j].id+'\',\''+evalJson[k][j].nombre+'\');" onkeypress="isalphanumeric(event);" '+read+' />';
 				mihtml+= '</div>';
 				mihtml+= '</td><td width="5%" class="basurero" style="display:none; "><button class="btn" type="button" onclick="ResetPagos('+evalJson[k][j].id+');"><span class="glyphicon glyphicon-trash"></span></button></td>';
 				mihtml+= '</tr>';
@@ -4282,7 +4282,10 @@ function VerConsumos(idmesa){
 						var agregado=item.agregados.split("@");
 						for(var t=0;t<agregado.length;t++){
 							var dataagr=agregado[t].split('|');
-							html+="<tr><td>"+dataagr[0]+"</td><td style='text-align:right;'>$"+parseFloat(dataagr[1]).toFixed(2)+"</td></tr>";
+							var cn="";
+							if(parseFloat(dataagr[3])<1)
+								cn="1/2";
+							html+="<tr><td>"+cn+dataagr[0]+"</td><td style='text-align:right;'>$"+parseFloat(dataagr[1]).toFixed(2)+"</td></tr>";
 						}
 						html+="</table>";
 					}

@@ -36,12 +36,13 @@
             <div class="col-xs-12">
     			<div class="col-xs-4">
     				<h4><label class='trans_precio' style='display:inline;'>Precio</label> (<label style='display:inline;' class='trans_sinimp'>sin imp.</label>)</h4>
-    				<input style="width:100%;" class="form-control soloFloat" type="number" step="0.1" autofocus=""  placeholder="Precio sin imp " name='precioproducto' id='precioproducto' onkeypress="isalphanumeric(event);"/>
-    				<label style="color:red;display:none;" class="errorLabel3">Ingrese un precio válido</label>
+    				<input style="width:100%;" class="form-control soloFloat"  readonly autofocus=""  placeholder="Precio sin imp " name='precioproducto' data-toggle="popover" data-placement="bottom" id='precioproducto' onkeypress="isalphanumeric(event);" data-container="body" />
+					<div id='contentteclado'></div>
+    				<label style="color:red;display:none;"  class="errorLabel3">Ingrese un precio válido</label>
     			</div>
     			<div class="col-xs-4">
     				<h4><label class='trans_precio' style='display:inline;'>Precio</label> (<label style='display:inline;' class='trans_conimp'>con imp.</label>)</h4>
-    				<input style="width:100%;" class="form-control" type="number" step="0.1" autofocus="" id='precioConImpuestos' onkeypress="isalphanumeric(event);"  placeholder="Precio con imp" onchange='CalcularSinImpuestos();' />
+    				<input style="width:100%;" class="form-control"  data-toggle="popover" data-placement="bottom" data-container="body"  autofocus="" id='precioConImpuestos' onkeypress="isalphanumeric(event);" placeholder="Precio con imp" onchange='CalcularSinImpuestos();' readonly />
     				<label style="color:red;display:none;" class="errorLabel">Ingrese un precio válido</label>
     			</div>
                 <div class="col-xs-4">
@@ -104,6 +105,17 @@
 <script>
 	$(document).ready(function(){
 	
+		$('#precioproducto').popover({html:true,content:"<div style='padding:5px;' id='tecladoc'><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='1'>1</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='2'>2</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='3'>3</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='4'>4</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='5'>5</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='6'>6</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='7'>7</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='8'>8</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='9'>9</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='0'>0</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='p'>.</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button></div><div style='margin-top:3px; text-align:center;'><button class='btn btn-sm btn-success' type='button' onclick='ocultarTeclado("+'"precioproducto"'+");'>OK</button></div></div>",delay: { "show": 100, "hide": 100 },trigger:"click"});
+		$('#precioproducto').on('shown.bs.popover', function () {
+		   setTimeout(function(){ocultarTeclado('precioproducto');},60000);
+		});
+		
+		$('#precioConImpuestos').popover({html:true,content:"<div style='padding:5px;' id='tecladoc'><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='1'>1</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='2'>2</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='3'>3</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='4'>4</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='5'>5</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='6'>6</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='7'>7</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='8'>8</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='9'>9</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='0'>0</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='p'>.</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button></div><div style='margin-top:3px; text-align:center;'><button class='btn btn-sm btn-success' type='button' onclick='ocultarTeclado("+'"precioConImpuestos"'+");'>OK</button></div></div>",delay: { "show": 100, "hide": 100 },trigger:"click"});
+		$('#precioConImpuestos').on('shown.bs.popover', function () {
+		   setTimeout(function(){ocultarTeclado('precioConImpuestos');},60000);
+		});
+		
+		
 		//idioma
 		var linklang="es";
 		if(localStorage.getItem("idioma")==2)
@@ -172,7 +184,7 @@
 		
 		$( "#precioproducto" ).change(function() {
 			var precioHis = parseFloat($( "#precioproducto" ).val());
-			$( "#precioproducto" ).val(precioHis.toFixed(4).toString().replace(",","."));
+			$("#precioproducto").val(precioHis.toFixed(4));
 			var sumaimpuesto=1;
 			/*if($('#conservicio').is(":checked"))
 				sumaimpuesto+=0.10;
@@ -194,6 +206,7 @@
 			var precioConImpuestos=(precioHis*sumaimpuesto).toFixed(2);
 			$('#precioConImpuestos').val(precioConImpuestos);
 		});
+		
 		$('#coniva').on('switchChange.bootstrapSwitch',function(event,state){
 			jsonimpuestosventa();
 		});
@@ -204,6 +217,14 @@
 	});
 	
 	
+	function ocultarTeclado(inp){
+		if(inp=='precioproducto')
+			CalcularConImpuestos();
+		else
+			CalcularSinImpuestos();
+			
+		$('#'+inp).popover('hide');
+	}
 	
 	function jsonimpuestosventa(){
 		var arrayimpventa=new Array();
@@ -289,7 +310,7 @@
 					//console.log("Ana");
 					$("#idcategoria").val(row.categoriaid);
 					$("#colorproducto").val(row.color);
-					if(row.cargaiva==1) 
+					if(row.tieneimpuestos=='true')
 						$('#coniva').bootstrapSwitch('state', true, true);
 					else
 						$('#coniva').bootstrapSwitch('state', false, true);
@@ -659,6 +680,9 @@
 	
 	function CalcularSinImpuestos(){
 		var precioHis = parseFloat($( "#precioConImpuestos" ).val());
+		//alert(precioHis);
+		var preciocon=precioHis.toFixed(2);
+		$("#precioConImpuestos").val(preciocon);
 		var sumaimpuesto=1;
 			/*if($('#conservicio').is(":checked"))
 				sumaimpuesto+=0.10;
@@ -675,10 +699,65 @@
 						sumaimpuesto+=por;
 					}
 				}
-			}
-
-				
+			}				
 			var precioConImpuestos=(precioHis/sumaimpuesto).toFixed(4);
 			$('#precioproducto').val(precioConImpuestos.toString().replace(",","."));
 	}
+	
+	
+	function ClickNumero(numc,input){
+	var miinp=$('#'+input);
+	var accion = $.trim($(numc).attr('cual'));
+		//console.log(accion);
+		if(accion == 'p'){
+			if(miinp.val().indexOf('.') == -1){
+				if(miinp.val() == 0){
+					miinp.val(miinp.val()+".");
+					}
+				else{
+					miinp.val(miinp.val()+'.');
+					}
+				}
+			return false;
+			}
+		else if($.isNumeric(accion) === true){
+			if(miinp.val()=='0')
+					miinp.val(accion);
+			else
+					miinp.val(miinp.val()+accion);
+			return false;
+			}
+
+		var fetchHTML = $.trim(miinp.val());
+		miinp.val(fetchHTML.substring(0,(fetchHTML.length-1)));
+		if(miinp.val()=='')
+			miinp.val('0');
+	}
+	
+	function CalcularConImpuestos(){
+			var precioHis = parseFloat($( "#precioproducto" ).val());
+			console.log(precioHis);
+			$("#precioproducto").val(precioHis.toFixed(4));
+			var sumaimpuesto=1;
+			/*if($('#conservicio').is(":checked"))
+				sumaimpuesto+=0.10;
+
+			if($('#coniva').is(":checked"))
+				sumaimpuesto+=0.12;*/	
+			if($('#coniva').is(':checked')){
+				var cadimp=$('#impuestosactivos').html();
+				var aplican="";
+				if(cadimp!=''){
+					var misporcentimp=cadimp.split('@');
+					for(var t=0;t<misporcentimp.length;t++){
+						var por=parseFloat(misporcentimp[t]);
+						sumaimpuesto+=por;
+					}
+				}
+			}
+
+			var precioConImpuestos=(precioHis*sumaimpuesto).toFixed(2);
+			$('#precioConImpuestos').val(precioConImpuestos);
+	}
+	
 </script>

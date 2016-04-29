@@ -33,16 +33,17 @@
         </div>
 
 		<div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-12" id='contentteclado'>
     			<div class="col-xs-4">
     				<h4><label class='trans_precio' style='display:inline;'>Precio</label> (<label style='display:inline;' class='trans_sinimp'>sin imp.</label>)</h4>
-    				<input style="width:100%;" class="form-control soloFloat"  readonly autofocus=""  placeholder="Precio sin imp " name='precioproducto' data-toggle="popover" data-placement="bottom" id='precioproducto' onkeypress="isalphanumeric(event);" data-container="body" />
-					<div id='contentteclado'></div>
+    				<input style="width:100%;" class="form-control soloFloat"  readonly autofocus=""  placeholder="Precio sin imp " name='precioproducto' data-toggle="popover" data-placement="bottom" id='precioproducto' onkeypress="isalphanumeric(event);" data-container="#contentteclado" />
     				<label style="color:red;display:none;"  class="errorLabel3">Ingrese un precio válido</label>
     			</div>
     			<div class="col-xs-4">
     				<h4><label class='trans_precio' style='display:inline;'>Precio</label> (<label style='display:inline;' class='trans_conimp'>con imp.</label>)</h4>
-    				<input style="width:100%;" class="form-control"  data-toggle="popover" data-placement="bottom" data-container="body"  autofocus="" id='precioConImpuestos' onkeypress="isalphanumeric(event);" placeholder="Precio con imp" onchange='CalcularSinImpuestos();' readonly />
+					
+    				<input style="width:100%;" class="form-control"  data-toggle="popover" data-placement="bottom" data-container="#contentteclado"  autofocus="" id='precioConImpuestos' onkeypress="isalphanumeric(event);" placeholder="Precio con imp" onchange='CalcularSinImpuestos();' readonly />
+					
     				<label style="color:red;display:none;" class="errorLabel">Ingrese un precio válido</label>
     			</div>
                 <div class="col-xs-4">

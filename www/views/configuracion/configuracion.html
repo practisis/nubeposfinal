@@ -101,8 +101,12 @@
 				
 		});
 	
-		if(localStorage.getItem("logo")!='')
+		if(localStorage.getItem("logo")!=''&&localStorage.getItem("logo")!=null&&localStorage.getItem("logo").logo!=''){
+			$('#logofull').fadeIn();
 			$('#logofull').attr('src','file:///data/data/com.practisis.practipos/files//'+localStorage.getItem("logo"));
+		}else{
+			$('#logofull').css("display","none");
+		}
 			
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);

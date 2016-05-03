@@ -907,7 +907,7 @@ function cambiarCantidad(){
 						$('#changeFromPurchase').html(sumTotal.toFixed(2));
 						$('#totalmiFactura').val(sumTotal);
 						$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
-            if(localStorage.getItem("idioma")==1)
+						if(localStorage.getItem("idioma")==1)
 							$('#btn_gpedidos').html('GUARDAR $'+ parseFloat(sumTotal).toFixed(2));
 						else if(localStorage.getItem("idioma")==2)
 							$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
@@ -1203,6 +1203,12 @@ function pagar(){
 		if(localStorage.getItem("imprimelogo")=="true")
 		   logo=localStorage.getItem("logo");
 	}
+	
+	var mensajepie="";
+	if(localStorage.getItem("mensajefinal")!=''&&localStorage.getItem("mensajefinal")!=null){
+		if(!localStorage.getItem("paquete")=="1")
+		   mensajepie=localStorage.getItem("mensajefinal");
+	}
 		
 	
 	//if($('#timespanFactura').val()=='')
@@ -1279,7 +1285,8 @@ function pagar(){
 			json +=	'"telefono": "'+$('#telefonoP').val()+'",';
 			json +=	'"email": "'+$('#emailP').val()+'",';
 			json +=	'"direccion": "'+$('#direccionP').val()+'",';
-			json +=	'"logo": "'+logo+'"';
+			json +=	'"logo": "'+logo+'",';
+			json +=	'"mensajefinal": "'+mensajepie+'"';
 			json +=	'},';
 			json += '"producto": [';
 		$('.productDetails').each(function(){
@@ -1785,17 +1792,19 @@ function ColocarFormasPago(){
 				mihtml+= '</div>';
 				mihtml+= '</td>';
 				mihtml+= '<td class="columna2" style="display:none;">';
-				var read='';
 				var fondo='transparent';
 				var inputfondo='#F7F7F7';
+				var clase='pop';
+				var datacontain='data-container="#rowbotonpagos" ';
 				if(evalJson[k][j].id!=1){
-					read='readonly';
 					fondo='#DDD';
 					inputfondo='#DDD;'
+					clase='';
+					datacontain='';
 				}
 					
 				mihtml+= '<div style="height:100%; background-color:'+inputfondo+'; border:1px solid #CCCCCC; text-align:center; padding-right:10px;">';
-				mihtml+= '<input class="paymentMethods" pattern="[0-9]*" paymentMethod="'+evalJson[k][j].nombre+'" idPaymentMethod="'+evalJson[k][j].id+'" id="payment'+evalJson[k][j].nombre.replace(" ","")+'" style="height:100%; width:100%; background:'+fondo+'; border:0px; text-align:right;" placeholder="0.00" value="" type="number" min="0.00" step="0.10" onfocus="this.select();" onchange="changePaymentCategory(\''+evalJson[k][j].id+'\',\''+evalJson[k][j].nombre+'\');" onkeypress="isalphanumeric(event);" '+read+' />';
+				mihtml+= '<input class="paymentMethods '+clase+'" paymentMethod="'+evalJson[k][j].nombre+'" idPaymentMethod="'+evalJson[k][j].id+'" id="payment'+evalJson[k][j].nombre.replace(" ","")+'" style="height:100%; width:100%; background:'+fondo+'; border:0px; text-align:right;" placeholder="0.00" value="" onfocus="this.select();" onchange="changePaymentCategory(\''+evalJson[k][j].id+'\',\''+evalJson[k][j].nombre+'\');" onkeypress="isalphanumeric(event);" readonly '+datacontain+' />';
 				mihtml+= '</div>';
 				mihtml+= '</td><td width="5%" class="basurero" style="display:none; "><button class="btn" type="button" onclick="ResetPagos('+evalJson[k][j].id+');"><span class="glyphicon glyphicon-trash"></span></button></td>';
 				mihtml+= '</tr>';
@@ -1803,6 +1812,68 @@ function ColocarFormasPago(){
 		}
 	}
 	$('#tablaformaspago').html(mihtml);
+	
+	$('.pop').popover({html:true,content:"<div style='padding:5px;' id='tecladoc'><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='1'>1</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='2'>2</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='3'>3</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='4'>4</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='5'>5</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='6'>6</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='7'>7</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='8'>8</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='9'>9</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='0'>0</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='p'>.</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button></div><div style='margin-top:3px; text-align:center;'><button class='btn btn-success' type='button' onclick='ocultarTeclado(this);'>OK</button></div></div>",delay: { "show": 100, "hide": 10 },trigger:"click",placement:"bottom"});
+	$('.pop').on('shown.bs.popover', function () {
+			$('.numeron').css('width','80px');
+			//$('#precioConImpuestos').popover('hide');
+		    setTimeout(function(){ocultarTeclado();},60000);
+	});
+}
+
+function ClickNumeroP(numc){
+	var div=$(numc).parent().parent().parent().parent();
+	var miinp;
+	$('#pay input').each(function(){
+		if($(this).attr('aria-describedby')==div.attr('id')){
+			miinp=$(this);
+		}
+	});
+	//alert(div.attr('id'));
+	var accion = $.trim($(numc).attr('cual'));
+		//console.log(accion);
+		if(accion == 'p'){
+			if(miinp.val().indexOf('.') == -1){
+				if(miinp.val() == 0){
+					miinp.val(miinp.val()+".");
+					}
+				else{
+					miinp.val(miinp.val()+'.');
+					}
+				}
+			return false;
+			}
+		else if($.isNumeric(accion) === true){
+			if(miinp.val()=='0')
+					miinp.val(accion);
+			else
+					miinp.val(miinp.val()+accion);
+			return false;
+			}
+
+		var fetchHTML = $.trim(miinp.val());
+		miinp.val(fetchHTML.substring(0,(fetchHTML.length-1)));
+		if(miinp.val()=='')
+			miinp.val('0');
+}
+
+function ocultarTeclado(numc){
+	if(numc!=null){
+		var div=$(numc).parent().parent().parent().parent();
+		var inp;
+		$('#pay input').each(function(){
+			if($(this).attr('aria-describedby')==div.attr('id')){
+				inp=$(this);
+			}
+		});
+		$(inp).change();
+		if(inp!=null)
+			$(inp).popover('hide');
+		else
+			$('.pop').popover('hide');
+	}else{
+		$('.pop').popover('hide');
+	}
 }
 
 function BuscarCliente(e){
@@ -1835,6 +1906,7 @@ function BuscarCliente(e){
 		},errorCB,successCB);
 	}
 }
+
 function Init3(){
 	//console.log("celular pequeno");
 	mialtoboton=0;
@@ -2329,6 +2401,29 @@ function ClickNumeroM(numd){
 
 function Ready(){
 	
+  $('#paymentModule').on("click",function(e){
+	  if ($(e.target).data('toggle') !== 'popover'&& $(e.target).parents('.popover.in').length === 0) {
+			if($('.popover.in').length>0){
+				//alert('se oculta');
+				//$('[data-toggle="popover"]').popover('hide');
+				var mipop=$('.popover.in')[0];
+				var id=$(mipop).attr('id');
+				var inp;
+				$('#pay input').each(function(){
+					if($(this).attr('aria-describedby')==id){
+						inp=$(this);
+					}
+				});
+				
+				if(inp!=null){
+					$(inp).change();
+					$(inp).popover('hide');
+				}
+				//ocultarTeclado();
+			}
+		}
+  });
+	
   if(localStorage.getItem("con_shop")=='true'){
     /*$('#productos').fadeOut();
     $('#productosnew').fadeIn();*/
@@ -2801,11 +2896,11 @@ function elegirTarjeta(id){
 	changePaymentCategory('2','Tarjetas');
 
     if(localStorage.getItem("con_tarjeta")=='true'){
-      $('#valortarjeta').prop("readonly",true);
+     // $('#valortarjeta').prop("readonly",true);
       $('#payButton').fadeOut("fast");
       pagotarjeta();
     }else{
-      $('#valortarjeta').prop("readonly",false);
+      //$('#valortarjeta').prop("readonly",false);
       $('#payButton').fadeIn("fast");
       $('#order_id').val('');
     }
@@ -4602,10 +4697,17 @@ function SaveMesa(){
 			cuan++;
 		}
 	});
+	
+	var mensajepie="";
+	if(localStorage.getItem("mensajefinal")!=''&&localStorage.getItem("mensajefinal")!=null){
+		if(!localStorage.getItem("paquete")=="1")
+		   mensajepie=localStorage.getItem("mensajefinal");
+	}
 			
 	//json = json.substring(0,json.length -1);	
 	json += '],"mesa":"'+sessionStorage.getItem("mesa_name")+'",';
-	json += '"lang":"'+localStorage.getItem("idioma")+'"';
+	json += '"lang":"'+localStorage.getItem("idioma")+'",';
+	json += '"mensajefinal":"'+mensajepie+'"';
 	json += '}]}';
 		
 	
@@ -4649,6 +4751,14 @@ function SaveMesa(){
 }
 
 function  ImprimirPrecuenta(){
+	
+	
+	var mensajepie="";
+	if(localStorage.getItem("mensajefinal")!=''&&localStorage.getItem("mensajefinal")!=null){
+		if(!localStorage.getItem("paquete")=="1")
+		   mensajepie=localStorage.getItem("mensajefinal");
+	}
+	
 	var mesaactiva=sessionStorage.getItem("mesa_activa");
     //alert(mesaactiva);
 	if(mesaactiva!=null&&mesaactiva!=""){
@@ -4752,7 +4862,8 @@ function  ImprimirPrecuenta(){
 			json += '"lang" : "'+ localStorage.getItem("idioma") +'",';
 			json += '"propina" : "'+propina+'",';
 			json += '"mesa" : "'+mesaname+'",';
-			json += '"pax" : "'+pax+'"';
+			json += '"pax" : "'+pax+'",';
+			json += '"mensajefinal" : "'+mensajepie+'"';
 		json += '}}]}';
 		
 		console.log(json);

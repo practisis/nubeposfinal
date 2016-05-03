@@ -401,7 +401,8 @@ function CambiarLogo(){
 		alert("Necesita Premium");
 	}
 }
-
+	
+	
 function ver_version(){
   var version_nub = document.getElementById('version_nub').value;
   if(version_nub == '1'){
@@ -424,7 +425,6 @@ function ver_version(){
     localStorage.setItem("con_mesas","false");
     $('#con_shop').bootstrapSwitch('state', false);
     $('#con_mesas').bootstrapSwitch('state', false);
-	}
-  localStorage.setItem("id_version_nube",version_nub);
+  }
 }
 </script>

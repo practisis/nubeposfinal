@@ -18,7 +18,7 @@ function receiveJson(){
 
 function changePaymentCategory(index,nombre){
 
-    $('#valortarjeta').prop("readonly",false);
+    //$('#valortarjeta').prop("readonly",false);
     $('#payButton').fadeIn("fast");
     $('#order_id').val('');
 	

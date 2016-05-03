@@ -491,7 +491,18 @@ function registrarUser(){
 						//localStorage.setItem("menuya",true);
 						//localStorage.setItem("permisosya",true);
 						//localStorage.setItem("mesasya",true);
-						
+
+                        setTimeout(function(){
+                          //alert(localStorage.getItem("id_version_nube"));
+                          if(localStorage.getItem("id_version_nube") == '0'){
+            	            $('#version_escoje').fadeIn('slow');
+                          }
+
+                          if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+              	            $('#pide_telefono').fadeIn('slow');
+                          }
+                        }, 2000);
+
 						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','','',false);});
 						

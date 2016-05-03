@@ -1769,6 +1769,7 @@ function soloNumerost(e){
 	}
 }
 
+var digitado=false;
 function ColocarFormasPago(){
 	var formaspago=$('#jsonformaspago').html();
 	var evalJson=JSON.parse(formaspago);
@@ -1812,9 +1813,9 @@ function ColocarFormasPago(){
 		}
 	}
 	$('#tablaformaspago').html(mihtml);
-	
 	$('.pop').popover({html:true,content:"<div style='padding:5px;' id='tecladoc'><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='1'>1</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='2'>2</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='3'>3</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='4'>4</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='5'>5</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='6'>6</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='7'>7</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='8'>8</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='9'>9</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='0'>0</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='p'>.</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button></div><div style='margin-top:3px; text-align:center;'><button class='btn btn-success' type='button' onclick='ocultarTeclado(this);'>OK</button></div></div>",delay: { "show": 100, "hide": 10 },trigger:"click",placement:"bottom"});
 	$('.pop').on('shown.bs.popover', function () {
+			digitado=false;
 			$('.numeron').css('width','80px');
 			//$('#precioConImpuestos').popover('hide');
 		    setTimeout(function(){ocultarTeclado();},60000);
@@ -1834,22 +1835,44 @@ function ClickNumeroP(numc){
 		//console.log(accion);
 		if(accion == 'p'){
 			if(miinp.val().indexOf('.') == -1){
-				if(miinp.val() == 0){
+				/*if(miinp.val()==0){
 					miinp.val(miinp.val()+".");
-					}
-				else{
-					miinp.val(miinp.val()+'.');
-					}
+					digitado=true;
 				}
-			return false;
+				else{*/
+					if(digitado==false){
+						miinp.val('0.');
+						digitado=true;
+					}
+					else{
+						miinp.val(miinp.val()+'.');
+						digitado=true;
+					}
+				//}
+			}else{
+				if(digitado==false){
+						miinp.val('0.');
+						digitado=true;
+				}
 			}
+			return false;
+		}
 		else if($.isNumeric(accion) === true){
-			if(miinp.val()=='0')
-					miinp.val(accion);
-			else
-					miinp.val(miinp.val()+accion);
-			return false;
+			if(miinp.val()=='0'){
+				miinp.val(accion);
+				digitado=true;
 			}
+			else {
+				if(digitado==true)
+					miinp.val(miinp.val()+accion);
+				else{
+					miinp.val(accion);
+					digitado=true;
+				}
+			}
+					
+			return false;
+		}
 
 		var fetchHTML = $.trim(miinp.val());
 		miinp.val(fetchHTML.substring(0,(fetchHTML.length-1)));

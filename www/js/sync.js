@@ -501,7 +501,7 @@ function registrarUser(){
                           if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
               	            $('#pide_telefono').fadeIn('slow');
                           }
-                        }, 2000);
+                        }, 3000);
 
 						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','','',false);});

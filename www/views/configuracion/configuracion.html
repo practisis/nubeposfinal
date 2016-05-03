@@ -1,61 +1,86 @@
 <div id='console' class='table-responsive' style='padding:20px; font-size:12px; color:#404041; background-color:white;'>
-<h2 id='trans_label_24'>Configuración General</h2>
+<h2 id='trans_label_24'>Configuración</h2>
 <!--<button type='button' class='btn btn-success' onclick='BajarLogo();'>Logo</button>-->
 <div style='margin-top:25px; font-size:16px;'>
-	<div style='text-align:center;'><img id='logofull' width='150px'/></div>
-	<table class='table'>
-		<tr><td  style='text-align:right;' id="trans_label_62">País:</td><td><input id='tablet_pais' class='form-control' readonly /></td></tr>
-		<tr><td  style='text-align:right;' id="trans_label_25">Nombre Dispositivo:</td><td><input id='tablet_name' class='form-control' /></td></tr>
-		<tr><td  style='text-align:right;' id="trans_label_26">Ver Diseño Menú:</td><td align='left'><input data-size='small' type='checkbox' id='tablet_menu' class='switch' /></td></tr>
-		<tr><td  style='text-align:right;' id="trans_label_27">Version:</td><td><input id='tablet_version' class='form-control' readonly /></td></tr>
-		<tr><td  style='text-align:right;' id="trans_label_28">Numero Empresa:</td><td><input id='tablet_emp' class='form-control' readonly /></td></tr>
-		<tr><td  style='text-align:right;' id="trans_label_29">Cuenta/usuario:</td><td><input id='tablet_cuenta' class='form-control' readonly /></td></tr>
-        <tr>
-          <td  style='text-align:right;' id="trans_label_47">Idioma:</td>
-          <td>
-             <select id="idioma" name="idioma" class="form-control obligated" size="1">
-              <option value="1">Español</option>
-              <option value="2">English</option>
-             </select>
-          </td>
-        </tr>
-        <tr>
-            <td  style='text-align:right;' id="trans_label_48">Sin Documento de Cliente:</td>
-            <td align='left'><input data-size='small' type='checkbox' id='sin_documento' class='switch' /></td>
-        </tr>
-        <tr>
-            <td  style='text-align:right;' id="trans_label_49">Con Nombre en la Orden:</td>
-            <td align='left'><input data-size='small' type='checkbox' id='con_orden' class='switch' /></td>
-        </tr>
-        <tr>
-            <td  style='text-align:right;' id="trans_label_50">Con Propina:</td>
-            <td align='left'><input data-size='small' type='checkbox' id='con_propina' class='switch' /></td>
-        </tr>
-        <tr>
-            <td  style='text-align:right;' id="trans_label_51">Con Tarjeta:</td>
-            <td align='left'><input data-size='small' type='checkbox' id='con_tarjeta' class='switch' /></td>
-        </tr>
-        <tr>
-            <td  style='text-align:right;' id="trans_label_52">Con Shop:</td>
-            <td align='left'><input data-size='small' type='checkbox' id='con_shop' class='switch' /></td>
-        </tr>
-        <tr>
-            <td  style='text-align:right;' id="trans_label_56">Con Notas en Pedido:</td>
-            <td align='left'><input data-size='small' type='checkbox' id='con_notas' class='switch' /></td>
-        </tr>
-        <tr>
-            <td  style='text-align:right;' id="trans_label_57">Con Impresion para Comanderas:</td>
-            <td align='left'><input data-size='small' type='checkbox' id='con_comanderas' class='switch'/></td>
-        </tr>
-		<tr>
-            <td  style='text-align:right;' id="trans_label_58">Con Mesas:</td>
-            <td align='left'><input data-size='small' type='checkbox' id='con_mesas' class='switch' /></td>
-        </tr>
-        <tr>
+	 <!-- Nav tabs -->
+	  <ul class="nav nav-tabs" role="tablist">
+		<li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">General</a></li>
+		<li role="presentation"><a href="#ventastab" aria-controls="ventastab" role="tab" data-toggle="tab" class='trans_sales'>Ventas</a></li>
+		<li role="presentation" id='tabclickimpuestos'><a href="#impuestostab" aria-controls="impuestostab" role="tab" data-toggle="tab" class='trans_imp'>Impuestos</a></li>
+	  </ul>
+	  <!-- Tab panes -->
+	  <div class="tab-content">
+		<div role="tabpanel" class="tab-pane active" id="general">
+			<div style='text-align:center; margin-top:15px; margin-bottom:15px;'><img id='logofull' width='150px'/><button type='button' class='btn btn-success trans_change' id='cambiarlogo' onclick="CambiarLogo();">Cambiar</button></div>
+			<table class='table'>
+			<tr><td  style='text-align:right;' id="trans_label_62">País:</td><td><input id='tablet_pais' class='form-control' readonly /></td></tr>
+			<tr><td  style='text-align:right;' id="trans_label_25">Nombre Dispositivo:</td><td><input id='tablet_name' class='form-control' /></td></tr>
+			  <tr>
             <td  style='text-align:right;'>LocalHost</td>
             <td align='left'><input id='con_localhost' class='form-control' readonly /></td>
-        </tr>
-	</table>
+			</tr>
+			<tr><td  style='text-align:right;' id="trans_label_27">Version:</td><td><input id='tablet_version' class='form-control' readonly /></td></tr>
+			<tr><td  style='text-align:right;' id="trans_label_28">Numero Empresa:</td><td><input id='tablet_emp' class='form-control' readonly /></td></tr>
+			<tr><td  style='text-align:right;' id="trans_label_29">Cuenta/usuario:</td><td><input id='tablet_cuenta' class='form-control' readonly /></td></tr>
+			<tr>
+				  <td  style='text-align:right;' id="trans_label_47">Idioma:</td>
+				  <td>
+					 <select id="idioma" name="idioma" class="form-control obligated" size="1">
+					  <option value="1">Español</option>
+					  <option value="2">English</option>
+					 </select>
+				  </td>
+			</tr>
+			</table>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="ventastab">
+			<table class='table'>
+			<tr><td  style='text-align:right; width:50%;' id="trans_label_26">Ver Diseño Menú:</td><td align='left'><input data-size='small' type='checkbox' id='tablet_menu' class='switch' /></td></tr>
+			  <tr>
+				<td  style='text-align:right;' id="trans_label_48">Sin Documento de Cliente:</td>
+				<td align='left'><input data-size='small' type='checkbox' id='sin_documento' class='switch' /></td>
+			</tr>
+			<tr>
+				<td  style='text-align:right;' id="trans_label_49">Con Nombre en la Orden:</td>
+				<td align='left'><input data-size='small' type='checkbox' id='con_orden' class='switch' /></td>
+			</tr>
+			<tr>
+				<td  style='text-align:right;' id="trans_label_50">Con Propina:</td>
+				<td align='left'><input data-size='small' type='checkbox' id='con_propina' class='switch' /></td>
+			</tr>
+			<tr>
+				<td  style='text-align:right;' id="trans_label_51">Con Tarjeta:</td>
+				<td align='left'><input data-size='small' type='checkbox' id='con_tarjeta' class='switch' /></td>
+			</tr>
+			<tr>
+				<td  style='text-align:right;' id="trans_label_52">Con Shop:</td>
+				<td align='left'><input data-size='small' type='checkbox' id='con_shop' class='switch' /></td>
+			</tr>
+			<tr>
+				<td  style='text-align:right;' id="trans_label_56">Con Notas en Pedido:</td>
+				<td align='left'><input data-size='small' type='checkbox' id='con_notas' class='switch' /></td>
+			</tr>
+			<tr>
+				<td  style='text-align:right;' id="trans_label_57">Con Impresion para Comanderas:</td>
+				<td align='left'><input data-size='small' type='checkbox' id='con_comanderas' class='switch'/></td>
+			</tr>
+			<tr>
+				<td  style='text-align:right;' id="trans_label_58">Con Mesas:</td>
+				<td align='left'><input data-size='small' type='checkbox' id='con_mesas' class='switch' /></td>
+			</tr>
+			<tr>
+				<td  style='text-align:right;' id="trans_label_63">Mensaje Personalizado</td>
+				<td align='left'><input type='text' id='custommsg' class='form-control input'/></td>
+			</tr>
+			</table>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="impuestostab">
+			<table class='table table-striped' id='confimpuestos' style='margin-top:30px; margin-bottom:20px;'>
+			<thead><tr><th class='trans_name'>Nombre</th><th class='trans_percent'>Porcentaje (%)</th><th class='trans_consider'>Considerar</th></tr></thead>
+			<tbody></tbody>
+			</table>
+		</div>
+	  </div>
 </div>
 <div class='row'>
 	<div class='col-lg-12' style='margin-bottom:35px;'>
@@ -65,6 +90,9 @@
 </div>
 <script>
 	$(document).ready(function(){
+	
+		//paquete
+		var paquete=localStorage.getItem("paquete");
 		//idioma
 		var linklang="es";
 		if(localStorage.getItem("idioma")==2)
@@ -102,20 +130,28 @@
 		});
 	
 		if(localStorage.getItem("logo")!=''&&localStorage.getItem("logo")!=null&&localStorage.getItem("logo").logo!=''){
-			$('#logofull').fadeIn();
+			$('#logofull,#cambiarlogo').fadeIn();
 			$('#logofull').attr('src','file:///data/data/com.practisis.practipos/files//'+localStorage.getItem("logo"));
 		}else{
-			$('#logofull').css("display","none");
+			$('#logofull,#cambiarlogo').css("display","none");
 		}
 			
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT nombreterminal as c,id_idioma,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais from CONFIG where id=1",[],function(tx1,results1){
+				tx1.executeSql("SELECT nombreterminal as c,id_idioma,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais,mensajefinal from CONFIG where id=1",[],function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c!=''){
 							$('#tablet_name').val(results1.rows.item(0).c);
 							$('#tablet_pais').val(results1.rows.item(0).pais);
+							$('#custommsg').val(results1.rows.item(0).mensajefinal);
+							
+							if(paquete==1){
+								$('#custommsg').prop("readonly","readonly");
+								$('#custommsg').click(function(){
+									alert("Necesita Premium");
+								});
+							}
 							
                             //alert(results1.rows.item(0).con_nombre_orden);
                             $('#idioma > option[value="'+results1.rows.item(0).id_idioma+'"]').attr('selected', 'selected');
@@ -166,11 +202,43 @@
                             $('#con_localhost').val(results1.rows.item(0).con_localhost);
 						}
 					}
-				});}
+				});
+				
+				///consulta impuestostab
+				if(localStorage.getItem('con_localhost')=="false"){
+					$('#confimpuestos tbody').html('');
+					tx1.executeSql("SELECT * FROM IMPUESTOS GROUP BY NOMBRE",[],function(tx1,results3){
+						if(results3.rows.length>0){
+							for(var t=0;t<results3.rows.length;t++){
+								var itemimp=results3.rows.item(t);
+								var esactivo=itemimp.activo;
+								var porcen=itemimp.porcentaje;
+								var nombreimp=itemimp.nombre;
+								var timespanimp=itemimp.timespan;
+								var checked='';
+								if(esactivo=='true')
+									checked='checked';
+								var mifila='<tr><td style="text-align:left;">'+nombreimp.toUpperCase()+'</td><td  style="text-align:left;"><input id="impval_'+timespanimp+'" style="display:inline; width:60%;" type="text" class="input form-control imporcent" value="'+porcen+'"/><span style="display:inline;"> %</span></td><td  style="text-align:left;"><input id="impact_'+timespanimp+'" type="checkbox" '+checked+' data-size="mini"; /></td></tr>';
+								$('#confimpuestos tbody').append(mifila);
+								
+								if(esactivo=='true'){
+									$('#impact_'+timespanimp).bootstrapSwitch('state', true);
+								}else{
+									$('#impact_'+timespanimp).bootstrapSwitch('state', false);
+								}
+							}
+						}
+					});
+				}else{
+					$('#tabclickimpuestos').css("display","none");
+				}
+				
+				///consulta impuestos
+				
+				}
 			,errorCB,successCB);
 			
 		$('#tablet_menu').bootstrapSwitch();
-
         $('#sin_documento').bootstrapSwitch();
         $('#con_orden').bootstrapSwitch();
         $('#con_propina').bootstrapSwitch();
@@ -239,54 +307,65 @@
 				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas],
 				function(tx1,results1){
 					
-					
 					var linklang="es";
 					if(localStorage.getItem("idioma")==2)
 						linklang="en";
+								
+					if(localStorage.getItem("idioma")==1)
+						showalert("Datos Guardados con exito.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("Successfully Saved.");
+							
+					var xmlidioma=$.get("lang/"+linklang+".html",function(datos){
+					d=JSON.parse(datos);
+					var itemestructura=d.estructura;
+					//console.log(itemestructura);
+					var itemmen=itemestructura.menu;
+					var itemtitles=itemestructura.titles;
+					var itembuttons=itemestructura.botones;
+					var itemlabels=itemestructura.labels;
+					var todostitles=itemtitles.item;
+					var todosbuttons=itembuttons.item;
+					var todoslabels=itemlabels.item;
+					var todositems=itemmen.item;	
+					
+						for(var k=0;k<todositems.length;k++){
+							var miitem=todositems[k];
+							$('#lab_menu_'+parseInt(k+1)).html(miitem);
+						}
+							
+						for(var k=0;k<todostitles.length;k++){
+							var miitemname=todostitles[k].name;
+							//alert(miitemname);
+							$('.'+miitemname).html(todostitles[k].text);
+						}
 						
-			if(localStorage.getItem("idioma")==1)
-				showalert("Datos Guardados con exito.");
-			else if(localStorage.getItem("idioma")==2)
-				showalert("Successfully Saved.");
-					
-			var xmlidioma=$.get("lang/"+linklang+".html",function(datos){
-			d=JSON.parse(datos);
-			var itemestructura=d.estructura;
-			//console.log(itemestructura);
-			var itemmen=itemestructura.menu;
-			var itemtitles=itemestructura.titles;
-			var itembuttons=itemestructura.botones;
-			var itemlabels=itemestructura.labels;
-			var todostitles=itemtitles.item;
-			var todosbuttons=itembuttons.item;
-			var todoslabels=itemlabels.item;
-			var todositems=itemmen.item;	
-			
-				for(var k=0;k<todositems.length;k++){
-					var miitem=todositems[k];
-					$('#lab_menu_'+parseInt(k+1)).html(miitem);
-				}
-					
-				for(var k=0;k<todostitles.length;k++){
-					var miitemname=todostitles[k].name;
-					//alert(miitemname);
-					$('.'+miitemname).html(todostitles[k].text);
-				}
+						for(var k=0;k<todosbuttons.length;k++){
+							var miitemname=todosbuttons[k].name;
+							//alert(miitemname);
+							$('.'+miitemname).html(todosbuttons[k].text);
+						}
+						
+						for(var k=0;k<todoslabels.length;k++){
+							//console.log(todoslabels[k].name+"/"+todoslabels[k].name);
+							var miitemname=todoslabels[k].name;
+							$('#'+miitemname).html(todoslabels[k].text);
+						}
+						
+				});
+				});
 				
-				for(var k=0;k<todosbuttons.length;k++){
-					var miitemname=todosbuttons[k].name;
-					//alert(miitemname);
-					$('.'+miitemname).html(todosbuttons[k].text);
-				}
+				$('.imporcent').each(function(){
+					var porcen=$(this).val();
+					var idinp=$(this).attr('id');
+					var datinp=idinp.split("_");
+					var active=$('#impact_'+datinp[1]).bootstrapSwitch('state');
+					tx1.executeSql("UPDATE IMPUESTOS set porcentaje=?,activo=?,sincronizar=? where timespan=?",[porcen,active,"true",datinp[1]],function(tx1,res2){
+						console.log("impuesto actualizado");
+					});
+				});
 				
-				for(var k=0;k<todoslabels.length;k++){
-					//console.log(todoslabels[k].name+"/"+todoslabels[k].name);
-					var miitemname=todoslabels[k].name;
-					$('#'+miitemname).html(todoslabels[k].text);
 				}
-				
-		});
-				});}
 			,errorCB,successCB);
 	}
 	
@@ -301,5 +380,12 @@ function gotFS(fileSystem) {
     window.rootFS = fileSystem.root;
 	alert(fileSystem.root.fullPath);
 	alert( cordova.file.dataDirectory);
+}
+
+function CambiarLogo(){
+	var paquete=localStorage.getItem("paquete");
+	if(paquete==1){
+		alert("Necesita Premium");
+	}
 }
 </script>

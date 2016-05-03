@@ -162,7 +162,6 @@
               var expresionRegular2=/\s/;
               var codigoPa = document.getElementById('codigo_pais').value
               var numtelefono = '';
-              var primernumero = numeroTelefono.value.charAt(0);
 
               if(codigoPa=='' || codigoPa=='0'){
                 if(localStorage.getItem("idioma")==2){
@@ -170,13 +169,6 @@
                 }else{
                  alert('El código del país es obligatorio');
                 }
-              }else if(primernumero == '0' && codigoPa == '593'){
-                if(localStorage.getItem("idioma")==2){
-                 alert('Your phone number is not leading 0.');
-                }else{
-                 alert('Su número de teléfono no debe anteponer el 0.');
-                }
-                document.getElementById('numero_telefonico').value = numeroTelefono.value.substr(1);
               }else if(numeroTelefono.value==''){
                 if(localStorage.getItem("idioma")==2){
                  alert('The phone number is required');

@@ -33,22 +33,23 @@
         </div>
 
 		<div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-12" id='contentteclado'>
     			<div class="col-xs-4">
     				<h4><label class='trans_precio' style='display:inline;'>Precio</label> (<label style='display:inline;' class='trans_sinimp'>sin imp.</label>)</h4>
-    				<input style="width:100%;" class="form-control soloFloat"  readonly autofocus=""  placeholder="Precio sin imp " name='precioproducto' data-toggle="popover" data-placement="bottom" id='precioproducto' onkeypress="isalphanumeric(event);" data-container="body" />
-					<div id='contentteclado'></div>
+    				<input style="width:100%;" class="form-control soloFloat"  readonly autofocus=""  placeholder="Precio sin imp " name='precioproducto' data-toggle="popover" data-placement="bottom" id='precioproducto' onkeypress="isalphanumeric(event);" data-container="#contentteclado" />
     				<label style="color:red;display:none;"  class="errorLabel3">Ingrese un precio válido</label>
     			</div>
     			<div class="col-xs-4">
     				<h4><label class='trans_precio' style='display:inline;'>Precio</label> (<label style='display:inline;' class='trans_conimp'>con imp.</label>)</h4>
-    				<input style="width:100%;" class="form-control"  data-toggle="popover" data-placement="bottom" data-container="body"  autofocus="" id='precioConImpuestos' onkeypress="isalphanumeric(event);" placeholder="Precio con imp" onchange='CalcularSinImpuestos();' readonly />
+					
+    				<input style="width:100%;" class="form-control"  data-toggle="popover" data-placement="bottom" data-container="#contentteclado"  autofocus="" id='precioConImpuestos' onkeypress="isalphanumeric(event);" placeholder="Precio con imp" onchange='CalcularSinImpuestos();' readonly />
+					
     				<label style="color:red;display:none;" class="errorLabel">Ingrese un precio válido</label>
     			</div>
                 <div class="col-xs-4">
     				<h4 id="trans_label_12">Código</h4>
         				<div class="input-group">
-        					<input style="" class="form-control" type="text" autofocus=""  placeholder="Ingrese aquí su código" type='number' name='codigoproducto' id='codigoproducto' onkeypress="isalphanumeric(event);"/>
+        					<input style="" class="form-control" type="text" autofocus=""  placeholder="Ingrese aquí su código" type='number' name='codigoproducto' id='codigoproducto' onkeypress="isalphanumeric(event);"  onclick='ocultarTeclado();'/>
         					<!--<span class="input-group-btn"> <button class="btn btn-default" type="button"><span class='fa fa-barcode'></span></button> </span>-->
                         </div>
         		</div>
@@ -105,14 +106,19 @@
 <script>
 	$(document).ready(function(){
 	
-		$('#precioproducto').popover({html:true,content:"<div style='padding:5px;' id='tecladoc'><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='1'>1</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='2'>2</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='3'>3</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='4'>4</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='5'>5</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='6'>6</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='7'>7</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='8'>8</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='9'>9</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='0'>0</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='p'>.</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button></div><div style='margin-top:3px; text-align:center;'><button class='btn btn-sm btn-success' type='button' onclick='ocultarTeclado("+'"precioproducto"'+");'>OK</button></div></div>",delay: { "show": 100, "hide": 100 },trigger:"click"});
+		$('#precioproducto').popover({html:true,content:"<div style='padding:5px;' id='tecladoc'><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='1'>1</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='2'>2</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='3'>3</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='4'>4</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='5'>5</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='6'>6</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='7'>7</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='8'>8</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='9'>9</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='0'>0</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='p'>.</button> <button onclick='ClickNumero(this,"+'"precioproducto"'+");' class='numeron btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button></div><div style='margin-top:3px; text-align:center;'><button class='btn btn-sm btn-success' type='button' onclick='ocultarTeclado("+'"precioproducto"'+");'>OK</button></div></div>",delay: { "show": 100, "hide": 10 },trigger:"click"});
 		$('#precioproducto').on('shown.bs.popover', function () {
+			$('.numeron').css('width','80px');
+			$('#precioConImpuestos').popover('hide');
 		   setTimeout(function(){ocultarTeclado('precioproducto');},60000);
 		});
 		
-		$('#precioConImpuestos').popover({html:true,content:"<div style='padding:5px;' id='tecladoc'><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='1'>1</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='2'>2</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='3'>3</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='4'>4</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='5'>5</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='6'>6</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='7'>7</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='8'>8</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='9'>9</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='0'>0</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='p'>.</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button></div><div style='margin-top:3px; text-align:center;'><button class='btn btn-sm btn-success' type='button' onclick='ocultarTeclado("+'"precioConImpuestos"'+");'>OK</button></div></div>",delay: { "show": 100, "hide": 100 },trigger:"click"});
+		$('#precioConImpuestos').popover({html:true,content:"<div style='padding:5px;' id='tecladoc'><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='1'>1</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='2'>2</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='3'>3</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='4'>4</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='5'>5</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='6'>6</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='7'>7</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='8'>8</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='9'>9</button></div><div class='row'> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='0'>0</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='p'>.</button> <button onclick='ClickNumero(this,"+'"precioConImpuestos"'+");' class='numeron btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button></div><div style='margin-top:3px; text-align:center;'><button class='btn btn-sm btn-success' type='button' onclick='ocultarTeclado("+'"precioConImpuestos"'+");'>OK</button></div></div>",delay: { "show": 100, "hide": 10 },trigger:"click"});
+		
 		$('#precioConImpuestos').on('shown.bs.popover', function () {
-		   setTimeout(function(){ocultarTeclado('precioConImpuestos');},60000);
+			$('.numeron').css('width','80px');
+			$('#precioproducto').popover('hide');
+			setTimeout(function(){ocultarTeclado('precioConImpuestos');},60000);
 		});
 		
 		
@@ -220,10 +226,13 @@
 	function ocultarTeclado(inp){
 		if(inp=='precioproducto')
 			CalcularConImpuestos();
-		else
+		else if(inp=='precioConImpuestos')
 			CalcularSinImpuestos();
 			
-		$('#'+inp).popover('hide');
+		if(inp!=null)
+			$('#'+inp).popover('hide');
+		else
+			$('[data-toggle="popover"]').popover('hide');
 	}
 	
 	function jsonimpuestosventa(){

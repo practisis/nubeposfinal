@@ -212,6 +212,7 @@ function agregarCompra(item,origen){
 	if(parseInt($.trim($('.cantidad').html())) != 0){
 		productoCantidad = $.trim($('.cantidad').html());
 	}
+
 	//impuestos start
 	if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
 		if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
@@ -905,7 +906,12 @@ function cambiarCantidad(){
 						$('#payButton').html('PAGAR $ <span id="invoiceTotal" class="payOverview">'+sumTotal.toFixed(2)+'</span>');
 						$('#changeFromPurchase').html(sumTotal.toFixed(2));
 						$('#totalmiFactura').val(sumTotal);
-						$('#total').html('$'+ parseFloat(sumTotal).toFixed(2))
+						$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+            if(localStorage.getItem("idioma")==1)
+							$('#btn_gpedidos').html('GUARDAR $'+ parseFloat(sumTotal).toFixed(2));
+						else if(localStorage.getItem("idioma")==2)
+							$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
+
 						$('#justo').html(sumTotal.toFixed(2));
 						$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
 						$('#redondeado').html(Math.ceil(sumTotal).toFixed(2));
@@ -1500,6 +1506,10 @@ function closePopup(){
 }
 	
 function closePopup2(){
+  $('#recibeIdentificadorTr').val('');
+	$('#modificaCantidadActual').html('');
+	$('#productoIDAcambiar').val('');
+	$('.cantidad').html('1');
 	$('#popupCantidad').modal("hide");
 }
 	
@@ -1571,6 +1581,11 @@ function borrarCompra(item){
 	
 	$('#totalmiFactura').val(sumTotal);
 	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+  	if(localStorage.getItem("idioma")==1)
+  		$('#btn_gpedidos').html('GUARDAR $'+ parseFloat(sumTotal).toFixed(2));
+  	else if(localStorage.getItem("idioma")==2)
+  		$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
+	
 	//$('#payButton').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2));
 	$('#subtotalSinIva').val(parseFloat(subtotalSinIva) - parseFloat(subtotalSinIvaCompra));
 	$('#subtotalIva').val(parseFloat(subtotalIva) - parseFloat(subtotalIvaCompra));
@@ -2992,6 +3007,7 @@ function VerificarNumero(valor){
 								ceros+='0';
 								ceroscount++;
 							}
+              	console.log(ceros);
 							$('#invoiceNr').val(ceros+nfact);
 							$('#invoiceNr').effect('highlight',{},'normal');
 						});
@@ -3004,18 +3020,33 @@ function VerificarNumero(valor){
 						});
 					});
 				}else{
+//console.log('admitido');
+					var invoicenr=$('#invoiceNr').val();
+					if(parseInt(localStorage.getItem('ultimafact'))>valor){
+						invoicenr=parseInt(parseInt(localStorage.getItem('ultimafact')))+1;
+					}
 					$('#invoiceNr').effect('highlight',{},'normal');
 					db.transaction(function (tx2){
 					tx2.executeSql('SELECT serie,establecimiento from config where id=1',[],function(tx2,results){
 							var miserie=results.rows.item(0).serie;
 							var miestablecimiento=results.rows.item(0).establecimiento;
-							var invoicenr=$('#invoiceNr').val();
+							
+							var ceros='';
+							var coun=invoicenr.toString().length;
+							var ceroscount=0;
+							while(ceroscount<(9-coun)){
+								ceros+='0';
+								ceroscount++;
+							}
+							console.log(ceros);
+							invoicenr=ceros.toString()+invoicenr.toString();
+							$('#invoiceNr').val(invoicenr);
 							$('#invoiceNrComplete').val(miestablecimiento+'-'+miserie+'-'+invoicenr);
 						});
 					});
 				}
 			});
-	});
+	},errorCB,successCB);
     //************************************fin normal**************************************
     }
 }

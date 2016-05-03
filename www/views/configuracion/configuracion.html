@@ -400,7 +400,7 @@ function CambiarLogo(){
 	if(paquete==1){
 		alert("Necesita Premium");
 	}
-	
+}
 	
 function ver_version(){
   var version_nub = document.getElementById('version_nub').value;
@@ -425,7 +425,6 @@ function ver_version(){
     $('#con_shop').bootstrapSwitch('state', false);
     $('#con_mesas').bootstrapSwitch('state', false);
   }
-  //alert(version_nub);
->>>>>>> 8565c84bce745fda2dfbf2a04bbe219131926266
+  localStorage.setItem("id_version_nube",version_nub);
 }
 </script>

@@ -17,34 +17,22 @@
 		</div>
 	</div>
    <!-- <div class="alert alert-danger" role="alert" style="display: none;"></div>-->
-
-<div class="row" id="contentStepSincro" style="display:none;" >
-		<div class="col-md-3" ></div>
-		<div class="col-md-6" >
-			
-				<div class="bs-example" data-example-id="simple-nav-justified">
-				<ul class="nav nav-tabs nav-justified" style="display:none;">
-				  <li role="presentation" class="active"><a href="#"> <span class="badge">1</span> Productos</a></li>
-				  <li role="presentation"><a href="#"> <span class="badge">2</span> Facturas</a></li>
-				  <li role="presentation"><a href="#"> <span class="badge">3</span>  Clientes</a></li>
-				  <li role="presentation"><a href="#" >  <span class="badge">4</span> Final </a></li>
-				</ul>
-				<br><br>
-				<center> <i><span id='trans_label_18'></span> <span id="txtSincro"></span></i></center>
-				<div class="progress" >
-					<div id="theProgress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0.5%"><span class="sr-only">25% Complete</span></div>
-				</div>
-			  </div>
-			  
-			
-			
-		</div>
-		<div class="col-md-3" ></div>
-	</div>
-
-	<div id="putHereIframes" style="display:none;"> </div>
-	<div class="row" style="display:none; padding:20px;" id="fadeRow" >
-    <h1 style='vertical-align:bottom; font-size:45px;'><img style='margin-top:-10px;' src='img/solo.png' width='40px;'/>&nbsp;<span>PractiPOS</span></h1>
+	  <div class='row'  id="bloqueo" style="display: none;">
+			<div class="col-lg-12">
+				<h1>Licencia Caducada!</h1>
+				<div class='alert alert-danger trans_block' style='margin-top:30px;'>Su cuenta PractiPOS se encuentra bloqueada, ya que se ha terminado la validez de la licencia.</div>
+				<center style='margin-top:20px; margin-bottom:20px;'><button link="" onclick='IraNube(this);'  id="linkloginb" class="btn btn-primary trans_cloud" type="button">Abrir PractiPOS en la nube</button></center>
+			</div>
+	  </div>
+	  
+      <div class='row'  id="desactivo" style="display: none;">
+			<div class="col-lg-12">
+				<h1>Terminal Desactivado!</h1>
+				<div class='alert alert-danger trans_inactive' style='margin-top:30px;'>Su terminal esta desactivado de PractiPOS.</div>
+			</div>
+	  </div>
+	  
+	  <div class="row" style="display:none; padding:20px;" id="fadeRow" >
 		<div class='col-md-2'></div>
 		<div class="col-md-8">
 		<div class="text-center" id="contentLogin" style="min-height: 263px;">
@@ -76,33 +64,84 @@
 		<input id="pass" type="hidden" />
 	
 		<br><br><br><br><br><br><br><br><br>
+	  </div>
+	    <div class='row' id='cuentaactiva' style='display:none; margin:20px;'>
+		<div style='margin-bottom:40px;'>
+			<h1>Guía de precios AvaPOS</h1>
+			<p>AvaPOS es gratis por el tiempo que quieras.  Pásate a un plan pagado cuando quieras.</p>
+		</div>
 
+	  <!--<div style='margin-top:10px; margin-bottom:10px;' id='trans_label_15' >Ingresa a tu cuenta PractiPOS en la nube</div>
+			<center><button onclick="VerificarPermiso('nube');" class="btn btn-md btn-primary btn-center trans_cloud" type="button" id="linklogin">Ir a la nube</button></center>
+			<div class='alert alert-success' style='margin-top:20px; margin-bottom:20px;'><span id='trans_label_16'>Su cuenta se encuentra activa por</span><b><span id='dias'>x</span></b> <label id='trans_label_17'>dias</label>.</div>-->
+		<div class='col-lg-4 col-md-4 col-xs-4'>
+		 <div class="jumbotron jumbo-green">
+				<h1>Gratis</h1>		
+				<p>Para pequeños negocios o evaluación ilimitada</p>
+				<h1>$0.00</h1>		
+				<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center trans_cloud" type="button" id="linklogin">Ir a la nube</button></center>
+				<div style='text-align:left; margin-top:15px;'>
+				<ul>
+				<li>POS completo para 1 Dispositivo</li>
+				<li>Inteligencia Artificial con Ava</li>
+				<li>Facturas y Productos Ilimitados</li>
+				</ul>
+				</div>
+		 </div>
+		</div>
+		<div class='col-lg-4 col-md-4 col-xs-4'>
+		 <div class="jumbotron jumbo-red">
+				<h1>Profesional</h1>
+				<p>Pago mensual con beneficios adicionales</p>
+				<h1>$29.00</h1>
+				<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin">Upgrade</button></center>
+				<div style='text-align:left; margin-top:15px;'>
+				<ul>
+				<li>Todo lo de la versión Gratis</li>
+				<li>Múltiples dispositivos por Local</li>
+				<li>Personalización de Impresiones (logo y cupón/mensaje)</li>
+				<li>Respaldo de Información en la nube garantizado</li>
+				<li>Manejo de Permisos y Accesos por Usuario</li>
+				</ul>
+				</div>
+
+		 </div>
+		</div>
+		<div class='col-lg-4 col-md-4 col-xs-4'>
+		 <div class="jumbotron jumbo-blue">
+				<h1>Premium</h1> 
+				<p>Pago mensual, ideal para cadenas de locales</p>
+				<h1>$69.00</h1>		
+				<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin">Upgrade</button></center>
+				<div style='text-align:left; margin-top:15px; margin-bottom:15px;'>
+				<ul>
+				<li>Todo lo de la versión Profesional</li>
+				<li>Manejo de Inventarios Avanzados</li>
+				<li>Manejo de Multiples Locales por Cuenta</li>
+				<li>Módulo de Manejo de Franquicias: multiprecios</li>
+				</ul>
+				</div>
+		 </div>
+		</div>
+	  </div>
+	  <div class="row" id="contentStepSincro" style="display:none;" >
+		<div class="col-md-3" ></div>
+		<div class="col-md-6" >
+			<div class="bs-example" data-example-id="simple-nav-justified">
+				<br><br>
+				<center> <i><span id='trans_label_18'></span> <span id="txtSincro"></span></i></center>
+				<div class="progress" >
+					<div id="theProgress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0.5%"><span class="sr-only">25% Complete</span></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3" ></div>
 	  </div>
 	  <div class='row'>
 		<div class='col-lg-12' id='finalizado' style='margin-top:10px; margin-bottom:10px;'>
 		<!--<img style='max-width:60%;' src='images/doneSync.png' style='cursor:pointer;' />-->
-		<h1 id='trans_label_14'>Sincronizado con exito! </h1>
+		<h2 id='trans_label_14'>Sincronizado con exito! </h2>
 		</div>
-	  </div>
-	  <div class='row' id='cuentaactiva' style='display:none;'>
-		<div class='col-lg-12'>
-			<div style='margin-top:10px; margin-bottom:10px;' id='trans_label_15' >Ingresa a tu cuenta PractiPOS en la nube</div>
-			<center><button onclick="VerificarPermiso('nube');" class="btn btn-md btn-primary btn-center trans_cloud" type="button" id="linklogin">Ir a la nube</button></center>
-			<div class='alert alert-success' style='margin-top:20px; margin-bottom:20px;'><span id='trans_label_16'>Su cuenta se encuentra activa por</span><b><span id='dias'>x</span></b> <label id='trans_label_17'>dias</label>.</div>
-		</div>
-	  </div>
-	  <div class='row'  id="bloqueo" style="display: none;">
-			<div class="col-lg-12">
-				<h1>Licencia Caducada!</h1>
-				<div class='alert alert-danger trans_block' style='margin-top:30px;'>Su cuenta PractiPOS se encuentra bloqueada, ya que se ha terminado la validez de la licencia.</div>
-				<center style='margin-top:20px; margin-bottom:20px;'><button link="" onclick='IraNube(this);'  id="linkloginb" class="btn btn-primary trans_cloud" type="button">Abrir PractiPOS en la nube</button></center>
-			</div>
-	  </div>
-      <div class='row'  id="desactivo" style="display: none;">
-			<div class="col-lg-12">
-				<h1>Terminal Desactivado!</h1>
-				<div class='alert alert-danger trans_inactive' style='margin-top:30px;'>Su terminal esta desactivado de PractiPOS.</div>
-			</div>
 	  </div>
 	  <div class='row'>
 		<div class='col-lg-12' style='font-size:14px; color:#404041; display:none;' id='mensajeperso'>
@@ -441,6 +480,19 @@ $(document).ready(function(){
 		$('#finalizado,#demoGratis,#fadeRow,#escojeIdioma').css("display","none");
 		$('#contentStepSincro,#cuentaactiva,#mensajeperso').fadeIn();
 	}
+	
+	var maxheight=0;
+	$('.jumbotron').each(function(){
+		var mh=parseFloat($(this).css('height'));
+		console.log(mh);
+		if(mh>maxheight){
+			//$('.jumbotron').css('height',mh);
+			maxheight=mh;
+			console.log(maxheight);
+		}
+	});
+	
+	$('.jumbotron').css('height',maxheight);
 });
 
 function IraNube(elem){

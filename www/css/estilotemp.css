@@ -1218,15 +1218,31 @@ margin-top:10px;
 }
 
 .jumbo-green{
-	background-color:#53C2BA;
+	background-color:#54B847;
+	color:white;
+	padding:10px 10px 10px 10px;
+	padding-right:20px;
+	padding-left:20px;
 }
 
 .jumbo-blue{
 	background-color:#3A4D80;
 	color:#DDD;
+	padding:10px 10px 10px 10px;
+	padding-right:20px;
+	padding-left:20px;
 }
 
 .jumbo-red{
 	background-color:#B3252A;
 	color:white;
+	padding:10px 10px 10px 10px;
+	padding-right:20px;
+	padding-left:20px;
+}
+
+.jumbotron
+{
+	padding-right:20px;
+	padding-left:20px;
 }

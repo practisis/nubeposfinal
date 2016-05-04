@@ -1216,3 +1216,17 @@ margin-top:10px;
 	background-image:url("../images/piso.jpg");
 	
 }
+
+.jumbo-green{
+	background-color:#53C2BA;
+}
+
+.jumbo-blue{
+	background-color:#3A4D80;
+	color:#DDD;
+}
+
+.jumbo-red{
+	background-color:#B3252A;
+	color:white;
+}

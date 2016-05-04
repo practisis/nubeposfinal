@@ -64,7 +64,7 @@
                     padding: 0px;
                     width: 100%;
                     height: 100%;
-                    font-size:22px;
+                    font-size:25px;
 				}
                 #pide_telefono {
 					bottom: 0;
@@ -81,7 +81,7 @@
                     padding: 0px;
                     width: 100%;
                     height: 100%;
-                    font-size:22px;
+                    font-size:25px;
 				}
 				.infoDash{
 					border:3px solid #1EA076;
@@ -168,6 +168,7 @@
               var expresionRegular2=/\s/;
               var codigoPa = document.getElementById('codigo_pais').value
               var numtelefono = '';
+              var primernumero = numeroTelefono.value.charAt(0);
 
               if(codigoPa=='' || codigoPa=='0'){
                 if(localStorage.getItem("idioma")==2){
@@ -175,6 +176,13 @@
                 }else{
                  alert('El código del país es obligatorio');
                 }
+              }else if(primernumero == '0' && codigoPa == '593'){
+                if(localStorage.getItem("idioma")==2){
+                 alert('Your phone number is not leading 0.');
+                }else{
+                 alert('Su número de teléfono no debe anteponer el 0.');
+                }
+                document.getElementById('numero_telefonico').value = numeroTelefono.value.substr(1);
               }else if(numeroTelefono.value==''){
                 if(localStorage.getItem("idioma")==2){
                  alert('The phone number is required');
@@ -601,48 +609,49 @@
 		</div><!-- /.modal -->
 		<!---fin modal--->
         <div  id="version_escoje" class='panel-default'>
-    		<div class="popover-title">
-    			<center><label class='trans_version' id='trans_label_64' style="font-size: 25px;">Tipo de Sistema</label></center>
-    		</div>
-    		<div class="popover-content">
+    		<div class="popover-content" style="padding-top: 25px;">
     		<div class='row'>
     			<div class="col-sm-12" style="text-align: center;">
     			    <img src="img/logo.png" width="150" alt="">
                 </div>
     		</div>
-            <br>
+            <div class='row' style="padding-top: 15px;">
+    			<div class="col-sm-12" id='trans_label_63' style="text-align: center;font-weight: bold;font-size: 40px;">
+    			    Selecciona el proceso de venta que realizas
+                </div>
+    		</div>
             <div class='row'>
-    			<div class="col-sm-12" id='trans_label_63'>
-    			    En esta sección debes escojer la versión con la cual vas a manejar de tu negocio.
+    			<div class="col-sm-12" id='trans_label_64' style="text-align: center;">
+    			    Luego puedes cambiar esto en configuración
                 </div>
     		</div>
             <br>
             <div class='row'>
                     <div class="col-sm-11" id='trans_label_66'>
-                    <b>La Versión de Atención Código de Barra</b> "Shop" es recomendada para negocios que trabajen con
-                    mas de 200 productos.
+                    <b>Rápida</b> (la más popular)<br>
+                    Vende con una pantalla de botones, fácil de usar. Ideal para negocios de comida rápida, cafeterías, tiendas o ventas de servicios.
             </div>
   			<div class="col-sm-1">
                   <div class="radio">
-                    <label><input type="radio" id="id_version" name="id_version" value="1" style="width: 20px;height: 20px;"></label>
+                    <label><input type="radio" id="id_version" name="id_version" value="2" style="width: 20px;height: 20px;"></label>
                   </div>
               </div>
     		</div>
-            <div class='row'>
+            <div class='row' style="padding-top: 20px;">
                   <div class="col-sm-11" id='trans_label_65'>
-                  <b>La Versión de Atención Rápida</b> "Fast Food" es recomendada para negocios que trabajen con
-                  menu y un maximo de 200 productos por su mayor rendimiento.
+                  <b>Solo Código de Barras</b><br>
+                    Opción para negocios que manejan códigos de barras como forma principal de ventas. Interfaz y proceso de ventas basado en lectura o ingreso de códigos de barra.
                   </div>
     			<div class="col-sm-1">
                     <div class="radio">
-                      <label><input type="radio" id="id_version" name="id_version" value="2" style="width: 20px;height: 20px;"></label>
+                      <label><input type="radio" id="id_version" name="id_version" value="1" style="width: 20px;height: 20px;"></label>
                     </div>
                 </div>
     		</div>
-            <div class='row'>
+            <div class='row' style="padding-top: 20px;">
                 <div class="col-sm-11" id='trans_label_67'>
-                <b>La Versión de Atención con Mesas</b> "Restaurante" es recomendada para negocios que trabajen con
-                diseño de mesas.
+                <b>Restaurante</b><br>
+                Opción con mapa de mesas para restaurante. Permite almacenar pedidos en las mesas y facturar al final.
                 </div>
     			<div class="col-sm-1">
                     <div class="radio">
@@ -652,32 +661,43 @@
     		</div>
     		<br/>
     		<div class="modal-footer">
-    			<button type="button" class="btn btn-primary trans_save" onclick='guardaversion()' style="font-size: 22px;">Guardar</button>&nbsp;
+    			<center><button type="button" class="btn btn-primary trans_save" onclick='guardaversion()' style="font-size: 22px;">Guardar</button>&nbsp;</center>
     		</div>
-                        </div>
+        </div>
         </div>
 
         <div  id="pide_telefono" class='panel-default'>
-    		<div class="popover-title">
-    			<center><label class='trans_version' id="trans_label_69" style="font-size: 25px;">Activación de WhatsApp</label></center>
-    		</div>
     		<div class="popover-content">
-            <br>
-            <div class='row'>
+            <div class='row' style="padding-top: 25px;">
     			<div class="col-sm-12" style="text-align: center;">
     			    <img src="img/logo.png" width="150" alt="">
                 </div>
     		</div>
-            <br>
-    		<div class='row'>
-    			<div class="col-lg-12" id="trans_label_68">
-    			    En esta sección debes validar tu teléfono con la cual vas a manejar la inteligencia de tu negocio.
+    		<div class='row' style="padding-top: 15px;">
+    			<div class="col-lg-12" id="trans_label_68" style="text-align: center;font-weight: bold;font-size: 40px;">
+    			    Activar Inteligencia Artificial
                 </div>
     		</div>
-            <br><br>
             <div class='row'>
-                <div class="col-md-3">
-                    <b id="trans_label_70">Ingresa tu Teléfono</b>
+    			<div class="col-sm-12" id='trans_label_69' style="text-align: center;">
+    			    Ava es tu asistente de gerencia virtual, actívala aquí
+                </div>
+    		</div>
+            <br>
+            <div class='row'>
+    			<div class="col-sm-12" id='trans_label_70' style="text-align: center;font-weight: bold;">
+    			    El principal componente de AvaPOS es Ava, tu asistente personal de gerencia. Ava es un robot con inteligencia artificial que te ayuda a manejar tu negocio por medio de chats en WhatsApp.
+                </div>
+    		</div>
+            <br>
+            <div class='row'>
+    			<div class="col-sm-12" id='trans_label_76' style="text-align: center;font-size: 20px;">
+    			    Para activar a Ava, necesitamos un número telefónico válido con WhatsApp. Nunca usaremos este teléfono para llamarte, ni para otros propósitos y jamás venderemos tu información. Serás contactado exclusivamente por Ava a este número por medio de  WhatsApp.
+                </div>
+    		</div>
+            <br>
+            <div class='row'>
+                <div class="col-md-2">
                 </div>
                 <div class="col-md-3">
                     <select class="form-control input-md" id="paiswhat" name="paiswhat" size="1" required="" placeholder="País" onchange="ponerCodigoPais();">
@@ -723,16 +743,17 @@
                 <div class="col-md-2">
                     <input id="codigo_pais" name="codigo_pais" type="number" class="form-control" readonly="readonly" style="text-align: right;">
                 </div>
-    			<div class="col-md-4">
+    			<div class="col-md-3">
                     <input id="numero_telefonico" name="numero_telefonico" type="tel" class="form-control">
                 </div>
+                <div class="col-md-2">
+                </div>
     		</div>
-            <br>
             </div>
-    		<br/><br>
+    		<br/>
     		<div class="modal-footer">
-    			<button type="button" class="btn btn-default trans_skip" onclick='omitirtelefono()' style="font-size: 22px;">Omitir</button>&nbsp;
-                <button type="button" class="btn btn-primary trans_active" onclick='guardatelefono()' style="font-size: 22px;">Activar</button>&nbsp;
+    			<center><button type="button" class="btn btn-success trans_active_ava" onclick='guardatelefono()' style="font-size: 30px;">Activar AVA</button></center>
+                <center style="padding-top: 15px;"><button type="button" class="btn btn-default trans_skip" onclick='omitirtelefono()' style="font-size: 20px;">Omitir</button></center>
     		</div>
         </div>
 

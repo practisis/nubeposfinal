@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.practisis.practipos" version="1.0.6" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>PractiPOS</name>
+<widget id="com.practisis.practipos" version="1.0.8" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>AvaPOS</name>
     <description>
         App de Facturacion para Tablets
     </description>
@@ -24,6 +24,7 @@
     <preference name="android-minSdkVersion" value="14" />
     <preference name="android-installLocation" value="auto" />
 	<preference name="android-windowSoftInputMode" value="stateVisible"/>
+	<preference name="AndroidPersistentFileLocation" value="Compatibility"/>
     <gap:plugin name="org.apache.cordova.battery-status" />
     <gap:plugin name="org.apache.cordova.camera" />
     <gap:plugin name="org.apache.cordova.media-capture" />

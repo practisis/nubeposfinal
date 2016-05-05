@@ -11,11 +11,8 @@
 	  <!-- Tab panes -->
 	  <div class="tab-content">
 		<div role="tabpanel" class="tab-pane active" id="general">
-			<div style='text-align:center; margin:20px;'>
-			<img id='logofull' width='120px'/><br/><br/>
-			<span id='trans_label_79'>Puedes subir/cambiar tu logo en la nube, y este se sincronizará con tu dispositivo. </span><a id='cambiarlogo' target='_blank' >Subir logo</a>
-			</div>
 		<table class='table'>
+		<tr><td style='width:50%; text-align:right;'><img id='logofull' width='70px'/></td><td style='text-align:left; vertical-align:bottom;'><div id='trans_label_79' style='padding-bottom:10px;'>Puedes subir/cambiar tu logo en la nube, y este se sincronizará con tu dispositivo. </div><button type='button' class='btn btn-sm btn-success' id='cambiarlogo' href='' onclick='IrCloud();'>Subir logo</button></td></tr>
 		<tr><td style='text-align:right;' id="trans_label_62">País:</td><td><input id='tablet_pais' class='form-control' readonly /></td></tr>
 		<tr><td style='text-align:right;' id="trans_label_25">Nombre Dispositivo:</td><td><input id='tablet_name' class='form-control' /></td></tr>
 		<tr><td style='text-align:right;' id="trans_label_27">Version:</td><td><input id='tablet_version' class='form-control' readonly /></td></tr>
@@ -32,12 +29,13 @@
         </tr>
         <tr>
           <td  style='text-align:right;' id="trans_label_71">Tipo Sistema:</td>
-          <td>
-             <select id="version_nub" name="version_nub" class="form-control obligated" size="1" onchange="ver_version();">
+          <td style='text-align:left;'>
+             <select id="version_nub" name="version_nub" class="form-control obligated" size="1" onchange="ver_version();" style='margin-bottom:10px;'>
               <option value="2" id="trans_label_73">Rápida</option>
               <option value="1" id="trans_label_72">Solo Código de Barras</option>
               <option value="3" id="trans_label_74">Restaurante</option>
              </select>
+			 <button id='irdisenomesas' class='btn btn-sm btn-success trans_tabledesign' href='' onclick='IrDisenoMesas();'>Cambiar Diseño Mesas</button>
           </td>
         </tr>
 		<tr>
@@ -46,7 +44,7 @@
     	</tr>
         <tr>
 			<td  style='text-align:right;' id="trans_label_75">Mensaje Personalizado</td>
-			<td align='left'><input type='text' id='custommsg' class='form-control input'/></td>
+			<td align='left'><input type='text' id='custommsg' class='form-control input' style='margin-bottom:10px;'/><button class='btn btn-success btn-sm trans_changemessage' onclick='CambiarMensaje();'>Cambiar Mensaje</button></td>
     	</tr>
     	<tr>
     		<td  style='text-align:right;' id="trans_label_77">Respaldo de Información</td>
@@ -162,7 +160,7 @@
 			$('#logofull').attr('src','img/nologo.png');
 		}
 		
-		$('#cambiarlogo').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+		$('#cambiarlogo,#irdisenomesas').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 			
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -174,11 +172,8 @@
 							$('#tablet_pais').val(results1.rows.item(0).pais);
 							$('#custommsg').val(results1.rows.item(0).mensajefinal);
 
-							if(paquete==1){
-								$('#custommsg').prop("readonly","readonly");
-								$('#custommsg').click(function(){
-									alert("Necesita Premium");
-								});
+							if(paquete==1||paquete==null){
+								$('#custommsg').prop("readonly","readonly");	
 							}
 							
                             //alert(results1.rows.item(0).con_nombre_orden);
@@ -418,9 +413,21 @@ function gotFS(fileSystem) {
 
 function ImprimirLogo(){
 	var paquete=localStorage.getItem("paquete");
-	if(paquete==1){
+	if(paquete==1||paquete==null){
 		alert("Necesita Premium");
 	}
+}
+
+function CambiarMensaje(){
+	var paquete=localStorage.getItem("paquete");
+	if(paquete==1||paquete==1){
+		alert("Necesita Premium");
+	}
+}
+
+function IrCloud(){
+ var url=$('#cambiarlogo').attr('href');
+ window.open(url);
 }
 	
 	
@@ -436,16 +443,24 @@ function ver_version(){
     localStorage.setItem("con_mesas","false");
     $('#con_shop').bootstrapSwitch('state', false);
     $('#con_mesas').bootstrapSwitch('state', false);
+	$('#irdisenomesas').fadeOut();
   }else if(version_nub == '3'){
     localStorage.setItem("con_shop","false");
     localStorage.setItem("con_mesas","true");
     $('#con_shop').bootstrapSwitch('state', false);
     $('#con_mesas').bootstrapSwitch('state', true);
+	$('#irdisenomesas').fadeIn();
   }else{
     localStorage.setItem("con_shop","false");
     localStorage.setItem("con_mesas","false");
     $('#con_shop').bootstrapSwitch('state', false);
     $('#con_mesas').bootstrapSwitch('state', false);
+	$('#irdisenomesas').fadeOut();
   }
+}
+
+function IrDisenoMesas(){
+	var url=$('#irdisenomesas').attr('href')
+	window.open(url);
 }
 </script>

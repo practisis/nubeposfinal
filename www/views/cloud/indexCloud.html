@@ -24,7 +24,7 @@
 				<center style='margin-top:20px; margin-bottom:20px;'><button link="" onclick='IraNube(this);'  id="linkloginb" class="btn btn-primary trans_cloud" type="button">Abrir PractiPOS en la nube</button></center>
 			</div>
 	  </div>
-	  
+
       <div class='row'  id="desactivo" style="display: none;">
 			<div class="col-lg-12">
 				<h1>Terminal Desactivado!</h1>
@@ -38,6 +38,7 @@
 		<div class="text-center" id="contentLogin" style="min-height: 263px;">
 			<div class="modal-body" style="min-height: 266px;">
 			 <div id="divdatoslogin" style="overflow:auto;">
+             <h1 style='vertical-align:bottom; font-size:45px;'><img style='margin-top:-40px;' src='img/logoava.png' width='150px;'/></h1>
 			  <h3 style="-webkit-margin-before: 1em; -webkit-margin-after: 1em; 	-webkit-margin-start: 0px;
 		-webkit-margin-end: 0px;" id="trans_label_40">Ingresa a tu sistema y <span style="color:#0893d2;">Empecemos!</span></h3>
 			  <form method="post" class="contact-form form-validate4" id="myloginform" novalidate="novalidate">
@@ -47,7 +48,10 @@
 				<div class="form-group">
 				  <input type="password" id="pass2" name="mipass" value="" class="form-control input-lg trans_pass" placeholder="Password" required="" tabindex='2' autocomplete="off" aria-required="true">
 				</div>
-			   <button class="btn btn-success" tabindex='3'  id="btnvalida2" type="button" onclick="UserLogin();">Login</button>
+                <div class="form-group">
+					<a id='trans_label_79' data-toggle="modal" onclick="quitarSignIn();" href="">¿No tienes una cuenta en AvaPOS? Créala aquí.</a><br/>
+			    </div>
+			   <button class="btn btn-lg btn-success" tabindex='3'  id="btnvalida2" type="button" onclick="UserLogin();">Login</button>
 			  </form>
 			  </div>
 			  
@@ -158,7 +162,15 @@
 				$("#demoGratis").css("display" , "none");
                 $("#escojeIdioma").css("display" , "none");
 				$("#fadeRow").fadeIn();
-			
+
+			}
+
+            function quitarSignIn(){
+				$(".putHeightRows").css("height" , $(window).height() + "px");
+				$("#demoGratis").css("display" , "block");
+                $("#escojeIdioma").css("display" , "none");
+				$("#fadeRow").fadeOut();
+
 			}
 			
 			function nuevaCuenta(){
@@ -170,7 +182,15 @@
 			}
 	  </script>
       <div class="row" style="display:none; padding:20px; color:#404041;" id="escojeIdioma" >
-        <h1>Select your language / Seleccione su idioma</h1>
+      <br>
+      <div class="col-sm-12" style="text-align: center;">
+            <img src="img/logoava.png" width="150" alt="">
+      </div>
+      <br><br><br>
+      <div class="col-sm-12" style="text-align: center;font-weight: bold;font-size: 24px;">
+        Select your language / Seleccione su idioma
+      </div>
+      <br><br><br>
         <div class="row">
         <div class="col-xs-1"></div>
             <div class="col-xs-5">
@@ -197,19 +217,17 @@
 		<form>
 		<!--<div class="col-md-3" >
 		</div>-->
-		  <h1 style='vertical-align:bottom; font-size:45px;'><img style='margin-top:-10px;' src='img/solo.png' width='40px;'/>&nbsp;<span>PractiPOS</span></h1>
+		  <h1 style='vertical-align:bottom; font-size:45px;'><img style='margin-top:-10px;' src='img/logoava.png' width='150px;'/></h1>
 		<div class="col-md-2"></div>
 		<div class="col-md-8" style="position:relative;min-height: 300px;overflow:hidden;">
 			 <div id="divdatoslogin" style="overflow:auto;">
-			  <h4 style="text-align:left; margin-top:40px; margin-bottom:30px;" id='trans_label_38'>Regístrate! Ingresa tus datos y crea tu cuenta PractiPOS.</h4>
+			  <h4 style="text-align:left; margin-top:40px; margin-bottom:30px;" id='trans_label_38'>Regístrate! Ingresa tus datos y crea tu cuenta AvaPOS.</h4>
             <div class="form-group">
               <input onkeydown="isalphanumeric(event);" type="form-control input-lg" name="empresa"  class="form-control input-lg trans_companyname" id="newEmpresa" placeholder="Nombre de tu Negocio" tabindex="1" required="" autocomplete="off">
             </div>
             <div class="form-group">
               <select class="form-control input-lg" id="newPais" name="pais" size="1" required="" placeholder="País">
-                  <option value="0" style="color: #E0DEDE">País</option>
-                  <option value="1">Ecuador</option>
-                  <option value="2">Estados Unidos</option>
+                  <option id="trans_label_78" value="0" style="color: #E0DEDE">País</option>
                   <option value="3">Antigua y Barbuda</option>
                   <option value="4">Argentina</option>
                   <option value="5">Bahamas</option>
@@ -223,7 +241,9 @@
                   <option value="13">Costa Rica</option>
                   <option value="14">Cuba</option>
                   <option value="15">Dominica</option>
+                  <option value="1">Ecuador</option>
                   <option value="16">El Salvador</option>
+                  <option value="2">Estados Unidos</option>
                   <option value="17">Granada</option>
                   <option value="18">Guatemala</option>
                   <option value="19">Guyana</option>
@@ -257,11 +277,11 @@
             </div>
 
 			<div class="form-group">
-					<a id='trans_label_39' data-toggle="modal" data-target="#recuperarPass" onclick="mostrarSignIn();" href="">¿Ya tienes cuenta PractiPOS haz click aquí?</a><br/>
+					<a id='trans_label_39' data-toggle="modal" data-target="#recuperarPass" onclick="mostrarSignIn();" href="">¿Ya tienes cuenta AvaPOS haz click aquí?</a><br/>
 			</div>
-				
 
-<button class="btn btn-md btn-success btn-center trans_create" type="button" id="btnNewEmp" onclick="registrarUser();">Crear Cuenta</button>
+
+<button class="btn btn-lg btn-success btn-center trans_create" type="button" id="btnNewEmp" onclick="registrarUser();">Crear Cuenta</button>
 			  </div>
 
 			  <div id="varias">

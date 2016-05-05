@@ -107,9 +107,10 @@
 			</style>
             <script type="text/javascript">
             function guardaversion(){
+              $("#cargandoTabs").fadeIn();
               var version = $('input:radio[name=id_version]:checked').val();
               if(version === undefined){
-
+                $("#cargandoTabs").fadeOut();
                 if(localStorage.getItem("idioma")==2){
                  alert('You must choose a version for your system.');
                 }else{
@@ -141,6 +142,7 @@
 			    db.transaction(function(tx1){
 			      tx1.executeSql("UPDATE CONFIG SET id_version_nube=?,sincronizar='true',con_shop='"+auxshop+"',con_mesas='"+auxmesas+"' where id=1",[version],
     			  function(tx1,results1){
+    			   $("#cargandoTabs").fadeOut();
                    $('#version_escoje').fadeOut('slow');
                    localStorage.setItem("id_version_nube",version);
                    document.getElementById('main').style.display='block';
@@ -153,6 +155,7 @@
               }
             }
             function guardatelefono(){
+              $("#cargandoTabs").fadeIn();
               var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
             	db.transaction(
             	function (tx){
@@ -173,12 +176,14 @@
               var primernumero = numeroTelefono.value.charAt(0);
 
               if(codigoPa=='' || codigoPa=='0'){
+                $("#cargandoTabs").fadeOut();
                 if(localStorage.getItem("idioma")==2){
                  alert('The country code is mandatory');
                 }else{
                  alert('El código del país es obligatorio');
                 }
               }else if(primernumero == '0' && codigoPa == '593'){
+                $("#cargandoTabs").fadeOut();
                 if(localStorage.getItem("idioma")==2){
                  alert('Your phone number is not leading 0.');
                 }else{
@@ -186,18 +191,21 @@
                 }
                 document.getElementById('numero_telefonico').value = numeroTelefono.value.substr(1);
               }else if(numeroTelefono.value==''){
+                $("#cargandoTabs").fadeOut();
                 if(localStorage.getItem("idioma")==2){
                  alert('The phone number is required');
                 }else{
                  alert('El número de teléfono es obligatorio');
                 }
               }else if(expresionRegular2.test(numeroTelefono.value)){
+                $("#cargandoTabs").fadeOut();
                 if(localStorage.getItem("idioma")==2){
                  alert('Error there Blanks');
                 }else{
                  alert('Error existen espacios en blanco');
                 }
               }else if(!expresionRegular1.test(numeroTelefono.value)){
+                $("#cargandoTabs").fadeOut();
                 if(localStorage.getItem("idioma")==2){
                  alert('Incorrect phone number');
                 }else{
@@ -220,6 +228,7 @@
             			    db.transaction(function(tx1){
             			      tx1.executeSql("UPDATE CONFIG SET telefono_inte=?,sincronizar='true',pide_telefono='true' where id=1",[numeroTelefono.value],
                 			  function(tx1,results1){
+                			   $("#cargandoTabs").fadeOut();
                                $('#pide_telefono').fadeOut('slow');
                                document.getElementById('main').style.display='block';
                                localStorage.setItem("telefono_inte",numeroTelefono.value);
@@ -227,12 +236,14 @@
                 			  });
             			    },errorCB,successCB);
                         }else if(response == '2'){
+                          $("#cargandoTabs").fadeOut();
                             if(localStorage.getItem("idioma")==2){
                              alert('Telephone number used in another account , please enter a number not registered in the system.');
                             }else{
                              alert('Número de teléfono utilizado en otra cuenta, por favor ingrese un número no registrado en el sistema.');
                             }
                         }else{
+                          $("#cargandoTabs").fadeOut();
                             if(localStorage.getItem("idioma")==2){
                              alert('Invalid phone number , the reasons may be : not having intalado income whatsapp or wrong number , please check this information and reenter \ nThank for your understanding.');
                             }else{
@@ -250,6 +261,7 @@
             	},errorCB,successCB);
             }
             function omitirtelefono(){
+              $("#cargandoTabs").fadeIn();
               var numeroTelefono = '000000000';
 
               if(localStorage.getItem("idioma")==2){
@@ -263,6 +275,7 @@
     			    db.transaction(function(tx1){
     			      tx1.executeSql("UPDATE CONFIG SET telefono_inte=?,sincronizar='true' where id=1",[numeroTelefono],
         			  function(tx1,results1){
+        			    $("#cargandoTabs").fadeOut();
                        $('#pide_telefono').fadeOut('slow');
                        document.getElementById('main').style.display='block';
                        localStorage.setItem("telefono_inte",numeroTelefono);
@@ -576,8 +589,11 @@
 		<div id="idiva" style="display: none;"></div>
 		<div id="fadeCloud" style="display:none;width:100%;height:100%;position:absolute;left:0px;top:0px;background:rgba(255,255,255,0.7);"></div>
 		</div>
+
+
+
 		</div>
-		<div style="overflow:hidden;position:absolute;left:0px;top:0px;width:100%;height:100%;background:rgba(40,40,41,1);display:block;z-index:4;" id="fade">
+		<div style="overflow:hidden;position:absolute;left:0px;top:0px;width:100%;height:100%;background:rgba(40,40,41,1);display:block;z-index:5;" id="fade">
 			<table width="100%" height="100%" cellpadding="0" cellspacing="0" >
 				<tr>
 					<td valign="center" align="center" >
@@ -880,6 +896,33 @@
                 document.getElementById('main').style.display='none';
 
               }
+
+              window.addEventListener('native.keyboardshow', keyboardShowHandler);
+              function keyboardShowHandler(e){
+    			//alert("show");
+    			var inp=$(":focus");
+    			var padding = 15;
+                var targetPosition = parseInt($(inp).offset().top + padding);
+                var keyboardHeight = parseInt($(window).height())-parseInt(e.keyboardHeight);//get keyboard height
+
+                        //if the input is hidden by the keyboard,scroll to the input
+    			//alert(targetPosition+'/'+keyboardHeight);
+                if (targetPosition >= keyboardHeight) {
+                    //padding *=5;
+    				if(inp.attr('id')=='search-renderitem')
+                    $('#pide_telefono').css("top",-(targetPosition-keyboardHeight+padding+20)+"px");
+    				else
+                    $('#pide_telefono').css("top",-(targetPosition-keyboardHeight+padding)+"px");
+                }
+    		}
+
+    		// This event fires when the keyboard will show
+    		window.addEventListener('native.keyboardhide', keyboardHideHandler);
+
+    		function keyboardHideHandler(e){
+    			//alert("hide");
+    			$('#pide_telefono').css("top","0px");
+    		}
 
 				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 				db.transaction(iniciaDB,errorCB,successCB);

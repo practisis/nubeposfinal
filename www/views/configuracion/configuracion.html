@@ -35,7 +35,7 @@
               <option value="1" id="trans_label_72">Solo Código de Barras</option>
               <option value="3" id="trans_label_74">Restaurante</option>
              </select>
-			 <button id='irdisenomesas' class='btn btn-sm btn-success trans_tabledesign' href='' onclick='IrDisenoMesas();'>Cambiar Diseño Mesas</button>
+			 <button id='irdisenomesas' style='display:none;' class='btn btn-sm btn-success trans_tabledesign' href='' onclick='IrDisenoMesas();'>Cambiar Diseño Mesas</button>
           </td>
         </tr>
 		<tr>
@@ -175,6 +175,9 @@
 							if(paquete==1||paquete==null){
 								$('#custommsg').prop("readonly","readonly");	
 							}
+							
+							if(results1.rows.item(0).id_version_nube==3)
+								$('#irdisenomesas').fadeIn();
 							
                             //alert(results1.rows.item(0).con_nombre_orden);
                             $('#idioma > option[value="'+results1.rows.item(0).id_idioma+'"]').attr('selected', 'selected');
@@ -438,6 +441,7 @@ function ver_version(){
     localStorage.setItem("con_mesas","false");
     $('#con_shop').bootstrapSwitch('state', true);
     $('#con_mesas').bootstrapSwitch('state', false);
+	$('#irdisenomesas').fadeOut();
   }else if(version_nub == '2'){
     localStorage.setItem("con_shop","false");
     localStorage.setItem("con_mesas","false");

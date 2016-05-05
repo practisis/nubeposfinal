@@ -66,9 +66,10 @@
 		<br><br><br><br><br><br><br><br><br>
 	  </div>
 	    <div class='row' id='cuentaactiva' style='display:none; margin:20px;'>
+		<div id='planes_es' style='display:none;'>
 		<div style='margin-bottom:40px;'>
-			<h1>Guía de precios AvaPOS</h1>
-			<p>AvaPOS es gratis por el tiempo que quieras.  Pásate a un plan pagado cuando quieras.</p>
+			<h1>Guía de precios</h1>
+			<p>AvaPOS es gratis por el tiempo que quieras.  Pásate a un plan pagado cuando lo necesites.</p>
 		</div>
 
 	  <!--<div style='margin-top:10px; margin-bottom:10px;' id='trans_label_15' >Ingresa a tu cuenta PractiPOS en la nube</div>
@@ -94,10 +95,10 @@
 				<h2>Profesional</h2>
 				<p>Pago mensual con beneficios adicionales</p>
 				<h1>$29.00</h1>
-				<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin">Upgrade</button></center>
+				<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin">Activar</button></center>
 				<div style='text-align:left; margin-top:15px;'>
 				<ul>
-				<li>Todo lo de la versión Gratis</li>
+				<li>Todo lo del plan Gratis</li>
 				<li>Múltiples dispositivos por Local</li>
 				<li>Personalización de Impresiones (logo y cupón/mensaje)</li>
 				<li>Respaldo de Información en la nube garantizado</li>
@@ -112,16 +113,75 @@
 				<h2>Premium</h2> 
 				<p>Pago mensual, ideal para cadenas de locales</p>
 				<h1>$69.00</h1>		
-				<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin">Upgrade</button></center>
+				<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin">Activar</button></center>
 				<div style='text-align:left; margin-top:15px; margin-bottom:15px;'>
 				<ul>
-				<li>Todo lo de la versión Profesional</li>
+				<li>Todo lo del plan Profesional</li>
 				<li>Manejo de Inventarios Avanzados</li>
-				<li>Manejo de Multiples Locales por Cuenta</li>
-				<li>Módulo de Manejo de Franquicias: multiprecios</li>
+				<li>Manejo de Múltiples Locales por Cuenta</li>
+				<li>Módulo de Manejo de Franquicias: multiprecios, control de ventas y presupuestos</li>
 				</ul>
 				</div>
 		 </div>
+		</div>
+		</div>
+		<div id='planes_en' style='display:none;'>
+		<div style='margin-bottom:40px;'>
+			<h1>Pricing Guide</h1>
+			<p>AvaPOS is free to use for as long as you want.  Upgrade when you like.</p>
+		</div>
+
+	  <!--<div style='margin-top:10px; margin-bottom:10px;' id='trans_label_15' >Ingresa a tu cuenta PractiPOS en la nube</div>
+			<center><button onclick="VerificarPermiso('nube');" class="btn btn-md btn-primary btn-center trans_cloud" type="button" id="linklogin">Ir a la nube</button></center>
+			<div class='alert alert-success' style='margin-top:20px; margin-bottom:20px;'><span id='trans_label_16'>Su cuenta se encuentra activa por</span><b><span id='dias'>x</span></b> <label id='trans_label_17'>dias</label>.</div>-->
+		<div class='col-lg-4 col-md-4 col-xs-4'>
+		 <div class="jumbotron jumbo-green">
+				<h2>FREE</h2>		
+				<p>For small businesses or unlimited evaluation</p>
+				<h1>$0.00</h1>		
+				<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center trans_cloud" type="button" id="linklogin">Go to the cloud</button></center>
+				<div style='text-align:left; margin-top:15px;'>
+				<ul>
+				<li>Complete POS for 1 device</li>
+				<li>Artificial Intelligence with Ava</li>
+				<li>Unlimited Products and Invoicing</li>
+				</ul>
+				</div>
+		 </div>
+		</div>
+		<div class='col-lg-4 col-md-4 col-xs-4'>
+		 <div class="jumbotron jumbo-red">
+				<h2>Professional</h2>
+				<p>Monthly Payments with additional benefits</p>
+				<h1>$29.00</h1>
+				<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin">Upgrade Now</button></center>
+				<div style='text-align:left; margin-top:15px;'>
+				<ul>
+				<li>Everything in Free</li>
+				<li>Unlimited Devices</li>
+				<li>Customized printing (logo and cupons/message)</li>
+				<li>Guaranteed Cloud backUp of all your data.</li>
+				<li>Control over Access and Role Permissions.</li>
+				</ul>
+				</div>
+
+		 </div>
+		</div>
+		<div class='col-lg-4 col-md-4 col-xs-4'>
+		 <div class="jumbotron jumbo-blue">
+				<h2>Premium</h2> 
+				<p>Monthly Payment, idea for store chains</p>
+				<h1>$69.00</h1>		
+				<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin">Upgrade Now</button></center>
+				<div style='text-align:left; margin-top:15px; margin-bottom:15px;'>
+				<ul>
+				<li>Everything in Professional plan</li>
+				<li>Advanced inventory management</li>
+				<li>Manage multiple stores from one account: multipricing, sales control and forecasting</li>
+				</ul>
+				</div>
+		 </div>
+		</div>
 		</div>
 	  </div>
 	  <div class="row" id="contentStepSincro" style="display:none;" >
@@ -463,6 +523,12 @@ $(document).ready(function(){
 	$('#linklogin,#linkloginb').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 	$('#dias').html(localStorage.getItem('dias'));
 	$('#mensajeperso').html(localStorage.getItem('msj'));
+	
+	if(localStorage.getItem("idioma")==1){
+		$('#planes_es').fadeIn();
+	}else{
+		$('#planes_en').fadeIn();
+	}
 	
 	if(procesocount==0){
 		$('#fadeRow,#contentStepSincro,#cuentaactiva,#mensajeperso,#demoGratis,#escojeIdioma').css("display","none");

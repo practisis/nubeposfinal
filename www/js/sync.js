@@ -1569,7 +1569,7 @@ function downloadImage(url, fileName){
     );
 } 
 
-function ImprimirLogo(){
+/*function ImprimirLogo(){
 	//alert("va imprimir");
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function (tx){		
@@ -1586,6 +1586,6 @@ function ImprimirLogo(){
 				}
 			});
 			},errorCB,successCB);
-}
+}*/
 
 //-----------------------------------Fin nuevo---------------

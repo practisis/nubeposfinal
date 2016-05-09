@@ -141,7 +141,7 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12" style='margin-top:15px;'>
-				<span id='nombre_mesa' class='label label-default'></span>
+				<span id='nombre_mesa' onclick='envia("puntodeventa");'></span>
 			</div>
 		</div>
 		<table cellspacing="0px" cellpadding="0px" width='98%' style='margin-top:10px;' align='center'>
@@ -332,7 +332,7 @@
         <!--fin calculadora--->
 		
 	<div class='col-md-4'>
-	<div class='row'>
+	<div class='row sumarow'>
 	<div  id='buscador' style='margin-top:10px;'>
 
 		<div style='display:none;'>
@@ -397,20 +397,39 @@
 			</table>
 		</div>
 		<div class='col-lg-12 col-xs-12 col-md-12' style='text-align:right; background-color:white;'>
-		
+			<div class='row'>
+			<div class='col-lg-12'>
+				<div id='divtotal'>
+					<span>TOTAL</span> 
+					<span id='total'>0.00</span>
+				</div>
+			</div>
+			</div>
+			<div class='row'>
+				<div class='col-lg-4 col-md-6 col-xs-6' style='padding-top:5px; padding-right:0px; text-align:right;'>
+				<span><button type='button' class='btn btn-default trans_mesas' style='display:none; margin-bottom:5px; margin-right:5px;' id='btn_mesas' data-toggle="tooltip" data-placement="top" title="" onclick="ImprimirPrecuenta();"><span class="fa fa-print fa-2x"></span></button>
+				<button type='button' class='btn btn-default btn-lg' style='margin-bottom:5px; margin-right:5px;' id='btn_descuento' onclick="showPopup(); return false;">%</button>
+				</span>
+				</div>
+				<div class='col-lg-8 col-md-6 col-xs-6' style='padding-top:5px; padding-left:0px;'>
+				<span>
+				<button type='button' class='btn btn-success btn-block' id='btn_pagar' style='margin-bottom:5px; margin-right:5px; text-transform:uppercase;' onclick="VerPropinas(); return false;"><span class='trans_pay' id='spanaction'>PAGAR</span></button>
+				<button type='button' class='btn btn-success btn-lg trans_save btn-block' style='margin-bottom:5px; margin-right:5px; display:none; text-transform:uppercase;' data-toggle="tooltip" data-placement="top" title="" id='btn_gpedidos' onclick="SaveMesa();">GUARDAR</button>
+				</span>
+				</div>
+			</div>
 			
-			<button type='button' class='btn btn-default trans_mesas' style=' display:none; margin-bottom:5px; margin-right:5px;' id='btn_mesas' data-toggle="tooltip" data-placement="top" title="" onclick="ImprimirPrecuenta();"><span class="fa fa-print fa-2x"></span></button>
+			
 			<!--<div class='row'>
 				<div class='col-xs-6'>
 					<center>-->
-			<button type='button' class='btn btn-default btn-lg trans_desc' style='margin-bottom:5px; margin-right:5px;' id='btn_descuento' onclick="showPopup(); return false;">DESCUENTO</button>
+			
 					<!--</center>
 				</div>
 				<div class='col-xs-6'>
 					<center>	-->
-			<button type='button' class='btn btn-success btn-lg trans_save' style='margin-bottom:5px; margin-right:5px; display:none; text-transform:uppercase;' data-toggle="tooltip" data-placement="top" title="" id='btn_gpedidos' onclick="SaveMesa();">GUARDAR</button>
 			
-			<button type='button' class='btn btn-success btn-lg' id='btn_pagar' style='margin-bottom:5px;  margin-right:5px;' onclick="VerPropinas(); return false;"><span class='trans_pay'>PAGAR</span>&nbsp;<span id='total'>0.00</span></button>
+			
 					<!--</center>
 				</div>
 			</div>-->

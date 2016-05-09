@@ -791,6 +791,78 @@
     		</div>
         </div>
 
+		<!---modal cantidad--->
+		<div class="modal fade" role="dialog" id='popupprecios' data-backdrop='static'>
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 id='titlenumeric' style='text-align:center;'></h3>
+					</div>
+					<div class='modal-body'>
+						<div style='padding:5px;' id='tecladoc'>
+							<div class='row'>
+								<div class='col-xs-12 col-md-12 col-lg-12'>
+									<input class='cantidadn' readonly value='0'/>
+									<input type='text' style='display:none;' id='inputtarget' />
+								</div>
+							</div>
+							<div class='row'>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='1'>1</button> 
+								</div>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='2'>2</button>
+								</div>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='3'>3</button>
+								</div>
+							</div>
+							<div class='row'>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='4'>4</button>
+								</div>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='5'>5</button>
+								</div>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='6'>6</button>
+								</div>
+							</div>
+							<div class='row'>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='7'>7</button>
+								</div>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='8'>8</button>
+								</div>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='9'>9</button>
+								</div>
+							</div>
+							<div class='row'>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='0'>0</button>
+								</div>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='p'>.</button>
+								</div>
+								<div class='col-lg-4 col-md-4 col-sm-4'>
+								<button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button>
+								</div>
+							</div>
+							<div class='row' style='padding-top:20px;'>
+								<div class='col-lg-12' style='text-align:center;'>
+								<button class='btn btn-default btn-lg trans_cancel' type='button' onclick='ocultarTeclado(0);'>Cancelar</button>
+								<button class='btn btn-success btn-lg' type='button' onclick='ocultarTeclado(1);'>Aplicar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!---fin modal cantidad--->
+		
 		</body>
 		<link href="slide/bootstrap-switch.css" rel="stylesheet"/>
 		<script src="slide/bootstrap-switch.js"></script>
@@ -860,6 +932,7 @@
 					alert('debes leer todas las instrucciones y marcar su check correspondiente');
 				}  
 			}
+			
 			google.load("visualization", "1", {packages:["corechart"]});
 			var timerFade;
 			function startAnimation(){
@@ -884,28 +957,28 @@
 			});
 			
 			
-			$( document ).ready(function(){
-
-			  if(localStorage.getItem("id_version_nube") == '0'){
+	$( document ).ready(function(){
+			digitado=false;
+			if(localStorage.getItem("id_version_nube") == '0'){
 			    $('#version_escoje').fadeIn('slow');
                 document.getElementById('main').style.display='none';
-              }
+            }
 
-              if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+            if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
 			    $('#pide_telefono').fadeIn('slow');
                 document.getElementById('main').style.display='none';
 
-              }
+            }
 
-              window.addEventListener('native.keyboardshow', keyboardShowHandler);
-              function keyboardShowHandler(e){
+            window.addEventListener('native.keyboardshow', keyboardShowHandler);
+            function keyboardShowHandler(e){
     			//alert("show");
     			var inp=$(":focus");
     			var padding = 15;
                 var targetPosition = parseInt($(inp).offset().top + padding);
                 var keyboardHeight = parseInt($(window).height())-parseInt(e.keyboardHeight);//get keyboard height
 
-                        //if the input is hidden by the keyboard,scroll to the input
+                //if the input is hidden by the keyboard,scroll to the input
     			//alert(targetPosition+'/'+keyboardHeight);
                 if (targetPosition >= keyboardHeight) {
                     //padding *=5;
@@ -916,44 +989,43 @@
                 }
     		}
 
-    		// This event fires when the keyboard will show
-    		window.addEventListener('native.keyboardhide', keyboardHideHandler);
+			// This event fires when the keyboard will show
+			window.addEventListener('native.keyboardhide', keyboardHideHandler);
 
-    		function keyboardHideHandler(e){
-    			//alert("hide");
-    			$('#pide_telefono').css("top","0px");
-    		}
+			function keyboardHideHandler(e){
+					//alert("hide");
+					$('#pide_telefono').css("top","0px");
+			}
 
-				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-				db.transaction(iniciaDB,errorCB,successCB);
-				$('html').addClass('android-scroll-bar');
-				startAnimation();
-				SyncStart();
-				var alto = $( window ).height();
-				$('#contieneMensajes').css('height',(alto)*90/100);
-
-				$('.carousel').carousel({
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(iniciaDB,errorCB,successCB);
+			$('html').addClass('android-scroll-bar');
+			startAnimation();
+			SyncStart();
+			var alto = $( window ).height();
+			$('#contieneMensajes').css('height',(alto)*90/100);
+			$('.carousel').carousel({
 					interval: 4000
-				})
+			});
 				
-				//idioma
-					var linklang="es";
-					if(localStorage.getItem("idioma")==2){
-						linklang="en";
-						$('#dash_1').attr("src","images/resumen_en.jpg");
-						$('#dash_2').attr("src","images/pagar_en.jpg");
-						$('#dash_3').attr("src","images/descProd_en.jpg");
-						$('#dash_4').attr("src","images/ventas_en.jpg");
-						$('#dash_5').attr("src","images/historial_en.jpg");
-						$('#dash_6').attr("src","images/listaProd_en.jpg");
-						$('#dash_7').attr("src","images/nuevoProd_en.jpg");
-						$('#dash_8').attr("src","images/cloud1_en.jpg");
-						$('#dash_9').attr("src","images/cloud2_en.jpg");
-						$('#dash_10').attr("src","images/cloud3_en.jpg");
-					}
+			//idioma
+			var linklang="es";
+			if(localStorage.getItem("idioma")==2){
+				linklang="en";
+				$('#dash_1').attr("src","images/resumen_en.jpg");
+				$('#dash_2').attr("src","images/pagar_en.jpg");
+				$('#dash_3').attr("src","images/descProd_en.jpg");
+				$('#dash_4').attr("src","images/ventas_en.jpg");
+				$('#dash_5').attr("src","images/historial_en.jpg");
+				$('#dash_6').attr("src","images/listaProd_en.jpg");
+				$('#dash_7').attr("src","images/nuevoProd_en.jpg");
+				$('#dash_8').attr("src","images/cloud1_en.jpg");
+				$('#dash_9').attr("src","images/cloud2_en.jpg");
+				$('#dash_10').attr("src","images/cloud3_en.jpg");
+			}
 						
 					
-					var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
+			var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
 					//alert("Ana");
 					var itemestructura=$(d).find("estructura")[0];
 					var itemmen=$(itemestructura).find("menu")[0];
@@ -983,11 +1055,84 @@
 						var miitemname=$(todosplaceholder[k]).attr("name");
 						$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
 					}
-					
-					
-				});
-				//fin idioma
-
 			});
+				//fin idioma
+	});
+			
+	function ClickNumeroP(numc){
+		console.log('entra al click');
+		//var div=$(numc).parent().parent().parent().parent();
+		var miinp=$('.cantidadn');
+		//console.log(miinp);
+		/*$('#pay input').each(function(){
+			if($(this).attr('aria-describedby')==div.attr('id')){
+				miinp=$(this);
+			}
+		});*/
+		//alert(div.attr('id'));
+		var accion = $.trim($(numc).attr('cual'));
+			//console.log(accion);
+		if(accion == 'p'){
+				if(miinp.val().indexOf('.') == -1){
+					/*if(miinp.val()==0){
+						miinp.val(miinp.val()+".");
+						digitado=true;
+					}
+					else{*/
+						if(digitado==false){
+							miinp.val('0.');
+							digitado=true;
+						}
+						else{
+							miinp.val(miinp.val()+'.');
+							digitado=true;
+						}
+					//}
+				}else{
+					if(digitado==false){
+							miinp.val('0.');
+							digitado=true;
+					}
+				}
+				return false;
+		}
+		else if($.isNumeric(accion) === true){
+				if(miinp.val()=='0'){
+					miinp.val(accion);
+					digitado=true;
+				}
+				else {
+					if(digitado==true)
+						miinp.val(miinp.val()+accion);
+					else{
+						miinp.val(accion);
+						digitado=true;
+					}
+				}
+						
+				return false;
+		}
+
+		var fetchHTML = $.trim(miinp.val());
+		miinp.val(fetchHTML.substring(0,(fetchHTML.length-1)));
+		if(miinp.val()=='')
+			miinp.val('0');
+	}
+	
+	function ocultarTeclado(como){
+		if(como==1){
+			var miinp=$('#inputtarget').val();
+			var inp=$('#'+miinp);
+			inp.val($('.cantidadn').val());
+			if(miinp=='precioproducto')
+				CalcularConImpuestos();
+			else if(miinp=='precioConImpuestos')
+				CalcularSinImpuestos();
+			else if(miinp=='paymentEfectivo'||miinp=='valortarjeta'||miinp=='valorcheque1'||miinp=='valorcxc')
+				$(inp).change();
+		}
+		$('#popupprecios').modal('hide');
+	}
+	
 	</script>
 </html>

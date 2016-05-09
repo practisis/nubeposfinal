@@ -407,29 +407,23 @@ function registrarUser(){
     newIdioma = $("#id_idioma").val();
     var expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     if(newEmpresa==''){
-        $('.alert-danger').fadeIn('slow');
 		if(localStorage.getItem("idioma")==1)
-			$(".alert-danger").html('Debe ingresar el nombre de su negocio.');
+			showalertred('Debe ingresar el nombre de su negocio.');
 		else if(localStorage.getItem("idioma")==2)
-			$(".alert-danger").html('Please, enter a business name.');
+			showalertred('Please, enter a business name.');
 		
         $("#newEmpresa").val('');
-        setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
      }else if(newPais=='' || newPais=='0'){
-        $('.alert-danger').fadeIn('slow');
         if(localStorage.getItem("idioma")==1)
-			$(".alert-danger").html('Debe ingresar su país para tu negocio.');
+			showalertred('Debe ingresar su país para tu negocio.');
 		else if(localStorage.getItem("idioma")==2)
-			$(".alert-danger").html('Please, enter a country.');
-        setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
+			showalertred('Please, enter a country.');
      }else if(newEmail=='' || !expr.test(newEmail)){
-        $('.alert-danger').fadeIn('slow');
 		if(localStorage.getItem("idioma")==1)
-			$(".alert-danger").html('Debe ingresar un e-mail valido para su negocio.');
+			showalertred('Debe ingresar un e-mail valido para su negocio.');
 		else if(localStorage.getItem("idioma")==2)
-			 $(".alert-danger").html('Enter a valid e-mail.');
+			 showalertred('Enter a valid e-mail.');
         $("#newEmail").val('');
-        setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
      }else{
     	if(newConfirm == newPass){
 			$("#cargandoTabs").fadeIn();
@@ -469,13 +463,11 @@ function registrarUser(){
 				//alert(data);
                 if(data=='existe'){
 						$("#cargandoTabs").fadeOut();
-                        $('.alert-danger').fadeIn('slow');
 						if(localStorage.getItem("idioma")==1)
-                        $(".alert-danger").html('El correo ingresado ya existe en el sistema, vuelva a ingresar otro correo.');
+                        showalertred('El correo ingresado ya existe en el sistema, vuelva a ingresar otro correo.');
 						else if(localStorage.getItem("idioma")==1)
-                        $(".alert-danger").html('The mail entered already exists in the system, please enter another.');
+                        showalertred('The mail entered already exists in the system, please enter another.');
                         $("#newEmail").val('');
-                            setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
     			}else{
 						var datosback=data.split("||");
 						console.log(data);
@@ -511,14 +503,12 @@ function registrarUser(){
 
     	}else{
 				$("#cargandoTabs").fadeOut();
-    			$('.alert-danger').fadeIn('slow');
 				if(localStorage.getItem("idioma")==1)
-					$(".alert-danger").html('Las contraseñas son distintas.');
+					showalertred('Las contraseñas son distintas.');
 				else if(localStorage.getItem("idioma")==2)
-					$(".alert-danger").html('The passwords are different.');
+					showalertred('The passwords are different.');
                 $("#newPass").val('');
     			$("#newConfirm").val('');
-                setTimeout(function(){ $('.alert-danger').fadeOut('slow'); }, 3000);
     		}
         }
 }

@@ -390,7 +390,10 @@ function agregarCompra(item,origen){
 	});
 
 	if(localStorage.getItem("con_mesas")=="true"){
-		$('#btn_gpedidos').html('guardar '+$('#total').html());
+		if(localStorage.getItem("idioma")==1)
+			$('#btn_gpedidos').html('guardar');
+		else if(localStorage.getItem("idioma")==2)
+			$('#btn_gpedidos').html('save');
 		$('#btn_gpedidos').show();
 		$('#btn_pagar').hide();
 	}
@@ -611,7 +614,10 @@ function agregarCompranew(item,origen){
 	});
 	
 	if(localStorage.getItem("con_mesas")=="true"){
-		$('#btn_gpedidos').html('guardar '+$('#total').html());
+		if(localStorage.getItem("idioma")==1)
+			$('#btn_gpedidos').html('guardar');
+		else
+			$('#btn_gpedidos').html('save');
 		$('#btn_gpedidos').show();
 		$('#btn_pagar').hide();
 	}
@@ -908,9 +914,11 @@ function cambiarCantidad(){
 						$('#totalmiFactura').val(sumTotal);
 						$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
 						if(localStorage.getItem("idioma")==1)
-							$('#btn_gpedidos').html('GUARDAR $'+ parseFloat(sumTotal).toFixed(2));
+							//$('#btn_gpedidos').html('GUARDAR $'+ parseFloat(sumTotal).toFixed(2));
+							$('#btn_gpedidos').html('GUARDAR');
 						else if(localStorage.getItem("idioma")==2)
-							$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
+							//$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
+							$('#btn_gpedidos').html('SAVE');
 
 						$('#justo').html(sumTotal.toFixed(2));
 						$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
@@ -1282,6 +1290,7 @@ function pagar(){
 			json +=	'"id_cliente": "'+$('#idCliente').val()+'",';
 			json +=	'"cedula": "'+$('#cedulaP').val()+'",';
 			json +=	'"nombre": "'+$('#nombreP').val()+'",';
+			json +=	'"listaDePrecio":"1",';
 			json +=	'"telefono": "'+$('#telefonoP').val()+'",';
 			json +=	'"email": "'+$('#emailP').val()+'",';
 			json +=	'"direccion": "'+$('#direccionP').val()+'",';
@@ -1487,9 +1496,9 @@ function addDiscount(){
 			$('#changeFromPurchase').html((parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2));
 			$('#redondeado').attr('data-value',-1*Math.ceil((parseFloat(totales) - parseFloat(discount)+parseFloat(propina))).toFixed(2));
 			if(discount.toFixed(2)>0)
-				$('#btn_descuento').html('DESC  $'+discount.toFixed(2));
+				$('#btn_descuento').html('% $'+discount.toFixed(2));
 			else
-				$('#btn_descuento').html('DESCUENTO');
+				$('#btn_descuento').html('%');
 			$('#msjDescuentoError').html('');
 			$('#btn_descuento').effect('highlight',{},'normal');
 		}else{
@@ -1589,9 +1598,11 @@ function borrarCompra(item){
 	$('#totalmiFactura').val(sumTotal);
 	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
   	if(localStorage.getItem("idioma")==1)
-  		$('#btn_gpedidos').html('GUARDAR $'+ parseFloat(sumTotal).toFixed(2));
+  		//$('#btn_gpedidos').html('GUARDAR $'+ parseFloat(sumTotal).toFixed(2));
+  		$('#btn_gpedidos').html('GUARDAR');
   	else if(localStorage.getItem("idioma")==2)
-  		$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
+  		//$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
+  		$('#btn_gpedidos').html('SAVE');
 	
 	//$('#payButton').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2));
 	$('#subtotalSinIva').val(parseFloat(subtotalSinIva) - parseFloat(subtotalSinIvaCompra));
@@ -1813,16 +1824,37 @@ function ColocarFormasPago(){
 		}
 	}
 	$('#tablaformaspago').html(mihtml);
-	$('.pop').popover({html:true,content:"<div style='padding:5px;' id='tecladoc'><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='1'>1</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='2'>2</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='3'>3</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='4'>4</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='5'>5</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='6'>6</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='7'>7</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='8'>8</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='9'>9</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='0'>0</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='p'>.</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button></div><div style='margin-top:3px; text-align:center;'><button class='btn btn-success' type='button' onclick='ocultarTeclado(this);'>OK</button></div></div>",delay: { "show": 100, "hide": 10 },trigger:"click",placement:"bottom"});
-	$('.pop').on('shown.bs.popover', function () {
+	/*$('.pop').popover({html:true,content:"<div style='padding:5px;' id='tecladoc'><div class='row'><button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='1'>1</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='2'>2</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='3'>3</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='4'>4</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='5'>5</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='6'>6</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='7'>7</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='8'>8</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='9'>9</button></div><div class='row'> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='0'>0</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='p'>.</button> <button onclick='ClickNumeroP(this);' class='numeron btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button></div><div style='margin-top:3px; text-align:center;'><button class='btn btn-success' type='button' onclick='ocultarTeclado(this);'>OK</button></div></div>",delay: { "show": 100, "hide": 10 },trigger:"click",placement:"bottom"});*/
+	/*$('.pop').on('shown.bs.popover', function () {
 			digitado=false;
 			$('.numeron').css('width','80px');
 			//$('#precioConImpuestos').popover('hide');
 		    setTimeout(function(){ocultarTeclado();},60000);
+	});*/
+	
+	$('#paymentEfectivo,#valortarjeta,#valorcheque1,#valorcxc').on('click',function(){
+		digitado=false;
+		if($(this).val()!='')
+			$('.cantidadn').val($(this).val());
+		else
+			$('.cantidadn').val('0.00');
+		
+		$('#inputtarget').val($(this).attr('id'));
+		
+		if($(this).attr('id')=='paymentEfectivo')
+			$('#titlenumeric').html("Pago en Efectivo");
+		else if($(this).attr('id')=='valortarjeta')
+			$('#titlenumeric').html("Pago con Tarjeta");
+		if($(this).attr('id')=='valorcheque1')
+			$('#titlenumeric').html("Pago con Cheque");
+		else if($(this).attr('id')=='valorcxc')
+			$('#titlenumeric').html("Pago CxC");
+		
+		$('#popupprecios').modal('show');
 	});
 }
 
-function ClickNumeroP(numc){
+/*function ClickNumeroP(numc){
 	var div=$(numc).parent().parent().parent().parent();
 	var miinp;
 	$('#pay input').each(function(){
@@ -1840,16 +1872,16 @@ function ClickNumeroP(numc){
 					digitado=true;
 				}
 				else{*/
-					if(digitado==false){
+					/*if(digitado==false){
 						miinp.val('0.');
 						digitado=true;
 					}
 					else{
 						miinp.val(miinp.val()+'.');
 						digitado=true;
-					}
+					}*/
 				//}
-			}else{
+			/*}else{
 				if(digitado==false){
 						miinp.val('0.');
 						digitado=true;
@@ -1878,9 +1910,9 @@ function ClickNumeroP(numc){
 		miinp.val(fetchHTML.substring(0,(fetchHTML.length-1)));
 		if(miinp.val()=='')
 			miinp.val('0');
-}
+}*/
 
-function ocultarTeclado(numc){
+/*function ocultarTeclado(numc){
 	if(numc!=null){
 		var div=$(numc).parent().parent().parent().parent();
 		var inp;
@@ -1897,7 +1929,7 @@ function ocultarTeclado(numc){
 	}else{
 		$('.pop').popover('hide');
 	}
-}
+}*/
 
 function BuscarCliente(e){
 	var valor=$('#cedulaP').val();
@@ -1987,10 +2019,15 @@ function Init31(){
 	console.log(vertical);
 	$('#main').height(h-parseFloat($('.navbar').css('height')));
 	$('#main').width(w*98/100);
-	if(localStorage.getItem("con_mesas")=="true")
-		$('#contentdetalle').css("height",(3.2*h/6));
-	else
-		$('#contentdetalle').css("height",(3*h/5));
+	
+	var suma=parseFloat($('.navbar').css('height'))+185;
+	$('.sumarow').each(function(){
+		suma+=parseFloat($(this).css('height'));
+	});
+	//console.log(suma);
+
+	$('#contentdetalle').css("height",parseFloat($(window).height())-suma);
+	
 	var navh=parseInt($('.navbar').css("height"));
 	$('#pay').css("height",(hd-navh));
 	if(w<600){
@@ -2024,7 +2061,7 @@ function Init31(){
 	$('.den').css('height',2*parseFloat($('.producto').css('height')));
 	$('.den').css('width',2*parseFloat($('.producto').css('height')));
 	$('.den').css('font-size','14px');
-	$('#productos').css('height',h-parseFloat($('.navbar').css('height'))-parseFloat($('#listaCategorias').css('height'))-20);
+	$('#productos').css('height',h-parseFloat($('.navbar').css('height'))-parseFloat($('#listaCategorias').css('height'))-15);
 	
 	/*if(h<600)
 		$('#listaProductos').css("min-height","480px");*/
@@ -2064,6 +2101,8 @@ function Init31(){
 		}
 	//alert('init');
 }
+
+
 
 $(document).ready(function(){
 	Ready();
@@ -2424,7 +2463,7 @@ function ClickNumeroM(numd){
 
 function Ready(){
 	
-  $('#paymentModule').on("click",function(e){
+  /*$('#paymentModule').on("click",function(e){
 	  if ($(e.target).data('toggle') !== 'popover'&& $(e.target).parents('.popover.in').length === 0) {
 			if($('.popover.in').length>0){
 				//alert('se oculta');
@@ -2445,37 +2484,40 @@ function Ready(){
 				//ocultarTeclado();
 			}
 		}
-  });
+  });*/
 	
   if(localStorage.getItem("con_shop")=='true'){
     /*$('#productos').fadeOut();
     $('#productosnew').fadeIn();*/
     document.getElementById('productos').style.display='none';
     document.getElementById('productosnew').style.display='block';
-	$('#btn_descuento').attr("class","btn btn-default trans_desc");
-	$('#btn_pagar').attr("class","btn btn-success");
+	$('#btn_descuento').attr("class","btn btn-default btn-lg");
+	$('#btn_pagar').attr("class","btn btn-success btn-block btn-lg");
 	$('#btn_pagar').show();
+	$('#spanaction').attr('class','trans_continue');
 	$('#btn_gpedidos').hide();
   }else if(localStorage.getItem("con_mesas")=='true'){
 			/*if(sessionStorage.getItem("mesa_activa")==""){
 			$('#divmesas').show();
   		}*/
-		$('#btn_descuento').attr("class","btn btn-default trans_desc btn-lg");
-		$('#btn_pagar').attr("class","btn btn-success btn-lg");
-		$('#btn_gpedidos').attr("class","btn btn-success btn-lg trans_save");
+		$('#btn_descuento').attr("class","btn btn-default btn-lg");
+		$('#btn_pagar').attr("class","btn btn-success btn-lg btn-block");
+		$('#btn_gpedidos').attr("class","btn btn-success btn-lg trans_save btn-block");
   		$('#divmesas,#btn_mesas').show();
   		$('#btn_pagar').hide();
+		$('#spanaction').attr('class','trans_save');
 		CargarMesas();
   }else{
     /*$('#productosnew').fadeOut();
     $('#productos').fadeIn();*/
     document.getElementById('productosnew').style.display='none';
     document.getElementById('productos').style.display='block';
-	$('#btn_descuento').attr("class","btn btn-default trans_desc");
-	$('#btn_pagar').attr("class","btn btn-success");
-	$('#btn_gpedidos').attr("class","btn btn-success trans_save");
+	$('#btn_descuento').attr("class","btn btn-default btn-lg");
+	$('#btn_pagar').attr("class","btn btn-success btn-block btn-lg");
+	$('#btn_gpedidos').attr("class","btn btn-success trans_save btn-block");
 	$('#btn_pagar').show();
 	$('#btn_gpedidos').hide();
+	$('#spanaction').attr('class','trans_continue');
   }
 	
 	if(localStorage.getItem("propina")=='false'){

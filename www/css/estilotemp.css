@@ -25,7 +25,7 @@
 	/*padding-top:5px;*/
 }
 
-#divtotal{
+#divtotal,#divtotal2{
 	background-color:black;
 	color:#5cb85c;
 	font-size:30px;
@@ -706,7 +706,7 @@ margin-top:10px;
     /*width:320px;*/
     margin-left: auto;
     margin-right: auto;
-    font-size: 14px;
+    font-size: 18px;
     margin-top: 5px;
   }
   .totalvista{
@@ -734,20 +734,11 @@ margin-top:10px;
     }
 	
 	.cuadroClientes{
-		z-index:901;
-		width:100%;
 		padding-bottom:15px;
-		height:380px;
-		overflow:hidden; 
-		border:solid 1px #808081;
-		border-radius:6px;
-		position:absolute;
-		top:0px;
 		background-color:white;
 		text-align:left;
 		padding:0px;
 		text-align:center;
-		left:0px;
 	}
 	
 	.camposcolor{
@@ -1189,10 +1180,11 @@ margin-top:10px;
 }
 
 .touchpago{
-	border:1px solid #CCC;
+	/*border:1px solid #CCC;
 	border-radius:5px;
 	padding:10px;
-	margin-top:10px;
+	margin-top:10px;*/
+	border:1px solid #ddd;
 }
 .touchpago .row .col-lg-6 .btn,.touchpago .col-xs-3 .btn{
 	width:100%;

@@ -494,22 +494,22 @@
 							<div class='col-lg-12'>
 								<table width='100%'><tr>
 								<td width='95%'>
-								<div onclick="changePaymentCategory('1','Efectivo');" style='padding:15px;'><span class='trans_Efectivo' style='font-size:18px; font-weight:bold;'>Efectivo</span></div>
+								<div onclick="changePaymentCategory('1','Efectivo');" style='padding:15px;'><span id='caretEfectivo' class='fa fa-caret-down'></span>&nbsp;<span id='trans_label_84' style='font-size:18px; font-weight:bold;'>Efectivo</span></div>
 								</td>
 								<td style='vertical-align:middle'>
 							    <span class="badge" style='float:right;' id='paymentEfectivoa'>$ 0.00</span>
 								</td>
 								<td>
-								<button onclick='ResetPagos(1);'class='btn btn-default basurero' style='margin-left:5px;'><span class='glyphicon glyphicon-trash'></span></button>
+								<button onclick='ResetPagos(1);'class='btn btn-default basurero' style='margin-left:5px;margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
 								</td>
 								</tr>
 								</table>
 							</div>
 						</div>
 						</div>
-						<div id='touchefectivo' style='display:none; padding:5px;' class='touchpago  container-fluid'>
+						<div id='touchefectivo' style='display:none; padding:15px;' class='touchpago  container-fluid'>
 						<!--<span id='trans_label_34'>Elige tu pago en efectivo</span>-->
-							<div style='margin-bottom:3px; margin-top:15px; text-align:left;'>
+							<div style='text-align:left;'>
 								<div class='' style='text-align:left; display:inline;'>
 								<button onclick='subirefectivo(this);' id='justo' class='btn btn-lg btn-primary den' style='margin-right: 10px;' data-value='' type='button'></button>
 								</div>
@@ -536,23 +536,23 @@
 							<div class='col-lg-12'>
 								<table width='100%'><tr>
 								<td width='95%'>
-									<div onclick="changePaymentCategory('2','Tarjetas');" style='padding:15px;' >&nbsp;<span class='trans_Tarjetas' style='font-size:18px; font-weight:bold;'>Tarjetas</span></div>
+									<div onclick="changePaymentCategory('2','Tarjetas');" style='padding:15px;' ><span id='caretTarjetas' class='fa fa-caret-right'></span>&nbsp;<span id='trans_label_85' style='font-size:18px; font-weight:bold;'>Tarjetas</span></div>
 								</td>
 								<td style='vertical-align:middle'>
 									<span class="badge" id='paymentTarjetasa' style='float:right;'>$ 0.00</span>
 								</td>
 								<td>
-									<button onclick='ResetPagos(2);'class='btn btn-default basurero' style='margin-left:5px;'><span class='glyphicon glyphicon-trash'></span></button>
+									<button onclick='ResetPagos(2);'class='btn btn-default basurero' style='margin-left:5px; margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
 								</td>
 								</tr>
 								</table>
 							</div>
 						</div>
 						</div>
-						<div id='touchtarjetas' style='display:none; padding:5px;' class='touchpago  container-fluid'>
+						<div id='touchtarjetas' style='display:none; padding:15px;' class='touchpago  container-fluid'>
 							<!--<div class='col-lg-12 col-md-12 col-xs-12'>-->
 							<!--<div id='trans_label_35'>Elige la tarjeta con la que vas a pagar</div>-->
-							<div class="input-group" style='margin-top:5px; margin-bottom:5px; display:none;' id='cardgroup'>
+							<div class="input-group" style='display:none;' id='cardgroup'>
 								<span class="input-group-addon" id="basic-addon1" >Valor US</span>
 								<input onchange='valorcardchange();' class='form-control input-lg pop' id='valortarjeta' value='0.00' readonly />
 							</div>
@@ -565,22 +565,22 @@
 							<div class='col-lg-12'>
 								<table width='100%'><tr>
 								<td width='95%'>
-									<div onclick="changePaymentCategory('3','Cheques');" style='padding:15px;'>&nbsp;<span class='trans_Cheques' style='font-size:18px; font-weight:bold;'>Cheques</span></div>
+									<div onclick="changePaymentCategory('3','Cheques');" style='padding:15px;'><span id='caretCheques' class='fa fa-caret-right'></span>&nbsp;<span style='font-size:18px; font-weight:bold;' id='trans_label_86'>Cheques</span></div>
 								</td>
 								<td  style='vertical-align:middle'>
-									 <span class="badge" id='paymentsChequesa' style='float:right;'>$ 0.00</span>
+									 <span class="badge" id='paymentChequesa' style='float:right;'>$ 0.00</span>
 								</td>
 								<td>
-								<button onclick='ResetPagos(3);'class='btn btn-default basurero'  style='margin-left:5px;'><span class='glyphicon glyphicon-trash'></span></button>
+								<button onclick='ResetPagos(3);'class='btn btn-default basurero'  style='margin-left:5px; margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
 								</td>
 								</tr></table>
 							</div>
 						</div>	
 						</div>						
-						<div id='touchcheques' style='display:none; padding:5px;' class='touchpago  container-fluid'>
+						<div id='touchcheques' style='display:none; padding:15px;' class='touchpago  container-fluid'>
 							<!--<div class='col-lg-12 col-md-12 col-xs-12'>-->
 							<!---<div id='trans_label_36'>Ingresa el monto del cheque</div>-->
-							<table width='100%' style='margin-top:15px;'>
+							<table width='100%' style=''>
 								<tr><td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
 								<span class="input-group-addon" id="basic-addon1" style='width:20%;'> Cheque No.</span>
@@ -603,22 +603,22 @@
 							<div class='col-lg-12'>
 								<table width='100%'><tr>
 								<td width='95%'>
-									<div onclick="changePaymentCategory('4','CxC');" style='padding:15px;'>&nbsp;<span style='font-size:18px; font-weight:bold;'>CxC</span></div>
+									<div onclick="changePaymentCategory('4','CxC');" style='padding:15px;'><span id='caretCxC' class='fa fa-caret-right'></span>&nbsp;<span style='font-size:18px; font-weight:bold;' id='trans_label_87'>CxC</span></div>
 								</td>
 								<td  style='vertical-align:middle'>
 									 <span class="badge" id='paymentCxCa' style='float:right;'>$ 0.00</span>
 								</td>
 								<td>
-									<button onclick='ResetPagos(4);'class='btn btn-default basurero'   style='margin-left:5px;'><span class='glyphicon glyphicon-trash'></span></button>
+									<button onclick='ResetPagos(4);'class='btn btn-default basurero'   style='margin-left:5px; margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
 								</td>
 								</tr></table>
 							</div>
 						</div>
 						</div>
-						<div id='touchcxc' style='display:none; padding:5px;' class='touchpago container-fluid'>
+						<div id='touchcxc' style='display:none; padding:15px;' class='touchpago container-fluid'>
 							<!--<div class='col-lg-12 col-md-12 col-xs-12'>-->
 								<!--<div id='trans_label_37'>Ingresa el monto que se va a cancelar</div>-->
-								<table width='100%' style='margin-top:15px;'>
+								<table width='100%' style=''>
 								<tr><td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
 								<span class="input-group-addon" id="basic-addon1" style='width:20%;' >Justificación</span>
@@ -668,16 +668,16 @@
 						<table align='right'>
                             <tr>
 								<td>
-									 <button class='btn btn-success btn-lg' id='pagoavan' style='margin-right:3px;' onclick='PagoAvanzado();'><span class=''>Pago Avanzado</span></button>
+									 <button class='btn btn-default btn-lg' id='pagoavan' style='margin-right:3px;' onclick='PagoAvanzado();'><span class='trans_advance'>Pago Avanzado</span></button>
 								</td>
 								<td>
-									  <button  class='btn btn-success btn-lg' id='lisimple' style='display:none; margin-right:3px;' onclick='PagoSimple();' style='display:none;'>Pago Simple</button>
+									  <button  class='btn btn-default btn-lg trans_pagosimple' id='lisimple' style='display:none; margin-right:3px;' onclick='PagoSimple();' style='display:none;'>Pago Simple</button>
 								</td>
 								<td>
     							    <button id="cancelButton" class='btn btn-default btn-lg trans_cancel' onclick="cancelPayment(); return false;" style='margin-right:5px;'>Cancelar</button>
                                 </td>
 								<td>
-									<button id="nombre_orden" class='btn btn-lg btn-primary trans_ordern' onclick="$('#popupNameorder').modal('show');" style='margin-right:5px;display: none;' type='button'>Nombre Orden</button>
+									<button id="nombre_orden" class='btn btn-lg btn-default trans_ordern' onclick="$('#popupNameorder').modal('show');" style='margin-right:5px;display: none;' type='button'>Nombre Orden</button>
 								</td>
                                 <td>
         						<button style="float:right; margin-right:3px; display:none;" id="payButton" class="btn btn-success btn-lg" onclick="VerificarComandas();"><span class='trans_pay'>PAGAR</span></button>
@@ -981,7 +981,7 @@
 			</div>
 		</div>
 	</div>
-
+	
 <input type='hidden' style='display:none;' value='001-001-000050' id='nextnumber'/>
 <div id="factura" style='display:none;'>
 		<input type="hidden" id="subtotalSinIva" value="0"/>

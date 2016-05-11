@@ -21,7 +21,7 @@ function changePaymentCategory(index,nombre){
     //$('#valortarjeta').prop("readonly",false);
     //$('#payButton').fadeIn("fast");
     $('#order_id').val('');
-	
+	$('.fa-caret-down').attr('class','fa fa-caret-right');
 	$('.touchpago').css('display','none');
 	
 	$('.columna1 div').each(function(){
@@ -59,12 +59,13 @@ function changePaymentCategory(index,nombre){
 		$('.cardv').html('');
 		$('#valortarjeta').val('0.00');
 		$('.card').attr('data-value','0');
-		$('#simple_2').html('0.00');
+		//$('#simple_2').html('0.00');
 	}
 	
 	//alert(pagonormal+"/"+cual);
 	
 	if(nombre=='Efectivo'){
+		$('#caretEfectivo').attr('class','fa fa-caret-down');
 		if(pagonormal==true){
 			$('#valorcxc,#paymentCxC,#valorcheque1,#paymentCheques').val("0.00");
 		}else{
@@ -73,6 +74,7 @@ function changePaymentCategory(index,nombre){
 		
 	}
 	if(nombre=='Tarjetas'){
+		$('#caretTarjetas').attr('class','fa fa-caret-down');
 		if(pagonormal==true){
 			$('#valorcxc,#paymentCxC,#valorcheque1,#paymentCheques').val("0.00");
 		}else{
@@ -83,26 +85,34 @@ function changePaymentCategory(index,nombre){
 	//alert(nombre);
 	
 	if(nombre=='Cheques'){
+		$('#caretCheques').attr('class','fa fa-caret-down');
 		if(pagonormal==true){
 			$('#valorcxc,#paymentCxC').val("0.00");
 			$('#valorcheque1,#paymentCheques').val(parseFloat($('#total').html().substring(1)).toFixed(2));
+			$('#paymentChequesa').html('$ '+parseFloat($('#total').html().substring(1)).toFixed(2));
 		}else{
 				if(parseFloat($('#valorcheque1').val())==0||$('#valorcheque1').val()==""){
-					if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
+					if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0){
 						$('#valorcheque1,#paymentCheques').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
+						$('#paymentChequesa').html('$ '+parseFloat($('#changeFromPurchase').html()).toFixed(2));
+					}
 				}
 		}
 		
 	}
 	if(nombre=='CxC'){
+		$('#caretCxC').attr('class','fa fa-caret-down');
 		$('#touchcxc').fadeIn();
 		if(pagonormal==true){
 			$('#valorcheque1,#paymentCheques').val("0.00");
 			$('#valorcxc,#paymentCxC').val(parseFloat($('#total').html().substring(1)).toFixed(2));
+			$('#paymentCxCa').html('$ '+parseFloat($('#total').html().substring(1)).toFixed(2));
 		}else{
 				if(parseFloat($('#valorcxc').val())==0){
-				if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0)
+				if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0){
 					$('#valorcxc,#paymentCxC').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
+					$('#paymentCxCa').html('$ '+parseFloat($('#changeFromPurchase').html()).toFixed(2));
+				}
 			}
 		}
 	}
@@ -549,6 +559,13 @@ function performPurchase(restaurant){
 			totalFac = parseFloat(totalFac).toFixed(2);
 			$('#totalPagado').html(totalFac);
 			console.log(datosFactura.Pagar[0]);
+			
+			//popupsavefactura
+			$('#popupprecios').modal('hide');
+			$('#totalalert').html('$ '+totalFac);
+			$('#pagadoalert').html('$ '+$('#invoicePaid').html());
+			$('#vueltoalert').html('$ '+$('#changeFromPurchase').html());
+			//
             impresionMovil(fetchJson.toString());
             //setTimeout(function(){localStorage.setItem("nameorder","");},2000);
 		}else{
@@ -625,9 +642,9 @@ function impresionMovil(mijson){
 				//fin comanderas
 		//});
 		
-
+	localStorage.setItem("nameorder","");
+	$('#popupsavefactura').modal('show');
 	envia('puntodeventa');
-    localStorage.setItem("nameorder","");
 }
 
 function cancelPayment(){
@@ -1574,7 +1591,7 @@ function PagoSimple(){
 	//$('.simple').css('display','none');
 	//$('.columna2').fadeIn();
 	$('#pagoavan').fadeIn();
-	$('#lisimple,.touchpago').css('display','none');
+	$('#lisimple,.touchpago,#payButton').css('display','none');
 	$('#licheques,#licxc,.basurero,.badge,.cuadrototal').css('display','none');
 	$('.paymentMethods').val('0.00');
 	$('#valortarjeta,#valorcheque1,#valorcxc').val('0.00');

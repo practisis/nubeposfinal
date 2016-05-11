@@ -1118,7 +1118,7 @@ function slider(direccion){
 	}
 	
 function pagar(){
-	//lert('viene a pagar');
+	//alert('viene a pagar');
 	//$("#cuadroClientes,#opaco").fadeOut("fast");
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	var serie='001';
@@ -1753,7 +1753,7 @@ function AntesDePagar(){
 		}else{
           $('#nombre_orden').css('display','none');
 		}
-		$('#paymentModule').fadeIn();
+		$('#paymentModule,#touchefectivo').fadeIn();
 		$('#row1,.basurero,.badge').css('display','none');
 		//$('#paymentEfectivo').val(parseFloat($('#justo').attr('data-value'))*-1);
 		//$('#paymentCategory-1').click();
@@ -2065,8 +2065,15 @@ function Init31(){
 		//$('#listaProductos').css('height',"100%");
 	}
 	$('.den,.card').css('height',1.8*parseFloat($('.producto').css('height')));
-	$('.den,.card').css('width',3*parseFloat($('.producto').css('height')));
-	$('.den,.card').css('font-size','26px');
+	$('.den,.card').css('width',2.5*parseFloat($('.producto').css('height')));
+	$('.den,.card').css('font-size','24px');
+	
+	$('.nombrecard').each(function(){
+		if($(this).html().length>8){
+			$(this).css('font-size','18px');
+		}
+	});
+	
 	$('#productos').css('height',h-parseFloat($('.navbar').css('height'))-parseFloat($('#listaCategorias').css('height'))-15);
 	
 	/*if(h<600)
@@ -2491,6 +2498,7 @@ function Ready(){
 			}
 		}
   });*/
+  $('#popupprecios').modal('hide');
 	
   if(localStorage.getItem("con_shop")=='true'){
     /*$('#productos').fadeOut();
@@ -2511,7 +2519,7 @@ function Ready(){
 		$('#btn_gpedidos').attr("class","btn btn-success btn-lg trans_save btn-block");
   		$('#divmesas,#btn_mesas').show();
   		$('#btn_pagar').hide();
-		$('#spanaction').attr('class','trans_save');
+		$('#spanaction').attr('class','trans_pay');
 		CargarMesas();
   }else{
     /*$('#productosnew').fadeOut();
@@ -2882,8 +2890,19 @@ function vertarjetas(){
 		var mihtml='';
 		for(var j in evalJson[k]){
 			var dat=evalJson[k][j];
+			var iconcard='fa-credit-card';
+			if(dat.nombre=='Visa')
+				iconcard='fa-cc-visa';
+			else if(dat.nombre=='Mastercard')
+				iconcard='fa-cc-mastercard';
+			else if(dat.nombre=='Discover')
+				iconcard='fa-cc-discover';
+			else if(dat.nombre=='Diners')
+				iconcard='fa-cc-diners-club';
+			else if(dat.nombre=='Amex')
+				iconcard='fa-cc-amex';
 			//var div='<div class="col-xs-3"><button data-value="0.00" type="button" class="btn btn-primary btn-lg card" id="card_'+dat.id+'" data-id="'+dat.id+'" onclick="elegirTarjeta('+dat.id+');"><span>'+dat.nombre+'</span><span style="position:absolute; right:5px; top:3px; font-size:10px;" class="cardv" id="cardv_'+dat.id+'"></span></button></div>';
-			var div='<button style="float:left; margin-right:10px;" data-value="0.00" type="button" class="btn btn-primary btn-lg card" id="card_'+dat.id+'" data-id="'+dat.id+'" onclick="elegirTarjeta('+dat.id+');"><span>'+dat.nombre+'</span><span style="position:absolute; right:5px; top:3px; font-size:10px;" class="cardv" id="cardv_'+dat.id+'"></span></button>';
+			var div='<button style="float:left; margin-right:10px; position:relative;" data-value="0.00" type="button" class="btn btn-primary btn-lg card" id="card_'+dat.id+'" data-id="'+dat.id+'" onclick="elegirTarjeta('+dat.id+');"><span class="fa '+iconcard+' fa-3x"></span><span style="position:absolute; right:5px; top:3px; font-size:10px;" class="cardv" id="cardv_'+dat.id+'"></span></button>';
 			$('#lastarjetas').append(div);
 			x++;
 		}

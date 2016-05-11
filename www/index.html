@@ -863,6 +863,35 @@
 		</div>
 		<!---fin modal cantidad--->
 		
+		<!----popup factura guardada---->
+<div  class="modal fade" id="popupsavefactura" role="dialog" data-backdrop="static">
+		<div class="modal-dialog modal-lg">
+			<div class='modal-content text-center'>
+				<div class="modal-body" style='color:#404041;'>
+						<h1 id='trans_label_88' style='font-size:58px; margin-bottom:20px;'>FACTURA GUARDADA CON ÉXITO</h1>
+						<br/>
+						<div class='row'>
+							<div class='col-lg-4 col-md-4 col-xs-4'></div>
+							<div class='col-lg-4 col-md-4 col-xs-4'>
+							<table class='table table-condensed' style='font-size:20px;'>
+								<tr><td style='text-align:right;'><b>TOTAL<b></td><td style='text-align:right;'><span id='totalalert' style='font-weight:bold;'>$ 0.00</span></td></tr>
+								<tr><td class='trans_paid'  style='text-align:right;' >PAGADO</td><td style='text-align:right;'><span id='pagadoalert'>$ 0.00</span></td></tr>
+								<tr><td class='trans_change'  style='text-align:right;'>VUELTO</td><td style='text-align:right;'><span id='vueltoalert'>$ 0.00</span></td></tr>
+							</table>
+							</div>
+							<div class='col-lg-4 col-md-4 col-xs-4'></div>
+						</div>
+						<div class='row'>
+							<div class='col-lg-12' style='text-align:center; margin-top:10px;'>
+								<button class='btn btn-lg btn-success' onclick='$("#popupsavefactura").modal("hide");'>OK</button>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+</div>
+<!--fin factura guardada--->
+		
 		</body>
 		<link href="slide/bootstrap-switch.css" rel="stylesheet"/>
 		<script src="slide/bootstrap-switch.js"></script>

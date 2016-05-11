@@ -1847,14 +1847,30 @@ function ColocarFormasPago(){
 		
 		$('#inputtarget').val($(this).attr('id'));
 		
-		if($(this).attr('id')=='paymentEfectivo')
-			$('#titlenumeric').html("Pago en Efectivo");
-		else if($(this).attr('id')=='valortarjeta')
-			$('#titlenumeric').html("Pago con Tarjeta");
-		if($(this).attr('id')=='valorcheque1')
-			$('#titlenumeric').html("Pago con Cheque");
-		else if($(this).attr('id')=='valorcxc')
-			$('#titlenumeric').html("Pago CxC");
+		if($(this).attr('id')=='paymentEfectivo'){
+			if(localStorage.getItem("idioma")==1)
+				$('#titlenumeric').html("Pago en Efectivo");
+			else if(localStorage.getItem("idioma")==2)
+				$('#titlenumeric').html("Cash Payment");
+		}
+		else if($(this).attr('id')=='valortarjeta'){
+			if(localStorage.getItem("idioma")==1)
+				$('#titlenumeric').html("Pago con Tarjeta");
+			else if(localStorage.getItem("idioma")==2)
+				$('#titlenumeric').html("Card Payment");
+		}
+		if($(this).attr('id')=='valorcheque1'){
+			if(localStorage.getItem("idioma")==1)
+				$('#titlenumeric').html("Pago con Cheque");
+			else if(localStorage.getItem("idioma")==2)
+				$('#titlenumeric').html("Check Payment");
+		}
+		else if($(this).attr('id')=='valorcxc'){
+			if(localStorage.getItem("idioma")==1)
+				$('#titlenumeric').html("Pago CxC");
+			else if(localStorage.getItem("idioma")==2)
+				$('#titlenumeric').html("CxC Payment");
+		}
 		
 		$('#popupprecios').modal('show');
 	});

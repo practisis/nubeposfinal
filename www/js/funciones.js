@@ -4263,6 +4263,7 @@ function VerConsumos(idmesa){
 	    $('#tablaCompra').html('');
 
     if(localStorage.getItem("con_localhost") == 'true'){
+      $('#btn_pagar').attr({onclick: ''});
      var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
      var total = 0;
      var sumTotal = 0;
@@ -4647,6 +4648,7 @@ function SaveMesa(){
     if(localStorage.getItem("con_localhost") == 'true'){
      var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
      var query = '';
+     var datos = '';
      var mesaactiva=sessionStorage.getItem("mesa_activa");
      $('#tablaCompra>tbody>tr').each(function(){
 		var inputdata=$(this).find('.productDetails');
@@ -4662,7 +4664,14 @@ function SaveMesa(){
 			if(inputdata.attr('data-id_real')!=null&&inputdata.attr('data-id_real')!=""&&inputdata.attr('data-id_real')!="undefined")
 				idreal=inputdata.attr('data-id_real');
 			var fecha= new Date().getTime();
-            query += "INSERT INTO mesas_consumos (id_mesa,hora,details,agregados,notas,id_real) values ('"+mesaactiva+"','"+fecha+"','"+details+"','"+agreg+"','"+notes+"','"+idreal+"')||@"
+            query += "INSERT INTO mesas_consumos (id_mesa,hora,details,agregados,notas,id_real) values ('"+mesaactiva+"','"+fecha+"','"+details+"','"+agreg+"','"+notes+"','"+idreal+"')||@";
+
+            if( $(this).find('.product_del').is(':visible') ){
+                datos += details+'|@|'+agreg+'|@|'+notes+'|@|'+idreal+'|@|'+fecha+'|/@';
+            }else{
+                //alert('Elemento oculto');
+            }
+
 		}
 	});
 
@@ -4674,7 +4683,9 @@ function SaveMesa(){
 		id_barra : localStorage.getItem("idbarra"),
 		deviceid:$("#deviceid").html(),
         id_mesa : mesaactiva,
-        query : query
+        query : query,
+        datos : datos,
+        con_menu : localStorage.getItem("diseno")
 		}).done(function(response){
 			if(response!='block' && response!='Desactivado'){
 				console.log(response);

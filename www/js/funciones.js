@@ -1502,9 +1502,9 @@ function addDiscount(){
 			$('#changeFromPurchase').html(Math.abs((parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2)));
 			$('#redondeado').attr('data-value',-1*Math.ceil((parseFloat(totales) - parseFloat(discount)+parseFloat(propina))).toFixed(2));
 			if(discount.toFixed(2)>0)
-				$('#btn_descuento').html('% $'+discount.toFixed(2));
+				$('#btn_descuento').html('<span class="fa fa-minus"></span> $'+discount.toFixed(2));
 			else
-				$('#btn_descuento').html('%');
+				$('#btn_descuento').html('<span class="fa fa-minus"><span class="fa fa-dollar">');
 			$('#msjDescuentoError').html('');
 			$('#btn_descuento').effect('highlight',{},'normal');
 		}else{
@@ -2918,7 +2918,7 @@ function vertarjetas(){
 			else if(dat.nombre=='Amex')
 				iconcard='fa-cc-amex';
 			//var div='<div class="col-xs-3"><button data-value="0.00" type="button" class="btn btn-primary btn-lg card" id="card_'+dat.id+'" data-id="'+dat.id+'" onclick="elegirTarjeta('+dat.id+');"><span>'+dat.nombre+'</span><span style="position:absolute; right:5px; top:3px; font-size:10px;" class="cardv" id="cardv_'+dat.id+'"></span></button></div>';
-			var div='<button style="float:left; margin-right:10px; position:relative;" data-value="0.00" type="button" class="btn btn-primary btn-lg card" id="card_'+dat.id+'" data-id="'+dat.id+'" onclick="elegirTarjeta('+dat.id+');"><span class="fa '+iconcard+' fa-3x"></span><span style="position:absolute; right:5px; top:3px; font-size:10px;" class="cardv" id="cardv_'+dat.id+'"></span></button>';
+			var div='<button style="float:left; margin:5px; position:relative;" data-value="0.00" type="button" class="btn btn-primary btn-lg card" id="card_'+dat.id+'" data-id="'+dat.id+'" onclick="elegirTarjeta('+dat.id+');"><span class="fa '+iconcard+' fa-3x"></span><span style="position:absolute; right:5px; top:3px; font-size:10px;" class="cardv" id="cardv_'+dat.id+'"></span></button>';
 			$('#lastarjetas').append(div);
 			x++;
 		}
@@ -3555,12 +3555,12 @@ function VerificarAgregados(btnprod,origen){
 
         					if(localStorage.getItem("idioma")==1)
         						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Mitad</button>";
-        					else if(localStorage.getItem("idioma")==1)
+        					else if(localStorage.getItem("idioma")==2)
         						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Half</button>";
 
         					if(localStorage.getItem("idioma")==1)
         						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
-        					else
+        					else if(localStorage.getItem("idioma")==2)
         						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>NONE</button></div>";
         					inhtml+="<hr></hr>";
 
@@ -3639,12 +3639,12 @@ function VerificarAgregados(btnprod,origen){
 
 					if(localStorage.getItem("idioma")==1)
 						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Mitad</button>";
-					else if(localStorage.getItem("idioma")==1)
+					else if(localStorage.getItem("idioma")==2)
 						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Half</button>";
 
 					if(localStorage.getItem("idioma")==1)
 						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
-					else
+					else if(localStorage.getItem("idioma")==2)
 						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>NONE</button></div>";
 					inhtml+="<hr></hr>";
 

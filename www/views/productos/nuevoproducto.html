@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css">
 <div id="mainDiv" class="row" style="padding-bottom:150px;">
 	<div class="col-sm-12" align="left" id="contentAll">
 		<table width='100%'>
@@ -8,7 +7,7 @@
 				</td>
 				<td width='10%'>
 					<div style='width:100%;text-align:right;padding-right:30px;padding-top:15px;cursor:pointer;color:#1495C0;'>
-						<i class="fa fa-chevron-circle-left fa-2x" title='Volver...' onclick="envia('listaproductos')"></i>
+						<i class="fa fa-chevron-circle-left fa-3x" title='Volver...' onclick="envia('listaproductos')"></i>
 					</div>
 				</td>
 			</tr>
@@ -66,11 +65,11 @@
     				<h4>Servicio</h4>
     				<input type="checkbox"  id='conservicio' name="my-checkbox" class='impventa' data-id="2" data-value="0.1" data-size="mini">
     				</div>
-    				<div class="col-xs-1">
+    				<div class="col-lg-1 col-md-1 col-xs-2">
     				<h4 class='trans_imp'>Aplica Impuestos <label id='aplican' style='font-size:10px; display:inline;'></label></h4>
     				<input type="checkbox"  id='coniva' name="my-checkbox" class='impventa' data-id="1" data-value="0.12" data-size="mini" checked >
     				</div>
-					<div class='col-xs-11'>
+					<div class='col-lg-11 col-md-11 col-xs-10'>
 					<div>
 					<h4>Color</h4>
 					<!--<div class='row' id='paleta' style='margin-left:3px;'>-->
@@ -87,14 +86,14 @@
     				
     		</div>
         </div>
-			<div class='row'>
-				<div class='col-xs-10'></div>
-				<div class='col-xs-2' style='text-align:right; padding-top:35px;'><button class='btn btn-success btn-lg trans_save' onclick='GuardaProducto();'>Guardar</button></div>
+		<div class='row'>
+				<div class='col-lg-10 col-md-10 col-xs-9'></div>
+				<div class='col-lg-2 col-md-2 col-xs-3' style='text-align:right; padding-top:35px;'><button class='btn btn-success btn-lg trans_save' onclick='GuardaProducto();'>Guardar</button></div>
 				<input style="display:none;" class="form-control input-sm" autofocus="" placeholder="Color" name='colorproducto' id='colorproducto' type='text' value=''/>
-				</div>
-			</div>
-		<br/>
+		</div>
 	</div>
+	<br/>
+</div>
 <div id='jsoncomplete' style='display:none;'></div>
 <div id='jsonSugerenciasProductos' style='display:none;'></div>
 </div>
@@ -518,14 +517,15 @@
 								idInsert=timeSpanCat;
 								if(!idInsert) timeSpanCat=currentTimeSpanCat;
 									$('#idcategoria').val(results.timeSpanCat);
-										console.log('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,tieneimpuestos) SELECT "'+nombrep+'","'+codigop+'","'+preciop+'","'+timeSpanCat+'",'+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+',"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");');
+										//console.log('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,tieneimpuestos) SELECT "'+nombrep+'","'+codigop+'","'+preciop+'","'+timeSpanCat+'",'+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+',"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");');
 									db.transaction(function(tx){
 									tx.executeSql('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,estado,tieneimpuestos) SELECT "'+nombrep+'","'+codigop+'","'+preciop+'","'+timeSpanCat+'",'+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+' ,1,"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");',[],function(tx,results){
 									console.log("prod:"+results.insertId);
-									if(localStorage.getItem("idioma")==1)
+									/*if(localStorage.getItem("idioma")==1)
 										showalertred("Producto <b>" + nombrep + "</b> Creado con éxito.");
 									else if(localStorage.getItem("idioma")==2)
-										showalertred("Product <b>" + nombrep + "</b>, successfully created.");
+										showalertred("Product <b>" + nombrep + "</b>, successfully created.");*/
+										$('#popupsaveproducts').modal('show');
 									
 									});
 									},errorCB,successCB);
@@ -536,11 +536,12 @@
 								db.transaction(function(tx){
 								timeSpan=getTimeSpan();
 								tx.executeSql('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,estado,tieneimpuestos) SELECT "'+nombrep+'","'+codigop+'","'+preciop+'",'+currentTimeSpanCat+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+' , 1 ,"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");',[],function(tx,results){
-								console.log('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,tieneimpuestos) SELECT '+nombrep+'","'+codigop+'","'+preciop+'",'+currentTimeSpanCat+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+',"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");');
-									if(localStorage.getItem("idioma")==1)
+								//console.log('INSERT INTO 		PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,tieneimpuestos) SELECT '+nombrep+'","'+codigop+'","'+preciop+'",'+currentTimeSpanCat+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+',"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");');
+									/*if(localStorage.getItem("idioma")==1)
 										showalertred("Producto <b>" + nombrep + "</b> Creado con éxito.");
 									else if(localStorage.getItem("idioma")==2)
-										showalertred("Product <b>" + nombrep + "</b>, successfully created.");
+										showalertred("Product <b>" + nombrep + "</b>, successfully created.");*/
+										$('#popupsaveproducts').modal('show');
 								});
 								},errorCB,successCB);
 							}
@@ -551,11 +552,12 @@
 					},errorCB,successCB);
 				});
 			}else{
-				showalert("Por favor complete todos los datos");
+				//showalertred("Por favor complete todos los datos");
 				if(localStorage.getItem("idioma")==1)
-					showalert("Por favor complete todos los datos");
+					showalertred("Por favor complete todos los datos");
 				else if(localStorage.getItem("idioma")==2)
-					showalert("Please, complete all the information.");
+					showalertred("Please, complete all the information.");
+					
 				if($("#nombreproducto").val()=='') {$(".errorLabel1").fadeIn();setTimeout(function(){$('.errorLabel1').fadeOut('slow');},5000);}
 				if($("#search-renderitem").val()=='') {$(".errorLabel2").fadeIn();setTimeout(function(){$('.errorLabel2').fadeOut('slow');},5000);}
 				if($("#precioproducto").val()=='') {$(".errorLabel3").fadeIn();setTimeout(function(){$('.errorLabel3').fadeOut('slow');},5000);}
@@ -615,41 +617,44 @@
 					console.log('UPDATE PRODUCTOS SET formulado="'+nombrep+'",codigo="'+codigop+'",precio='+preciop+',categoriaid="'+currentTimespanCategory+'",productofinal='+prfinal+',materiaprima='+matprima+',ppq='+costo+',color='+micolor+',servicio='+serv+',tieneimpuestos='+iva+' WHERE timespan='+idproducto+' AND NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE (formulado like "'+nombrep+'" or codigo like "'+codigop+'") and timespan!='+idproducto+');');
 					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+nombrep+'",codigo="'+codigop+'",precio='+preciop+',categoriaid="'+currentTimespanCategory+'",productofinal='+prfinal+',materiaprima='+matprima+',ppq='+costo+',color='+micolor+' ,sincronizar="true",tieneimpuestos="'+iva+'" WHERE timespan="'+idproducto+'" AND NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE (formulado like "'+nombrep+'" or codigo like "'+codigop+'") and timespan!="'+idproducto+'");',[],function(tx,results){
 					console.log("prod:"+idproducto);
-					$('#jsalert').html("Datos Actualizados con éxito.");
+					/*$('#jsalert').html("Datos Actualizados con éxito.");
 					if(localStorage.getItem("idioma")==1)
 						showalert("Datos Actualizados con éxito.");
 					else if(localStorage.getItem("idioma")==2)
-						showalert("Successfully Updated");
+						showalert("Successfully Updated");*/
 					
-					setTimeout(function(){$('#jsalert').effect('highlight',{color:'white'},1000);},500);
+					$('#popupsaveproducts').modal('show');
+					
+					/*setTimeout(function(){$('#jsalert').effect('highlight',{color:'white'},1000);},500);
 					setTimeout(function(){$('#jsalert').fadeOut('slow');},4000);
-					showalert("Producto " + nombrep + " Actualizado con éxito");
+					showalert("Producto " + nombrep + " Actualizado con éxito");*/
 					});
 					},errorCB,successCB);
 					});
 				},errorCB,successCB);
 			}else{
 				idcategoria=$('#idcategoria').val();
-				console.log('UPDATE PRODUCTOS SET formulado="'+nombrep+'",codigo="'+codigop+'",precio='+preciop+',categoriaid="'+idcategoria+'",productofinal='+prfinal+',materiaprima='+matprima+',ppq='+costo+',color='+micolor+',servicio='+serv+',tieneimpuestos="'+iva+'" WHERE timespan="'+idproducto + '"');
+				//console.log('UPDATE PRODUCTOS SET formulado="'+nombrep+'",codigo="'+codigop+'",precio='+preciop+',categoriaid="'+idcategoria+'",productofinal='+prfinal+',materiaprima='+matprima+',ppq='+costo+',color='+micolor+',servicio='+serv+',tieneimpuestos="'+iva+'" WHERE timespan="'+idproducto + '"');
 				db.transaction(function(tx){
 					tx.executeSql('UPDATE PRODUCTOS SET formulado="'+nombrep+'",codigo="'+codigop+'",precio='+preciop+',categoriaid="'+idcategoria+'",productofinal='+prfinal+',materiaprima='+matprima+',ppq='+costo+',color='+micolor+',servicio='+serv+' ,sincronizar="true",tieneimpuestos="'+iva+'" WHERE timespan="'+idproducto + '"',[],function(tx,results){
 					console.log(results);
-					if(localStorage.getItem("idioma")==1)
+					/*if(localStorage.getItem("idioma")==1)
 						showalert("Datos Actualizados con éxito.");
 					else if(localStorage.getItem("idioma")==2)
-						showalert("Successfully Updated");
+						showalert("Successfully Updated");*/
+						$('#popupsaveproducts').modal('show');
 					});
 					},errorCB,successCB);
 			}
 		}else{
-			$('#jsalert').html("Por favor complete todos los datos.");
+			//$('#jsalert').html("Por favor complete todos los datos.");
 			if(localStorage.getItem("idioma")==1)
-				showalert("Por favor complete todos los datos.");
+				showalertred("Por favor complete todos los datos.");
 			else if(localStorage.getItem("idioma")==2)
-				showalert("Complete all the information.");
+				showalertred("Complete all the information.");
 				
-			setTimeout(function(){$('#jsalert').effect('highlight',{color:'white'},1000);},500);
-			setTimeout(function(){$('#jsalert').fadeOut('slow');},4000);
+			//setTimeout(function(){$('#jsalert').effect('highlight',{color:'white'},1000);},500);
+			//setTimeout(function(){$('#jsalert').fadeOut('slow');},4000);
 		}
 	}
 	

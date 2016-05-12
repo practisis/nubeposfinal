@@ -397,12 +397,12 @@
 			</div>
 			</div>
 			<div class='row'>
-				<div class='col-lg-4 col-md-6 col-xs-6' style='padding-top:5px; padding-right:0px; text-align:right;'>
+				<div class='col-lg-5 col-md-6 col-xs-6' style='padding-top:5px; padding-right:0px; text-align:right;'>
 				<span><button type='button' class='btn btn-default trans_mesas' style='display:none; margin-bottom:5px; margin-right:5px;' id='btn_mesas' data-toggle="tooltip" data-placement="top" title="" onclick="ImprimirPrecuenta();"><span class="fa fa-print fa-2x"></span></button>
-				<button type='button' class='btn btn-default btn-lg' style='margin-bottom:5px; margin-right:5px;' id='btn_descuento' onclick="showPopup(); return false;">%</button>
+				<button type='button' class='btn btn-default btn-lg' style='margin-bottom:5px; margin-right:5px;' id='btn_descuento' onclick="showPopup(); return false;"><span class='fa fa-minus'></span>&nbsp;<span class='fa fa-dollar'></span></button>
 				</span>
 				</div>
-				<div class='col-lg-8 col-md-6 col-xs-6' style='padding-top:5px; padding-left:0px;'>
+				<div class='col-lg-7 col-md-6 col-xs-6' style='padding-top:5px; padding-left:0px;'>
 				<span>
 				<button type='button' class='btn btn-default btn-block' id='btn_pagar' style='margin-bottom:5px; margin-right:5px; text-transform:uppercase;' onclick="VerPropinas(); return false;"><span class='trans_pay' id='spanaction'>PAGAR</span></button>
 				<button type='button' class='btn btn-success btn-lg trans_save btn-block' style='margin-bottom:5px; margin-top:0px; margin-right:5px; display:none; text-transform:uppercase;' data-toggle="tooltip" data-placement="top" title="" id='btn_gpedidos' onclick="SaveMesa();">GUARDAR</button>
@@ -466,14 +466,14 @@
 					<div class='row' style='background-color:#DDD; padding-bottom:10px; padding-top:10px;'>
 						<div class='col-xs-6' >
 							<div class="row">
-								<div class='col-md-5' style='padding-right:0px; '>
+								<div class='col-md-5 col-lg-5 col-xs-12' style='padding-right:0px; '>
 									<div style='margin-top:5px; text-align:left;'><b><span class='trans_nfact'>Factura No.</span>&nbsp;&nbsp;</b><span id='seriesfact'></span></div>
 									<input id='invoiceNrComplete' type='hidden' style='display:none;'/>
 								</div>
-								<div class='col-md-4 col-lg-4 col-xs-4'>
+								<div class='col-md-4 col-lg-4 col-xs-12'>
 								<input id="invoiceNr" class='form-control input input-lg' onchange='VerificarNumero(this.value);' type='text'  maxlength='9'/>
 								</div>
-								<div class='col-md-3 col-lg-3 col-xs-3'>
+								<div class='col-md-3 col-lg-3 col-xs-0'>
 								</div>
 							</div>
 						</div>
@@ -511,19 +511,19 @@
 						<!--<span id='trans_label_34'>Elige tu pago en efectivo</span>-->
 							<div style='text-align:left;'>
 								<div class='' style='text-align:left; display:inline;'>
-								<button onclick='subirefectivo(this);' id='justo' class='btn btn-lg btn-primary den' style='margin-right: 10px;' data-value='' type='button'></button>
+								<button onclick='subirefectivo(this);' id='justo' class='btn btn-lg btn-primary den' style='margin:5px;' data-value='' type='button'></button>
 								</div>
 								<div class='' style='text-align:left; display:inline;'>
-								<button onclick='subirefectivo(this);' id='redondeado' class='btn btn-lg btn-primary den' style='margin-right: 10px;'  data-value='' type='button'></button>
+								<button onclick='subirefectivo(this);' id='redondeado' class='btn btn-lg btn-primary den' style='margin:5px;'  data-value='' type='button'></button>
 								</div>
 								<div class='' style='text-align:left; display:none;'>
-								<button onclick='subirefectivo(this);' id='altaden' class='btn btn-lg btn-primary den' style='margin-right: 10px;'  data-value='' type='button'></button>
+								<button onclick='subirefectivo(this);' id='altaden' class='btn btn-lg btn-primary den' style='margin:5px;'  data-value='' type='button'></button>
 								</div>
 								<div class='' style='text-align:left; display:none;'>
-								<button onclick='subirefectivo(this);' id='prox10' class='btn btn-lg btn-primary den' style='margin-right: 10px;'  data-value='' type='button'></button>
+								<button onclick='subirefectivo(this);' id='prox10' class='btn btn-lg btn-primary den' style='margin:5px;'  data-value='' type='button'></button>
 								</div>
 								<div class='' style='text-align:left; display:none;'>
-								<button onclick='subirefectivo(this);' id='prox20' class='btn btn-lg btn-primary den' style='margin-right: 10px;'  data-value='' type='button'></button>
+								<button onclick='subirefectivo(this);' id='prox20' class='btn btn-lg btn-primary den' style='margin:5px;'  data-value='' type='button'></button>
 								</div>
 								<div class='' style='text-align:left; display:inline;'>
 								<button onclick='$("#paymentEfectivo").click();' id='other' class='btn btn-lg btn-primary den trans_otro' style='margin-right: 10px;' data-value='' type='button' >OTHER</button>
@@ -553,7 +553,7 @@
 							<!--<div class='col-lg-12 col-md-12 col-xs-12'>-->
 							<!--<div id='trans_label_35'>Elige la tarjeta con la que vas a pagar</div>-->
 							<div class="input-group" style='display:none;' id='cardgroup'>
-								<span class="input-group-addon" id="basic-addon1" >Valor US</span>
+								<span class="input-group-addon trans_valorus" id="basic-addon1" >Valor US</span>
 								<input onchange='valorcardchange();' class='form-control input-lg pop' id='valortarjeta' value='0.00' readonly />
 							</div>
 							<div id='lastarjetas' style='margin-top:15px;'>
@@ -583,14 +583,14 @@
 							<table width='100%' style=''>
 								<tr><td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon" id="basic-addon1" style='width:20%;'> Cheque No.</span>
+								<span class="input-group-addon trans_checknumber" id="basic-addon1" style='width:20%;'> Cheque No.</span>
 								<input type='number' id='chequeno1' name='chequeno1' class='form-control input-lg' value='' placeholder='0000' onclick='this.select();'/>
 								</div></td>
 								</tr>
 								<tr>
 								<td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon" id="basic-addon1" style='width:20%;' >Valor US</span>
+								<span class="input-group-addon trans_valorus" id="basic-addon1" style='width:20%;' >Valor US</span>
 								<input onchange='valorchequechange();' class='form-control input-lg cheque pop' id='valorcheque1' onkeypress="isalphanumeric(event);" name='valorcheque1' value='0.00' readonly data-container='#touchcheques'/>
 								</div>
 								</td></tr>
@@ -621,13 +621,13 @@
 								<table width='100%' style=''>
 								<tr><td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon" id="basic-addon1" style='width:20%;' >Justificación</span>
+								<span class="input-group-addon trans_justification" id="basic-addon1" style='width:20%;' >Justificación</span>
 								<input type='text' class='form-control input input-lg' id='justcxc' name='justcxc' onclick='this.select();'/>
 								</div>
 								</td></tr>
 								<tr><td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon" id="basic-addon1" style='width:20%;' >Valor US</span>
+								<span class="input-group-addon trans_valorus" id="basic-addon1" style='width:20%;' >Valor US</span>
 								<input onchange='valorcxcchange();' class='form-control input input-lg pop' id='valorcxc' name='valorcxc' readonly data-container='#touchcxc'/>
 								</div>
 								</td></tr></table>
@@ -639,7 +639,7 @@
 					<div class='row'>
 						<div class='col-xs-12'>
 						<div class='row' style='background-color:#DDD; padding-top:10px; padding-bottom:10px;'>
-						<div class='col-md-6' style="padding-top:10px;">
+						<div class='col-md-6' style="padding-top:10px;padding-bottom:10px;">
 						<table class="cuadrototal" style='display:none;' border="0" cellpadding="0px" cellspacing="0px" width='100%'>
 							<tr>
 								<td class="" align='right' id='trans_label_33'>
@@ -680,7 +680,7 @@
 									<button id="nombre_orden" class='btn btn-lg btn-default trans_ordern' onclick="$('#popupNameorder').modal('show');" style='margin-right:5px;display: none;' type='button'>Nombre Orden</button>
 								</td>
                                 <td>
-        						<button style="float:right; margin-right:3px; display:none;" id="payButton" class="btn btn-success btn-lg" onclick="VerificarComandas();"><span class='trans_pay'>PAGAR</span></button>
+        						<button style="float:right; margin-right:3px; display:none;" id="payButton" class="btn btn-success btn-lg trans_pay" onclick="VerificarComandas();"><span class='trans_pay'>PAGAR</span></button>
 								</td>
     						</tr>
 						</table>

@@ -1,3 +1,4 @@
+var msjcloud=0;
 var campos=new Array();
 campos["PRODUCTOS"]=['id_local|integer primary key AUTOINCREMENT','id|integer','formulado|text','codigo|text','precio|real','categoriaid|text','cargaiva|integer','productofinal|integer','materiaprima|integer','timespan|text UNIQUE','ppq|real default 0','color|text','servicio|integer default 0','estado|integer default 1','sincronizar|boolean default "true"','tieneimpuestos|boolean default "true"'];
 
@@ -1123,7 +1124,7 @@ function showalert(msg){
     $('#alert').html(msg);
     $('html, body').animate( { scrollTop : 0 },500,function(){
         $('#alert').slideDown('slow',function(){
-            setTimeout(function(){hidealert()},1500);
+            setTimeout(function(){hidealert()},3500);
         });
     });
 }
@@ -1137,8 +1138,15 @@ function showalertred(msg){
     $('#alertred').html(msg);
     $('html, body').animate( { scrollTop : 0 },500,function(){
         $('#alertred').slideDown('slow',function(){
-            setTimeout(function(){hidealertred()},1500);
+            setTimeout(function(){hidealertred()},3500);
         });
+    });
+}
+
+function showalertredquiet(msg){
+    $('#alertred').html(msg);
+    $('#alertred').slideDown('slow',function(){
+            setTimeout(function(){hidealertred()},10000);
     });
 }
 

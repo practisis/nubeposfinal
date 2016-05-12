@@ -40,19 +40,23 @@
         </tr>
 		<tr>
 			<td  style='text-align:right;' id="trans_label_80">Imprimir Logo</td>
-			<td align='left'><input type='checkbox' id='printlogo' readonly onclick='ImprimirLogo();'/></td>
+			<td align='left'><input type='checkbox' id='printlogo' onclick='ActivarImprimirLogo();'  readonly />
+				<div style='margin-top:10px;'>
+				<button class='btn btn-success btn-sm' onclick='ActivarImprimirLogo();' >Activar</button>
+				</div>
+			</td>
     	</tr>
         <tr>
 			<td  style='text-align:right;' id="trans_label_75">Mensaje Personalizado</td>
 			<td align='left'><input type='text' id='custommsg' class='form-control input' style='margin-bottom:10px;'/><button class='btn btn-success btn-sm trans_changemessage' onclick='CambiarMensaje();'>Cambiar Mensaje</button></td>
     	</tr>
-    	<tr>
+    	<tr style='display:none;'>
     		<td  style='text-align:right;' id="trans_label_77">Respaldo de Información</td>
-    		<td align='left'><input type='checkbox' id='backupinf' readonly /></td>
+    		<td align='left'><input type='checkbox' id='backupinf' onclick='CambiarBackup();' readonly /></td>
     	</tr>
-		<tr>
+		<tr style='display:none;'>
 			<td  style='text-align:right;' id="trans_label_78">Múltiple Tablet</td>
-			<td align='left'><input type='checkbox' id='multitablet' readonly /></td>
+			<td align='left'><input type='checkbox' id='multitablet' onclick='ActivarMultitablet();' readonly /></td>
 		</tr>
         <tr>
             <td  style='text-align:right;'>LocalHost</td>
@@ -172,7 +176,7 @@
 							$('#tablet_pais').val(results1.rows.item(0).pais);
 							$('#custommsg').val(results1.rows.item(0).mensajefinal);
 
-							if(paquete==1||paquete==null){
+							if(paquete==22||paquete==null){
 								$('#custommsg').prop("readonly","readonly");	
 							}
 							
@@ -416,15 +420,16 @@ function gotFS(fileSystem) {
 
 function ImprimirLogo(){
 	var paquete=localStorage.getItem("paquete");
-	if(paquete==1||paquete==null){
+	if(paquete==22||paquete==null){
 		alert("Necesita Premium");
 	}
 }
 
 function CambiarMensaje(){
 	var paquete=localStorage.getItem("paquete");
-	if(paquete==1||paquete==1){
-		alert("Necesita Premium");
+	if(paquete==22||paquete=="22"){
+		msjcloud=1;
+		envia('cloud');	
 	}
 }
 
@@ -467,4 +472,22 @@ function IrDisenoMesas(){
 	var url=$('#irdisenomesas').attr('href')
 	window.open(url);
 }
+
+function ActivarMultitablet(){
+	var paquete=localStorage.getItem("paquete");
+	if(paquete==22){
+		msjcloud=2;
+		envia('cloud');
+	}
+}
+
+function ActivarImprimirLogo(){
+	//alert('entra imprlogo');
+	var paquete=localStorage.getItem("paquete");
+	if(paquete==22){
+		msjcloud=3;
+		envia('cloud');
+	}
+}
+
 </script>

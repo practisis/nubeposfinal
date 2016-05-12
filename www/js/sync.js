@@ -268,7 +268,9 @@ function ExtraeDatosApi(donde){
 			localStorage.setItem("logo",ext[0].logo);
 			localStorage.setItem("imprimelogo",ext[0].imprlogo);
 			localStorage.setItem("mensajefinal",ext[0].mensajefinal);
-			localStorage.setItem("paquete","1");
+			localStorage.setItem("paquete",ext[0].plan);
+			//localStorage.setItem("paquete","36");
+			//localStorage.setItem("paquete","37");
 			//localStorage.setItem("con_mesas",false);
             localStorage.setItem("con_localhost",ext[0].localhost);
             localStorage.setItem("ip_servidor",ext[0].ipservidor);
@@ -1026,7 +1028,9 @@ function DatosRecurrentes(cual){
                       localStorage.setItem("pide_telefono",item.pide_telefono);
                       localStorage.setItem("telefono_inte",item.telefono_inte);
                       localStorage.setItem("mensajefinal",item.mensajefinal);
-                      localStorage.setItem("paquete","1");
+                      localStorage.setItem("paquete",item.plan);
+                      //localStorage.setItem("paquete","36");
+                      //localStorage.setItem("paquete","37");
 					  
                       tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'",con_notasorden="'+item.notas+'",con_comanderas="'+item.comanderas+'",con_localhost="'+item.localhost+'",ip_servidor="'+item.ipservidor+'",con_mesas="'+item.mesas+'",logo="'+item.logo+'",id_version_nube="'+item.id_version_nube+'",pide_telefono="'+item.pide_telefono+'",telefono_inte="'+item.telefono_inte+'",mensajefinal="'+item.mensajefinal+'" WHERE id=1',[],function(tx,results){
 

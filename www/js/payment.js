@@ -589,6 +589,7 @@ function impresionMovil(mijson){
 	$('#totalPagado').html('');
 	$('#tablaCompra').html('');
 	$('#printFactura').hide();
+	envia('puntodeventa');
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function (tx){
 		var now=new Date().getTime();
@@ -644,7 +645,7 @@ function impresionMovil(mijson){
 		
 	localStorage.setItem("nameorder","");
 	$('#popupsavefactura').modal('show');
-	envia('puntodeventa');
+	
 }
 
 function cancelPayment(){

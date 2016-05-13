@@ -89,9 +89,13 @@
     		</div>
         </div>
 		<div class='row'>
-				<div class='col-lg-10 col-md-10 col-xs-9'></div>
-				<div class='col-lg-2 col-md-2 col-xs-3' style='text-align:right; padding-top:35px;'><button class='btn btn-success btn-lg trans_save' onclick='GuardaProducto();'>Guardar</button></div>
-				<input style="display:none;" class="form-control input-sm" autofocus="" placeholder="Color" name='colorproducto' id='colorproducto' type='text' value=''/>
+            <div class="col-sm-12">
+				<div class='col-lg-8 col-md-8 col-xs-8'></div>
+				<div class='col-lg-4 col-md-4 col-xs-4' style='padding-top:30px;text-align: right;'>
+                  <button class='btn btn-success btn-lg trans_save' onclick='GuardaProducto();'>Guardar</button>
+                  <input style="display:none;" class="form-control input-sm" autofocus="" placeholder="Color" name='colorproducto' id='colorproducto' type='text' value=''/>
+                </div>
+            </div>
 		</div>
 	</div>
 	<br/>
@@ -839,6 +843,7 @@ function LlenarComboCatNew(options,idInsertCatNew){
 	$('#listacategorias').html(options);
     alert('Categoria creada con exito!.');
     $('#listacategorias > option[value="'+idInsertCatNew+'"]').attr('selected', 'selected');
+    $('#idcategoria').val(idInsertCatNew);
     $('#popupCat').modal('hide');
 }
 function sacaidcat(){

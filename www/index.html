@@ -35,20 +35,6 @@
 				.col-sm-offset-1{
 						margin:0px;
 				}
-				#myDash {
-					bottom: 0;
-					display: none;
-					left: 0;
-					outline: 0 none;
-					overflow-y: hidden;
-					overflow-x: hidden;
-					position: fixed;
-					right: 0;
-					top:47px;
-					z-index:4;
-					background-color: rgba(40,40, 41, 0.8);
-					max-height:100%;
-				}
                 #version_escoje {
 					bottom: 0;
 					display: none;
@@ -83,27 +69,11 @@
                     height: 100%;
                     font-size:14px;
 				}
-				.infoDash{
-					border:3px solid #1EA076;
-					-webkit-border-top-left-radius: 10px;
-					-webkit-border-bottom-right-radius: 10px;
-					-moz-border-radius-topleft: 10px;
-					-moz-border-radius-bottomright: 10px;
-					border-top-left-radius: 10px;
-					border-bottom-right-radius: 10px;
-					min-height:170px !important;
-					padding:0px !important;
-					margin:0px !important;
-				}
 				.popover-example .popover {
 					position: relative;
 					display: block;
 					margin: 20px;
 				}
-				/*.popover {
-					max-width:75% !important;
-					height:50% !important;
-				}*/
 			</style>
             <script type="text/javascript">
             function guardaversion(){
@@ -306,11 +276,11 @@
 				  <a class="navbar-brand" href="#"><img src="img/logo1.png" width='110px'/></a>
 				</div>
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav">
+					<ul class="nav navbar-nav" id='listademenus'>
 					    <li onclick="envia('puntodeventa')"><a id='menu_1'  href="javascript:void(0);"><span style='display:inline;' class='fa fa-shopping-cart'></span>&nbsp;<label id='lab_menu_1'>Facturar</label><span class="sr-only">(current)</span></a></li>
 						<li onclick="VerificarPermiso('historial');" role="presentation"><a id='menu_2' href="javascript:void(0);"><span style='display:inline;' class='fa fa-money'></span>&nbsp;<label id='lab_menu_2'>Historial</label></a></li>
 						<li onclick="VerificarPermiso('productos');" id='productosIndex'><a id='menu_3' href="javascript:void(0);"><span style='display:inline;' class='fa fa-list-alt'></span>&nbsp;<label id='lab_menu_3'>Productos</label></a></li>
-						<li onclick="envia('dashboard')"><a id='menu_4' href="javascript:void(0);"><span style='display:inline;' class='fa fa-line-chart'></span>&nbsp;<label id='lab_menu_4'>Resultados</label><span class="sr-only">(current)</span></a></li>
+						<li onclick="envia('dashboard')"><a id='menu_4' href="javascript:void(0);"><span style='display:inline;' class='fa fa-line-chart'></span>&nbsp;<label id='lab_menu_4'>Resultados</label></a></li>
 						<li onclick="VerificarPermiso('configuracion');"><a id='menu_5' href="javascript:void(0);"><span style='display:inline;' class='fa fa-cog'></span>&nbsp;<label id='lab_menu_5'>Configuración</label></a></li>
 						<!---<li onclick="envia('cloud')" id='cloudIndex'><a id='menu_5' href="javascript:void(0);"><span style='display:inline;' class='fa fa-cloud'></span>&nbsp;<label id='lab_menu_5'>Cloud</label></a></li>
 						<li id='cloudIndexOff' style='display:none;'><a href="javascript:void(0);" style='color:#2EC1CC;'><span style='display:inline;color:#2EC1CC;' class='fa fa-times'></span>&nbsp;<label id='lab_menu_5'>Cloud<br></label></a></li>-->
@@ -368,204 +338,6 @@
 			<p id="state"/>
 			<div id='log'><input type='hidden' id='conexion' value=''/></div>
 		</div>
-		<div  id="myDash" class='panel-default'>
-			<div class='row'>
-				<div class='col-md-12'>
-					<table width='100%' height='100%' id='contieneMensajes' cellpadding='0px' cellspacing='0px'>
-						<tr>
-							<td valign='top' align='center'>
-								<div class="popover-example">
-									<div class="popover bottom" style='max-width:75% !important; height:50% !important;'>
-										<div class="arrow" style='left:8%;'></div>
-										<!--1-->
-										<div  id='resumenInicia'>
-										<div class="popover-title">
-											<span style='display:inline;' class='fa fa-line-chart'></span>&nbsp;<label class='trans_dash'>Resúmen</label>
-										</div>
-										<div class="popover-content">
-										<div class='row'>
-											<div class="col-lg-9" id='trans_label_42'>
-											En esta sección puedes ver un resumen detallado de ventas de tu negocio</div>
-											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
-											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(1)'>Siguiente</button>
-											</div>
-										</div>
-										</div>
-										<center>
-											<img src="images/resumen.jpg" id='dash_1' alt="..." class="img-thumbnail" style=';'/>
-										</center>
-										<br/>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(1)'>Siguiente</button>
-										</div>
-										</div>
-										<!--fin--->
-										<!--2-->
-										<div id='ventasInicia' style='display:none;'>
-											<div class="popover-title">
-											<span style='display:inline;' class='fa fa-shopping-cart'></span>&nbsp;<label class='trans_sales'>Ventas</label>
-											</div>
-										<div class="popover-content">
-										<div class='row'>
-											<div class="col-lg-9" id='trans_label_43'>En esta sección puedes facturar tus productos.</div>
-											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
-											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(2)'>Siguiente</button>
-											</div>
-											</div>
-										</div>
-										<center style='margin-left:20px; margin-right:20px;'>
-											<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-												<div class="carousel-inner" role="listbox">
-													<div class="item ">
-														<img src="images/descProd.jpg" alt="..."  id='dash_2'  class="img-thumbnail" style=''/>
-														<!--<div class="carousel-caption">
-															Se puede aplicar un descuento al total de la factura
-														</div>--->
-													</div>
-													<div class="item">
-														<img src="images/pagar.jpg"  id='dash_3'  alt="..." class="img-thumbnail" style=';'/>
-														<!--<div class="carousel-caption" style='color:#000 !important;'>
-															Modulo de Pagos y Emisión de Facturas
-														</div>--->
-													</div>
-													<div class="item active">
-														<img src="images/ventas.jpg"  id='dash_4'  alt="..." class="img-thumbnail" style=';'/>
-														<!--<div class="carousel-caption" style='color:#000 !important;'>
-															Modulo de Facturación
-														</div>--->
-													</div>
-												</div>
-												<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-													<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-													<span class="sr-only">Previous</span>
-												</a>
-												<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-													<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-													<span class="sr-only">Next</span>
-												</a>
-											</div>
-										</center><br/>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5);'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(2);'>Siguiente</button>
-										</div>
-										</div>
-										<!--fin--->
-										<!--3-->
-										<div id='historialInicia' style='display:none;'>
-										<div class="popover-title">
-											<span style='display:inline;' class='fa fa-money'></span>&nbsp;<label class='trans_historial'>Historial</label>
-										</div>
-										<div class="popover-content">
-										<div class='row'>
-											<div class="col-lg-9" id='trans_label_44'>En esta sección puedes visualizar todas las facturas emitidas.</div>
-											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
-											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(3)'>Siguiente</button>
-											</div>
-										</div>
-										</div>
-										<center>
-											<img src="images/historial.jpg" alt="..." class="img-thumbnail"  id='dash_5'  style=''/>
-										</center><br/>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(3);'>Siguiente</button>
-										</div>
-										</div>
-										<!--fin--->
-										<!--4-->
-										<div id='productosInicia' style='display:none;'>
-										<div class="popover-title">
-											<span style='display:inline;' class='fa fa-list-alt'></span>&nbsp;<label id='trans_label_9'>Productos</label>
-										</div>
-										<div class="popover-content">
-											<div class='row'>
-											<div class="col-lg-9" id='trans_label_45'>En esta sección puedes visualizar el listado global de tus productos ingresados al sistema.</div>
-											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
-											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(4)'>Siguiente</button>
-											</div>
-											</div>
-										</div>
-										<center style="margin-left:20px; margin-right:20px;">
-											<div id="carousel-example-generic2" class="carousel slide" data-ride="carousel">
-												<div class="carousel-inner" role="listbox">
-													<div class="item active">
-														<img src="images/listaProd.jpg" alt="..."  id='dash_6'   class="img-thumbnail" style=';'/>
-													</div>
-													<div class="item">
-														<img src="images/nuevoProd.jpg" alt="..."  id='dash_7'  class="img-thumbnail" style=';'/>
-													</div>
-												</div>
-												<a class="left carousel-control" href="#carousel-example-generic2" role="button" data-slide="prev">
-													<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-													<span class="sr-only">Previous</span>
-												</a>
-												<a class="right carousel-control" href="#carousel-example-generic2" role="button" data-slide="next">
-													<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-													<span class="sr-only">Next</span>
-												</a>
-											</div>
-										</center><br/>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-primary trans_skip" onclick='siguiente(5)'>Omitir</button>&nbsp;
-											<button type="button" class="btn btn-primary trans_next" onclick='siguiente(4)'>Siguiente</button>
-										</div>
-										</div>
-										<!--fin--->
-										<!--5-->
-										<div id='cloudInicia' style='display:none;'>
-										<div class="popover-title">
-											<span style='display:inline;' class='fa fa-cloud'></span>&nbsp;<label>Cloud</label>
-										</div>
-										<div class="popover-content">
-											<div class='row'>
-											<div class="col-lg-9" id='trans_label_46'>En esta sección puedes conectarte con tu cuenta nubePOS en la web.</div>
-											<div class="col-lg-3" style='text-align:right; margin-bottom:5px;'>
-											<button type="button" class="btn btn-primary trans_end" onclick='siguiente(5)'>Terminar</button>
-											</div>
-											</div>
-										<center style="margin-left:20px; margin-right:20px;">
-											<div id="carousel-example-generic3" class="carousel slide" data-ride="carousel">
-												<div class="carousel-inner" role="listbox">
-													<div class="item active">
-														<img src="images/cloud1.jpg" alt="..." class="img-thumbnail"  id='dash_8'  style=''/>
-													</div>
-													<div class="item">
-														<img src="images/cloud2.jpg" alt="..." class="img-thumbnail"  id='dash_9'  style=''/>
-													</div>
-													<div class="item">
-														<img src="images/cloud3.jpg" alt="..." class="img-thumbnail"  id='dash_10'  style=''/>
-													</div>
-												</div>
-												<a class="left carousel-control" href="#carousel-example-generic3" role="button" data-slide="prev">
-													<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-													<span class="sr-only">Previous</span>
-												</a>
-												<a class="right carousel-control" href="#carousel-example-generic3" role="button" data-slide="next">
-													<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-													<span class="sr-only">Next</span>
-												</a>
-											</div>
-										</center>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-primary trans_end" onclick='siguiente(5)'>Terminar</button>
-										</div>
-										</div>
-										<!--fin--->
-									</div>
-								</div>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-		</div>
 		<div style='display:none;' id='jsonprint'>{"Pagar": [{ "cliente": {"id_cliente": "1","cedula": "9999999999999","nombre": "Consumidor Final","telefono": "2222222","email": "","direccion": "Av. Test 101","listaDePrecio": ""},"producto": [{"id_producto" : "708331454520391276","timespanproducto" : "708331454520391276","timespanconsumo" : "14593432603987829","nombre_producto" : "PIZZA","cant_prod" : "2","precio_orig" : "8","precio_prod" : "8","impuesto_prod" : "","precio_total" : "16.00","precio_descuento_justificacion" : "","agregados" : "0","detalle_agregados" : ""}],"factura" : {"subtotal_sin_iva" : "16","timespanfactura" : "14593432603962978","idbarrascajas" : "a383bc4552bfb701f96a17a4541b5565","fecha" : "1459343260398","anulada" : "false","subtotal_iva" : "0","impuestos" : "","iva" : "0","servicio" : "0","descuento" : "0","total" : "16","numerofact" : "001-001-000000170","encabezado" : "3","largo" : "18","impuestosdata" : "","ordername" : "null","lang" : "1","propina" : "0"},"empresa":{"nombre":"Test","direccion":"Av. Test"},"pagos":[{"forma":"efectivo","valor":"16.00","tipotarjeta":"","lote":"","numerocheque":"","banco":""}]}]}</div>
 		<div id="JSONproductosLocal" style="color:red;display:none;"></div>
 		<div id="JSONproductosNube"  style="color:blue;display:none;" ></div>
@@ -591,10 +363,30 @@
 		<div id="taxes" style="display: none;"></div>
 		<div id="idiva" style="display: none;"></div>
 		<div id="fadeCloud" style="display:none;width:100%;height:100%;position:absolute;left:0px;top:0px;background:rgba(255,255,255,0.7);"></div>
+		
+		<!---modal ayuda-->
+		<div class="modal fade" id="myDash" role="dialog" data-backdrop='static'>
+			<div class="modal-dialog">
+			  <!-- Modal content-->
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <button type="button" class="close" data-dismiss="modal">&times;</button>
+				  <h4 class="modal-title">Avapos Tip</h4>
+				</div>
+				<div class="modal-body">
+				  <p class='ayudainicialp'>Este es el menú principal de AvaPOS.</p>
+				</div>
+				<div class="modal-footer">
+				  <button type="button" class="btn btn-default trans_end" data-dismiss="modal">Finalizar</button>
+				</div>
+			  </div>
+			  <img src='images/flechamenu.png' style='position:absolute; top:-140px; left:25%; width:160px;'/>
+			</div>
 		</div>
-
-
-
+		  
+		<!---fin ayuda-->
+		
+		</div>
 		</div>
 		<div style="overflow:hidden;position:absolute;left:0px;top:0px;width:100%;height:100%;background:rgba(40,40,41,1);display:block;z-index:5;" id="fade">
 			<table width="100%" height="100%" cellpadding="0" cellspacing="0" >
@@ -925,75 +717,13 @@
 	</div>
 </div>
 <!---fin creado--->
+
 </body>
 <link href="slide/bootstrap-switch.css" rel="stylesheet"/>
 <script src="slide/bootstrap-switch.js"></script>
 <script src="slide/highlight.js"></script>
 <script>
 			//app.initialize();
-			function siguiente(id){
-				if(id == 1){
-					setTimeout(function() {
-						$('#resumenInicia').fadeOut('fast',function(){
-							$('.arrow').animate({left:"22%"},500);
-							$('#ventasInicia').fadeIn('slow');
-							$("#menu_2").effect('highlight',{}, 1500);
-						});
-					}, 500);
-				}
-				
-				if(id == 2){
-					setTimeout(function() {
-						$('#ventasInicia').fadeOut('fast',function(){
-							 $('.arrow').animate({left:"35%"},500);
-							 $('#historialInicia').fadeIn('slow');
-							 $("#menu_3").effect('highlight',{}, 1500);
-						});
-					}, 500);
-				}
-				
-				if(id == 3){
-					setTimeout(function() {
-						$('#historialInicia').fadeOut('fast',function(){
-							$('.arrow').animate({left:"50%"},500);
-							$('#productosInicia').fadeIn('slow');
-							$("#menu_4").effect('highlight',{}, 1500);
-						});
-					}, 500);
-				}
-				if(id == 4){
-					setTimeout(function() {
-						$('#productosInicia').fadeOut('fast',function(){
-							$('.arrow').animate({left:"65%"},500);
-							$('#cloudInicia').fadeIn('slow');
-							$("#menu_5").effect('highlight',{}, 1500);
-						});
-					}, 500);
-					
-				}
-				if(id == 5){
-					$('#myDash').fadeOut('slow');
-					setTimeout(function() {
-						$('.arrow').animate({left:"8%"},500);
-						//envia('listaproductos');
-						$('#menu_4').click();
-					}, 1500);
-				}
-			}
-            function final(){
-
-				if($("#dash").is(':checked') && $("#vent").is(':checked') && $("#his").is(':checked') && $("#prod").is(':checked') && $("#clou").is(':checked') && $("#conf").is(':checked')) {  
-					//alert("Está activado");  
-					$('#myDash').fadeOut('slow');
-					setTimeout(function() {
-						//envia('listaproductos');
-						$('#menu_4').click();
-					}, 1500);
-				} else {  
-					alert('debes leer todas las instrucciones y marcar su check correspondiente');
-				}  
-			}
-			
 			google.load("visualization", "1", {packages:["corechart"]});
 			var timerFade;
 			function startAnimation(){
@@ -1031,6 +761,15 @@
 
             }
 
+			$('#myDash').on('show.bs.modal',function(){
+				$(this).find('.modal-dialog').css('top','150px');
+			});
+			
+			$('#myDash').on('shown.bs.modal',function(){
+				$(this).find('.modal-backdrop').css('top','60px');
+				setTimeout(function(){$('#listademenus').effect('highlight',{'color':'#CCC', "opacity": ".5"},2000)},1500);
+			}); 
+			
             window.addEventListener('native.keyboardshow', keyboardShowHandler);
             function keyboardShowHandler(e){
     			//alert("show");
@@ -1070,22 +809,7 @@
 			});
 				
 			//idioma
-			var linklang="es";
-			if(localStorage.getItem("idioma")==2){
-				linklang="en";
-				$('#dash_1').attr("src","images/resumen_en.jpg");
-				$('#dash_2').attr("src","images/pagar_en.jpg");
-				$('#dash_3').attr("src","images/descProd_en.jpg");
-				$('#dash_4').attr("src","images/ventas_en.jpg");
-				$('#dash_5').attr("src","images/historial_en.jpg");
-				$('#dash_6').attr("src","images/listaProd_en.jpg");
-				$('#dash_7').attr("src","images/nuevoProd_en.jpg");
-				$('#dash_8').attr("src","images/cloud1_en.jpg");
-				$('#dash_9').attr("src","images/cloud2_en.jpg");
-				$('#dash_10').attr("src","images/cloud3_en.jpg");
-			}
-						
-					
+			var linklang="es";			
 			var xmlidioma=$.get("lang/"+linklang+".xml",function(d){
 					//alert("Ana");
 					var itemestructura=$(d).find("estructura")[0];
@@ -1117,7 +841,8 @@
 						$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
 					}
 			});
-				//fin idioma
+			
+			//fin idioma
 	});
 			
 	function ClickNumeroP(numc){

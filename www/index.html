@@ -183,13 +183,14 @@
                  alert('El código del país es obligatorio');
                 }
               }else if(primernumero == '0' && codigoPa == '593'){
-                $("#cargandoTabs").fadeOut();
+                /*$("#cargandoTabs").fadeOut();
                 if(localStorage.getItem("idioma")==2){
                  alert('Your phone number is not leading 0.');
                 }else{
                  alert('Su número de teléfono no debe anteponer el 0.');
-                }
+                }*/
                 document.getElementById('numero_telefonico').value = numeroTelefono.value.substr(1);
+                guardatelefono();
               }else if(numeroTelefono.value==''){
                 $("#cargandoTabs").fadeOut();
                 if(localStorage.getItem("idioma")==2){

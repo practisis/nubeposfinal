@@ -520,9 +520,7 @@ function registrarUser(){
 
 function LaunchBoarding(){
 	$('.navbar').slideDown();
-	$('#myDash').fadeIn('slow',function(){
-        //setTimeout(function() {$("#menu_1").effect('highlight',{},1500);},1000);
-    });
+	$('#myDash').modal('show');
 }
 
 function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direccion,tablet,desde_login){
@@ -550,7 +548,8 @@ function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direcc
 			function(tx2,res){
 				if(!desde_login){
 					LaunchBoarding();
-					envia("dashboard");
+					//envia("dashboard");
+					envia("puntodeventa");
 				}else{
 					tx2.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1',[],function(tx,results){
 						if(results.rows.item(0).cp==0||results.rows.item(0).cp==null){
@@ -678,7 +677,7 @@ var apiURL='https://practisis.net/connectnubepos/api2.php';
         }else if(response=='Desactivado'){
     	    //envia('cloud');
     	    envia('config');
-            $('#myDash').fadeOut();
+            $('#myDash').modal('hide');
     		setTimeout(function(){
     			$('.navbar').slideUp();
     			$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
@@ -687,7 +686,7 @@ var apiURL='https://practisis.net/connectnubepos/api2.php';
     	}else{
     		//envia('cloud');
     		envia('config');
-            $('#myDash').fadeOut();
+            $('#myDash').modal('hide');
     		setTimeout(function(){
     			$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
     			$('.navbar').slideUp();

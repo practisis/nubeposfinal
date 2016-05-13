@@ -20,7 +20,8 @@ function SyncStart(){
 	
 	console.log(clientesya+'*'+productosya+'*'+categoriasya+'*'+presupuestoya+'*'+menucategoriasya+'*'+menuya+'*'+permisosya+'*'+idbarra+'*'+mesasya);
 	if((clientesya||productosya||categoriasya||presupuestoya||menucategoriasya||menuya||permisosya||idbarra)&&mesasya==false){
-		envia('cloud');
+		//envia('cloud');
+		envia('config');
 		localStorage.setItem("idioma",2);
 		$('.navbar').slideDown();
 	}
@@ -28,7 +29,7 @@ function SyncStart(){
 		$('#fadeRow,#demoGratis').css("display","none");
 		yaesta=true;
 		$('.navbar').slideDown();
-		envia('dashboard');
+		envia('puntodeventa');
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
 			tx.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1',[],function(tx,results){
@@ -69,7 +70,8 @@ function ExtraeDatosApi(donde){
 	console.log("saca datos del api"+donde);
 	if(donde==0){
 		localStorage.setItem("idioma",2);
-		envia('cloud');
+		//envia('cloud');
+		envia('config');
 	}else if(donde==1){
 		console.log("Datos API 1: Categorias");
 		//$(".navbar").slideUp();
@@ -674,7 +676,8 @@ var apiURL='https://practisis.net/connectnubepos/api2.php';
 
     		ExtraeDatosApi(cual);
         }else if(response=='Desactivado'){
-    	    envia('cloud');
+    	    //envia('cloud');
+    	    envia('config');
             $('#myDash').fadeOut();
     		setTimeout(function(){
     			$('.navbar').slideUp();
@@ -682,7 +685,8 @@ var apiURL='https://practisis.net/connectnubepos/api2.php';
     			$('#desactivo').fadeIn();
     		},100);
     	}else{
-    		envia('cloud');
+    		//envia('cloud');
+    		envia('config');
             $('#myDash').fadeOut();
     		setTimeout(function(){
     			$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
@@ -754,14 +758,16 @@ function DatosRecurrentes(cual){
 				DatosRecurrentes(1);
 				updateOnlineStatus("ONLINE");
 			}else if(response=='Desactivado'){
-			    envia('cloud');
+			    //envia('cloud');
+			    envia('config');
 				setTimeout(function(){
 					$('.navbar').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#desactivo').fadeIn();
 				},100);
 			}else{
-				envia('cloud');
+				//envia('cloud');
+				envia('config');
 				setTimeout(function(){
 					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 					$('.navbar').slideUp();

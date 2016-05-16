@@ -70,6 +70,7 @@
 			<section class="panel panel-box info-box">
 					<div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span id='trans_label_5' data-i18n="ventascateg">Ventas por Categoria</span></strong></div>
 					<div class="panel-body">
+					<div id='trans_label_92'  style='display:none;'>Aquí puedes ver tus ventas por categoría cuando comiences a facturar.</div>
 					<div id='ventascategoria'>
 					</div>
 					</div>
@@ -79,6 +80,7 @@
 			<section class="panel panel-box info-box">
 					<div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> <span data-i18n="productosten" id='trans_label_6'>Ranking de Productos</span></strong></div>
 					<div class="panel-body">
+					<div id='trans_label_93' style='display:none;'>Aquí puedes ver la lista de tus 10 productos más vendidos cuando comiences a facturar.</div>
 					<div id='productosten'>
 					</div>
 					</div>
@@ -319,10 +321,13 @@ function ObtenerDatosDashboard(){
 			function(tx,res){
 				if(res.rows.length>0){
 					console.log(res);
-					if(res.rows.item(0).total==null)
+					if(res.rows.item(0).total==null){
 						misubtotal=0;
-					else
+						$('#trans_label_92,#trans_label_93').fadeIn();
+					}
+					else{
 						misubtotal=parseFloat(res.rows.item(0).total);
+					}
 					$('#totalventas').html(parseFloat(misubtotal).toFixed(2));
 				}
 

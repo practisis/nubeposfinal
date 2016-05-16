@@ -50,11 +50,13 @@ function updateOnlineStatus(condition) {
 					var conexionInternet = $('#conexion').val();
 					console.log(conexionInternet)
 					if(conexionInternet == 'ONLINE' ){
-						$('#cloudIndex').css('display','block');
-						$('#cloudIndexOff').css('display','none');
+						//$('#cloudIndex').css('display','block');
+						//$('#cloudIndexOff').css('display','none');
+						$('#cloudIndex').css('color','white');
 					}else if(conexionInternet == 'OFFLINE' ){
-						$('#cloudIndex').css('display','none');
-						$('#cloudIndexOff').css('display','block');
+						//$('#cloudIndex').css('display','none');
+						//$('#cloudIndexOff').css('display','block');
+						$('#cloudIndex').css('color','#606061');
 					}
 	}
 
@@ -203,8 +205,8 @@ var app = {
 		window.StarIOAdapter = {};
 		var handle_error_callback = function(error_message) {
 			//alert(error_message);
-			showalert(error_message);
-			//console.log(error_message);
+			//showalert(error_message);
+			console.log(error_message);
 		};
 		
 	

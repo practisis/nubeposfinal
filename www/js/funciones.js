@@ -148,6 +148,12 @@ function showProducts(categoria,direction){
 				$(this).show();
 	});
 	$('#maxPage').val(counter);
+	
+	if(localStorage.getItem("con_mesas")=='true'){
+		if($('#listaProductos').html()!=''){
+			$('#divmesas').show();
+		}
+	}
 }
 
 
@@ -1502,9 +1508,10 @@ function addDiscount(){
 			$('#changeFromPurchase').html(Math.abs((parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2)));
 			$('#redondeado').attr('data-value',-1*Math.ceil((parseFloat(totales) - parseFloat(discount)+parseFloat(propina))).toFixed(2));
 			if(discount.toFixed(2)>0)
-				$('#btn_descuento').html('<span class="fa fa-minus"></span> $'+discount.toFixed(2));
+				$('#btn_descuento').html('<span class="fa fa-minus"></span>&nbsp;<span class="fa fa-dollar"></span>');
 			else
-				$('#btn_descuento').html('<span class="fa fa-minus"><span class="fa fa-dollar">');
+				$('#btn_descuento').html('<span class="fa fa-minus"></span>&nbsp;<span class="fa fa-dollar"></span>');
+			
 			$('#msjDescuentoError').html('');
 			$('#btn_descuento').effect('highlight',{},'normal');
 		}else{
@@ -2081,7 +2088,7 @@ function Init31(){
 		//$('#listaProductos').css('height',"100%");
 	}
 	$('.den,.card').css('height',1.8*parseFloat($('.producto').css('height')));
-	$('.den,.card').css('width',2.5*parseFloat($('.producto').css('height')));
+	$('.den,.card').css('width',3*parseFloat($('.producto').css('height')));
 	$('.den,.card').css('font-size','24px');
 	
 	$('.nombrecard').each(function(){
@@ -2533,7 +2540,10 @@ function Ready(){
 		$('#btn_descuento').attr("class","btn btn-default btn-lg");
 		$('#btn_pagar').attr("class","btn btn-success btn-lg btn-block");
 		$('#btn_gpedidos').attr("class","btn btn-success btn-lg trans_save btn-block");
-  		$('#divmesas,#btn_mesas').show();
+		if($('#listaProductos').html()!=''){
+			$('#divmesas').show();
+		}
+  		$('#btn_mesas').show();
   		$('#btn_pagar').hide();
 		$('#spanaction').attr('class','trans_pay');
 		CargarMesas();

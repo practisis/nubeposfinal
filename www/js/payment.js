@@ -666,6 +666,7 @@ function cancelPayment(){
 	$('#propinaFactura').val("0");
 	$('#valorpropina').val("0");
 	$('#invoiceprop').html("0.00");
+	$('#busquedacliente').html('9999999999999');
 	pagonormal=true;
 	ResetPagos(1);
 	ResetPagos(2);
@@ -901,7 +902,9 @@ function jsonNuevoCliente(){
 					$('#idCliente').val(res.rows.item(0).id);
 					$("#clientefind").html(nombreP);
 					$("#busquedacliente").html(cedula);
-					$("#newCliente,#opaco").fadeOut();
+					//$("#newCliente,#opaco").fadeOut();
+					$("#clientever").fadeOut("fast",function(){});
+					$('#easypay').fadeIn();
 				});	
 			}else{
 				tx.executeSql('INSERT INTO CLIENTES (nombre,direccion,cedula,telefono,email,existe,sincronizar) VALUES (?,?,?,?,?,?,?)',[nombreP,direccionP,cedula,telefonoP,email,0,'true'],
@@ -910,7 +913,9 @@ function jsonNuevoCliente(){
 					$('#idCliente').val(res3.insertId);
 					$("#clientefind").html(nombreP);
 					$("#busquedacliente").html(cedula);
-					$("#newCliente,#opaco").fadeOut();
+					//$("#newCliente,#opaco").fadeOut();
+					$("#clientever").fadeOut("fast",function(){});
+					$('#easypay').fadeIn();
 				});	
 			}
 			
@@ -922,10 +927,12 @@ function jsonNuevoCliente(){
 
 function noCliente(){
 	if($('#cedulaP').val()==''){
+		$('#busquedacliente').html('9999999999999');
 		$('#cedulaP').val('9999999999999');
 		BuscarCliente(13);
 	}
     if($('#idCliente').val()==''){
+		$('#busquedacliente').html('9999999999999');
 		$('#cedulaP').val('9999999999999');
 		BuscarCliente(13);
 	}

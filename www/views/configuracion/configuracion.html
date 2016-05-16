@@ -205,7 +205,7 @@
 							<h2>Gratis</h2>		
 							<p>Para pequeños negocios o evaluación ilimitada</p>
 							<h1>$0.00</h1>		
-							<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogines">Activar</button></center>
+							<center><button onclick="IraNube(this);" class="btn btn-lg btn-default btn-center" type="button" id="linklogines">Activar</button></center>
 							<div style='text-align:left; margin-top:15px;'>
 							<ul>
 							<li>POS completo para 1 Dispositivo</li>
@@ -220,7 +220,7 @@
 							<h2>Profesional</h2>
 							<p>Pago mensual con beneficios adicionales</p>
 							<h1>$29.00</h1>
-							<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin29es">Activar</button></center>
+							<center><button onclick="IraNube(this);" class="btn btn-lg btn-default btn-center" type="button" id="linklogin29es">Activar</button></center>
 							<div style='text-align:left; margin-top:15px;'>
 							<ul>
 							<li>Todo lo del plan Gratis</li>
@@ -238,7 +238,7 @@
 							<h2>Premium</h2> 
 							<p>Pago mensual, ideal para cadenas de locales</p>
 							<h1>$69.00</h1>		
-							<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin69es">Activar</button></center>
+							<center><button onclick="IraNube(this);" class="btn btn-lg btn-default btn-center" type="button" id="linklogin69es">Activar</button></center>
 							<div style='text-align:left; margin-top:15px; margin-bottom:15px;'>
 							<ul>
 							<li>Todo lo del plan Profesional</li>
@@ -260,7 +260,7 @@
 							<h2>FREE</h2>		
 							<p>For small businesses or unlimited evaluation</p>
 							<h1>$0.00</h1>		
-							<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linkloginen">Active</button></center>
+							<center><button onclick="IraNube(this);" class="btn btn-lg btn-default btn-center" type="button" id="linkloginen">Active</button></center>
 							<div style='text-align:left; margin-top:15px;'>
 							<ul>
 							<li>Complete POS for 1 device</li>
@@ -275,7 +275,7 @@
 							<h2>Professional</h2>
 							<p>Monthly Payments with additional benefits</p>
 							<h1>$29.00</h1>
-							<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin29en">Upgrade Now</button></center>
+							<center><button onclick="IraNube(this);" class="btn btn-lg btn-default btn-center" type="button" id="linklogin29en">Upgrade Now</button></center>
 							<div style='text-align:left; margin-top:15px;'>
 							<ul>
 							<li>Everything in Free</li>
@@ -293,7 +293,7 @@
 							<h2>Premium</h2> 
 							<p>Monthly Payment, idea for store chains</p>
 							<h1>$69.00</h1>		
-							<center><button onclick="VerificarPermiso('nube');" class="btn btn-lg btn-default btn-center" type="button" id="linklogin69en">Upgrade Now</button></center>
+							<center><button onclick="IraNube(this);" class="btn btn-lg btn-default btn-center" type="button" id="linklogin69en">Upgrade Now</button></center>
 							<div style='text-align:left; margin-top:15px; margin-bottom:15px;'>
 							<ul>
 							<li>Everything in Professional plan</li>
@@ -630,8 +630,8 @@ $(document).ready(function(){
 	$('#fadeRow').css('height',parseInt($(window).height())*110/100);
 	
 	/*planes*/
-	$('#linklog29es,#linklogin29en').attr("link","https://www.practisis.net/indexupgrade.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&plan=avapo29.00");
-	$('#linklog69es,#linklogin69en').attr("link","https://www.practisis.net/indexupgrade.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&plan=avapo69.00");
+	$('#linklogin29es,#linklogin29en').attr("link","https://www.practisis.net/indexupgrade.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&plan=avapo29.00");
+	$('#linklogin69es,#linklogin69en').attr("link","https://www.practisis.net/indexupgrade.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&plan=avapo69.00");
 	$('#linklogines,#linloginen').attr("link","https://www.practisis.net/indexupgrade.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&plan=avapo00.00");
 	
 	var paquete=localStorage.getItem("paquete");
@@ -984,25 +984,33 @@ $(document).ready(function(){
 			});				
 		},errorCB,successCB);
 		
+		var linea1="<tr><td style='vertical-align:middle;' onclick='$("+'"#print_0"'+").click();' >No print</td><td><input style='width:35px; height:35px;' class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
+			
+		var linea1c="<tr><td style='vertical-align:middle;' onclick='$("+'"#printc_0"'+").click();'>No print</td><td><input style='width:35px; height:35px;' class='printerradioc' data-value='0' type='radio' name='printerc' value='0' id='printc_0' checked /></td></tr>";
+			
+		$('#listaimpresoras tbody').append(linea1);
+		$('#listaimpresorascomandas tbody').append(linea1c);
+		
+		/*var linea1="<tr><td onclick='$("+'"#print_50"'+").click();' >No print</td><td><input style='width:20px; height:20px;' class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_50' checked /></td></tr>";
+			
+		var linea1c="<tr><td onclick='$("+'"#printc_50"'+").click();'>No print</td><td><input style='width:20px; height:20px;' class='printerradioc' data-value='0' type='radio' name='printerc' value='0' id='printc_50' checked /></td></tr>";
+			
+		$('#listaimpresoras tbody').append(linea1);
+		$('#listaimpresorascomandas tbody').append(linea1c);*/
+		
 		//StarIOAdapter.searchall("USB:SN:00123456",function(dataprint){
 		var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
 		if ( app ) {
 		StarIOAdapter.searchall("",function(dataprint){
 			//alert(dataprint);
-			var linea1="<tr><td>No print</td><td><input class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
-			
-			var linea1c="<tr><td>No print</td><td><input class='printerradioc' data-value='0' type='radio' name='printerc' value='0' id='printc_0' checked /></td></tr>";
-			
-			$('#listaimpresoras tbody').append(linea1);
-			$('#listaimpresorascomandas tbody').append(linea1c);
 			//alert(res);
 			var todasimp=dataprint.split('||');
 			for(var m=0;m<todasimp.length;m++){
 				var res=todasimp[m].split('@');
 				//alert(res[0]+''+res[1]);
-				var linea="<tr><td>"+res[1]+"</td><td><input class='printerradio' data-value='"+res[0]+"' type='radio' name='printer' value='"+res[0]+"' id='print_"+res[0]+"'/></td></tr>";
+				var linea="<tr><td style='vertical-align:middle;' onclick='$("+'"#print_'+res[0]+'"'+").click();'>"+res[1]+"</td><td><input style='width:35px; height:35px;' class='printerradio' data-value='"+res[0]+"' type='radio' name='printer' value='"+res[0]+"' id='print_"+res[0]+"'/></td></tr>";
 				
-				var lineac="<tr><td>"+res[1]+"</td><td><input class='printerradioc' data-value='"+res[0]+"' type='radio' name='printerc' value='"+res[0]+"' id='printc_"+res[0]+"'/></td></tr>";
+				var lineac="<tr><td style='vertical-align:middle;' onclick='$("+'"#printc_'+res[0]+'"'+").click();'>"+res[1]+"</td><td><input style='width:35px; height:35px;' class='printerradioc' data-value='"+res[0]+"' type='radio' name='printerc' value='"+res[0]+"' id='printc_"+res[0]+"'/></td></tr>";
 				$('#listaimpresoras tbody').append(linea);
 				$('#listaimpresorascomandas tbody').append(lineac);
 			}

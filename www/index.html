@@ -767,7 +767,8 @@
 			});
 			
 			$('#myDash').on('shown.bs.modal',function(){
-				$(this).find('.modal-backdrop').css('top','60px');
+				var hmenu=parseFloat($('.navbar').css('height'));
+				$(this).find('.modal-backdrop').css('top',hmenu);
 				setTimeout(function(){$('#listademenus').effect('highlight',{'color':'#CCC', "opacity": ".5"},2000)},2500);
 			}); 
 			

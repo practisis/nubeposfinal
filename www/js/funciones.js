@@ -320,7 +320,16 @@ function agregarCompra(item,origen){
 
 	//alert(sumTotal+'/');
 	$('#totalmiFactura').val(sumTotal);
-	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2))
+	if(sumTotal.toString().length>8)
+		$('#divtotal').css('font-size','26px');
+	else
+		$('#divtotal').css('font-size','30px');
+	
+	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+	if(sumTotal.toString().length>8)
+			$('#divtotal').css('font-size','26px');
+		else
+			$('#divtotal').css('font-size','30px');
 	$('#payButton').html('PAGAR');
 	$('#invoiceTotal').html(parseFloat(sumTotal).toFixed(2));
 	$('#justo').html('$ '+sumTotal.toFixed(2));
@@ -550,7 +559,12 @@ function agregarCompranew(item,origen){
 
 	//alert(subtotalSinIva+'/'+subtotalSinIvaCompra);
 	$('#totalmiFactura').val(sumTotal);
-	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2))
+	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+	if(sumTotal.toString().length>8)
+		$('#divtotal').css('font-size','26px');
+	else
+		$('#divtotal').css('font-size','30px');
+	
 	$('#payButton').html('PAGAR');
 	$('#invoiceTotal').html(parseFloat(sumTotal).toFixed(2));
 	$('#justo').html(sumTotal.toFixed(2));
@@ -737,7 +751,11 @@ function agregarCompra2(item,origen){
 	
 	//alert(subtotalSinIva+'/'+subtotalSinIvaCompra);
 	$('#totalmiFactura').val(sumTotal);
-	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2))
+	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+	if(sumTotal.toString().length>8)
+		$('#divtotal').css('font-size','26px');
+	else
+		$('#divtotal').css('font-size','30px');
 	$('#justo').html(sumTotal.toFixed(2));
 	$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
 	$('#redondeado').html(Math.ceil(sumTotal).toFixed(2));
@@ -918,12 +936,20 @@ function cambiarCantidad(){
 						/*$('#itemsVendidos').css('display','block');
 						$('#itemsVendidos').css('background-color','red');*/
 						$('#total').html('$'+sumTotal.toFixed(2));
+						if(sumTotal.toString().length>8)
+							$('#divtotal').css('font-size','26px');
+						else
+							$('#divtotal').css('font-size','30px');
 						$('#justo').html(sumTotal.toFixed(2));
 						$('#payButton').html('PAGAR');
 						$('#invoiceTotal').html(sumTotal.toFixed(2));
 						$('#changeFromPurchase').html(Math.abs(sumTotal).toFixed(2));
 						$('#totalmiFactura').val(sumTotal);
 						$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+						if(sumTotal.toString().length>8)
+							$('#divtotal').css('font-size','26px');
+						else
+							$('#divtotal').css('font-size','30px');
 						if(localStorage.getItem("idioma")==1)
 							//$('#btn_gpedidos').html('GUARDAR $'+ parseFloat(sumTotal).toFixed(2));
 							$('#btn_gpedidos').html('GUARDAR');
@@ -1490,6 +1516,11 @@ function addDiscount(){
 			//$('#totalmiFactura').val(parseFloat(totales) + parseFloat(discount));
 			$('#totalmiFactura').val(parseFloat(totales));
 			$('#total').html('$'+ (parseFloat(totales) - parseFloat(discount)+parseFloat(propina)).toFixed(2));
+			if($('#total').html().length>8)
+				$('#divtotal').css('font-size','26px');
+			else
+				$('#divtotal').css('font-size','30px');
+			
 			$('#payButton').html('PAGAR');
 			$('#invoiceTotal').html( (parseFloat(totales) - parseFloat(discount)+parseFloat(propina)).toFixed(2));
 			$('#descuentoFactura').val(discount);
@@ -1610,6 +1641,11 @@ function borrarCompra(item){
 	
 	$('#totalmiFactura').val(sumTotal);
 	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+	if(sumTotal.toString().length>8)
+		$('#divtotal').css('font-size','26px');
+	else
+		$('#divtotal').css('font-size','30px');
+	
   	if(localStorage.getItem("idioma")==1)
   		//$('#btn_gpedidos').html('GUARDAR $'+ parseFloat(sumTotal).toFixed(2));
   		$('#btn_gpedidos').html('GUARDAR');
@@ -3956,6 +3992,11 @@ function GuardarPropina(){
 	$('#propinaFactura').val($('#valorpropina').val());
 	$('#invoiceprop').html($('#valorpropina').val());
 	$('#total').html("$"+(parseFloat($('#total').html().substring(1))+parseFloat($('#valorpropina').val())).toFixed(2));
+	if($('#total').html().toString().length>8)
+		$('#divtotal').css('font-size','26px');
+	else
+		$('#divtotal').css('font-size','30px');
+	
 	//$('#totalmiFactura').val(parseFloat(totales));
 	$('#payButton').html('PAGAR');
 	$('#invoiceTotal').html($('#total').html());
@@ -4410,7 +4451,11 @@ function VerConsumos(idmesa){
 				});
 
 				$('#totalmiFactura').val(sumTotal);
-				$('#total').html('$'+ parseFloat(sumTotal).toFixed(2))
+				$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+				if(sumTotal.toString().length>8)
+					$('#divtotal').css('font-size','26px');
+				else
+					$('#divtotal').css('font-size','30px');
 				//$('#total').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2))
 				$('#justo').html('$ '+sumTotal.toFixed(2));
 				$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
@@ -4615,6 +4660,10 @@ function VerConsumos(idmesa){
 
 				$('#totalmiFactura').val(sumTotal);
 				$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+				if(sumTotal.toString().length>8)
+					$('#divtotal').css('font-size','26px');
+				else
+					$('#divtotal').css('font-size','30px');
 				$('#payButton').html('PAGAR');
 				$('#invoiceTotal').html(parseFloat(sumTotal).toFixed(2));
 				//$('#total').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2))

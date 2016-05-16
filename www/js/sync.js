@@ -585,39 +585,48 @@ function UserLogin(){
 		}
 		else{
 			var datosaux = data.split("||");
-			localStorage.setItem("userRegister", quien);
-			localStorage.setItem("userPasswod", pass);
-			localStorage.setItem("empresa",datosaux[0]);
-			localStorage.setItem("idbarra",datosaux[2]);
 
-            setTimeout(function(){
-              //alert(localStorage.getItem("id_version_nube"));
-              if(localStorage.getItem("id_version_nube") == '0'){
-	            $('#version_escoje').fadeIn('slow');
-                document.getElementById('main').style.display='none';
+            if(datosaux[2] == '0'){
+
+              localStorage.setItem("userRegister", quien);
+    		  localStorage.setItem("userPasswod", pass);
+    		  localStorage.setItem("empresa",datosaux[0]);
+
+              if(localStorage.getItem("idioma")==1){
+				showalertred('Su plan actual no permite tener más de un dispositivo activo.');
+              }else if(localStorage.getItem("idioma")==2){
+				showalertred('Your current plan does not allow more than one active device.');
               }
 
-              if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
-  	            $('#pide_telefono').fadeIn('slow');
-                document.getElementById('main').style.display='none';
-              }
-            }, 2000);
-			
-			/*localStorage.setItem("categoriasya",true);
-			localStorage.setItem("clientesya",true);
-			localStorage.setItem("productosya",true);
-			localStorage.setItem("presupuestoya",true);
-			localStorage.setItem("menucategoriasya",true);
-			localStorage.setItem("menuya",true);
-			localStorage.setItem("permisosya",true);
-			localStorage.setItem("mesasya",true);*/
-			
-			
-			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-			db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],'',true)});
-			$('.navbar').slideDown();
-			//function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direccion,desde_login)
-			//SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],true);
+              $('#fadeRow').fadeOut();
+              $('#noplan').fadeIn();
+
+            }else{
+
+                localStorage.setItem("userRegister", quien);
+    			localStorage.setItem("userPasswod", pass);
+    			localStorage.setItem("empresa",datosaux[0]);
+    			localStorage.setItem("idbarra",datosaux[2]);
+
+                setTimeout(function(){
+                  //alert(localStorage.getItem("id_version_nube"));
+                  if(localStorage.getItem("id_version_nube") == '0'){
+    	            $('#version_escoje').fadeIn('slow');
+                    document.getElementById('main').style.display='none';
+                  }
+
+                  if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+      	            $('#pide_telefono').fadeIn('slow');
+                    document.getElementById('main').style.display='none';
+                  }
+                }, 2000);
+
+    			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+    			db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],'',true)});
+    			$('.navbar').slideDown();
+    			//function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direccion,desde_login)
+    			//SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],true);
+          }
 		}
 		$('#btnvalida2').html("Login");
 	});
@@ -1529,10 +1538,10 @@ function PostaLaNube(arraydatos,cual,accion,t){
 		if(parseInt(response)>0){
 			db.transaction(function(tx){
 				var sentencia='UPDATE '+accion+' SET sincronizar="false" WHERE timespan="'+item.timespan+'"';
-				
+
 				if(accion=='Clientes')
 				sentencia='UPDATE '+accion+' SET sincronizar="false" WHERE cedula="'+item.cedula+'"';
-				
+
 				if(accion=='Config')
 				sentencia='UPDATE '+accion+' SET sincronizar="false" WHERE id=1';
 
@@ -1579,7 +1588,68 @@ function downloadImage(url, fileName){
 			console.log("download error" + JSON.stringify(error));
         }
     );
-} 
+}
+
+function verplanes(){
+  alert('rv');
+  document.getElementById('main').style.height='650px';
+  document.getElementById('trans_label_24').style.display='none';
+  $('.nav-tabs').css('display','none');
+  $('#noplan').fadeOut();
+  //$('#escojeIdioma').fadeOut();
+  $('#cuentaactiva').fadeIn();
+  $('#planes_es').fadeIn();
+  $('#planes_en').fadeOut();
+  $('#pestanasconfig').fadeIn();
+
+  var maxheight='500px';
+  $('.jumbotron').css('height',maxheight);
+
+}
+
+function desactivarterminal(){
+  if(localStorage.getItem("idioma")==2){
+    var r = confirm("¿Está seguro de desactivar la tablet en uso?");
+  }else{
+    var r = confirm("Are you sure you turn off the tablet in use?");
+  }
+  if (r == true) {
+
+    var apiURL='https://practisis.net/connectnubepos/api2.php';
+	$.post(apiURL,{
+		id_emp: localStorage.getItem("empresa"),
+		action: 'DesactivaTerminal'
+
+	}).done(function(response){
+
+		console.log(response);
+        var res = response.split("||");
+
+        if(res[0] == 'ok'){
+          if(localStorage.getItem("idioma")==2){
+            showalert('Your tablet will turn off successfully.');
+          }else{
+            showalert('Su tablet se desactivo con éxito.');
+          }
+          location.reload(true);
+        }else{
+          if(localStorage.getItem("idioma")==2){
+            showalertred('I can not disable.\nPlease try.');
+          }else{
+            showalertred('No se puedo desactivar.\nVuelva a intentarlo.');
+          }
+        }
+
+		updateOnlineStatus("ONLINE");
+
+	}).fail(function(){
+			updateOnlineStatus("OFFLINE");
+			setTimeout(function(){SincronizadorNormal()},180000);
+	});
+
+  } else {
+  }
+}
 
 /*function ImprimirLogo(){
 	//alert("va imprimir");

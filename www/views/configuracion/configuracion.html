@@ -44,13 +44,32 @@
 					  </div>
 					</div>
 					<div class='col-md-2'></div>
-					
-					
+
+
 					<div id="mensaje2"></div>
 					<input id="user" type="hidden" />
 					<input id="pass" type="hidden" />
-				
+
 					<br><br><br><br><br><br><br><br><br>
+</div>
+
+<div class="row" style="display:none; padding:20px;" id="noplan" >
+	<div class='col-md-2'></div>
+	<div class="col-md-8">
+	<div class="text-center" style="min-height: 263px;">
+		<div class="modal-body" style="min-height: 266px;">
+		 <div id="divdatoslogin" style="overflow:auto;">
+		 <h1 style='vertical-align:bottom; font-size:45px;'><img style='margin-top:-40px;' src='img/logoava.png' width='150px;'/></h1>
+		  <h3 style="-webkit-margin-before: 1em;-webkit-margin-after: 1em;-webkit-margin-start: 0px;-webkit-margin-end: 0px;font-size: 30px;" id="trans_label_94">Su plan actual no permite tener más de un dispositivo activo.</h3>
+		  <ul style="text-align: left;">
+		    <li style="font-size: 25px;" id="trans_label_95">Puedes realizar una actualización de tu plan actual <a href="javascript:void(0);" onclick="verplanes();">aquí</a>.</li>
+            <li id="trans_label_96">O puede desactivar la tablet que esta en uso desde <a href="javascript:void(0);" onclick="desactivarterminal();">aquí</a>.</li>
+		  </ul>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class='col-md-2'></div>
 </div>
 
 <div class="row" style="display:none; padding:20px; color:#404041;" id="escojeIdioma" >
@@ -740,7 +759,7 @@ $(document).ready(function(){
 			console.log(maxheight);
 		}
 	});
-	
+
 	$('.jumbotron').css('height',maxheight);
 	///fin planes
 	

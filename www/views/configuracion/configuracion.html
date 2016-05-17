@@ -1394,7 +1394,7 @@ function CambiarMensaje(){
 	var paquete=localStorage.getItem("paquete");
 	if(paquete==22||paquete=="22"){
 		msjcloud=1;
-		envia('cloud');	
+		envia('config');	
 	}
 }
 
@@ -1442,7 +1442,7 @@ function ActivarMultitablet(){
 	var paquete=localStorage.getItem("paquete");
 	if(paquete==22){
 		msjcloud=2;
-		envia('cloud');
+		envia('config');
 	}
 }
 
@@ -1451,7 +1451,7 @@ function ActivarImprimirLogo(){
 	var paquete=localStorage.getItem("paquete");
 	if(paquete==22){
 		msjcloud=3;
-		envia('cloud');
+		envia('config');
 	}
 }
 

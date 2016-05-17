@@ -591,6 +591,7 @@ function UserLogin(){
               localStorage.setItem("userRegister", quien);
     		  localStorage.setItem("userPasswod", pass);
     		  localStorage.setItem("empresa",datosaux[0]);
+              localStorage.setItem("idbarra",'0');
 
               if(localStorage.getItem("idioma")==1){
 				showalertred('Su plan actual no permite tener más de un dispositivo activo.');

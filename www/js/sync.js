@@ -551,9 +551,9 @@ function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direcc
 					//envia("dashboard");
 					envia("puntodeventa");
 				}else{
-					tx2.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1',[],function(tx,results){
+					tx2.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1 and estado=1',[],function(tx,results){
 						if(results.rows.item(0).cp==0||results.rows.item(0).cp==null){
-							LaunchBoarding();
+							//LaunchBoarding();
 						}
 					});
 					//SyncStart();
@@ -623,9 +623,7 @@ function UserLogin(){
 
     			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
     			db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],'',true)});
-    			$('.navbar').slideDown();
-    			//function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direccion,desde_login)
-    			//SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],true);
+    			//$('.navbar').slideDown();
           }
 		}
 		$('#btnvalida2').html("Login");
@@ -642,6 +640,7 @@ var apiURL='https://practisis.net/connectnubepos/api2.php';
 	}).done(function(response){
 		//sincronizacion inicial
         if(response!='block' && response!='Desactivado'){
+			$('.navbar').slideDown();
     		var arraydatos=JSON.parse(response);
     		console.log(">>>>Iniciar >>>"+response);
     		JSONproductosNube=arraydatos.productos;
@@ -689,7 +688,8 @@ var apiURL='https://practisis.net/connectnubepos/api2.php';
             $('#myDash').modal('hide');
     		setTimeout(function(){
     			$('.navbar').slideUp();
-    			$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+    			$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig").css("display","none");
+				$('.navbar').slideUp();
     			$('#desactivo').fadeIn();
     		},100);
     	}else{
@@ -699,7 +699,7 @@ var apiURL='https://practisis.net/connectnubepos/api2.php';
     		setTimeout(function(){
     			$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
     			$('.navbar').slideUp();
-    			$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+    			$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig").css("display","none");
     			$('#bloqueo').fadeIn();
     		},100);
 

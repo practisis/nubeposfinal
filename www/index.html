@@ -750,6 +750,7 @@
 			
 			
 	$( document ).ready(function(){
+			SyncStart();
 			digitado=false;
 			if(localStorage.getItem("id_version_nube") == '0'){
 			    $('#version_escoje').fadeIn('slow');
@@ -802,8 +803,6 @@
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(iniciaDB,errorCB,successCB);
 			$('html').addClass('android-scroll-bar');
-			startAnimation();
-			SyncStart();
 			var alto = $( window ).height();
 			$('#contieneMensajes').css('height',(alto)*90/100);
 			$('.carousel').carousel({
@@ -843,7 +842,7 @@
 						$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
 					}
 			});
-			
+			startAnimation();
 			//fin idioma
 	});
 			

@@ -4223,8 +4223,30 @@ function CargarMesas(){
 					if(item.es_mesa=='true'){
 						onclick="AccionMesa(this);";
 					}
-
-					var html="<div id='divmesa_"+item.timespan+"' style='position:absolute; top:"+(item.top-96)+"px; left:"+item.left+"px;' timespan='"+item.timespan+"' class='"+clase+"' onclick='"+onclick+"' ><div id='mesaname_"+item.timespan+"'>"+item.nombre+"</div><img id='mesaimg_"+item.timespan+"' class='imgmesa' src='images/mesas/"+img+"'/></div>";
+					
+					var mitop=item.top-96;
+					var mileft=item.left;
+					var proporcionw=1;
+					var proporcionh=1;
+					var anchomesas='';
+					var fontsize='';
+					
+					var miancho=parseFloat($(window).width());
+					var mialto=parseFloat($(window).height());
+					if(miancho<800){
+						proporcionw=miancho/800;
+						mileft=proporcionw*item.left;
+						anchomesas='width:40px;';
+						fontsize='font-size:11px;'
+					}
+					
+					if(mialto<600){
+						proporcionh=mialto/600;
+						mitop=proporcionh*(item.top-96);
+					}
+					
+					
+					var html="<div id='divmesa_"+item.timespan+"' style='position:absolute; top:"+(mitop)+"px; left:"+mileft+"px;' timespan='"+item.timespan+"' class='"+clase+"' onclick='"+onclick+"' ><div style='"+fontsize+"' id='mesaname_"+item.timespan+"'>"+item.nombre+"</div><img id='mesaimg_"+item.timespan+"' class='imgmesa' src='images/mesas/"+img+"' style='"+anchomesas+"'/></div>";
 					$('#contentmesas_'+item.tab).append(html);
 				}
 				

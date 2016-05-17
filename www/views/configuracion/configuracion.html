@@ -1754,6 +1754,7 @@ function actualizar(){
         var plan = planaux[1];
         var us = localStorage.getItem("userRegister");
         var pa = localStorage.getItem("userPasswod");
+        localStorage.removeItem("idbarra");
         var url = 'https://www.practisis.net/indexupgrade.php?rvpas='+pa+'&rvus='+us+'&plan='+plan;
 		window.open(url);
 	  }else{

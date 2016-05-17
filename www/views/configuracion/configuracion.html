@@ -385,13 +385,13 @@
 			<td  style='text-align:right;' id="trans_label_80">Imprimir Logo</td>
 			<td align='left'><input type='checkbox' id='printlogo' onclick='ActivarImprimirLogo();'  readonly />
 				<div style='margin-top:10px;'>
-				<button class='btn btn-success btn-sm' onclick='ActivarImprimirLogo();' >Activar</button>
+				<button class='btn btn-success btn-sm' onclick='ActivarImprimirLogo();' id='activaprintlogo' >Activar</button>
 				</div>
 			</td>
     	</tr>
         <tr>
 			<td  style='text-align:right;' id="trans_label_75">Mensaje Personalizado</td>
-			<td align='left'><input type='text' id='custommsg' class='form-control input' style='margin-bottom:10px;'/><button class='btn btn-success btn-sm trans_changemessage' onclick='CambiarMensaje();'>Cambiar Mensaje</button></td>
+			<td align='left'><input type='text' id='custommsg' class='form-control input' style='margin-bottom:10px;'/><button class='btn btn-success btn-sm trans_changemessage' onclick='CambiarMensaje();' id='cambiamensaje'>Cambiar Mensaje</button></td>
     	</tr>
     	<tr style='display:none;'>
     		<td  style='text-align:right;' id="trans_label_77">Respaldo de Información</td>
@@ -672,6 +672,7 @@ $(document).ready(function(){
 		$('#linklogin69en').html('Upgrade Now');
 		$('#jumbo0es,#jumbo0en,#jumbo69es,#jumbo69en').attr('class','jumbotron');
 		$('#jumbo29es,#jumbo29en').attr('class','jumbotron jumbo-red');
+		$("#activaprintlogo,#cambiamensaje").fadeIn();
 	}else if(paquete=="36"){
 		$('#linklogin29es,#linklogin29en').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 		$('#linklogin29es').html('<div style="font-size:11px;">Tu plan Actual</div> Ir a la Nube');
@@ -682,6 +683,10 @@ $(document).ready(function(){
 		$('#linklogin69en').html('Upgrade Now');
 		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').attr('class','jumbotron');
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
+		$('#printlogo').bootstrapSwitch('readonly',false);
+		if(localStorage.getItem('imprimelogo')=="true")
+			$('#printlogo').bootstrapSwitch('state',true);
+		$("#activaprintlogo,#cambiamensaje").css("display","none");
 		
 	}else if(paquete=="37"){
 		$('#linklogin69es,#linklogin69en').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
@@ -693,6 +698,10 @@ $(document).ready(function(){
 		$('#linkloginen').html('Active');
 		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').attr('class','jumbotron');
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
+		$('#printlogo').bootstrapSwitch('readonly',false);
+		if(localStorage.getItem('imprimelogo')=="true")
+			$('#printlogo').bootstrapSwitch('state',true);
+		$("#activaprintlogo,#cambiamensaje").css("display","none");
 	}
 	
 	/*fin planes*/

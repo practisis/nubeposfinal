@@ -660,10 +660,20 @@ function cancelPayment(){
 	$('#row1').fadeIn();
 	var propina=parseFloat($('#invoiceprop').html());
 	$('#total').html("$"+(parseFloat($('#total').html().substring(1))-propina).toFixed(2));
-	if($('#total').html().toString().length>8)
+	
+	if($('#total').html().toString().length==9)
 		$('#divtotal').css('font-size','26px');
+	else if($('#total').html().toString().length>9)
+		$('#divtotal').css('font-size','24px');
 	else
 		$('#divtotal').css('font-size','30px');
+	
+	if($('#total').html().toString().length>9){
+		$('.den').css('width',5*parseFloat($('.producto').css('height')));
+	}else{
+		$('.den').css('width',3*parseFloat($('.producto').css('height')));
+	}
+	
 	//$('#totalmiFactura').val(parseFloat(totales));
 	$('#payButton').html('PAGAR');
 	$('#invoiceTotal').html($('#total').html());

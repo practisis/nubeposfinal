@@ -1740,9 +1740,26 @@ function actualizar(){
 	
 	
 	function IraNube(elem){
-	  //alert(elem);
+	  if(localStorage.getItem("idbarra") == '0'){
+	    $('#noplan').fadeOut();
+        $('#cuentaactiva').fadeOut();
+        $('#pestanasconfig').fadeOut();
+        $('#planes_en').fadeOut();
+        $('#planes_es').fadeOut();
+        $('#volverplan_es').fadeOut();
+        $('#volverplan_en').fadeOut();
+        $('#fadeRow').fadeIn();
+        var urlaux = $(elem).attr('link');
+        var planaux = urlaux.split('&plan=');
+        var plan = planaux[1];
+        var us = localStorage.getItem("userRegister");
+        var pa = localStorage.getItem("userPasswod");
+        var url = 'https://www.practisis.net/indexupgrade.php?rvpas='+pa+'&rvus='+us+'&plan='+plan;
+		window.open(url);
+	  }else{
 		var url=$(elem).attr('link');
 		window.open(url);
+      }
 	}
 	
 	function activaidioma(cual){

@@ -328,8 +328,8 @@ function agregarCompra(item,origen){
 	else
 		$('#divtotal').css('font-size','30px');
 	
-	if($('#total').html().toString().length>9){
-		$('.den').css('width',5*parseFloat($('.producto').css('height')));
+	if($('#total').html().toString().length>7){
+		$('.den').css('width',4.5*parseFloat($('.producto').css('height')));
 	}else{
 		$('.den').css('width',3*parseFloat($('.producto').css('height')));
 	}
@@ -571,8 +571,8 @@ function agregarCompranew(item,origen){
 	else
 		$('#divtotal').css('font-size','30px');
 	
-	if($('#total').html().toString().length>9){
-		$('.den').css('width',5*parseFloat($('.producto').css('height')));
+	if($('#total').html().toString().length>7){
+		$('.den').css('width',4.5*parseFloat($('.producto').css('height')));
 	}else{
 		$('.den').css('width',3*parseFloat($('.producto').css('height')));
 	}
@@ -772,8 +772,8 @@ function agregarCompra2(item,origen){
 	else
 		$('#divtotal').css('font-size','30px');
 	
-	if($('#total').html().toString().length>9){
-		$('.den').css('width',5*parseFloat($('.producto').css('height')));
+	if($('#total').html().toString().length>7){
+		$('.den').css('width',4.5*parseFloat($('.producto').css('height')));
 	}else{
 		$('.den').css('width',3*parseFloat($('.producto').css('height')));
 	}
@@ -973,8 +973,8 @@ function cambiarCantidad(){
 						else
 							$('#divtotal').css('font-size','30px');
 						
-						if($('#total').html().toString().length>9){
-							$('.den').css('width',5*parseFloat($('.producto').css('height')));
+						if($('#total').html().toString().length>7){
+							$('.den').css('width',4.5*parseFloat($('.producto').css('height')));
 						}else{
 							$('.den').css('width',3*parseFloat($('.producto').css('height')));
 						}
@@ -1677,8 +1677,8 @@ function borrarCompra(item){
 	else
 		$('#divtotal').css('font-size','30px');
 	
-	if($('#total').html().toString().length>9){
-		$('.den').css('width',5*parseFloat($('.producto').css('height')));
+	if($('#total').html().toString().length>7){
+		$('.den').css('width',4.5*parseFloat($('.producto').css('height')));
 	}else{
 		$('.den').css('width',3*parseFloat($('.producto').css('height')));
 	}
@@ -4052,8 +4052,8 @@ function GuardarPropina(){
 	else
 		$('#divtotal').css('font-size','30px');
 	
-	if($('#total').html().toString().length>9){
-		$('.den').css('width',5*parseFloat($('.producto').css('height')));
+	if($('#total').html().toString().length>7){
+		$('.den').css('width',4.5*parseFloat($('.producto').css('height')));
 	}else{
 		$('.den').css('width',3*parseFloat($('.producto').css('height')));
 	}
@@ -4543,8 +4543,8 @@ function VerConsumos(idmesa){
 				else
 					$('#divtotal').css('font-size','30px');
 				
-				if($('#total').html().toString().length>9){
-					$('.den').css('width',5*parseFloat($('.producto').css('height')));
+				if($('#total').html().toString().length>7){
+					$('.den').css('width',4.5*parseFloat($('.producto').css('height')));
 				}else{
 					$('.den').css('width',3*parseFloat($('.producto').css('height')));
 				}
@@ -4760,8 +4760,8 @@ function VerConsumos(idmesa){
 				else
 					$('#divtotal').css('font-size','30px');
 			
-				if($('#total').html().toString().length>9){
-					$('.den').css('width',5*parseFloat($('.producto').css('height')));
+				if($('#total').html().toString().length>7){
+					$('.den').css('width',4.5*parseFloat($('.producto').css('height')));
 				}else{
 					$('.den').css('width',3*parseFloat($('.producto').css('height')));
 				}

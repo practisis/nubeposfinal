@@ -30,6 +30,7 @@ function SyncStart(){
 		yaesta=true;
 		$('.navbar').slideDown();
 		envia('puntodeventa');
+		//Init31();
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
 			tx.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1',[],function(tx,results){
@@ -591,7 +592,6 @@ function UserLogin(){
               localStorage.setItem("userRegister", quien);
     		  localStorage.setItem("userPasswod", pass);
     		  localStorage.setItem("empresa",datosaux[0]);
-              localStorage.setItem("idbarra",'0');
 
               if(localStorage.getItem("idioma")==1){
 				showalertred('Su plan actual no permite tener más de un dispositivo activo.');
@@ -1625,8 +1625,7 @@ function desactivarterminal(){
     var apiURL='https://practisis.net/connectnubepos/api2.php';
 	$.post(apiURL,{
 		id_emp: localStorage.getItem("empresa"),
-		action: 'DesactivaTerminal',
-        deviceid:$("#deviceid").html()
+		action: 'DesactivaTerminal'
 
 	}).done(function(response){
 

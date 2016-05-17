@@ -30,6 +30,7 @@ function ActivarCategoria(cual,categoria){
 	db.transaction(
 	function (tx){
 		//console.log('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc');
+		$('#taxes').html('');
 		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? group by nombre order by id",["true"],function(tx,results3){
 							console.log(results3);
 							var impuestos='';
@@ -45,12 +46,15 @@ function ActivarCategoria(cual,categoria){
 									}
 									impuestos+=parseFloat(imp.porcentaje)/100;
 									impuestosid+=imp.timespan;
+									$('#taxes').append('<input id="impuesto-'+imp.id+'" type="text" value="'+imp.id+"|"+imp.nombre+"|"+parseFloat((imp.porcentaje)/100)+'">');
+									
 									cuan++;
 								}
 								console.log(impuestos+'/'+impuestosid);
 								$('#impuestosactivos').html(impuestos);
 								$('#impuestosactivosid').html(impuestosid);
-								}
+								
+				}
 		});
 								
 		tx.executeSql('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc',[],function(tx,res){
@@ -149,11 +153,6 @@ function showProducts(categoria,direction){
 	});
 	$('#maxPage').val(counter);
 	
-	if(localStorage.getItem("con_mesas")=='true'){
-		if($('#listaProductos').html()!=''){
-			$('#divmesas').show();
-		}
-	}
 }
 
 
@@ -2621,6 +2620,21 @@ function Ready(){
   		$('#btn_pagar').hide();
 		$('#spanaction').attr('class','trans_pay');
 		CargarMesas();
+		
+		/**/
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx1){
+			tx1.executeSql("SELECT count(*) as cuantos from PRODUCTOS where estado=1 and id_local!=-1",[],function(tx1,results1){
+				console.log(results1);
+				if(results1.rows.length>0){
+					if(results1.rows.item(0)!=null){
+						if(results1.rows.item(0).cuantos>0)
+							$('#divmesas').show();
+						}
+					}
+			});
+		},errorCB,successCB);
+		
   }else{
     /*$('#productosnew').fadeOut();
     $('#productos').fadeIn();*/

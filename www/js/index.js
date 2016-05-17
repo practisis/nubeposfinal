@@ -101,8 +101,6 @@ function envia(donde){
 					$('#correoMal').fadeOut('slow');
 					$.get(lugar,function(data){
 						$('#main').html(data);
-						if(donde=='puntodeventa')
-							Ready();
 					});
 					/*$('#main').load(lugar,function(){
 						$("#simple-menu").click();

@@ -667,7 +667,7 @@ $(document).ready(function(){
 	if(paquete=="22"){
 		$('#linklogines,#linkloginen').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 		$('#linklogines').html('<div style="font-size:11px;">Tu plan Actual</div>Ir a la Nube');
-		$('#linkloginen').html('<div style="font-size:11px;">Your current plan</div>Access Cloud');
+		$('#linkloginen').html('<div style="font-size:11px;">Your current plan</div>Go to Cloud');
 		$('#linklogin29es').html('Activar');
 		$('#linklogin29en').html('Upgrade Now');
 		$('#linklogin69es').html('Activar');
@@ -1335,6 +1335,36 @@ $(document).ready(function(){
 					});
 				});
 				
+				
+				/*impuestos activos */
+				tx1.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? group by upper(nombre) order by id",["true"],function(tx,results3){
+					$('#taxes').html('');
+					console.log(results3);
+					var impuestos='';
+					var impuestosid='';
+					if(results3.rows.length>0){
+						console.log("encuentra impuestos");
+						var cuan=0;
+						for(var r=0;r<results3.rows.length;r++){
+							var imp=results3.rows.item(r);
+								if(cuan>0){
+									impuestos+="@";
+									impuestosid+="@";
+								}
+								impuestos+=parseFloat(imp.porcentaje)/100;
+								impuestosid+=imp.timespan;
+								$('#taxes').append('<input id="impuesto-'+imp.id+'" type="text" value="'+imp.id+"|"+imp.nombre+"|"+parseFloat((imp.porcentaje)/100)+'">');
+								cuan++;
+						}
+						console.log(impuestos+'/'+impuestosid);
+						$('#impuestosactivos').html(impuestos);
+						$('#impuestosactivosid').html(impuestosid);
+						
+					}
+				});
+				/**/
+				
+				
 				}
 			,errorCB,successCB);
 	}
@@ -1740,27 +1770,9 @@ function actualizar(){
 	
 	
 	function IraNube(elem){
-	  if(localStorage.getItem("idbarra") == '0'){
-	    $('#noplan').fadeOut();
-        $('#cuentaactiva').fadeOut();
-        $('#pestanasconfig').fadeOut();
-        $('#planes_en').fadeOut();
-        $('#planes_es').fadeOut();
-        $('#volverplan_es').fadeOut();
-        $('#volverplan_en').fadeOut();
-        $('#fadeRow').fadeIn();
-        var urlaux = $(elem).attr('link');
-        var planaux = urlaux.split('&plan=');
-        var plan = planaux[1];
-        var us = localStorage.getItem("userRegister");
-        var pa = localStorage.getItem("userPasswod");
-        localStorage.removeItem("idbarra");
-        var url = 'https://www.practisis.net/indexupgrade.php?rvpas='+pa+'&rvus='+us+'&plan='+plan;
-		window.open(url);
-	  }else{
+	  //alert(elem);
 		var url=$(elem).attr('link');
 		window.open(url);
-      }
 	}
 	
 	function activaidioma(cual){

@@ -689,7 +689,7 @@ var apiURL='https://practisis.net/connectnubepos/api2.php';
             $('#myDash').modal('hide');
     		setTimeout(function(){
     			$('.navbar').slideUp();
-    			$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+    			$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig").css("display","none");
     			$('#desactivo').fadeIn();
     		},100);
     	}else{
@@ -770,7 +770,7 @@ function DatosRecurrentes(cual){
 			    envia('config');
 				setTimeout(function(){
 					$('.navbar').slideUp();
-					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig").css("display","none");
 					$('#desactivo').fadeIn();
 				},100);
 			}else{
@@ -1591,27 +1591,30 @@ function downloadImage(url, fileName){
 }
 
 function verplanes(){
-  alert('rv');
   document.getElementById('main').style.height='650px';
   document.getElementById('trans_label_24').style.display='none';
   $('.nav-tabs').css('display','none');
   $('#noplan').fadeOut();
   //$('#escojeIdioma').fadeOut();
   $('#cuentaactiva').fadeIn();
-  $('#planes_es').fadeIn();
-  $('#planes_en').fadeOut();
+  if(localStorage.getItem("idioma")==2){
+    $('#planes_en').fadeIn();
+    $('#planes_es').fadeOut();
+  }else{
+    $('#planes_es').fadeIn();
+    $('#planes_en').fadeOut();
+  }
   $('#pestanasconfig').fadeIn();
-
-  var maxheight='500px';
+  var maxheight='525px';
   $('.jumbotron').css('height',maxheight);
 
 }
 
 function desactivarterminal(){
   if(localStorage.getItem("idioma")==2){
-    var r = confirm("¿Está seguro de desactivar la tablet en uso?");
-  }else{
     var r = confirm("Are you sure you turn off the tablet in use?");
+  }else{
+    var r = confirm("¿Está seguro de desactivar la tablet en uso?");
   }
   if (r == true) {
 
@@ -1631,7 +1634,8 @@ function desactivarterminal(){
           }else{
             showalert('Su tablet se desactivo con éxito.');
           }
-          location.reload(true);
+          //location.reload(true);
+          UserLogin();
         }else{
           if(localStorage.getItem("idioma")==2){
             showalertred('I can not disable.\nPlease try.');
@@ -1649,6 +1653,14 @@ function desactivarterminal(){
 
   } else {
   }
+}
+
+function VerOpcionesIngreso(){
+  $('#noplan').fadeIn();
+  $('#cuentaactiva').fadeOut();
+  $('#pestanasconfig').fadeOut();
+  $('#planes_en').fadeOut();
+  $('#planes_es').fadeOut();
 }
 
 /*function ImprimirLogo(){

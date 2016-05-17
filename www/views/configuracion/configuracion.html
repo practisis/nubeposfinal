@@ -54,22 +54,23 @@
 </div>
 
 <div class="row" style="display:none; padding:20px;" id="noplan" >
-	<div class='col-md-2'></div>
-	<div class="col-md-8">
+	<div class='col-sm-1'></div>
+	<div class="col-sm-10">
 	<div class="text-center" style="min-height: 263px;">
 		<div class="modal-body" style="min-height: 266px;">
 		 <div id="divdatoslogin" style="overflow:auto;">
 		 <h1 style='vertical-align:bottom; font-size:45px;'><img style='margin-top:-40px;' src='img/logoava.png' width='150px;'/></h1>
-		  <h3 style="-webkit-margin-before: 1em;-webkit-margin-after: 1em;-webkit-margin-start: 0px;-webkit-margin-end: 0px;font-size: 30px;" id="trans_label_94">Su plan actual no permite tener más de un dispositivo activo.</h3>
+		  <h3 style="-webkit-margin-before: 1em;-webkit-margin-after: 1em;-webkit-margin-start: 0px;-webkit-margin-end: 0px;font-size: 45px;" id="trans_label_94">Su plan actual no permite tener más de un dispositivo activo.</h3>
 		  <ul style="text-align: left;">
-		    <li style="font-size: 25px;" id="trans_label_95">Puedes realizar una actualización de tu plan actual <a href="javascript:void(0);" onclick="verplanes();">aquí</a>.</li>
-            <li id="trans_label_96">O puede desactivar la tablet que esta en uso desde <a href="javascript:void(0);" onclick="desactivarterminal();">aquí</a>.</li>
+		    <li style="font-size: 35px;" id="trans_label_95">Puedes realizar una actualización de tu plan actual <a href="javascript:void(0);" onclick="verplanes();">aquí</a>.</li>
+            <br>
+            <li style="font-size: 25px;" id="trans_label_96">O puede desactivar la tablet que esta en uso desde <a href="javascript:void(0);" onclick="desactivarterminal();">aquí</a>.</li>
 		  </ul>
 		  </div>
 		</div>
 	  </div>
 	</div>
-	<div class='col-md-2'></div>
+	<div class='col-sm-1'></div>
 </div>
 
 <div class="row" style="display:none; padding:20px; color:#404041;" id="escojeIdioma" >
@@ -215,6 +216,9 @@
 			   <!-- <div class="alert alert-danger" role="alert" style="display: none;"></div>-->
 					<div class='row' id='cuentaactiva' style='display:none; margin:20px;'>
 					<div id='planes_es' style='display:none;'>
+                    <div style="position: absolute;top: 25px;right: 50px;cursor:pointer;color:#1495C0;">
+                        <i class="fa fa-chevron-circle-left fa-3x" title='Volver...' onclick="VerOpcionesIngreso();"></i>
+                    </div>
 					<div style='margin-bottom:40px;'>
 						<h1>Guía de precios</h1>
 						<p>AvaPOS es gratis por el tiempo que quieras.  Pásate a un plan pagado cuando lo necesites.</p>
@@ -270,6 +274,9 @@
 					</div>
 					</div>
 					<div id='planes_en' style='display:none;'>
+                    <div style="position: absolute;top: 25px;right: 50px;cursor:pointer;color:#1495C0;">
+                        <i class="fa fa-chevron-circle-left fa-3x" title='Back...' onclick="VerOpcionesIngreso();"></i>
+                    </div>
 					<div style='margin-bottom:40px;'>
 						<h1>Pricing Guide</h1>
 						<p>AvaPOS is free to use for as long as you want.  Upgrade when you like.</p>

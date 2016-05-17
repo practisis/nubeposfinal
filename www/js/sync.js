@@ -1599,9 +1599,13 @@ function verplanes(){
   if(localStorage.getItem("idioma")==2){
     $('#planes_en').fadeIn();
     $('#planes_es').fadeOut();
+    $('#volverplan_en').fadeIn();
+    $('#volverplan_es').fadeOut();
   }else{
     $('#planes_es').fadeIn();
     $('#planes_en').fadeOut();
+    $('#volverplan_en').fadeOut();
+    $('#volverplan_es').fadeIn();
   }
   $('#pestanasconfig').fadeIn();
   var maxheight='525px';
@@ -1660,6 +1664,8 @@ function VerOpcionesIngreso(){
   $('#pestanasconfig').fadeOut();
   $('#planes_en').fadeOut();
   $('#planes_es').fadeOut();
+  $('#volverplan_es').fadeOut();
+  $('#volverplan_en').fadeOut();
 }
 
 /*function ImprimirLogo(){

@@ -1625,7 +1625,8 @@ function desactivarterminal(){
     var apiURL='https://practisis.net/connectnubepos/api2.php';
 	$.post(apiURL,{
 		id_emp: localStorage.getItem("empresa"),
-		action: 'DesactivaTerminal'
+		action: 'DesactivaTerminal',
+        deviceid:$("#deviceid").html()
 
 	}).done(function(response){
 

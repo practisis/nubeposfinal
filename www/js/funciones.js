@@ -959,7 +959,7 @@ function cambiarCantidad(){
 						/*$('#itemsVendidos').css('display','block');
 						$('#itemsVendidos').css('background-color','red');*/
 						
-						$('#justo').html(sumTotal.toFixed(2));
+						$('#justo').html('$ '+sumTotal.toFixed(2));
 						$('#payButton').html('PAGAR');
 						$('#invoiceTotal').html(sumTotal.toFixed(2));
 						$('#changeFromPurchase').html(Math.abs(sumTotal).toFixed(2));
@@ -987,9 +987,9 @@ function cambiarCantidad(){
 							//$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
 							$('#btn_gpedidos').html('SAVE');
 
-						$('#justo').html(sumTotal.toFixed(2));
+						$('#justo').html('$ '+sumTotal.toFixed(2));
 						$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
-						$('#redondeado').html(Math.ceil(sumTotal).toFixed(2));
+						$('#redondeado').html('$ '+Math.ceil(sumTotal).toFixed(2));
 						$('#redondeado').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
 						var alta=0;
 						for( var t in misdenominaciones){
@@ -999,7 +999,7 @@ function cambiarCantidad(){
 								break;
 							}
 						}
-						$('#altaden').html(alta.toFixed(2));
+						$('#altaden').html('$ '+alta.toFixed(2));
 						$('#altaden').attr('data-value',-1*alta.toFixed(2));
 						if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
 							$('#altaden').parent().css('display','inline');
@@ -1013,7 +1013,7 @@ function cambiarCantidad(){
 							iter++;
 							p10=iter*10;
 						}
-						$('#prox10').html(p10.toFixed(2));
+						$('#prox10').html('$ '+p10.toFixed(2));
 						$('#prox10').attr('data-value',-1*p10.toFixed(2));
 						//console.log(p10+'/'+alta);
 						if(p10>0&&p10!=alta)
@@ -1028,7 +1028,7 @@ function cambiarCantidad(){
 							iter++;
 							p20=iter*20;
 						}
-						$('#prox20').html(p20.toFixed(2));
+						$('#prox20').html('$ '+p20.toFixed(2));
 						$('#prox20').attr('data-value',-1*p20.toFixed(2));
 						if(p20>0&&p20!=p10)
 							$('#prox20').parent().css('display','inline');
@@ -4521,6 +4521,7 @@ function VerConsumos(idmesa){
 
 				$('#totalmiFactura').val(sumTotal);
 				$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+				
 				if($('#total').html().toString().length==9)
 					$('#divtotal').css('font-size','26px');
 				else if($('#total').html().toString().length>9)

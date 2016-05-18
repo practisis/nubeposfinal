@@ -46,7 +46,7 @@ function ActivarCategoria(cual,categoria){
 									}
 									impuestos+=parseFloat(imp.porcentaje)/100;
 									impuestosid+=imp.timespan;
-									$('#taxes').append('<input id="impuesto-'+imp.id+'" type="text" value="'+imp.id+"|"+imp.nombre+"|"+parseFloat((imp.porcentaje)/100)+'">');
+									$('#taxes').append('<input id="impuesto-'+imp.timespan+'" type="text" value="'+imp.id+"|"+imp.nombre+"|"+parseFloat((imp.porcentaje)/100)+'">');
 									
 									cuan++;
 								}
@@ -249,7 +249,7 @@ function agregarCompra(item,origen){
 			}
 		else{
 			productoImpuestosIndexes == parseInt($('#idiva').html()) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
-
+              //alert($('#impuestoFactura-'+productoImpuestosIndexes)+'**'+productoImpuestosIndexes);
 			if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
 				var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
 				taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
@@ -2661,8 +2661,8 @@ function Ready(){
 				var itemi=results.rows.item(r);
 				if($.trim(itemi.nombre.toLowerCase())=='iva')
 					$('#idiva').html(itemi.timespan);
-				
 				if($('#impuesto-'+itemi.timespan).length==0){
+				    //alert('<input id="impuesto-'+itemi.timespan+'" type="text" value="'+itemi.timespan+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100)+'">');
 					$('#taxes').append('<input id="impuesto-'+itemi.timespan+'" type="text" value="'+itemi.timespan+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100)+'">');
 				}else{
 					$("impuesto-"+itemi.timespan).val(itemi.timespan+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100))

@@ -347,8 +347,9 @@ function performPurchase(restaurant){
 				}
 			
 			});
-			
-			var clientName = $.trim($('#payClientName').html());
+
+			//var clientName = $.trim($('#payClientName').html());
+            var clientName = $.trim($('#clientefind').html());
 			var RUC = $.trim($('#cedulaP').val());
 			var address = $('#direccionP').val();
 			var tele = $('#telefonoP').val();
@@ -787,6 +788,7 @@ function BuscarCliente(e){
 					$('#nombreP').val(row.nombre);
 					$('#clientefind').html(row.nombre);
 					$('#cedulaP').val(row.cedula);
+                    $('#busquedacliente').val(row.cedula);
 					$('#telefonoP').val(row.telefono);
 					$('#direccionP').val(row.direccion);
 					$('#emailP').val(row.email);
@@ -944,6 +946,8 @@ function noCliente(){
 		$('#busquedacliente').html('9999999999999');
 		$('#cedulaP').val('9999999999999');
 		BuscarCliente(13);
+	}else{
+      $('#busquedacliente').html($('#cedulaP').val());
 	}
     if($('#idCliente').val()==''){
 		$('#busquedacliente').html('9999999999999');

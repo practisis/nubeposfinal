@@ -169,6 +169,11 @@
 						  <input type="password" name="pass" id="newConfirm"  class="form-control input-lg trans_confpass" placeholder="Confirma tu contraseña" required="" tabindex="4" autocomplete="off">
 						</div>
 
+                        <div class="form-group" style="text-align: left;font-size: 18px;">
+								<input id="terminos" name="terminos" type="checkbox" style="width: 25px;height: 25px;">
+                                <span id='trans_label_97'>Acepto los <a href="https://www.practisis.net/avapos/terminosycondiciones.php" target="_blank">términos y condiciones</a>.</span>
+						</div>
+
 						<div class="form-group">
 								<a id='trans_label_39' data-toggle="modal" data-target="#recuperarPass" onclick="mostrarSignIn();" href="">¿Ya tienes cuenta AvaPOS haz click aquí?</a><br/>
 						</div>
@@ -665,7 +670,7 @@ $(document).ready(function(){
 	if(paquete=="22"){
 		$('#linklogines,#linkloginen').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 		$('#linklogines').html('<div style="font-size:11px;">Tu plan Actual</div>Ir a la Nube');
-		$('#linkloginen').html('<div style="font-size:11px;">Your current plan</div>Go to Cloud');
+		$('#linkloginen').html('<div style="font-size:11px;">Your current plan</div>Access Cloud');
 		$('#linklogin29es').html('Activar');
 		$('#linklogin29en').html('Upgrade Now');
 		$('#linklogin69es').html('Activar');
@@ -676,7 +681,7 @@ $(document).ready(function(){
 	}else if(paquete=="36"){
 		$('#linklogin29es,#linklogin29en').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 		$('#linklogin29es').html('<div style="font-size:11px;">Tu plan Actual</div> Ir a la Nube');
-		$('#linklogin29en').html('<div style="font-size:11px;">Your current plan</div> Go to Cloud');
+		$('#linklogin29en').html('<div style="font-size:11px;">Your current plan</div> Access Cloud');
 		$('#linklogines').html('Activar');
 		$('#linkloginen').html('Active');
 		$('#linklogin69es').html('Activar');
@@ -691,7 +696,7 @@ $(document).ready(function(){
 	}else if(paquete=="37"){
 		$('#linklogin69es,#linklogin69en').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 		$('#linklogin69es').html('<div style="font-size:11px;">Tu plan Actual</div> Ir a la Nube');
-		$('#linklogin69en').html('<div style="font-size:11px;">Your current plan</div> Go to Cloud');
+		$('#linklogin69en').html('<div style="font-size:11px;">Your current plan</div> Access Cloud');
 		$('#linklogin29es').html('Activar');
 		$('#linklogin29en').html('Active');
 		$('#linklogines').html('Activar');

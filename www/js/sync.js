@@ -513,7 +513,7 @@ function registrarUser(){
               	            $('#pide_telefono').fadeIn('slow');
                             document.getElementById('main').style.display='none';
                           }
-                        }, 2500);
+                        }, 3000);
 
 						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','','',false);});

@@ -1682,6 +1682,11 @@ function VerOpcionesIngreso(){
   $('#volverplan_en').fadeOut();
 }
 
+function IrTerminos(){
+  var url="https://www.practisis.net/avapos/terminosycondiciones.php";
+  window.open(url);
+}
+
 /*function ImprimirLogo(){
 	//alert("va imprimir");
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);

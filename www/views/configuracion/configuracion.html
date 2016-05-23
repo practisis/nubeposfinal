@@ -842,7 +842,9 @@ $(document).ready(function(){
 			$('#logofull').attr('src','img/nologo.png');
 		}
 		
-		$('#cambiarlogo,#irdisenomesas').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+		$('#cambiarlogo').attr("href","https://www.practisis.net/indexredirect.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&mod=logo");
+		
+		$('#irdisenomesas').attr("href","https://www.practisis.net/indexredirect.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&mod=mesas");
 			
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -1854,5 +1856,18 @@ function actualizar(){
 
 	  $('#demoGratis').fadeIn();
 	  $('#escojeIdioma').fadeOut();
+	}
+	
+	
+	function Chequea(cual){
+		//alert(cual);
+		StarIOAdapter.check(cual,
+			function(){
+				showalertred(cual+' online.');
+			},
+			function(error){
+				showalertred(error);
+			}
+		);
 	}
 </script>

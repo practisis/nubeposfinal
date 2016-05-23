@@ -609,6 +609,8 @@ function impresionMovil(mijson){
 								showalert("Imprimiendo Factura.");
 							else if(localStorage.getItem("idioma")==2)
 								showalert("Printing Invoice.");
+							
+							ImprimeComanderas(mijson);
 						});
 					}
 				}else{
@@ -619,14 +621,24 @@ function impresionMovil(mijson){
 				}
 				
 				//comanderas
-				if(localStorage.getItem("con_comandas")=="true"&&localStorage.getItem("con_mesas")=="false"){
+				
+				//fin comanderas
+		//});
+		
+	localStorage.setItem("nameorder","");
+	$('#popupsavefactura').modal('show');
+	
+}
+
+function ImprimeComanderas(mijson){
+	if(localStorage.getItem("con_comandas")=="true"&&localStorage.getItem("con_mesas")=="false"){
 					if(localStorage.getItem("printc")!=null&&localStorage.getItem("printc")!=""){
 					//alert(miprint.printer);
 						mijson=mijson.replace("Pagar","Comandar");
 						var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
 						if ( app ) {
 							StarIOAdapter.rawprint(mijson,localStorage.getItem("printc"), function() {
-							var now=new Date().getTime();
+							//var now=new Date().getTime();
 							//tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
 							/*if(localStorage.getItem("idioma")==1)
 								showalert("Imprimiendo Comandas.");
@@ -640,13 +652,7 @@ function impresionMovil(mijson){
 							else if(localStorage.getItem("idioma")==2)
 								showalert("There is no configured a command printer.");
 					}
-				}
-				//fin comanderas
-		//});
-		
-	localStorage.setItem("nameorder","");
-	$('#popupsavefactura').modal('show');
-	
+	}
 }
 
 function cancelPayment(){

@@ -113,11 +113,30 @@ public class StarIOAdapter extends CordovaPlugin {
                     try {
 						String portSettings = "";
 						
+						if(Arguments.length() < 2) {
+                            throw new Exception("You must specify a portName search parameter");
+                        }
+
+                        if(Arguments.length() == 3) {
+                            portSettings = Arguments.getString(2);
+                        }
+						
+                        currentPluginInstance.printImage(currentCallbackContext,Arguments.getString(0),Arguments.getString(1),portSettings);
+                    } catch (Exception e) {
+                        currentCallbackContext.error(e.getMessage());
+                    }
+                }
+            });
+            return true;
+        } else if (action.equals("opendrawer")) {
+            cordova.getThreadPool().execute(new Runnable() {
+                public void run() {
+                    try {
+						String portSettings = "";
 						if(Arguments.length() < 1) {
                             throw new Exception("You must specify a portName search parameter");
                         }
-						
-                        currentPluginInstance.printImage(currentCallbackContext,Arguments.getString(0),portSettings);
+                        currentPluginInstance.openDrawer(currentCallbackContext,Arguments.getString(0),portSettings);
                     } catch (Exception e) {
                         currentCallbackContext.error(e.getMessage());
                     }
@@ -186,6 +205,7 @@ public class StarIOAdapter extends CordovaPlugin {
 		String subconiva="0.00";
 		String subsiniva="0.00";
 		String totalfact="0.00";
+		Double totalfactd=0.00;
 		String subtotal="0.00";
 		String iva="0.00";
 		String servicio="0.00";
@@ -209,6 +229,8 @@ public class StarIOAdapter extends CordovaPlugin {
 		String cadimpuestos="";
 		String propina="";
 		String pax="";
+		String logo="";
+		String mensajefinal="Generado con avapos.com";
 		Integer lang=1;
 		JSONArray cierreImpuestos= new JSONArray();
 		Integer lineastotales=30; //18cm-2lineas
@@ -220,8 +242,6 @@ public class StarIOAdapter extends CordovaPlugin {
 			message=message.replace("reimpr","");
 			textoreimpr="Reimpresion Factura "+hoy;
 		}
-		
-		
 		try{
 			JSONObject jsonobject = new JSONObject(message);
 			JSONArray nombres=jsonobject.names();
@@ -239,20 +259,32 @@ public class StarIOAdapter extends CordovaPlugin {
 			nombreCliente=objcliente.getString("nombre");
 			telefonoCliente=objcliente.getString("telefono");
 			direccionCliente=objcliente.getString("direccion");
+			if(objcliente.has("logo")){
+				if(!(objcliente.getString("logo").equals(JSONObject.NULL)))
+					logo=objcliente.getString("logo");
+			}
+			
+			if(objcliente.has("mensajefinal")){
+				if(!(objcliente.getString("mensajefinal").equals(JSONObject.NULL)||objcliente.getString("mensajefinal").equals("")))
+					mensajefinal=objcliente.getString("mensajefinal");
+			}
+			
 			subconiva=DoubleFormat(objfactura.getDouble("subtotal_iva"));
 			//iva=DoubleFormat(objfactura.getDouble("subtotal_iva")*0.12);
 			iva=DoubleFormat(objfactura.getDouble("iva"));
 			servicio=DoubleFormat(objfactura.getDouble("servicio"));
-			subsiniva=DoubleFormat(objfactura.getDouble("subtotal_sin_iva"));
-			subtotal=DoubleFormat(objfactura.getDouble("subtotal_sin_iva")+objfactura.getDouble("subtotal_iva"));
-			descuento=DoubleFormat(objfactura.getDouble("descuento"));
-			totalfact=DoubleFormat(objfactura.getDouble("total"));
+			subsiniva=DoubleFormat(Double.parseDouble(objfactura.getString("subtotal_sin_iva").replace(",",".")));
+			subtotal=DoubleFormat(Double.parseDouble(objfactura.getString("subtotal_sin_iva").replace(",","."))+Double.parseDouble(objfactura.getString("subtotal_iva").replace(",",".")));
+			descuento=DoubleFormat(Double.parseDouble(objfactura.getString("descuento").replace(",",".")));
+			totalfact=DoubleFormat(Double.parseDouble(objfactura.getString("total").replace(",",".")));
+			totalfactd=objfactura.getDouble("total");
 			nofact=objfactura.getString("numerofact");
 			nombreEmpresa=objempresa.getString("nombre");
 			direccionEmpresa=objempresa.getString("direccion");
 			fechanumber=(long)objfactura.getDouble("fecha");
 			lineastotales=(2*objfactura.getInt("largo"))-6;
 			lineasencabezado=(2*objfactura.getInt("encabezado"))-6;
+			
 			if(objfactura.has("impuestosdata")){
 				if(!(objfactura.getString("impuestosdata").equals(JSONObject.NULL)))
 					cadimpuestos=objfactura.getString("impuestosdata");
@@ -315,6 +347,11 @@ public class StarIOAdapter extends CordovaPlugin {
 					if(!(expjson.getString("propina").equals(JSONObject.NULL)))
 						propina=expjson.getString("propina");
 				}
+				
+				if(expjson.has("mensajefinal")){
+					if(!(expjson.getString("mensajefinal").equals(JSONObject.NULL)||expjson.getString("mensajefinal").equals("")))
+						mensajefinal=expjson.getString("mensajefinal");
+				}
 				//{"Cierre": [{"fecha_caja":"2015-12-17","fecha_imp":"2015-12-17","num_facts":"1","fact_anuladas":"0","subtotal":"3.13","iva":"0.38","total":"3.50","formaspago":[{"Efectivo":"3.50","Tarjetas":"0.00","Cheques":"0.00","CxC":"0.00"}]}]}
 			}else if(nombres.toString().contains("Comandar")){
 				JSONArray jsonArray = jsonobject.getJSONArray("Comandar");
@@ -341,7 +378,12 @@ public class StarIOAdapter extends CordovaPlugin {
 					if(!(objfactura.getString("lang").equals(JSONObject.NULL)))
 					lang=objfactura.getInt("lang");
 				}
-			
+				
+				if(objcliente.has("mensajefinal")){
+					if(!(objcliente.getString("mensajefinal").equals(JSONObject.NULL)))
+						mensajefinal=objcliente.getString("mensajefinal");
+				}
+				
 				tipo="comandar";
 			}else if(nombres.toString().contains("Precuenta")){
 				JSONArray jsonArray = jsonobject.getJSONArray("Precuenta");
@@ -389,6 +431,11 @@ public class StarIOAdapter extends CordovaPlugin {
 					propina=objfactura.getString("propina");
 				}
 				
+				if(objfactura.has("mensajefinal")){
+					if(!(objfactura.getString("mensajefinal").equals(JSONObject.NULL)))
+					mensajefinal=objfactura.getString("mensajefinal");
+				}
+				
 				tipo="precuenta";
 			}else if(nombres.toString().contains("ComandasMesas")){
 				JSONArray jsonArray = jsonobject.getJSONArray("ComandasMesas");
@@ -397,6 +444,12 @@ public class StarIOAdapter extends CordovaPlugin {
 				mesa=expjson.getString("mesa");
 				lang=expjson.getInt("lang");
 				tipo="comandasmesas";
+			}
+			
+			if(lang==1){
+				mensajefinal="Generado con avapos.com";
+			}else{
+				mensajefinal="Powered by avapos.com";
 			}
 			
 		}catch(JSONException ex){
@@ -427,7 +480,31 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(new byte[] { 0x06, 0x09, 0x1b, 0x69, 0x01, 0x01 });
 				
 			if(tipo.equals("pagar")){ 
+				
+				if(!logo.equals("")){
+					//printImage(callbackContext,logo,portNameSearch,portSettings);
+					int maxWidth=384;
+					boolean compressionEnable=false;
+					RasterCommand rasterType = RasterCommand.Graphics;
+					RasterDocument rasterDoc = new RasterDocument(RasSpeed.Medium,RasPageEndMode.None, RasPageEndMode.None, RasTopMargin.Standard, 0, 0, 0);
 					
+					//Bitmap bm = BitmapFactory.decodeResource(res, source);
+					
+					Bitmap bm =BitmapFactory.decodeFile("/data/data/com.practisis.practipos/files//"+logo);
+					
+					StarBitmap starbitmap = new StarBitmap(bm, false, maxWidth);
+
+					if (rasterType == RasterCommand.Standard) {
+						list.add(rasterDoc.BeginDocumentCommandData());
+						list.add(starbitmap.getImageRasterDataForPrinting_Standard(compressionEnable));
+						list.add(rasterDoc.EndDocumentCommandData());
+						
+					} else {
+						list.add(starbitmap.getImageRasterDataForPrinting_graphic(compressionEnable));
+						//list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Feed to cutter position
+					}
+				}
+				
 				list.add(createCp1252(nombreEmpresa+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(createCp1252(direccionEmpresa+"-"+telefonoEmpresa+"\r\n"));
@@ -454,7 +531,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				
 				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
 
-				list.add(new byte[] { 0x1b, 0x44, 0x02, 0x10, 0x22, 0x00 }); // Set horizontal tab
+				//list.add(new byte[] { 0x1b, 0x44, 0x02, 0x10, 0x22, 0x00 }); // Set horizontal tab
 
 				
 				
@@ -463,16 +540,12 @@ public class StarIOAdapter extends CordovaPlugin {
 				Date fechafact=new Date(fechanumber);
 				//String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
 				String fechaf=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(fechafact);
-				list.add(createCp1252("NO:"+nofact+"                   \r\n"));
+				list.add(createCp1252("NO:"+nofact+"            \r\n"));
 				if(lang.equals(1)){
-					list.add(createCp1252("FECHA:"+fechaf+"                   \r\n"));
+					list.add(createCp1252("FECHA:"+fechaf+"       \r\n"));
 				}else if(lang.equals(2)){
-					list.add(createCp1252("DATE:"+fechaf+"                    \r\n"));
+					list.add(createCp1252("DATE:"+fechaf+"         \r\n"));
 				}
-				
-				
-
-				
 				
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 }); // Alignment (center)
 				list.add(createCp1252("--------------------------------\r\n"));
@@ -521,8 +594,11 @@ public class StarIOAdapter extends CordovaPlugin {
 								String [] agregadosv=linea.getString("detalle_agregados").split("@");
 								for(int s=0;s<agregadosv.length;s++){
 									String [] detalleagr=agregadosv[s].split("\\|");
-									String valorag=DoubleFormat(Double.parseDouble(detalleagr[1]));
-									String cadena="    "+detalleagr[0]+": $"+valorag;
+									String medio="";
+									if(Double.parseDouble(detalleagr[3])<1&&detalleagr[3]!=null){
+										medio="1/2";
+									}
+									String cadena="    "+medio+detalleagr[0];
 									if(cadena.length()<32){
 										int tam=32-cadena.length();
 										for(int n=0;n<tam;n++){
@@ -684,49 +760,69 @@ public class StarIOAdapter extends CordovaPlugin {
 					}
 				}
 				
-				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
-				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x02 });
-
 				// Character expansion
 				list.add(new byte[] { 0x06, 0x09, 0x1b, 0x69, 0x01, 0x01 });
-				list.add(createCp1252("                TOTAL:"+String.valueOf(totalfact)+"\r\n"));
+				list.add(createCp1252("TOTAL:"+String.valueOf(totalfact)+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				
 				//formas de pago
 				if(expago.length()>0){
 					
-					list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
+					//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
 					if(lang.equals(1)){
-						list.add(createCp1252("Pagado:\r\n"));
+						list.add(createCp1252("Pagado:                         \r\n"));
 					}else if(lang.equals(2)){
-						list.add(createCp1252("Paid:\r\n"));
+						list.add(createCp1252("Paid:                           \r\n"));
 					}
 					
 					String forma="";
 					String elvuelto="0.00";
+					Double suma=0.00;
 					for(int i=0;i<expago.length();i++){
 						try{
 						JSONObject linea=expago.getJSONObject(i);
 						Double valor=linea.getDouble("valor");
 						Double vuelto=0.00;
+					
 						if(valor<0){
 							vuelto=-1*valor;
-						}
-						else{
+						}else{
 							if(lang.equals(2)){
 								forma=transpayment(linea.getString("forma"))+":"+DoubleFormat(valor);
 							}else{
 								forma=linea.getString("forma")+":"+DoubleFormat(valor);
 							}
-							list.add(createCp1252(forma+"\r\n"));
-						}
 							
-						elvuelto=DoubleFormat(vuelto);
+							if(forma.length()<32){
+								int tam=32-forma.length();
+								for(int n=0;n<tam;n++){
+									forma=forma+" ";
+								}
+							}
+							
+							list.add(createCp1252(forma+"\r\n"));
+							suma=suma+valor;
+						}
+						
+						//totalfact=totalfact.replace(".","");
+						Double mivuelto=suma-Double.parseDouble(totalfact.replace(",",""));
+						//Double mivuelto=suma-totalfactd;
+							
+						//elvuelto=DoubleFormat(vuelto);
+						elvuelto=DoubleFormat(mivuelto);
 						
 						}catch(JSONException ex){
 							ex.printStackTrace();
 						}
 					}
+					
+					if(elvuelto.length()<25){
+						int tam=25-elvuelto.length();
+						for(int n=0;n<tam;n++){
+							elvuelto=elvuelto+" ";
+						}
+					}
+					
 					if(lang.equals(1)){
 						list.add(createCp1252("Vuelto:"+String.valueOf(elvuelto)+"\r\n"));
 					}else{
@@ -775,7 +871,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				if(lang.equals(1))
 					list.add(createCp1252("CIERRE DE CAJA\r\n"));
 				else if(lang.equals(2))
-					list.add(createCp1252("DRAWER CLOSE\r\n"));
+					list.add(createCp1252("DAILY SALES\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
 				list.add(createCp1252("--------------------------------\r\n"));
@@ -962,15 +1058,14 @@ public class StarIOAdapter extends CordovaPlugin {
 				Date fechafact=new Date(fechanumber);
 				//String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
 				String fechaf=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(fechafact);
-				list.add(createCp1252("NO:"+nofact+"                   \r\n"));
+				list.add(createCp1252("NO:"+nofact+"            \r\n"));
 				if(lang.equals(1)){
-					list.add(createCp1252("FECHA:"+fechaf+"                   \r\n"));
+					list.add(createCp1252("FECHA:"+fechaf+"       \r\n"));
 				}else if(lang.equals(2)){
-					list.add(createCp1252("DATE:"+fechaf+"                    \r\n"));
+					list.add(createCp1252("DATE:"+fechaf+"         \r\n"));
 				}
 				
 				
-
 				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 }); // Alignment (center)
 				list.add(createCp1252("--------------------------------\r\n"));
 				
@@ -1012,7 +1107,11 @@ public class StarIOAdapter extends CordovaPlugin {
 								String [] agregadosv=linea.getString("detalle_agregados").split("@");
 								for(int s=0;s<agregadosv.length;s++){
 									String [] detalleagr=agregadosv[s].split("\\|");
-									String cadena=" "+detalleagr[0];
+									String medio="";
+									if(Double.parseDouble(detalleagr[3])<1&&detalleagr[3]!=null){
+										medio="1/2";
+									}
+									String cadena=" "+medio+detalleagr[0];
 									/*if(cadena.length()<32){
 										int tam=32-cadena.length();
 										for(int n=0;n<tam;n++){
@@ -1075,14 +1174,10 @@ public class StarIOAdapter extends CordovaPlugin {
 				//String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
 				String fechaf=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(fechafact);
 				if(lang.equals(1)){
-					list.add(createCp1252("FECHA:"+fechaf+"                   \r\n"));
+					list.add(createCp1252("FECHA:"+fechaf+"       \r\n"));
 				}else if(lang.equals(2)){
-					list.add(createCp1252("DATE:"+fechaf+"                    \r\n"));
+					list.add(createCp1252("DATE:"+fechaf+"         \r\n"));
 				}
-				
-				
-
-				
 				
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 }); // Alignment (center)
 				list.add(createCp1252("--------------------------------\r\n"));
@@ -1131,8 +1226,11 @@ public class StarIOAdapter extends CordovaPlugin {
 								String [] agregadosv=linea.getString("detalle_agregados").split("@");
 								for(int s=0;s<agregadosv.length;s++){
 									String [] detalleagr=agregadosv[s].split("\\|");
-									String valorag=DoubleFormat(Double.parseDouble(detalleagr[1]));
-									String cadena="    "+detalleagr[0]+": $"+valorag;
+									String medio="";
+									if(Double.parseDouble(detalleagr[3].replace(",","."))<1&&detalleagr[3]!=null){
+										medio="1/2";
+									}
+									String cadena="    "+medio+detalleagr[0];
 									if(cadena.length()<32){
 										int tam=32-cadena.length();
 										for(int n=0;n<tam;n++){
@@ -1292,9 +1390,8 @@ public class StarIOAdapter extends CordovaPlugin {
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x01, 0x00 });
 				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x02 });
 
-				// Character expansion
 				list.add(new byte[] { 0x06, 0x09, 0x1b, 0x69, 0x01, 0x01 });
-				list.add(createCp1252("                TOTAL:"+String.valueOf(totalfact)+"\r\n"));
+				list.add(createCp1252("TOTAL:"+String.valueOf(totalfact)+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				
 			}else if(tipo.equals("comandasmesas")){ 
@@ -1324,9 +1421,9 @@ public class StarIOAdapter extends CordovaPlugin {
 				//String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
 				//String fechaf=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(fechafact);
 				if(lang.equals(1)){
-					list.add(createCp1252("FECHA:"+hoy+"                   \r\n"));
+					list.add(createCp1252("FECHA:"+hoy+"       \r\n"));
 				}else if(lang.equals(2)){
-					list.add(createCp1252("DATE:"+hoy+"                    \r\n"));
+					list.add(createCp1252("DATE:"+hoy+"         \r\n"));
 				}
 				
 				
@@ -1372,7 +1469,11 @@ public class StarIOAdapter extends CordovaPlugin {
 								String [] agregadosv=linea.getString("detalle_agregados").split("@");
 								for(int s=0;s<agregadosv.length;s++){
 									String [] detalleagr=agregadosv[s].split("\\|");
-									String cadena=" "+detalleagr[0];
+									String medio="";
+									if(Double.parseDouble(detalleagr[3].replace(",","."))<1&&detalleagr[3]!=null){
+										medio="1/2";
+									}
+									String cadena=" "+medio+detalleagr[0];
 									/*if(cadena.length()<32){
 										int tam=32-cadena.length();
 										for(int n=0;n<tam;n++){
@@ -1428,6 +1529,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				if(tipo.equals("precuenta")){
 					if(lang.equals(1)){
 						list.add(createCp1252("Datos de la Factura:\r\n"));
+						list.add(createCp1252("                                \r\n"));
 						list.add(createCp1252("Propina:________________________\r\n"));
 						list.add(createCp1252("                                \r\n"));
 						list.add(createCp1252("Nombre:_________________________\r\n"));
@@ -1469,10 +1571,10 @@ public class StarIOAdapter extends CordovaPlugin {
 						}
 						String conmesas="";
 						if(!mesa.equals("")){
-							conmesas="*Mesa: "+mesa;
+							conmesas="Mesa: "+mesa;
 						}
-						String conpax="*";
-						if(!pax.equals(""))
+						String conpax="";
+						if(!pax.equals("")&&Double.parseDouble(pax)>0)
 							conpax="- Pax: "+pax+conpax;
 						
 						list.add(createCp1252(conmesas+conpax+"\r\n"));
@@ -1483,25 +1585,25 @@ public class StarIOAdapter extends CordovaPlugin {
 						}
 						String conmesas="";
 						if(!mesa.equals("")){
-							conmesas="*Table: "+mesa;
+							conmesas="Table: "+mesa;
 							
 						}
-						String conpax="*";
-						if(!pax.equals(""))
+						String conpax="";
+						if(!pax.equals("")&&Double.parseDouble(pax)>0)
 							conpax="- Pax: "+pax+conpax;
 						
 						list.add(createCp1252(conmesas+conpax+"\r\n"));
 					}
 				}
 				
-				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
+				//list.add(createCp1252(mensajefinal+"\r\n"));
+				list.add(createCp1252(mensajefinal+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
 
 				// 1D barcode example
-				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });
-				list.add(new byte[] { 0x1b, 0x62, 0x06, 0x02, 0x02 });
-
-				list.add(createCp1252(" 12ab34cd56\u001e\r\n"));
+				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });
+				//list.add(new byte[] { 0x1b, 0x62, 0x06, 0x02, 0x02 });
+				//list.add(createCp1252(" 12ab34cd56\u001e\r\n"));
 
 				list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Cut
 				list.add(new byte[] { 0x07 }); // Kick cash drawer
@@ -1538,6 +1640,29 @@ public class StarIOAdapter extends CordovaPlugin {
 				//list.add(new byte[] { 0x1b, 0x68, 0x00 }); // Cancel Character Expansion
 				//list.add(createCp1252(direccionEmpresa+"\r\n")); lineasescritas=lineasescritas+1;
 				//list.add(createCp1252("08029 BARCELONA\r\n\r\n"));
+				if(!logo.equals("")){
+					//printImage(callbackContext,logo,portNameSearch,portSettings);
+					int maxWidth=384;
+					boolean compressionEnable=false;
+					RasterCommand rasterType = RasterCommand.Standard;
+					RasterDocument rasterDoc = new RasterDocument(RasSpeed.Medium,RasPageEndMode.None, RasPageEndMode.None, RasTopMargin.Standard, 0, 0, 0);
+					
+					//Bitmap bm = BitmapFactory.decodeResource(res, source);
+					
+					Bitmap bm =BitmapFactory.decodeFile("/data/data/com.practisis.practipos/files//"+logo);
+					
+					StarBitmap starbitmap = new StarBitmap(bm, false, maxWidth);
+
+					if (rasterType == RasterCommand.Standard) {
+						list.add(rasterDoc.BeginDocumentCommandData());
+						list.add(starbitmap.getImageRasterDataForPrinting_Standard(compressionEnable));
+						list.add(rasterDoc.EndDocumentCommandData());
+						
+					} else {
+						list.add(starbitmap.getImageRasterDataForPrinting_graphic(compressionEnable));
+						//list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Feed to cutter position
+					}
+				}
 				
 				while(lineasescritas<lineasencabezado){
 					list.add(createCp1252("\r\n"));
@@ -1624,7 +1749,11 @@ public class StarIOAdapter extends CordovaPlugin {
 								String [] agregadosv=linea.getString("detalle_agregados").split("@");
 								for(int s=0;s<agregadosv.length;s++){
 									String [] detalleagr=agregadosv[s].split("\\|");
-									list.add(createCp1252("    "+detalleagr[0]+"\r\n"));
+									String medio="";
+									if(Double.parseDouble(detalleagr[3])<1&&detalleagr[3]!=null){
+										medio="1/2";
+									}
+									list.add(createCp1252("    "+medio+detalleagr[0]+"\r\n"));
 									lineasescritas=lineasescritas+1;
 								}
 							}
@@ -1820,7 +1949,7 @@ public class StarIOAdapter extends CordovaPlugin {
 					lineasescritas=lineasescritas+1;
 				}
 				
-				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
+				list.add(createCp1252(mensajefinal+"\r\n"));
 				lineasescritas=lineasescritas+1;
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });	
 				list.add(new byte[] { 0x1b, 0x68, 0x00 });
@@ -1869,7 +1998,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				if(lang.equals(1))
 					list.add(createCp1252("CIERRE DE CAJA\r\n"));
 				else if(lang.equals(2))
-					list.add(createCp1252("DRAWER CLOSE\r\n"));
+					list.add(createCp1252("DAILY SALES\r\n"));
 				
 				list.add(new byte[] { 0x1b, 0x68, 0x00 }); // Cancel Character Expansion
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
@@ -2064,7 +2193,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(createCp1252("------------------------------------------\r\n"));
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });				
 				list.add(new byte[] { 0x1b, 0x68, 0x01 });				
-				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
+				list.add(createCp1252(mensajefinal+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });	
 				list.add(new byte[] { 0x1b, 0x68, 0x00 });
 				list.add(new byte[] { 0x1b, 0x68, 0x00 });
@@ -2144,7 +2273,11 @@ public class StarIOAdapter extends CordovaPlugin {
 								String [] agregadosv=linea.getString("detalle_agregados").split("@");
 								for(int s=0;s<agregadosv.length;s++){
 									String [] detalleagr=agregadosv[s].split("\\|");
-									list.add(createCp1252("    "+detalleagr[0]+"\r\n"));
+									String medio="";
+									if(Double.parseDouble(detalleagr[3])<1&&detalleagr[3]!=null){
+										medio="1/2";
+									}
+									list.add(createCp1252("    "+medio+detalleagr[0]+"\r\n"));
 								}
 							}
 						}
@@ -2200,7 +2333,7 @@ public class StarIOAdapter extends CordovaPlugin {
 					list.add(createCp1252(conmesas+conpax+"\r\n"));
 				}
 				
-				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
+				list.add(createCp1252(mensajefinal+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });	
 				list.add(new byte[] { 0x1b, 0x68, 0x00 });
 				list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Cut
@@ -2289,7 +2422,11 @@ public class StarIOAdapter extends CordovaPlugin {
 								String [] agregadosv=linea.getString("detalle_agregados").split("@");
 								for(int s=0;s<agregadosv.length;s++){
 									String [] detalleagr=agregadosv[s].split("\\|");
-									list.add(createCp1252("    "+detalleagr[0]+"\r\n"));
+									String medio="";
+									if(Double.parseDouble(detalleagr[3])<1&&detalleagr[3]!=null){
+										medio="1/2";
+									}
+									list.add(createCp1252("    "+medio+detalleagr[0]+"\r\n"));
 									lineasescritas=lineasescritas+1;
 								}
 							}
@@ -2478,24 +2615,154 @@ public class StarIOAdapter extends CordovaPlugin {
 					lineasescritas=lineasescritas+1;
 				}
 				
-				list.add(createCp1252("**** PRACTIPOS ****\r\n"));
+				list.add(createCp1252(mensajefinal+"\r\n"));
 				lineasescritas=lineasescritas+1;
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });	
 				list.add(new byte[] { 0x1b, 0x68, 0x00 });
 				//list.add(new byte[] { 0x1b, 0x68, 0x00 });
 				//aumentar filas si faltan
-				if(lineasescritas<lineastotales){
+				/*if(lineasescritas<lineastotales){
 					while(lineasescritas<lineastotales){
 						list.add(createCp1252("\r\n"));
 						lineasescritas=lineasescritas+1;
 					}
-				}
+				}*/
+				
+					if(lang.equals(1)){
+						list.add(createCp1252("Datos de la Factura:\r\n"));
+						list.add(createCp1252("Propina:________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Nombre:_________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("CI:_____________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Dirección:______________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Teléfono:_______________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Email:__________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Fecha Cumpleaños:_______________\r\n"));	
+						list.add(createCp1252("                                \r\n"));
+					}else if(lang.equals(2)){
+						list.add(createCp1252("Invoice Data:\r\n"));
+						list.add(createCp1252("Tip:____________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Name:___________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("ID No.:_________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Address:________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Phone:__________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Email:__________________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+						list.add(createCp1252("Birthday:_______________________\r\n"));
+						list.add(createCp1252("                                \r\n"));
+					}
 				list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Cut
 				list.add(new byte[] { 0x07 }); // Kick cash draweR
 				
+			}else if(tipo.equals("comandasmesas")){
+				
+				 // Character expansion
+				list.add(new byte[] { 0x1b, 0x68, 0x01 });
+				
+				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 }); // Alignment
+				
+				list.add(createCp1252("------------------------------------------\r\n"));
+				if(lang.equals(1)){
+					list.add(createCp1252("FECHA:"+hoy+"                         \r\n"));
+				}else if(lang.equals(2)){
+					list.add(createCp1252("DATE:"+hoy+"                          \r\n"));
+				}
+				
+				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 }); // Alignment (center)
+				list.add(createCp1252("------------------------------------------\r\n"));
+				
+			   
+
+				
+				if(expprod.length()>0){
+					for(int i=0;i<expprod.length();i++){
+						try{
+						JSONObject linea=expprod.getJSONObject(i);
+						String cantidad=linea.getString("cant_prod").replace(",",".");
+						String desc=linea.getString("nombre_producto");
+						list.add(createCp1252(String.valueOf(cantidad)+" "+String.valueOf(desc)+"\r\n"));
+						
+						/**/
+						if(!(linea.getString("detalle_agregados").equals(JSONObject.NULL))){
+							if(!(linea.getString("detalle_agregados").equals(""))){
+								String [] agregadosv=linea.getString("detalle_agregados").split("@");
+								for(int s=0;s<agregadosv.length;s++){
+									String [] detalleagr=agregadosv[s].split("\\|");
+									String medio="";
+									if(Double.parseDouble(detalleagr[3].replace(",","."))<1&&detalleagr[3]!=null){
+										medio="1/2";
+									}
+									String cadena="  "+medio+detalleagr[0];
+									list.add(createCp1252(cadena+"\r\n"));
+								}
+							}
+						}
+						/**/
+						
+						
+						/*notas*/
+						if(!(linea.getString("detalle_notas").equals(JSONObject.NULL))){
+							if(!(linea.getString("detalle_notas").equals(""))){
+								String notasv=linea.getString("detalle_notas");
+								String cadena=" "+notasv+"*";
+									list.add(createCp1252(cadena+"\r\n"));
+								}
+						}
+						}catch(JSONException ex){
+							ex.printStackTrace();
+						}
+					}
+					
+				}
+				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
+				list.add(createCp1252("------------------------------------------\r\n"));
+				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });				
+				list.add(new byte[] { 0x1b, 0x68, 0x01 });	
+				if(lang.equals(1)){
+					String conmesas="";
+					if(!mesa.equals("")){
+						conmesas="*Mesa: "+mesa;
+						
+					}
+					String conpax="*";
+					if(!pax.equals(""))
+						conpax="- Pax: "+pax+conpax;
+					
+					list.add(createCp1252(conmesas+conpax+"\r\n"));
+				}
+				else if(lang.equals(2)){
+					String conmesas="";
+					if(!mesa.equals("")){
+						conmesas="*Table: "+mesa;
+						
+					}
+					String conpax="";
+					if(!pax.equals("")&&Double.parseDouble(pax)>0)
+						conpax="- Pax: "+pax+conpax;
+					
+					list.add(createCp1252(conmesas+conpax+"\r\n"));
+				}
+				
+				list.add(createCp1252(mensajefinal+"\r\n"));
+				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });	
+				list.add(new byte[] { 0x1b, 0x68, 0x00 });
+				list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Cut
+				list.add(new byte[] { 0x07 }); // Kick cash draweR
+				
+				//list.add(createCp1252("--------------------------------\r\n"));
 			}
 			
-				PrinterFunctions.SendCommand(context, portName, portSettings, list);
+			PrinterFunctions.SendCommand(context, portName, portSettings, list);
 				/*try {
 					PrinterFunctions.SendCommand(context, portName, portSettings, list);
 					callbackContext.success();
@@ -2537,11 +2804,20 @@ public class StarIOAdapter extends CordovaPlugin {
 				for(int x=0;x<portNames.size();x++) {
 					String needle="BT:";
 					if(portNames.get(x).toLowerCase().contains(needle.toLowerCase())){
-						if(cont>0){
-							portarray=portarray+"||";
+						String[] parts = portNames.get(x).split("@");
+						StarPrinterStatus status = PrinterFunctions.GetStatus(context,parts[0], portSettings, true);
+					   //StarPrinterStatus status = PrinterFunctions.GetStatus(context, portNames, portSettings, true);
+						if (status == null) {
+							callbackContext.error("Cannot get the printer status.");
+						} else if (status.offline) {
+							callbackContext.error("The printer is offline.");
+						} else {
+							if(cont>0){
+								portarray=portarray+"||";
+							}
+							portarray=portarray+portNames.get(x);
+							cont++;
 						}
-						portarray=portarray+portNames.get(x);
-						cont++;
 					}else{
 						StarPrinterStatus status = PrinterFunctions.GetStatus(context,portNames.get(x), portSettings, true);
 					   //StarPrinterStatus status = PrinterFunctions.GetStatus(context, portNames, portSettings, true);
@@ -2573,18 +2849,23 @@ public class StarIOAdapter extends CordovaPlugin {
      * @param portName the string containing the printer name
      * @param portSettings the port settings for the connection to the printer ("mini" if you are printing on star portable printers)
      */
-	private void printImage(CallbackContext callbackContext, String portName, String portSettings)throws StarIOPortException {
+	private void printImage(CallbackContext callbackContext,String imagename,String portName, String portSettings)throws StarIOPortException {
 		try{
 			int maxWidth=384;
 			Context context = this.cordova.getActivity().getApplicationContext();
 			boolean compressionEnable=false;
-			RasterCommand rasterType = RasterCommand.Graphics;
+			RasterCommand rasterType = RasterCommand.Standard;
+			String needle="BT:";
+			if(portName.toLowerCase().contains(needle.toLowerCase())){
+					rasterType=RasterCommand.Graphics;
+			}
+			
 			ArrayList<byte[]> commands = new ArrayList<byte[]>();
-			RasterDocument rasterDoc = new RasterDocument(RasSpeed.Medium,RasPageEndMode.FeedAndFullCut, RasPageEndMode.FeedAndFullCut, RasTopMargin.Standard, 0, 0, 0);
+			RasterDocument rasterDoc = new RasterDocument(RasSpeed.Medium,RasPageEndMode.None, RasPageEndMode.None, RasTopMargin.Standard, 0, 0, 0);
 			
 			//Bitmap bm = BitmapFactory.decodeResource(res, source);
 			
-			Bitmap bm =BitmapFactory.decodeFile("/data/data/com.practisis.practipos/files//logo.png");
+			Bitmap bm =BitmapFactory.decodeFile("/data/data/com.practisis.practipos/files//"+imagename);
 			
 			StarBitmap starbitmap = new StarBitmap(bm, false, maxWidth);
 
@@ -2595,13 +2876,31 @@ public class StarIOAdapter extends CordovaPlugin {
 				
 			} else {
 				commands.add(starbitmap.getImageRasterDataForPrinting_graphic(compressionEnable));
-				commands.add(new byte[] { 0x1b, 0x64, 0x02 }); // Feed to cutter position
+				//commands.add(new byte[] { 0x1b, 0x64, 0x02 }); // Feed to cutter position
 			}
 			PrinterFunctions.SendCommand(context, portName, portSettings, commands);
 		}catch (StarIOPortException e) {
             callbackContext.error(e.getMessage());
         }
 	}
+	
+	/**
+     * This method open the cash drawer
+     * @param callbackContext the callback context of the action
+     * @param portName the string containing the printer name
+     * @param portSettings the port settings for the connection to the printer ("mini" if you are printing on star portable printers)
+     */
+	private void openDrawer(CallbackContext callbackContext,String portName, String portSettings)throws StarIOPortException {
+		try{
+			Context context = this.cordova.getActivity().getApplicationContext();
+			ArrayList<byte[]> commands = new ArrayList<byte[]>();
+			commands.add(new byte[] { 0x07 }); // Kick cash draweR
+			PrinterFunctions.SendCommand(context, portName, portSettings, commands);
+		}catch (StarIOPortException e) {
+            callbackContext.error(e.getMessage());
+        }
+	}
+	
 	
 	private static byte[] createCp1252(String inputText) {
 		byte[] byteBuffer = null;
@@ -2629,7 +2928,7 @@ public class StarIOAdapter extends CordovaPlugin {
 	
 	public static String DoubleFormat(double parDouble)
 	{
-		DecimalFormat formatter = new DecimalFormat("###,##0.00"); 
+		DecimalFormat formatter = new DecimalFormat("##,###0.00"); 
 		String myNumero = formatter.format(parDouble);
 		return myNumero;
 	}
@@ -2672,7 +2971,6 @@ public class StarIOAdapter extends CordovaPlugin {
 		} else {
 			command = starbitmap.getImageRasterDataForPrinting_graphic(true);
 		}
-
 		return command;
 	}
 	

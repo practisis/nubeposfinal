@@ -662,13 +662,13 @@ $(document).ready(function(){
 	$('#fadeRow').css('height',parseInt($(window).height())*110/100);
 	
 	/*planes*/
-	$('#linklogin29es,#linklogin29en').attr("link","https://www.practisis.net/indexupgrade.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&plan=avapo29.00");
-	$('#linklogin69es,#linklogin69en').attr("link","https://www.practisis.net/indexupgrade.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&plan=avapo69.00");
-	$('#linklogines,#linloginen').attr("link","https://www.practisis.net/indexupgrade.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&plan=avapo00.00");
+	$('#linklogin29es,#linklogin29en').attr("link","https://www.practisis.net/indexupgrade.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister"))+"&plan=avapo29.00");
+	$('#linklogin69es,#linklogin69en').attr("link","https://www.practisis.net/indexupgrade.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister"))+"&plan=avapo69.00");
+	$('#linklogines,#linloginen').attr("link","https://www.practisis.net/indexupgrade.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister"))+"&plan=avapo00.00");
 	
 	var paquete=localStorage.getItem("paquete");
 	if(paquete=="22"){
-		$('#linklogines,#linkloginen').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+		$('#linklogines,#linkloginen').attr("link","https://www.practisis.net/index33.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister")));
 		$('#linklogines').html('<div style="font-size:11px;">Tu plan Actual</div>Ir a la Nube');
 		$('#linkloginen').html('<div style="font-size:11px;">Your current plan</div>Access Cloud');
 		$('#linklogin29es').html('Activar');
@@ -679,7 +679,7 @@ $(document).ready(function(){
 		$('#jumbo29es,#jumbo29en').attr('class','jumbotron jumbo-red');
 		$("#activaprintlogo,#cambiamensaje").fadeIn();
 	}else if(paquete=="36"){
-		$('#linklogin29es,#linklogin29en').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+		$('#linklogin29es,#linklogin29en').attr("link","https://www.practisis.net/index33.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister")));
 		$('#linklogin29es').html('<div style="font-size:11px;">Tu plan Actual</div> Ir a la Nube');
 		$('#linklogin29en').html('<div style="font-size:11px;">Your current plan</div> Access Cloud');
 		$('#linklogines').html('Activar');
@@ -694,7 +694,7 @@ $(document).ready(function(){
 		$("#activaprintlogo,#cambiamensaje").css("display","none");
 		
 	}else if(paquete=="37"){
-		$('#linklogin69es,#linklogin69en').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+		$('#linklogin69es,#linklogin69en').attr("link","https://www.practisis.net/index33.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister")));
 		$('#linklogin69es').html('<div style="font-size:11px;">Tu plan Actual</div> Ir a la Nube');
 		$('#linklogin69en').html('<div style="font-size:11px;">Your current plan</div> Access Cloud');
 		$('#linklogin29es').html('Activar');
@@ -712,7 +712,7 @@ $(document).ready(function(){
 	/*fin planes*/
 	
 	
-	$('#linklogin,#linkloginb').attr("link","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+	$('#linklogin,#linkloginb').attr("link","https://www.practisis.net/index33.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister")));
 	
 	
 	
@@ -842,9 +842,9 @@ $(document).ready(function(){
 			$('#logofull').attr('src','img/nologo.png');
 		}
 		
-		$('#cambiarlogo').attr("href","https://www.practisis.net/indexredirect.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&mod=logo");
+		$('#cambiarlogo').attr("href","https://www.practisis.net/indexredirect.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister"))+"&mod=logo");
 		
-		$('#irdisenomesas').attr("href","https://www.practisis.net/indexredirect.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister")+"&mod=mesas");
+		$('#irdisenomesas').attr("href","https://www.practisis.net/indexredirect.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister"))+"&mod=mesas");
 			
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -1785,8 +1785,29 @@ function actualizar(){
 	
 	function IraNube(elem){
 	  //alert(elem);
-		var url=$(elem).attr('link');
-		window.open(url);
+		//var url=$(elem).attr('link');
+		//window.open(url);
+			if(localStorage.getItem("idbarra") == '0'){
+			$('#noplan').fadeOut();
+			$('#cuentaactiva').fadeOut();
+			$('#pestanasconfig').fadeOut();
+			$('#planes_en').fadeOut();
+			$('#planes_es').fadeOut();
+			$('#volverplan_es').fadeOut();
+			$('#volverplan_en').fadeOut();
+			$('#fadeRow').fadeIn();
+			var urlaux = $(elem).attr('link');
+			var planaux = urlaux.split('&plan=');
+			var plan = planaux[1];
+			var us = localStorage.getItem("userRegister");
+			var pa = localStorage.getItem("userPasswod");
+			localStorage.removeItem("idbarra");
+			var url = 'https://www.practisis.net/indexupgrade.php?rvpas='+btoa(pa)+'&rvus='+btoa(us)+'&plan='+plan;
+			window.open(url);
+			}else{
+				var url=$(elem).attr('link');
+				window.open(url);
+			}
 	}
 	
 	function activaidioma(cual){

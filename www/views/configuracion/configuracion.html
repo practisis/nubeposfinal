@@ -15,7 +15,7 @@
 	</div>
 </div>
 
-<div class="row" style="display:none; padding:20px;" id="fadeRow" >
+<div class="row" style="display:none; padding:20px;" id="fadeRow">
 					<div class='col-md-2'></div>
 					<div class="col-md-8">
 					<div class="text-center" id="contentLogin" style="min-height: 263px;">
@@ -1111,9 +1111,11 @@ $(document).ready(function(){
 			$('#listaimpresorascomandas tbody').append(lineac);
 			
 			if(localStorage.getItem("idioma")==1)
-				showalert("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
+				//showalert("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
+				console.log("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
 			else if(localStorage.getItem("idioma")==2)
-				showalert("There is a problem with the printer, go to configuration: " + error);
+				//showalert("There is a problem with the printer, go to configuration: " + error);
+				console.log("There is a problem with the printer, go to configuration: " + error);
 			
 		});
 		}

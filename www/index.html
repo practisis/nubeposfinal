@@ -69,6 +69,23 @@
                     height: 100%;
                     font-size:14px;
 				}
+                #pide_local {
+					bottom: 0;
+					display: none;
+					left: 0;
+					outline: 0 none;
+					overflow-y: auto;
+					overflow-x: hidden;
+					position: absolute;
+					right: 0;
+					top: 0px;
+					z-index:4;
+					background-color: rgba(255, 255, 255, 1);
+                    padding: 0px;
+                    width: 100%;
+                    height: 100%;
+                    font-size:14px;
+				}
                 #terminos_condiciones {
 					bottom: 0;
 					display: none;
@@ -304,6 +321,31 @@
               }
 
             }
+            function guardalocal(){
+              var newLocal = document.getElementById('idlocales').value;
+
+              if (newLocal == '0'){
+                if(localStorage.getItem("idioma")==2){
+                 alert("You must select the local to continue.");
+                }else{
+                 alert("Debes seleccionar el local para continuar.");
+                }
+              }else{
+                  var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+    			    db.transaction(function(tx1){
+    			      tx1.executeSql("UPDATE CONFIG SET id_locales=?,sincronizar='true' where id=1",[newLocal],
+        			  function(tx1,results1){
+        			    $("#cargandoTabs").fadeOut();
+                       $('#pide_local').fadeOut('slow');
+                       document.getElementById('main').style.display='block';
+                       localStorage.setItem("id_locales",newLocal);
+                       //$('.navbar').fadeIn();
+                       envia('puntodeventa');
+        			  });
+    			    },errorCB,successCB);
+              }
+
+            }
             </script>
 		</head>
 		<body>
@@ -378,7 +420,7 @@
 			</div>
 		
 		<div id="status" style='display:none;'>
-			<p id="state"/>
+			<p id="state"></p>
 			<div id='log'><input type='hidden' id='conexion' value=''/></div>
 		</div>
 		<div style='display:none;' id='jsonprint'>{"Pagar": [{ "cliente": {"id_cliente": "1","cedula": "9999999999999","nombre": "Consumidor Final","telefono": "2222222","email": "","direccion": "Av. Test 101","listaDePrecio": ""},"producto": [{"id_producto" : "708331454520391276","timespanproducto" : "708331454520391276","timespanconsumo" : "14593432603987829","nombre_producto" : "PIZZA","cant_prod" : "2","precio_orig" : "8","precio_prod" : "8","impuesto_prod" : "","precio_total" : "16.00","precio_descuento_justificacion" : "","agregados" : "0","detalle_agregados" : ""}],"factura" : {"subtotal_sin_iva" : "16","timespanfactura" : "14593432603962978","idbarrascajas" : "a383bc4552bfb701f96a17a4541b5565","fecha" : "1459343260398","anulada" : "false","subtotal_iva" : "0","impuestos" : "","iva" : "0","servicio" : "0","descuento" : "0","total" : "16","numerofact" : "001-001-000000170","encabezado" : "3","largo" : "18","impuestosdata" : "","ordername" : "null","lang" : "1","propina" : "0"},"empresa":{"nombre":"Test","direccion":"Av. Test"},"pagos":[{"forma":"efectivo","valor":"16.00","tipotarjeta":"","lote":"","numerocheque":"","banco":""}]}]}</div>
@@ -401,6 +443,7 @@
 		<div id="JSONImpuestosNube" style="color:red;display:none;"></div>
 		<div id="JSONModifNube" style="color:red;display:none;"></div>
 		<div id="JSONPropinasNube" style="color:red;display:none;"></div>
+        <div id="JSONLocales" style="color:red;display:none;"></div>
 		<div id="impuestosactivos" style="color:red;display:none;"></div>
 		<div id="impuestosactivosid" style="color:red;display:none;"></div>
 		<div id="taxes" style="display: none;"></div>
@@ -807,6 +850,54 @@
   </div>
 </div>
 
+<div  id="pide_local" class='panel-default' style='z-index:1051;'>
+    <div class="popover-content">
+        <div class='row' style="padding-top: 25px;">
+          <div class="col-sm-12" style="text-align: center;">
+            <img src="img/logoava.png" width="150" alt="">
+          </div>
+        </div>
+        <div class='row' style="padding-top: 15px;">
+          <div class="col-lg-12" id="trans_label_100" style="text-align: center;font-weight: bold;font-size: 40px;">
+            Escoje tu Local
+          </div>
+        </div>
+        <div class='row'>
+          <div class="col-xs-2">
+          </div>
+          <div class="col-xs-8" id='trans_label_101' style="text-align: center;">
+            Aquí podras escoger a que local pertenece este dispositivo.
+          </div>
+          <div class="col-xs-2">
+          </div>
+        </div>
+        <div class='row'>
+          <div class="col-xs-2">
+          </div>
+	      <div class="col-xs-8" id='trans_label_102' style="text-align: center;font-weight: bold;font-size: 16px;">
+	        Para ingresar un nuevo local lo puedes hacer dando click aquí.
+          </div>
+          <div class="col-xs-2">
+          </div>
+  		</div>
+        <br><br>
+        <div class='row'>
+          <div class="col-xs-3">
+          </div>
+          <div class="col-xs-6">
+            <select class="form-control input-md" id="idlocales" name="idlocales" size="1" required="">
+            </select>
+          </div>
+          <div class="col-xs-3">
+          </div>
+        </div>
+    </div>
+    <br/>
+    <div>
+    <center><button type="button" class="btn btn-lg btn-success trans_continue" onclick='guardalocal()' style="font-size: 20px;">Continuar</button></center>
+    </div>
+</div>
+
 </body>
 <link href="slide/bootstrap-switch.css" rel="stylesheet"/>
 <script src="slide/bootstrap-switch.js"></script>
@@ -850,6 +941,13 @@
                 document.getElementById('main').style.display='none';
 
             }
+
+            if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
+	          $('#pide_local').fadeIn('slow');
+              document.getElementById('main').style.display='none';
+            }
+
+            ListarLocales();
 
             if(localStorage.getItem("terminos") == 'false'){
 			    $('#terminos_condiciones').fadeIn('slow');
@@ -1017,6 +1115,35 @@
     function activaradio(cual){
       $('input[value="'+cual+'"]').prop("checked", true);
     }
-	
+
+function ListarLocales(){
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function(tx){
+	tx.executeSql('SELECT * FROM LOCALES where timespan != "0" and activo = "true" ORDER BY local asc;',[],function(tx,results){
+		//console.log(results.rows.length);
+		var inhtml='';
+        if(localStorage.getItem("idioma")==2){
+         inhtml += '<option value="0">Select Local</option>';
+        }else{
+         inhtml += '<option value="0">Seleccionar Local</option>';
+        }
+
+		for (var i=0; i < results.rows.length; i++){
+			var row=results.rows.item(i);
+			inhtml+='<option value="'+row.timespan+'">'+row.local+'</option>';
+		}
+		 //LlenarComboCat(inhtml);
+         $('#idlocales').html(inhtml);
+
+	});
+	});
+}
+function IrLocales(){
+  var us = btoa(localStorage.getItem("userRegister"));
+  var pa = btoa(localStorage.getItem("userPasswod"));
+  var url = 'https://www.practisis.net/indexredirect.php?rvpas='+pa+'&rvus='+us+'&mod=locales';
+    window.open(url);
+}
+
 	</script>
 </html>

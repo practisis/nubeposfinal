@@ -1,10 +1,7 @@
 package com.uforge.plugins;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.Context;
-
 import com.starmicronics.stario.PortInfo;
 import com.starmicronics.stario.StarIOPort;
 import com.starmicronics.stario.StarIOPortException;
@@ -26,8 +23,9 @@ public class PrinterFunctions
         try {
 			
 			String needle="BT:";
-			if(portName.toLowerCase().contains( needle.toLowerCase()))
-			   portSettings  = "portable";
+			if(portName.toLowerCase().contains(needle.toLowerCase()))
+			   //portSettings  = "portable;escpos;l";
+			    portSettings  = "portable;l";
 				 //port = StarIOPort.getPort(portName, portSettings, 10000);
 				
 			port = StarIOPort.getPort(portName, portSettings, 10000, context);
@@ -211,7 +209,7 @@ public class PrinterFunctions
                 using StarIOPort3.1.jar (support USB Port)
                 Android OS Version: upper 2.2
             */
-            port = StarIOPort.getPort(portName, portSettings, 10000, context);
+            port = StarIOPort.getPort(portName,portSettings,30000, context);
             /*
                 using StarIOPort.jar
                 Android OS Version: under 2.1
@@ -241,7 +239,7 @@ public class PrinterFunctions
             byte[] commandToSendToPrinter = convertFromListByteArrayTobyteArray(byteList);
             port.writePort(commandToSendToPrinter, 0, commandToSendToPrinter.length);
 
-			port.setEndCheckedBlockTimeoutMillis(30000);
+			//port.setEndCheckedBlockTimeoutMillis(30000);
 			status = port.endCheckedBlock();
 
             if (status.coverOpen) {

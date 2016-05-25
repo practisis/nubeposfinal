@@ -86,14 +86,14 @@
                 },errorCB,successCB);
 
   			}else if(response=='Desactivado'){
-  			    envia('cloud');
+  			    envia('config');
   				setTimeout(function(){
   					$('.navbar').slideUp();
   					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
   					$('#desactivo').fadeIn();
   				},100);
   			}else{
-  				envia('cloud');
+  				envia('config');
   				setTimeout(function(){
   					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
   					$('.navbar').slideUp();
@@ -406,6 +406,9 @@ valor="0 @0 ";
 }
 </style>
 <div id="mainDiv" class='row'>
+		<input id="respuestatarjeta" name="respuestatarjeta" type="hidden">
+		<input id="order_id" name="order_id" type="hidden">
+		<input type='hidden' style='display:none;' id='idfactura'/>
 		<div class='col-lg-12 col-sm-12 col-md-12'>
 		<div class='row sumarow' style='margin-bottom:10px;'>
 			<div class='col-lg-12 col-md-12 col-sm-12'  style='background-color:white;'><h3 class='trans_historial'>Historial de Facturas</h3></div>
@@ -445,7 +448,7 @@ valor="0 @0 ";
 		</div>
 		<div class='row'>
 		<div class='col-lg-12 col-md-12 col-sm-12' style='margin-top:10px;'>
-		<table align='center' class='table table-hover table-striped' style='margin-bottom:0px;'><tr><th style='width:20%;' class='trans_fecha'>Fecha</th><th  style='width:20%;' class='trans_cliente'>Cliente</th><th  style='width:20%;'>RUC</th><th class='trans_nfact' style='width:20%;'>Factura No.</th><th style='width:5%;' class='trans_anulada'>Anulada</th><th style='text-align:right; width:10%;'>Total US</th><th style='text-align:right; width:5%;'></th></tr></table>
+		<table align='center' class='table table-hover table-striped' style='margin-bottom:0px;'><tr><th style='width:20%;' class='trans_fecha'>Fecha</th><th  style='width:20%;' class='trans_cliente'>Cliente</th><th  style='width:10%;'>RUC</th><th class='trans_nfact' style='width:20%;'>Factura No.</th><th style='width:5%;' class='trans_anulada'>Anulada</th><th style='text-align:right; width:10%;'>Total US</th><th style='text-align:right;'></th></tr></table>
 		<div id="detailDiv" class='table-responsive' style='min-height:200px;'></div>
 		</div>
 		</div>
@@ -457,6 +460,25 @@ valor="0 @0 ";
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id='modaleliminarfact'>
+	<input type='hidden' style='display:none;' id='timefact'/>
+	<div class="modal-dialog modal-xs">
+		<div class="modal-content">
+			<div class="modal-header trans_deletefact">
+				Anular Factura
+			</div>
+			<div class='modal-body'>
+				<label id='trans_label_103'>Está seguro que desea eliminar la factura </label> ?
+					<div style='margin-top:20px;'>
+						<button class='btn btn-lg btn-danger trans_yes' onclick='AnularFacturaAux();'>SI</button>
+						<button class='btn btn-lg btn-danger' onclick='$("#timefact").val(""); $("#modaleliminarfact").modal("hide");'>NO</button>
+					</div>
+				</div>
+			</div>
+	</div>
+</div>
+
 
 <script type="text/javascript">
 var page=1;
@@ -602,14 +624,14 @@ function getSearch(){
 				LlenarTablaFacturas(res[0]);
                 $('#totalencabezado').html(res[1]);
 			}else if(response=='Desactivado'){
-			    envia('cloud');
+			    envia('config');
 				setTimeout(function(){
 					$('.navbar').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#desactivo').fadeIn();
 				},100);
 			}else{
-				envia('cloud');
+				envia('config');
 				setTimeout(function(){
 					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
 					$('.navbar').slideUp();
@@ -656,16 +678,20 @@ function getSearch(){
 			var fechaformat=("00" + timefecha.getDate()).slice(-2)+"/"+mes+"/"+timefecha.getFullYear()+" "+("00" + timefecha.getHours()).slice(-2)+":"+("00" + timefecha.getMinutes()).slice(-2)+":"+("00" + timefecha.getSeconds()).slice(-2);
 			//console.log(row);
 			var mifunc="EditarFactura("+row.id+");";
+			var mifunc2="VerEliminarFactura("+row.id+");";
 			/*var datosfact=JSON.parse(row.fetchJson);*/
 			var totalf=(parseFloat(row.total)).toFixed(2);
 			var anulada='No';
+			var displayanular='';
 			if(row.anulada==1){
 				anulada='Si';
 				totalf='0.00';
+				displayanular='display:none;';
             }else{
                 totalfinal += parseFloat(totalf);
             }
-			inhtml+='<tr><td  style="width:20%; text-align:left;">'+fechaformat+'</td><td style="width:20%;  text-align:left;">'+row.clientName+'</td><td style="width:20%;  text-align:left;">'+row.RUC+'</td><td style="width:20%;  text-align:left;">'+row.nofact+'</td><td style="width:5%;">'+anulada+'</td><td style="text-align:right; width:10%;">'+totalf+'</td><td style="width:5%;"><button class="btn btn-default btn-sm" onclick="'+mifunc+'"><span class="glyphicon glyphicon-pencil"></span></button></td></tr>';
+			
+			inhtml+='<tr><td style="width:20%; text-align:left;">'+fechaformat+'</td><td style="width:20%;  text-align:left;">'+row.clientName+'</td><td style="width:10%;  text-align:left;">'+row.RUC+'</td><td style="width:20%;  text-align:left;">'+row.nofact+'</td><td style="width:5%;">'+anulada+'</td><td style="text-align:right; width:10%;">'+totalf+'</td><td ><button class="btn btn-default" style="margin-right:20px;" onclick="'+mifunc+'"><span class="glyphicon glyphicon-pencil"></span></button><button style="'+displayanular+'" class="btn btn-default" onclick="'+mifunc2+'"><span class="glyphicon glyphicon-trash"></span></button></td></tr>';
 		}
 		LlenarTablaFacturas(inhtml);
 		//$('#totalencabezado').html(totalfinal.toFixed(2));
@@ -728,5 +754,90 @@ function EditarFactura(idfactura){
 	$('#main').load("views/facturacion/editarfactura.html",function(){
 		VerDatosFactura(idfactura);
 	});
+}
+
+function AnularFacturaAux(){
+ if(localStorage.getItem("con_tarjeta")=='true'){
+    $('#respuestatarjeta').val('');
+    var order_id =  $('#order_id').val();
+    var myURL=encodeURI('https://www.practisis.net/pagos_tarjetas_void.php?order_id='+order_id);
+          iabRefa = window.open(myURL,'_blank', 'location=yes');
+          iabRefa.addEventListener('loadstart', iabLoadStarta);
+          iabRefa.addEventListener('loadstop', iabLoadStopa);
+          iabRefa.addEventListener('exit', iabClosea);
+  }else{
+    AnularFactura();
+  }
+}
+
+
+function AnularFactura(){
+	var id=$('#idfactura').val();
+    if(localStorage.getItem("con_localhost") == 'true'){
+     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+     $.post(apiURL,{
+		id_emp : localStorage.getItem("empresa"),
+		action : 'AnularFactura',
+		id_barra : localStorage.getItem("idbarra"),
+		deviceid:$("#deviceid").html(),
+        idfactura : id
+		}).done(function(response){
+			if(response!='block' && response!='Desactivado'){
+				console.log(response);
+                if(localStorage.getItem("idioma")==1)
+        			showalert("Factura anulada con éxito.");
+        		else if(localStorage.getItem("idioma")==2)
+        			showalert("Invoice canceled.");
+
+        		$('#factanulada').fadeIn('slow');
+        		$('#btnanularf,#reimprimir').fadeOut('slow');
+
+			}else if(response=='Desactivado'){
+			    envia('config');
+				setTimeout(function(){
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#desactivo').fadeIn();
+				},100);
+			}else{
+				envia('config');
+				setTimeout(function(){
+					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#bloqueo').fadeIn();
+				},100);
+
+			}
+
+		}).fail(function(){
+			updateOnlineStatus("OFFLINE");
+			setTimeout(function(){SincronizadorNormal()},180000);
+		});
+    }else{
+    var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx3){
+				tx3.executeSql('select fetchJson as j from facturas where id=?',[id],function(tx3,results){
+					var mijson=results.rows.item(0).j;
+					mijson=mijson.replace('"anulada" : "false"','"anulada" : "true"');
+					//console.log(mijson);
+					tx3.executeSql('UPDATE FACTURAS SET anulada=?,sincronizar="true",fetchJson=? where id=?',[1,mijson,id],function(tx3,results3){
+						console.log(results3);
+						if(localStorage.getItem("idioma")==1)
+							showalert("Factura anulada con éxito.");
+						else if(localStorage.getItem("idioma")==2)
+							showalert("Invoice canceled.");
+
+						envia('historial');
+						//location.reload(true);
+					});
+				});
+			},errorCB,successCB);
+    }
+}
+
+function VerEliminarFactura(cual){
+ $('#idfactura,#timefact').val(cual);
+ $('#modaleliminarfact').modal('show');
 }
 </script>

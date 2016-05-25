@@ -891,8 +891,14 @@ function cambiarCantidad(){
 				$('.cantidad').html('0.00');
 			}else{
 				$('.cantidad').html('0.00');
-				//alert('hola')
-				tx.executeSql('SELECT * FROM PRODUCTOS WHERE id_local='+productoIDAcambiar+';',[],function(tx,result){
+
+                if(localStorage.getItem("diseno")==1){
+                  var queryaux = 'SELECT p.*,m.timespan as timemenu FROM PRODUCTOS p,MENU m WHERE p.timespan=m.idproducto and p.id_local='+productoIDAcambiar+';';
+                }else{
+                  var queryaux = 'SELECT * FROM PRODUCTOS WHERE id_local='+productoIDAcambiar+';';
+                }
+
+                tx.executeSql(queryaux,[],function(tx,result){
 					//alert(result);
 					for (var i=0; i <= result.rows.length-1; i++){
 						var row = result.rows.item(i);
@@ -927,7 +933,11 @@ function cambiarCantidad(){
 						var productoPrecio = row.precio;
 						var total = (((parseFloat(productoPrecio)+sumaagregados) * parseFloat(productoCantidad))*parseFloat(productomas));
 						console.log(productoPrecio);
-						var productoID = row.timespan;
+                        if(localStorage.getItem("diseno")==1){
+                          var productoID = row.timemenu;
+                        }else{
+						  var productoID = row.timespan;
+                        }
 						//console.log(formulado);
 					
 						var sumTotal = 0;

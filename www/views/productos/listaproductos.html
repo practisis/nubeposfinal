@@ -54,7 +54,18 @@
 			</div>
 			<div class="row" align="center" > <!-- Row Table of products.. -->
 					<div class="col-sm-12">
-						<table class="table table-striped" style="margin-bottom:0px;"><thead><tr><th style="width:30%;" class="trans_prod">Nombre</th><th style=" width:30%;" class="trans_categ">Categoría</th><th style="width:10%; text-align:right;" class="trans_precio">Precio</th><th style="width:10%; text-align:center;" class="trans_imp" >Aplica Impuestos</th><th style="text-align:center; width:5%; display:none;"></th><th style="width:15%;"></th></tr></thead></table>
+						<table class="table table-striped" style="margin-bottom:0px;">
+                          <thead>
+                            <tr>
+                              <th style="width:25%;" class="trans_prod">Nombre</th>
+                              <th style=" width:25%;" class="trans_categ">Categoría</th>
+                              <th style="width:10%;" class="trans_code">Código</th>
+                              <th style="width:10%; text-align:right;" class="trans_precio">Precios $</th>
+                              <th style="width:10%; text-align:center;" class="trans_imp" >Aplica Impuestos</th>
+                              <th style="text-align:center; width:5%; display:none;"></th><th style="width:15%;"></th>
+                            </tr>
+                          </thead>
+                        </table>
 						<div id="recibeTodosLosProductos" style="font-size:14px; overflow-y:auto; min-height:200px;" class="table-responsive">
 						</div>
 						<input id='totalpags' style='display:none;'/>
@@ -506,9 +517,10 @@ function getSearch(){
 					categoria=$('.categoriasPrecargadas[timespan='+row.categoriaid+']').text();
 					inhtml+='\
 					<tr  iddb="'+row.id+'" categoria="'+categoria+'" codedb="'+row.codigo+'" formulado="'+row.formulado+'"  clase="listProduct" timespanCat="'+row.categoriaid+'">\
-							<td  style="width:30%;">'+row.formulado+'</td>';
-							inhtml+='<td style="width:30%;">'+categoria+'</td>\
-								<td style="text-align:right; width:10%;">'+parseFloat(precioConImpuestos).toFixed(2)+'</td><td style="text-align:center; width:10%;">'+checkiva2+'\
+							<td  style="width:25%;">'+row.formulado+'</td>';
+                            inhtml+='<td style="width:25%;">'+categoria+'</td>';
+							inhtml+='<td style="width:10%;">'+row.codigo+'</td>';
+                            inhtml+='<td style="text-align:right; width:10%;">'+parseFloat(precioConImpuestos).toFixed(2)+'</td><td style="text-align:center; width:10%;">'+checkiva2+'\
 								</td><td style="text-align:center; display:none; width:5%;">'+checkServ2+'</td><td style="text-align:right;  width:15%;">';
 							inhtml+='<button class="btn btn-default" style="display:none; margin-right:15px;" onclick="editProduct(\''+row.timespan+'\')" ><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<button class="btn btn-default" style="display:none;" onclick="VerificarEliminar('+row.id_local+",'"+row.formulado+"'"+');"><span class="glyphicon glyphicon-trash"></span></button></td>\
 						\

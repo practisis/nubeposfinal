@@ -419,7 +419,15 @@
 		</div>
 		<div role="tabpanel" class="tab-pane" id="ventastab">
 			<table class='table'>
-			<tr><td  style='text-align:right; width:50%;' id="trans_label_26">Ver Diseño Menú:</td><td align='left'><input data-size='small' type='checkbox' id='tablet_menu' class='switch' /></td></tr>
+			    <tr>
+                    <td  style='text-align:right; width:50%;' id="trans_label_26">Ver Diseño Menú:</td>
+                    <td align='left'>
+                        <input data-size='small' type='checkbox' id='tablet_menu' class='switch' />
+                        <div style='margin-top:10px;'>
+        				    <button class='btn btn-success btn-sm' onclick='ActivarVerDiseno();' id='activadisenomenu' >Activar</button>
+        				</div>
+                    </td>
+                </tr>
 				<tr>
 					<td  style='text-align:right;' id="trans_label_48">Sin Documento de Cliente:</td>
 					<td align='left'><input data-size='small' type='checkbox' id='sin_documento' class='switch' /></td>
@@ -677,7 +685,9 @@ $(document).ready(function(){
 		$('#linklogin69en').html('Upgrade Now');
 		$('#jumbo0es,#jumbo0en,#jumbo69es,#jumbo69en').attr('class','jumbotron');
 		$('#jumbo29es,#jumbo29en').attr('class','jumbotron jumbo-red');
-		$("#activaprintlogo,#cambiamensaje").fadeIn();
+		$("#activaprintlogo,#cambiamensaje,#activadisenomenu").fadeIn();
+        $('#tablet_menu').bootstrapSwitch('readonly',true);
+        localStorage.setItem("diseno",0);
 	}else if(paquete=="36"){
 		$('#linklogin29es,#linklogin29en').attr("link","https://www.practisis.net/index33.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister")));
 		$('#linklogin29es').html('<div style="font-size:11px;">Tu plan Actual</div> Ir a la Nube');
@@ -690,9 +700,11 @@ $(document).ready(function(){
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
 		$('#printlogo').bootstrapSwitch('readonly',false);
 		if(localStorage.getItem('imprimelogo')=="true")
-			$('#printlogo').bootstrapSwitch('state',true);
+		$('#printlogo').bootstrapSwitch('state',true);
 		$("#activaprintlogo,#cambiamensaje").css("display","none");
-		
+        $("#activadisenomenu").fadeIn();
+        $('#tablet_menu').bootstrapSwitch('readonly',true);
+        localStorage.setItem("diseno",0);
 	}else if(paquete=="37"){
 		$('#linklogin69es,#linklogin69en').attr("link","https://www.practisis.net/index33.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister")));
 		$('#linklogin69es').html('<div style="font-size:11px;">Tu plan Actual</div> Ir a la Nube');
@@ -705,8 +717,8 @@ $(document).ready(function(){
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
 		$('#printlogo').bootstrapSwitch('readonly',false);
 		if(localStorage.getItem('imprimelogo')=="true")
-			$('#printlogo').bootstrapSwitch('state',true);
-		$("#activaprintlogo,#cambiamensaje").css("display","none");
+		$('#printlogo').bootstrapSwitch('state',true);
+		$("#activaprintlogo,#cambiamensaje,#activadisenomenu").css("display","none");
 	}
 	
 	/*fin planes*/
@@ -748,6 +760,14 @@ $(document).ready(function(){
 				showalertredquiet("<b>Atención:</b> Para poder contar con la opción <b>Imprimir Logo</b> en Factura debes tener activado el <b>Plan Profesional o Plan Premium</b>.");
 			else
 				showalertredquiet("<b>Attention:</b> In order to have the <b>Print Invoice Logo</b> option, you must activate <b>Professional Plan or Premium Plan</b>.");
+			msjcloud=0;
+		}
+
+        if(msjcloud==4){
+			if(localStorage.getItem('idioma')==1)
+				showalertredquiet("<b>Atención:</b> Para poder contar con la opción <b>Diseño Menú</b> en Facturar debes tener activado el <b>Plan Premium</b>.");
+			else
+				showalertredquiet("<b>Attention:</b> In order to have the <b>Design Menu</b> option, you must activate <b>Premium Plan</b>.");
 			msjcloud=0;
 		}
 	}
@@ -1893,4 +1913,13 @@ function actualizar(){
 			}
 		);
 	}
+
+function ActivarVerDiseno(){
+  //alert('entra imprlogo');
+  var paquete=localStorage.getItem("paquete");
+  if(paquete==22 || paquete==36){
+    msjcloud=4;
+    envia('config');
+  }
+}
 </script>

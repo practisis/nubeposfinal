@@ -285,6 +285,7 @@ function ExtraeDatosApi(donde){
             localStorage.setItem("telefono_inte",ext[0].telefono_inte);
             localStorage.setItem("terminos",ext[0].terminos);
             localStorage.setItem("id_locales",ext[0].id_locales);
+            localStorage.setItem("id_pais",ext[0].id_pais);
 
             var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
@@ -546,6 +547,11 @@ function registrarUser(){
                             document.getElementById('main').style.display='none';
                           }
                           if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+                            var paisuax = localStorage.getItem("pais");
+                            if(paisuax != ''){
+                              $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
+                              ponerCodigoPais();
+                            }
               	            $('#pide_telefono').fadeIn('slow');
                             document.getElementById('main').style.display='none';
                           }
@@ -659,6 +665,11 @@ function UserLogin(){
                   }
 
                   if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+                    var paisuax = localStorage.getItem("pais");
+                    if(paisuax != ''){
+                      $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
+                      ponerCodigoPais();
+                    }
       	            $('#pide_telefono').fadeIn('slow');
                     document.getElementById('main').style.display='none';
                   }
@@ -1098,6 +1109,7 @@ function DatosRecurrentes(cual){
                       localStorage.setItem("terminos",item.terminos);
                       //alert(item.id_locales);
                       localStorage.setItem("id_locales",item.id_locales);
+                      localStorage.setItem("id_pais",item.id_pais);
                       //localStorage.setItem("paquete","36");
                       //localStorage.setItem("paquete","37");
 

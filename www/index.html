@@ -409,7 +409,7 @@
 				<div id="jsontarjetas" style="display: none;">{"Tarjetas":[{"id":"1","nombre":"Visa","imagen":"Tarjetas"},{"id":"2","nombre":"Mastercard","imagen":"Tarjetas"},{"id":"3","nombre":"Discover","imagen":"Bancos"},{"id":"4","nombre":"Diners","imagen":"CxC"},{"id":"5","nombre":"Amex","imagen":"CxC"}]}</div>
 				<div id='idiomaact' style="display: none;"></div>
 			
-			<div class="modal-backdrop fade in" id='cargandoTabs' style='z-index:1000;display:none;'>
+			<div class="modal-backdrop fade in" id='cargandoTabs' style='z-index:2000;display:none;'>
 				<table width='100%' height='100%'>
 					<tr>
 						<td valign='middle' align='center'> 
@@ -937,13 +937,18 @@
             }
 
             if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+              var paisuax = localStorage.getItem("pais");
+              if(paisuax != ''){
+                $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
+                ponerCodigoPais();
+              }
 			    $('#pide_telefono').fadeIn('slow');
                 document.getElementById('main').style.display='none';
 
             }
 
             if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
-	          $('#pide_local').fadeIn('slow');
+              $('#pide_local').fadeIn('slow');
               document.getElementById('main').style.display='none';
             }
 

@@ -406,6 +406,15 @@
 			<td  style='text-align:right;' id="trans_label_78">Múltiple Tablet</td>
 			<td align='left'><input type='checkbox' id='multitablet' onclick='ActivarMultitablet();' readonly /></td>
 		</tr>
+        <tr id="permisos">
+            <td  style='text-align:right; width:50%;' id="trans_label_104">Activar Permisos</td>
+            <td align='left'>
+                <input data-size='small' type='checkbox' id='permisoscheck' class='switch' readonly="readonly"/>
+                <div style='margin-top:10px;'>
+				    <button class='btn btn-success btn-sm' onclick='ActivarPermisos();' id='activapermiso'>Activar</button>
+				</div>
+            </td>
+        </tr>
         <tr>
             <td  style='text-align:right;'>LocalHost</td>
             <td align='left'><input id='con_localhost' class='form-control' readonly /></td>
@@ -420,7 +429,7 @@
 		<div role="tabpanel" class="tab-pane" id="ventastab">
 			<table class='table'>
 			    <tr>
-                    <td  style='text-align:right; width:50%;' id="trans_label_26">Ver Diseño Menú:</td>
+                    <td  style='text-align:right; width:50%;' id="trans_label_26">Ver Diseño Menú</td>
                     <td align='left'>
                         <input data-size='small' type='checkbox' id='tablet_menu' class='switch' />
                         <div style='margin-top:10px;'>
@@ -685,7 +694,7 @@ $(document).ready(function(){
 		$('#linklogin69en').html('Upgrade Now');
 		$('#jumbo0es,#jumbo0en,#jumbo69es,#jumbo69en').attr('class','jumbotron');
 		$('#jumbo29es,#jumbo29en').attr('class','jumbotron jumbo-red');
-		$("#activaprintlogo,#cambiamensaje,#activadisenomenu").fadeIn();
+		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos").fadeIn();
         $('#tablet_menu').bootstrapSwitch('readonly',true);
         localStorage.setItem("diseno",0);
 	}else if(paquete=="36"){
@@ -702,7 +711,7 @@ $(document).ready(function(){
 		if(localStorage.getItem('imprimelogo')=="true")
 		$('#printlogo').bootstrapSwitch('state',true);
 		$("#activaprintlogo,#cambiamensaje").css("display","none");
-        $("#activadisenomenu").fadeIn();
+        $("#activadisenomenu,#permisos").fadeIn();
         $('#tablet_menu').bootstrapSwitch('readonly',true);
         localStorage.setItem("diseno",0);
 	}else if(paquete=="37"){
@@ -718,7 +727,7 @@ $(document).ready(function(){
 		$('#printlogo').bootstrapSwitch('readonly',false);
 		if(localStorage.getItem('imprimelogo')=="true")
 		$('#printlogo').bootstrapSwitch('state',true);
-		$("#activaprintlogo,#cambiamensaje,#activadisenomenu").css("display","none");
+		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos").css("display","none");
 	}
 	
 	/*fin planes*/
@@ -768,6 +777,14 @@ $(document).ready(function(){
 				showalertredquiet("<b>Atención:</b> Para poder contar con la opción <b>Diseño Menú</b> en Facturar debes tener activado el <b>Plan Premium</b>.");
 			else
 				showalertredquiet("<b>Attention:</b> In order to have the <b>Design Menu</b> option, you must activate <b>Premium Plan</b>.");
+			msjcloud=0;
+		}
+
+        if(msjcloud==5){
+			if(localStorage.getItem('idioma')==1)
+				showalertredquiet("<b>Atención:</b> Para poder contar con la opción de <b>Permisos</b> debes tener activado el <b>Plan Premium</b>.");
+			else
+				showalertredquiet("<b>Attention:</b> In order to have the <b>Permissions</b> option, you must activate <b>Premium Plan</b>.");
 			msjcloud=0;
 		}
 	}
@@ -877,7 +894,7 @@ $(document).ready(function(){
 							$('#custommsg').val(results1.rows.item(0).mensajefinal);
 
 							if(paquete==22||paquete==null){
-								$('#custommsg').prop("readonly","readonly");	
+								$('#custommsg').prop("readonly","readonly");
 							}
 							
 							if(results1.rows.item(0).id_version_nube==3)
@@ -968,7 +985,8 @@ $(document).ready(function(){
 				
 				}
 			,errorCB,successCB);
-			
+
+        $('#permisoscheck').bootstrapSwitch();
 		$('#tablet_menu').bootstrapSwitch();
         $('#sin_documento').bootstrapSwitch();
         $('#con_orden').bootstrapSwitch();
@@ -1919,6 +1937,14 @@ function ActivarVerDiseno(){
   var paquete=localStorage.getItem("paquete");
   if(paquete==22 || paquete==36){
     msjcloud=4;
+    envia('config');
+  }
+}
+function ActivarPermisos(){
+  //alert('entra imprlogo');
+  var paquete=localStorage.getItem("paquete");
+  if(paquete==22 || paquete==36){
+    msjcloud=5;
     envia('config');
   }
 }

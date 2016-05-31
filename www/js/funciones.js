@@ -893,10 +893,12 @@ function cambiarCantidad(){
 				$('.cantidad').html('0.00');
 
                 if(localStorage.getItem("diseno")==1){
-                  var queryaux = 'SELECT p.*,m.timespan as timemenu FROM PRODUCTOS p,MENU m WHERE p.timespan=m.idproducto and p.id_local='+productoIDAcambiar+';';
+                  var queryaux = 'SELECT p.*,m.timespan as timemenu FROM PRODUCTOS p,MENU m WHERE p.timespan=m.idproducto and m.activo="true" and p.id_local='+productoIDAcambiar+';';
                 }else{
                   var queryaux = 'SELECT * FROM PRODUCTOS WHERE id_local='+productoIDAcambiar+';';
                 }
+
+                //alert(queryaux);
 
                 tx.executeSql(queryaux,[],function(tx,result){
 					//alert(result);

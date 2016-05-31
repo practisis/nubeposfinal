@@ -569,6 +569,14 @@ function registrarUser(){
 
 function LaunchBoarding(){
 	$('.navbar').slideDown();
+	if($(window).width()<500){
+		$('#flechamenumovil').css('display','');
+		$('#flechamenu').css('display','none');
+	}
+	else{
+		$('#flechamenu').css('display','');
+		$('#flechamenumovil').css('display','none');
+	}
 	$('#myDash').modal('show');
 }
 

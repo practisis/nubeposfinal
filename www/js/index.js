@@ -259,6 +259,14 @@ var app = {
 			return cordova.exec(success_callback, error_callback,"StarIOAdapter", "opendrawer", [port_search]);
 		};
 		
+		window.StarIOAdapter.searchEpson=function(port_search, success_callback, error_callback){
+			//alert("todas buscar");
+			if(error_callback == null) {
+				error_callback = handle_error_callback;
+			}
+			return cordova.exec(success_callback, error_callback, "StarIOAdapter", "searchEpson", [port_search]);
+		};
+		
         /*var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
         db.transaction(iniciaDB, errorCB, successCB);
         console.log(db);*/

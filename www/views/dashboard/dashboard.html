@@ -108,6 +108,7 @@
             </div>
         </div>
     </div>
+	<button style='display:none;' type='button' class='btn btn-lg btn-success' onclick='BuscarEpson();'>Epson</button>
 </div>
 <div id='jsoncats'></div>
 <script>
@@ -406,6 +407,16 @@ function ObtenerDatosDashboard(){
 		},errorCB,successCB);
     //************************************fin normal**************************************
     }
+}
+
+
+function BuscarEpson(){
+	//alert('BuscarEpson');
+	StarIOAdapter.searchEpson("",function(resp){
+		alert(resp);
+	},function(error){
+		alert(error);
+	});
 }
 </script>
   

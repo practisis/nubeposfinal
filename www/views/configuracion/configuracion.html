@@ -212,7 +212,8 @@
 		<li role="presentation" id='tabclickimpuestos'><a href="#impuestostab" aria-controls="impuestostab" role="tab" data-toggle="tab" class='trans_imp'>Impuestos</a></li>
 		<li role="presentation" id='tabclickimpresoras'><a href="#impresorastab" aria-controls="impresorastab" role="tab" data-toggle="tab" class='trans_printers'>Impresoras</a></li>
 		<li role="presentation" id='tabclickempresa'><a href="#empresatab" aria-controls="empresatab" role="tab" data-toggle="tab" class='trans_company'>Empresa</a></li>
-		<li role="presentation" id='tabclicklog'><a href="#logtab" aria-controls="logtab" role="tab" data-toggle="tab" class=''>Log</a></li>
+		<li role="presentation" id='tabclickfacele'><a href="#faceletab" aria-controls="faceletab" role="tab" data-toggle="tab" class='trans_ebilling'>Facturación Electrónica</a></li>
+        <li role="presentation" id='tabclicklog'><a href="#logtab" aria-controls="logtab" role="tab" data-toggle="tab" class=''>Log</a></li>
 	  </ul>
 	  <!-- Tab panes -->
 	  <div class="tab-content">
@@ -544,7 +545,7 @@
 				</div>
 			</div>
 		</div>
-		<div role='tabpanel' class='tab-pane' id='empresatab'>
+        <div role='tabpanel' class='tab-pane' id='empresatab'>
 				<div class='panel' id='sihayEmp'>
 				<div class="row"  style='padding-top:30px;'>
 					<div class='col-xs-1'></div>
@@ -554,7 +555,7 @@
 								Todos los campos requeridos
 							</div>
 							<div class="alert alert-success" style='display:none;' id='msjOk'>
-								
+
 							</div>
 							<table class='table' style='width:100%; align:center !important;'>
 								<tr>
@@ -583,7 +584,7 @@
 								</tr>
 								<tr>
 									<th class='trans_tel' style='text-align:right;'>
-										Telefono : 
+										Telefono :
 									</th>
 									<td>
 										<input type='number' id='tel' placeholder='Telefono' class='inputs form-control'/>
@@ -591,7 +592,7 @@
 								</tr>
 								<tr style='display:none; text-align:right;'>
 									<th>
-										Email : 
+										Email :
 									</th>
 									<td>
 										<input type='text' id='email' placeholder='Email' class='inputs form-control'/>
@@ -599,7 +600,7 @@
 								</tr>
 								<tr>
 									<th class='trans_serie' style='text-align:right;'>
-										No. Serie: 
+										No. Serie:
 									</th>
 									<td>
 										<input type='number' id='serie' placeholder='Serie' class='inputs form-control'/>
@@ -626,6 +627,122 @@
 										<center>
 											<button type="button" class="btn btn-success trans_update" style='display:none;' id='actualiza' onclick='actualizar()'>Actualizar</button>
 											<button type="button" class="btn btn-success trans_save" style='display:;' id='graba' onclick='grabar()'>Guardar</button>
+											<br/>
+										</center>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class='col-xs-1'></div>
+				</div>
+			</div>
+		</div>
+		<div role='tabpanel' class='tab-pane' id='faceletab'>
+				<div class='panel' id='sihayEmp'>
+				<div class="row"  style='padding-top:30px;'>
+					<div class='col-xs-1'></div>
+					<div class='col-xs-10'>
+						<div class="panel panel-default" style="padding:15px;">
+							<div class="alert alert-danger" style='display:none;' id='camposFac'>
+
+							</div>
+							<div class="alert alert-success" style='display:none;' id='msjOkFac'>
+
+							</div>
+							<table class='table' style='width:100%; align:center !important;'>
+								<tr>
+									<th id='trans_label_105' style='text-align:right;'>
+										Nombre Establecimiento
+									</th>
+									<td>
+										<input type='text' id='nombreEstable' class='inputs form-control trans_nombreEstable' placeholder='Nombre Establecimiento'/>
+									</td>
+								</tr>
+								<tr>
+									<th id='trans_label_106' style='text-align:right;'>
+										Razón Social
+									</th>
+									<td>
+										<input type='text' id='razonSo' class='inputs form-control trans_razonSo' placeholder='Razón Social'/>
+									</td>
+								</tr>
+								<tr>
+									<th style='text-align:right;'>
+										Ruc
+									</th>
+									<td>
+										<input type='text' id='rucFac' placeholder='Ruc' class='inputs form-control'/>
+									</td>
+								</tr>
+								<tr>
+									<th style='text-align:right;'>
+										Email
+									</th>
+									<td>
+										<input type='text' id='emailFac' placeholder='Email' class='inputs form-control'/>
+									</td>
+								</tr>
+								<tr>
+									<th id='trans_label_107' style='text-align:right;'>
+										Dirección
+									</th>
+									<td>
+										<textarea id='dirFac' class='inputs form-control trans_dirFac' placeholder='Dirección...'></textarea>
+									</td>
+								</tr>
+                                <tr>
+									<th id='trans_label_111' style='text-align:right;'>
+										Firma
+									</th>
+									<td>
+                                        <table style="width: 100%;">
+                                          <tr>
+                                            <td style="width: 85%;"><input type='text' id='firmaFac' class='inputs form-control firmaFac' placeholder='Firma' readonly="readonly"/></td>
+                                            <td style="width: 15%;"><button type="button" class="btn btn-primary trans_up" style='display:inline-block;' id='grabaFac' onclick='subirfirma()'>Subir</button></td>
+                                          </tr>
+                                        </table>
+									</td>
+								</tr>
+                                <tr>
+									<th id='trans_label_108' style='text-align:right;'>
+										# Contribuyente Especial
+									</th>
+									<td>
+										<input type='text' id='numcontribuyenteFac' class='inputs form-control numcontribuyenteFac' placeholder='# Contribuyente Especial'/>
+									</td>
+								</tr>
+                                <tr>
+									<th id='trans_label_109' style='text-align:right;'>
+										Obligado a llevar Contabilidad
+									</th>
+									<td style='text-align:left;'>
+										<input type='checkbox' id='obligado'/>
+									</td>
+								</tr>
+                                <tr>
+									<th id='trans_label_110' style='text-align:right;'>
+										Producción
+									</th>
+									<td style='text-align:left;'>
+										<input type='checkbox' id='produccion' readonly="readonly"/>
+                                        <div style='margin-top:10px;'>
+                        				    <button class='btn btn-success btn-sm' onclick='ActivarProduccion();' id='activaproduccion' >Activar</button>
+                        				</div>
+									</td>
+								</tr>
+                                <tr>
+									<th id='trans_label_112' style='text-align:right;'>
+										Activar Facturación Electrónica
+									</th>
+									<td style='text-align:left;'>
+										<input type='checkbox' id='activafacturacionelectronica'/>
+									</td>
+								</tr>
+								<tr>
+									<td colspan='2' align='center' style='text-align:center;'>
+										<center>
+											<button type="button" class="btn btn-success trans_save" style='display:;' id='grabaFac' onclick='grabarfac()'>Guardar</button>
 											<br/>
 										</center>
 									</td>
@@ -694,8 +811,9 @@ $(document).ready(function(){
 		$('#linklogin69en').html('Upgrade Now');
 		$('#jumbo0es,#jumbo0en,#jumbo69es,#jumbo69en').attr('class','jumbotron');
 		$('#jumbo29es,#jumbo29en').attr('class','jumbotron jumbo-red');
-		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos").fadeIn();
+		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion").fadeIn();
         $('#tablet_menu').bootstrapSwitch('readonly',true);
+        $('#grabaFac').attr({onclick:'ActivarFirma();'});
         localStorage.setItem("diseno",0);
 	}else if(paquete=="36"){
 		$('#linklogin29es,#linklogin29en').attr("link","https://www.practisis.net/index33.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister")));
@@ -708,11 +826,13 @@ $(document).ready(function(){
 		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').attr('class','jumbotron');
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
 		$('#printlogo').bootstrapSwitch('readonly',false);
+        $('#produccion').bootstrapSwitch('readonly',false);
 		if(localStorage.getItem('imprimelogo')=="true")
 		$('#printlogo').bootstrapSwitch('state',true);
-		$("#activaprintlogo,#cambiamensaje").css("display","none");
+		$("#activaprintlogo,#cambiamensaje,#activaproduccion").css("display","none");
         $("#activadisenomenu,#permisos").fadeIn();
         $('#tablet_menu').bootstrapSwitch('readonly',true);
+        $('#grabaFac').attr({onclick:'ActivarFirma();'});
         localStorage.setItem("diseno",0);
 	}else if(paquete=="37"){
 		$('#linklogin69es,#linklogin69en').attr("link","https://www.practisis.net/index33.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister")));
@@ -725,9 +845,11 @@ $(document).ready(function(){
 		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').attr('class','jumbotron');
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
 		$('#printlogo').bootstrapSwitch('readonly',false);
+        $('#produccion').bootstrapSwitch('readonly',false);
 		if(localStorage.getItem('imprimelogo')=="true")
 		$('#printlogo').bootstrapSwitch('state',true);
-		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos").css("display","none");
+        $('#grabaFac').attr({onclick:'subirfirma();'});
+		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion").css("display","none");
 	}
 	
 	/*fin planes*/
@@ -787,6 +909,22 @@ $(document).ready(function(){
 				showalertredquiet("<b>Attention:</b> In order to have the <b>Permissions</b> option, you must activate <b>Premium Plan</b>.");
 			msjcloud=0;
 		}
+
+        if(msjcloud==6){
+			if(localStorage.getItem('idioma')==1)
+				showalertredquiet("<b>Atención:</b> Para poder contar con la opción de <b>Producción</b> debes tener activado el <b>Plan Premium</b>.");
+			else
+				showalertredquiet("<b>Attention:</b> In order to have the <b>Production</b> option, you must activate <b>Premium Plan</b>.");
+			msjcloud=0;
+		}
+
+        if(msjcloud==7){
+			if(localStorage.getItem('idioma')==1)
+				showalertredquiet("<b>Atención:</b> Para poder contar con la opción de <b>Subir Firma</b> debes tener activado el <b>Plan Premium</b>.");
+			else
+				showalertredquiet("<b>Attention:</b> In order to have the <b>Sign Up</b> option, you must activate <b>Premium Plan</b>.");
+			msjcloud=0;
+		}
 	}
 	/*fin mensajes alerta*/
 	
@@ -840,9 +978,18 @@ $(document).ready(function(){
 			var itemtitles=itemestructura.titles;
 			var itembuttons=itemestructura.botones;
 			var itemlabels=itemestructura.labels;
+            var itemplaceholder=itemestructura.placeholder;
 			var todostitles=itemtitles.item;
 			var todosbuttons=itembuttons.item;
-			var todoslabels=itemlabels.item;	
+			var todoslabels=itemlabels.item;
+            var todosplaceholder=itemplaceholder.item;
+
+			for(var k=0;k<todosplaceholder.length;k++){
+				var miitemname=todosplaceholder[k].name;
+				//alert(miitemname);
+				$('.'+miitemname).prop("placeholder",todosplaceholder[k].text);
+			}
+
 				for(var k=0;k<todostitles.length;k++){
 					var miitemname=todostitles[k].name;
 					//alert(miitemname);
@@ -999,6 +1146,9 @@ $(document).ready(function(){
 		$('#backupinf').bootstrapSwitch();
 		$('#printlogo').bootstrapSwitch();
         $('#multitablet').bootstrapSwitch();
+        $('#obligado').bootstrapSwitch();
+        $('#produccion').bootstrapSwitch();
+        $('#activafacturacionelectronica').bootstrapSwitch();
 
 		if(localStorage.getItem("diseno")==1){
 			$('#tablet_menu').bootstrapSwitch('state', true, true);
@@ -1704,6 +1854,12 @@ function actualizar(){
 			db.transaction(function (tx){
 				tx.executeSql('update CONFIG set nombre = "'+nombreEsta+'" , razon = "'+razon+'", ruc = '+ruc+' , telefono = '+tel+', email = "'+email+'", direccion = "'+dir+'",sincronizar="true",serie="'+serie+'",establecimiento="'+establecimiento+'"');
 				$('#msjOk').html('Informacion actualizada con Éxito');
+
+                $('#nombreEstable').val(nombreEsta);
+        		$('#razonSo').val(razon);
+        		$('#rucFac').val(ruc);
+                $('#dirFac').val(dir);
+
 				$('#msjOk').fadeIn('slow');
 				$('#campos').css('display','none');
 				setTimeout(function() {
@@ -1722,7 +1878,7 @@ function actualizar(){
 		var dir = $('#dir').val();
 		var serie = $('#serie').val();
 		var establecimiento = $('#establecimiento').val();
-		
+
 		if(nombreEsta == '' ){
 			$('#nombreEsta').effect('highlight');
 		}
@@ -1743,7 +1899,7 @@ function actualizar(){
 		if(dir == '' ){
 			$('#dir').effect('highlight');
 		}
-		
+
 		if(nombreEsta == '' || razon == '' || ruc == '' || tel == '' || email == '' || dir == '' ){
 			$('#campos').fadeIn('slow');
 			$('#msjOk').css('display','none');
@@ -1757,6 +1913,12 @@ function actualizar(){
 				$('#msjOk').html('Informacion Ingresada con Éxito');
 				$('#msjOk').fadeIn('slow');
 				$('#campos').css('display','none');
+
+                $('#nombreEstable').val(nombreEsta);
+        		$('#razonSo').val(razon);
+        		$('#rucFac').val(ruc);
+                $('#dirFac').val(dir);
+
 				setTimeout(function() {
 					$('#msjOk').fadeOut('slow');
 				}, 3000);
@@ -1778,7 +1940,14 @@ function actualizar(){
 						var direccion = row.direccion;
 						var serie = row.serie;
 						var establecimiento = row.establecimiento;
-						
+
+                        var email_fact = row.email_fact;
+                        var key = row.key;
+                        var numero_contribuyente = row.numero_contribuyente;
+                        var obligado_contabilidad = row.obligado_contabilidad;
+                        var prueba_produccion = row.prueba_produccion;
+                        var tiene_factura_electronica = row.tiene_factura_electronica;
+
 						$('#nombreEsta').val(nombre);
 						$('#razon').val(razon);
 						$('#ruc').val(ruc);
@@ -1787,6 +1956,30 @@ function actualizar(){
 						$('#dir').val(direccion);
 						$('#serie').val(serie);
 						$('#establecimiento').val(establecimiento);
+
+                        $('#nombreEstable').val(nombre);
+						$('#razonSo').val(razon);
+						$('#rucFac').val(ruc);
+						$('#emailFac').val(email_fact);
+						$('#dirFac').val(direccion);
+                        $('#firmaFac').val(key);
+                        $('#numcontribuyenteFac').val(numero_contribuyente);
+                        if(obligado_contabilidad=='true'){
+							$('#obligado').bootstrapSwitch('state', true);
+						}else{
+							$('#obligado').bootstrapSwitch('state', false);
+						}
+                        if(prueba_produccion=='true'){
+							$('#produccion').bootstrapSwitch('state', false);
+						}else{
+							$('#produccion').bootstrapSwitch('state', true);
+						}
+                        if(tiene_factura_electronica=='true'){
+							$('#activafacturacionelectronica').bootstrapSwitch('state', true);
+						}else{
+							$('#activafacturacionelectronica').bootstrapSwitch('state', false);
+						}
+
 					}
 					
 					$('#actualiza').css('display','block');
@@ -1945,6 +2138,115 @@ function ActivarPermisos(){
   var paquete=localStorage.getItem("paquete");
   if(paquete==22 || paquete==36){
     msjcloud=5;
+    envia('config');
+  }
+}
+function ActivarProduccion(){
+  //alert('entra imprlogo');
+  var paquete=localStorage.getItem("paquete");
+  if(paquete==22){
+    msjcloud=6;
+    envia('config');
+  }
+}
+function grabarfac(){
+var nombreEstable = $('#nombreEstable').val();
+var razonSo = $('#razonSo').val();
+var rucFac = $('#rucFac').val();
+var emailFac = $('#emailFac').val();
+var dirFac = $('#dirFac').val();
+var numcontribuyenteFac = $('#numcontribuyenteFac').val();
+var obligado = $('#obligado').bootstrapSwitch('state');
+var produccionaux = $('#produccion').bootstrapSwitch('state');
+var activafacturacionelectronica = $('#activafacturacionelectronica').bootstrapSwitch('state');
+var firmaFac = $('#firmaFac').val();
+var produccion = true;
+
+if(nombreEstable == '' ){
+	$('#nombreEstable').effect('highlight');
+}
+if(razonSo == '' ){
+	$('#razonSo').effect('highlight');
+}
+if(rucFac == '' ){
+	$('#rucFac').effect('highlight');
+}
+if( emailFac == '' ){
+	$('#emailFac').effect('highlight');
+}
+if(dirFac == '' ){
+	$('#dirFac').effect('highlight');
+}
+if(numcontribuyenteFac == '' ){
+	$('#numcontribuyenteFac').val('0');
+}
+if(produccionaux == false){
+  produccion = true;
+}else{
+  produccion = false;
+}
+//alert(produccion);
+if(nombreEstable == '' || razonSo == '' || rucFac == '' || emailFac == '' || dirFac == '' ){
+	$('#camposFac').fadeIn('slow');
+
+    if(localStorage.getItem("idioma")==1){
+		$('#camposFac').html('Debe ingresar todos los campos requeridos.');
+	}else{
+		$('#camposFac').html('You must enter all required fields.');
+	}
+
+	$('#msjOkFac').css('display','none');
+	setTimeout(function() {
+		$('#camposFac').fadeOut('slow');
+	}, 3000);
+}else if(produccion == false && firmaFac== '' ){
+	$('#camposFac').fadeIn('slow');
+
+    if(localStorage.getItem("idioma")==1){
+		 $('#camposFac').html('Para poder pasar a producción debe primero tener la firma.');
+	}else{
+		 $('#camposFac').html('To go into production must first be signed.');
+	}
+    $('#produccion').bootstrapSwitch('state',false);
+
+	$('#msjOkFac').css('display','none');
+	setTimeout(function() {
+		$('#camposFac').fadeOut('slow');
+	}, 3000);
+}else{
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function (tx){
+		tx.executeSql('update CONFIG set nombre="'+nombreEstable+'",razon="'+razonSo+'",ruc="'+rucFac+'",email_fact="'+emailFac+'",direccion="'+dirFac+'",numero_contribuyente="'+numcontribuyenteFac+'",obligado_contabilidad="'+obligado+'",prueba_produccion="'+produccion+'",tiene_factura_electronica="'+activafacturacionelectronica+'",sincronizar="true" where id=1');
+
+        if(localStorage.getItem("idioma")==1){
+    		 $('#msjOkFac').html('Información Ingresada con Éxito');
+    	}else{
+    		 $('#msjOkFac').html('Information entered Success.');
+    	}
+
+        $('#nombreEsta').val(nombreEstable);
+		$('#razon').val(razonSo);
+		$('#ruc').val(rucFac);
+        $('#dir').val(dirFac);
+
+		$('#msjOkFac').fadeIn('slow');
+		$('#camposFac').css('display','none');
+		setTimeout(function() {
+			$('#msjOkFac').fadeOut('slow');
+		}, 3000);
+	},errorCB,successCB);
+}
+}
+function subirfirma(){
+  var idemp = localStorage.getItem("empresa");
+  var url = 'http://practifactura.com/facturaelectronica/subpages/administrador/firmam.php?idemp='+btoa(idemp);
+  window.open(url);
+}
+function ActivarFirma(){
+  //alert('entra imprlogo');
+  var paquete=localStorage.getItem("paquete");
+  if(paquete==22){
+    msjcloud=7;
     envia('config');
   }
 }

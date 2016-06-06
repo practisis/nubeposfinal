@@ -852,6 +852,32 @@
 
 <!--- ---->
 
+<!---pop up Empleados------>
+<div  class="modal fade" id="popupEmpleados" role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
+	<div class='modal-content text-center'>
+		<div class='modal-header'>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4><span id='trans_label_113'>Escoja Mesero</span></h4>
+        </div>
+		<span id='msjempleadoError'></span>
+		<input class='form-control input-lg' id='empleadoid' style='display:none;'/>
+		<div class="modal-body" style='color:#404041; position:relative;'>
+			<div class='row'>
+				<div id="listaempleados" class='col-md-9'>
+
+				</div>
+				<div class='col-md-3'>
+					<button type='button' class='btn btn-primary trans_continue' onclick="SaveMesaLocal();">Continuar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+
+<!--- ---->
+
 <!---pop up Activar Mesa------>
 <div  class="modal fade" id="popupActivarMesa" role="dialog" data-backdrop="static">
 	<div class="modal-dialog">

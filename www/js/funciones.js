@@ -4854,55 +4854,19 @@ function VerConsumos(idmesa){
 function SaveMesa(){
   var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
     if(localStorage.getItem("con_localhost") == 'true'){
-     var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
-     var query = '';
-     var datos = '';
-     var mesaactiva=sessionStorage.getItem("mesa_activa");
-     $('#tablaCompra>tbody>tr').each(function(){
-		var inputdata=$(this).find('.productDetails');
-		if(inputdata!=null){
-			var details=inputdata.val();
-			var agreg=""
-			if(inputdata.attr('data-detagregados')!=null&&inputdata.attr('data-detagregados')!=""&&inputdata.attr('data-detagregados')!="undefined")
-				agreg=inputdata.attr('data-detagregados');
-			var notes="";
-			if(inputdata.attr('data-notes')!=null&&inputdata.attr('data-notes')!=""&&inputdata.attr('data-notes')!="undefined")
-				notes=inputdata.attr('data-notes');
-			var idreal="";
-			if(inputdata.attr('data-id_real')!=null&&inputdata.attr('data-id_real')!=""&&inputdata.attr('data-id_real')!="undefined")
-				idreal=inputdata.attr('data-id_real');
-			var fecha= new Date().getTime();
-            query += "INSERT INTO mesas_consumos (id_mesa,hora,details,agregados,notas,id_real) values ('"+mesaactiva+"','"+fecha+"','"+details+"','"+agreg+"','"+notes+"','"+idreal+"')||@";
-
-            if( $(this).find('.product_del').is(':visible') ){
-                datos += details+'|@|'+agreg+'|@|'+notes+'|@|'+idreal+'|@|'+fecha+'|/@';
-            }else{
-                //alert('Elemento oculto');
-            }
-
-		}
-	});
-
-    //alert(query);
-
-     $.post(apiURL,{
+      var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+      $.post(apiURL,{
 		id_emp : localStorage.getItem("empresa"),
-		action : 'GuardaPedido',
+		action : 'ListaEmpleados',
 		id_barra : localStorage.getItem("idbarra"),
 		deviceid:$("#deviceid").html(),
-        id_mesa : mesaactiva,
-        query : query,
-        datos : datos,
-        con_menu : localStorage.getItem("diseno")
+        id_locales : localStorage.getItem("id_locales")
 		}).done(function(response){
 			if(response!='block' && response!='Desactivado'){
-				console.log(response);
-                var resp = response.split("||");
-                if(resp[0] == 'ok'){
-                  console.log("consumo insertados"+query);
-                }else{
-                  envia('puntodeventa');
-                }
+				//console.log(response);
+                //var resp = response.split("||");
+                $('#listaempleados').html(response);
+                $('#popupEmpleados').modal("show");
 
 			}else if(response=='Desactivado'){
 			    envia('cloud');
@@ -4926,6 +4890,7 @@ function SaveMesa(){
 			updateOnlineStatus("OFFLINE");
 			setTimeout(function(){SincronizadorNormal()},180000);
 		});
+      return false;
     }else{
     //*********************************inicio normal**************************************
 	var mesaactiva=sessionStorage.getItem("mesa_activa");
@@ -4991,7 +4956,7 @@ function SaveMesa(){
 				json += '"detalle_agregados" : "'+detalleagregados+'",';
 				json += '"detalle_notas" : "'+detallenotas+'"';
 			json += '}';
-			
+
 			cuan++;
 		}
 	});
@@ -5015,10 +4980,10 @@ function SaveMesa(){
 		showalert("Pedido Guardado con éxito");
 	else
 		showalert("Order Saved Successfully");
-	
+
 	if(cuan>0){
 		//comanderas
-		db.transaction(function (tx){	
+		db.transaction(function (tx){
 		tx.executeSql('SELECT printercom FROM CONFIG where id=1',[],
 		function(tx,res){
 			if(res.rows.length>0){
@@ -5044,7 +5009,7 @@ function SaveMesa(){
 				//fin comanderas
 	}
 	/*imprimir comandas no comandadas*/
-	
+
 	setTimeout(function(){envia("puntodeventa")},2500);
 }
 
@@ -5192,3 +5157,181 @@ function ActivarMitades(id){
 	$('#mid_'+id).attr("class","btn btn-success btn-lg");
 }
 
+function SaveMesaLocal(){
+  var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+  var id_empleado = $('#idempleado').val();
+  if(id_empleado == '0'){
+    if(localStorage.getItem("idioma")==1){
+      alert('Para continuar debe escoger el mesero.');
+    }else{
+      alert('To continue you must choose the waiter.');
+    }
+  }else{
+
+    $('#popupEmpleados').modal("hide");
+    var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+     var query = '';
+     var datos = '';
+     var mesaactiva=sessionStorage.getItem("mesa_activa");
+     $('#tablaCompra>tbody>tr').each(function(){
+		var inputdata=$(this).find('.productDetails');
+		if(inputdata!=null){
+			var details=inputdata.val();
+			var agreg=""
+			if(inputdata.attr('data-detagregados')!=null&&inputdata.attr('data-detagregados')!=""&&inputdata.attr('data-detagregados')!="undefined")
+				agreg=inputdata.attr('data-detagregados');
+			var notes="";
+			if(inputdata.attr('data-notes')!=null&&inputdata.attr('data-notes')!=""&&inputdata.attr('data-notes')!="undefined")
+				notes=inputdata.attr('data-notes');
+			var idreal="";
+			if(inputdata.attr('data-id_real')!=null&&inputdata.attr('data-id_real')!=""&&inputdata.attr('data-id_real')!="undefined")
+				idreal=inputdata.attr('data-id_real');
+			var fecha= new Date().getTime();
+            query += "INSERT INTO mesas_consumos (id_mesa,hora,details,agregados,notas,id_real) values ('"+mesaactiva+"','"+fecha+"','"+details+"','"+agreg+"','"+notes+"','"+idreal+"')||@";
+
+            if( $(this).find('.product_del').is(':visible') ){
+                datos += details+'|@|'+agreg+'|@|'+notes+'|@|'+idreal+'|@|'+fecha+'|/@';
+            }else{
+                //alert('Elemento oculto');
+            }
+
+		}
+	});
+
+    //alert(query);
+
+     $.post(apiURL,{
+		id_emp : localStorage.getItem("empresa"),
+		action : 'GuardaPedido',
+		id_barra : localStorage.getItem("idbarra"),
+		deviceid:$("#deviceid").html(),
+        id_mesa : mesaactiva,
+        query : query,
+        datos : datos,
+        con_menu : localStorage.getItem("diseno"),
+        id_empleado : id_empleado
+		}).done(function(response){
+			if(response!='block' && response!='Desactivado'){
+				console.log(response);
+                var resp = response.split("||");
+                if(resp[0] == 'ok'){
+                  console.log("consumo insertados"+query);
+                }else{
+                  envia('puntodeventa');
+                }
+
+			}else if(response=='Desactivado'){
+			    envia('cloud');
+				setTimeout(function(){
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#desactivo').fadeIn();
+				},100);
+			}else{
+				envia('cloud');
+				setTimeout(function(){
+					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+					$('.navbar').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+					$('#bloqueo').fadeIn();
+				},100);
+
+			}
+
+		}).fail(function(){
+			updateOnlineStatus("OFFLINE");
+			setTimeout(function(){SincronizadorNormal()},180000);
+		});
+
+    /*imprimir comandas*/
+	var json = '{"ComandasMesas": [{';
+		json += '"producto": [';
+	var cuan=0;
+	$('.productDetails').each(function(){
+		if(!$(this).parent().parent().hasClass("printed")){
+			var splitDetails = $(this).val().split('|');
+			var detalleagregados="";
+			var detallenotas="";
+			if($(this).attr("data-detagregados")!=''&&$(this).attr("data-detagregados")!=null&&$(this).attr("data-detagregados")!='undefined')
+			   detalleagregados=$(this).attr("data-detagregados");
+
+		   if($(this).attr("data-notes")!=''&&$(this).attr("data-notes")!=null&&$(this).attr("data-notes")!='undefined')
+			   detallenotas=$(this).attr("data-notes");
+
+		   if(cuan>0){
+			   json+=",";
+		   }
+
+			json += '{';
+				json += '"id_producto" : "'+ splitDetails[0] +'",';
+				json += '"timespanproducto" : "'+ splitDetails[0] +'",';
+				json += '"timespanconsumo" : "'+getTimeSpan()+'",';
+				json += '"nombre_producto" : "'+ splitDetails[1] +'",';
+				json += '"cant_prod" : "'+ splitDetails[2] +'",';
+				json += '"precio_orig" : "'+ splitDetails[3] +'",';
+				json += '"precio_prod" : "'+ splitDetails[4] +'",';
+				json += '"impuesto_prod" : "'+ splitDetails[7] +'",';
+				json += '"precio_total" : "'+ splitDetails[6] +'",';
+				json += '"precio_descuento_justificacion" : "",';
+				json += '"agregados" : "'+splitDetails[8]+'",';
+				json += '"detalle_agregados" : "'+detalleagregados+'",';
+				json += '"detalle_notas" : "'+detallenotas+'"';
+			json += '}';
+
+			cuan++;
+		}
+	});
+
+	var mensajepie="";
+	if(localStorage.getItem("mensajefinal")!=''&&localStorage.getItem("mensajefinal")!=null){
+		if(!localStorage.getItem("paquete")=="1")
+		   mensajepie=localStorage.getItem("mensajefinal");
+	}
+
+	//json = json.substring(0,json.length -1);
+	json += '],"mesa":"'+sessionStorage.getItem("mesa_name")+'",';
+	json += '"lang":"'+localStorage.getItem("idioma")+'",';
+	json += '"mensajefinal":"'+mensajepie+'"';
+	json += '}]}';
+
+
+	console.log(json);
+
+	if(localStorage.getItem("lang")==1)
+		showalert("Pedido Guardado con éxito");
+	else
+		showalert("Order Saved Successfully");
+
+	if(cuan>0){
+		//comanderas
+		db.transaction(function (tx){
+		tx.executeSql('SELECT printercom FROM CONFIG where id=1',[],
+		function(tx,res){
+			if(res.rows.length>0){
+				var miprint=res.rows.item(0);
+				if(localStorage.getItem("con_mesas")=="true"){
+					if(miprint.printercom!=null){
+						StarIOAdapter.rawprint(json,miprint.printercom, function() {
+						/*if(localStorage.getItem("idioma")==1)
+							showalert("Imprimiendo Comandas.");
+						else if(localStorage.getItem("idioma")==2)
+							showalert("Printing Kitchen Commands.");*/
+						});
+					}else{
+						if(localStorage.getItem("idioma")==1)
+							showalert("No se ha configurado una impresora para comandas.");
+						else if(localStorage.getItem("idioma")==2)
+							showalert("There is no configured a command printer.");
+					}
+				}
+			}
+		});
+		},errorCB,successCB);
+				//fin comanderas
+	}
+	/*imprimir comandas no comandadas*/
+
+	setTimeout(function(){envia("puntodeventa")},2500);
+  }
+
+}

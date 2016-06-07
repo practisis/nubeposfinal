@@ -211,7 +211,7 @@
 		<li role="presentation"><a href="#ventastab" aria-controls="ventastab" role="tab" data-toggle="tab" class='trans_sales'>Ventas</a></li>
 		<li role="presentation" id='tabclickimpuestos'><a href="#impuestostab" aria-controls="impuestostab" role="tab" data-toggle="tab" class='trans_imp'>Impuestos</a></li>
 		<li role="presentation" id='tabclickimpresoras'><a href="#impresorastab" aria-controls="impresorastab" role="tab" data-toggle="tab" class='trans_printers'>Impresoras</a></li>
-		<li role="presentation" id='tabclickempresa'><a href="#empresatab" aria-controls="empresatab" role="tab" data-toggle="tab" class='trans_company'>Empresa</a></li>
+		<!--<li role="presentation" id='tabclickempresa'><a href="#empresatab" aria-controls="empresatab" role="tab" data-toggle="tab" class='trans_company'>Empresa</a></li>-->
 		<li role="presentation" id='tabclickfacele'><a href="#faceletab" aria-controls="faceletab" role="tab" data-toggle="tab" class='trans_ebilling'>Facturación Electrónica</a></li>
         <li role="presentation" id='tabclicklog'><a href="#logtab" aria-controls="logtab" role="tab" data-toggle="tab" class=''>Log</a></li>
 	  </ul>
@@ -651,6 +651,25 @@
 
 							</div>
 							<table class='table' style='width:100%; align:center !important;'>
+                                <tr>
+									<th id='trans_label_112' style='text-align:right;'>
+										Activar Facturación Electrónica
+									</th>
+									<td style='text-align:left;'>
+										<input type='checkbox' id='activafacturacionelectronica'/>
+									</td>
+								</tr>
+                                <tr>
+									<th id='trans_label_110' style='text-align:right;'>
+										Producción
+									</th>
+									<td style='text-align:left;'>
+										<input type='checkbox' id='produccion' readonly="readonly"/>
+                                        <div style='margin-top:10px;'>
+                        				    <button class='btn btn-success btn-sm' onclick='ActivarProduccion();' id='activaproduccion' >Activar</button>
+                        				</div>
+									</td>
+								</tr>
 								<tr>
 									<th id='trans_label_105' style='text-align:right;'>
 										Nombre Establecimiento
@@ -668,7 +687,7 @@
 									</td>
 								</tr>
 								<tr>
-									<th style='text-align:right;'>
+									<th id='trans_label_115' style='text-align:right;'>
 										Ruc
 									</th>
 									<td>
@@ -681,6 +700,14 @@
 									</th>
 									<td>
 										<input type='text' id='emailFac' placeholder='Email' class='inputs form-control'/>
+									</td>
+								</tr>
+                                <tr>
+									<th id='trans_label_114' style='text-align:right;'>
+										Teléfono
+									</th>
+									<td>
+										<input type='number' id='telFac' placeholder='Telefono' class='inputs form-control'/>
 									</td>
 								</tr>
 								<tr>
@@ -705,11 +732,27 @@
 									</td>
 								</tr>
                                 <tr>
+									<th class='trans_serie' style='text-align:right;'>
+										No. Serie:
+									</th>
+									<td>
+										<input type='number' id='serieFac' placeholder='Serie' class='inputs form-control trans_serie'/>
+									</td>
+								</tr>
+								<tr>
+									<th class='trans_est' style='text-align:right;'>
+										No. Establecimiento
+									</th>
+									<td>
+										<input type='number' id='establecimientoFac' placeholder='Establecimiento' class='inputs form-control trans_establecimiento'/>
+									</td>
+								</tr>
+                                <tr>
 									<th id='trans_label_108' style='text-align:right;'>
 										# Contribuyente Especial
 									</th>
 									<td>
-										<input type='text' id='numcontribuyenteFac' class='inputs form-control numcontribuyenteFac' placeholder='# Contribuyente Especial'/>
+										<input type='number' id='numcontribuyenteFac' class='inputs form-control numcontribuyenteFac' maxlength="5" placeholder='# Contribuyente Especial'/>
 									</td>
 								</tr>
                                 <tr>
@@ -721,22 +764,11 @@
 									</td>
 								</tr>
                                 <tr>
-									<th id='trans_label_110' style='text-align:right;'>
-										Producción
+									<th id='trans_label_116' style='text-align:right;'>
+										Mensaje Facturación Electrónica
 									</th>
-									<td style='text-align:left;'>
-										<input type='checkbox' id='produccion' readonly="readonly"/>
-                                        <div style='margin-top:10px;'>
-                        				    <button class='btn btn-success btn-sm' onclick='ActivarProduccion();' id='activaproduccion' >Activar</button>
-                        				</div>
-									</td>
-								</tr>
-                                <tr>
-									<th id='trans_label_112' style='text-align:right;'>
-										Activar Facturación Electrónica
-									</th>
-									<td style='text-align:left;'>
-										<input type='checkbox' id='activafacturacionelectronica'/>
+									<td>
+										<input type='text' id='msjFac' placeholder='msj' class='inputs form-control'/>
 									</td>
 								</tr>
 								<tr>
@@ -813,7 +845,9 @@ $(document).ready(function(){
 		$('#jumbo29es,#jumbo29en').attr('class','jumbotron jumbo-red');
 		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion").fadeIn();
         $('#tablet_menu').bootstrapSwitch('readonly',true);
+        $('#msjFac').attr('readonly',true);
         $('#grabaFac').attr({onclick:'ActivarFirma();'});
+        $('#msjFac').attr({onclick:'ActivarMsjFactura();'});
         localStorage.setItem("diseno",0);
 	}else if(paquete=="36"){
 		$('#linklogin29es,#linklogin29en').attr("link","https://www.practisis.net/index33.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister")));
@@ -826,13 +860,15 @@ $(document).ready(function(){
 		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').attr('class','jumbotron');
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
 		$('#printlogo').bootstrapSwitch('readonly',false);
-        $('#produccion').bootstrapSwitch('readonly',false);
+        $('#produccion').bootstrapSwitch('readonly',true);
 		if(localStorage.getItem('imprimelogo')=="true")
 		$('#printlogo').bootstrapSwitch('state',true);
-		$("#activaprintlogo,#cambiamensaje,#activaproduccion").css("display","none");
-        $("#activadisenomenu,#permisos").fadeIn();
+		$("#activaprintlogo,#cambiamensaje").css("display","none");
+        $("#activadisenomenu,#permisos,#activaproduccion").fadeIn();
         $('#tablet_menu').bootstrapSwitch('readonly',true);
+        $('#msjFac').attr('readonly',true);
         $('#grabaFac').attr({onclick:'ActivarFirma();'});
+        $('#msjFac').attr({onclick:'ActivarMsjFactura();'});
         localStorage.setItem("diseno",0);
 	}else if(paquete=="37"){
 		$('#linklogin69es,#linklogin69en').attr("link","https://www.practisis.net/index33.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister")));
@@ -849,6 +885,7 @@ $(document).ready(function(){
 		if(localStorage.getItem('imprimelogo')=="true")
 		$('#printlogo').bootstrapSwitch('state',true);
         $('#grabaFac').attr({onclick:'subirfirma();'});
+        $('#msjFac').attr('readonly',false);
 		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion").css("display","none");
 	}
 	
@@ -923,6 +960,14 @@ $(document).ready(function(){
 				showalertredquiet("<b>Atención:</b> Para poder contar con la opción de <b>Subir Firma</b> debes tener activado el <b>Plan Premium</b>.");
 			else
 				showalertredquiet("<b>Attention:</b> In order to have the <b>Sign Up</b> option, you must activate <b>Premium Plan</b>.");
+			msjcloud=0;
+		}
+
+        if(msjcloud==8){
+			if(localStorage.getItem('idioma')==1)
+				showalertredquiet("<b>Atención:</b> Para poder contar con la opción de <b>Mensaje Facturación Electrónica</b> debes tener activado el <b>Plan Premium</b>.");
+			else
+				showalertredquiet("<b>Attention:</b> In order to have the <b>Message E-Billing</b> option, you must activate <b>Premium Plan</b>.");
 			msjcloud=0;
 		}
 	}
@@ -1947,6 +1992,7 @@ function actualizar(){
                         var obligado_contabilidad = row.obligado_contabilidad;
                         var prueba_produccion = row.prueba_produccion;
                         var tiene_factura_electronica = row.tiene_factura_electronica;
+                        var msj_factura_electronica = row.mensaje_factura;
 
 						$('#nombreEsta').val(nombre);
 						$('#razon').val(razon);
@@ -1964,6 +2010,11 @@ function actualizar(){
 						$('#dirFac').val(direccion);
                         $('#firmaFac').val(key);
                         $('#numcontribuyenteFac').val(numero_contribuyente);
+                        $('#telFac').val(telefono);
+                        $('#serieFac').val(serie);
+						$('#establecimientoFac').val(establecimiento);
+                        $('#msjFac').val(msj_factura_electronica);
+
                         if(obligado_contabilidad=='true'){
 							$('#obligado').bootstrapSwitch('state', true);
 						}else{
@@ -1971,8 +2022,10 @@ function actualizar(){
 						}
                         if(prueba_produccion=='true'){
 							$('#produccion').bootstrapSwitch('state', false);
+                            $('#rucFac').attr('readonly',false);
 						}else{
 							$('#produccion').bootstrapSwitch('state', true);
+                            $('#rucFac').attr('readonly',true);
 						}
                         if(tiene_factura_electronica=='true'){
 							$('#activafacturacionelectronica').bootstrapSwitch('state', true);
@@ -2144,7 +2197,7 @@ function ActivarPermisos(){
 function ActivarProduccion(){
   //alert('entra imprlogo');
   var paquete=localStorage.getItem("paquete");
-  if(paquete==22){
+  if(paquete==22 || paquete==36){
     msjcloud=6;
     envia('config');
   }
@@ -2161,6 +2214,10 @@ var produccionaux = $('#produccion').bootstrapSwitch('state');
 var activafacturacionelectronica = $('#activafacturacionelectronica').bootstrapSwitch('state');
 var firmaFac = $('#firmaFac').val();
 var produccion = true;
+var telFac = $('#telFac').val();
+var serieFac = $('#serieFac').val();
+var establecimientoFac = $('#establecimientoFac').val();
+var msjFac = $('#msjFac').val();
 
 if(nombreEstable == '' ){
 	$('#nombreEstable').effect('highlight');
@@ -2216,7 +2273,7 @@ if(nombreEstable == '' || razonSo == '' || rucFac == '' || emailFac == '' || dir
 }else{
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function (tx){
-		tx.executeSql('update CONFIG set nombre="'+nombreEstable+'",razon="'+razonSo+'",ruc="'+rucFac+'",email_fact="'+emailFac+'",direccion="'+dirFac+'",numero_contribuyente="'+numcontribuyenteFac+'",obligado_contabilidad="'+obligado+'",prueba_produccion="'+produccion+'",tiene_factura_electronica="'+activafacturacionelectronica+'",sincronizar="true" where id=1');
+		tx.executeSql('update CONFIG set nombre="'+nombreEstable+'",razon="'+razonSo+'",ruc="'+rucFac+'",email_fact="'+emailFac+'",direccion="'+dirFac+'",numero_contribuyente="'+numcontribuyenteFac+'",obligado_contabilidad="'+obligado+'",prueba_produccion="'+produccion+'",tiene_factura_electronica="'+activafacturacionelectronica+'",sincronizar="true",telefono='+telFac+',serie="'+serieFac+'",establecimiento="'+establecimiento+'",mensaje_factura="'+msjFac+'" where id=1');
 
         if(localStorage.getItem("idioma")==1){
     		 $('#msjOkFac').html('Información Ingresada con Éxito');
@@ -2243,10 +2300,16 @@ function subirfirma(){
   window.open(url);
 }
 function ActivarFirma(){
-  //alert('entra imprlogo');
   var paquete=localStorage.getItem("paquete");
-  if(paquete==22){
+  if(paquete==22 || paquete==36){
     msjcloud=7;
+    envia('config');
+  }
+}
+function ActivarMsjFactura(){
+  var paquete=localStorage.getItem("paquete");
+  if(paquete==22 || paquete==36){
+    msjcloud=8;
     envia('config');
   }
 }

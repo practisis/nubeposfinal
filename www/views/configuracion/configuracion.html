@@ -2273,7 +2273,7 @@ if(nombreEstable == '' || razonSo == '' || rucFac == '' || emailFac == '' || dir
 }else{
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function (tx){
-		tx.executeSql('update CONFIG set nombre="'+nombreEstable+'",razon="'+razonSo+'",ruc="'+rucFac+'",email_fact="'+emailFac+'",direccion="'+dirFac+'",numero_contribuyente="'+numcontribuyenteFac+'",obligado_contabilidad="'+obligado+'",prueba_produccion="'+produccion+'",tiene_factura_electronica="'+activafacturacionelectronica+'",sincronizar="true",telefono='+telFac+',serie="'+serieFac+'",establecimiento="'+establecimiento+'",mensaje_factura="'+msjFac+'" where id=1');
+		tx.executeSql('update CONFIG set nombre="'+nombreEstable+'",razon="'+razonSo+'",ruc="'+rucFac+'",email_fact="'+emailFac+'",direccion="'+dirFac+'",numero_contribuyente="'+numcontribuyenteFac+'",obligado_contabilidad="'+obligado+'",prueba_produccion="'+produccion+'",tiene_factura_electronica="'+activafacturacionelectronica+'",sincronizar="true",telefono='+telFac+',serie="'+serieFac+'",establecimiento="'+establecimientoFac+'",mensaje_factura="'+msjFac+'" where id=1');
 
         if(localStorage.getItem("idioma")==1){
     		 $('#msjOkFac').html('Información Ingresada con Éxito');

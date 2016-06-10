@@ -2091,6 +2091,7 @@ function Init3(){
 	//pongo alto uniforme al mas grande.
 	$('.producto').each(function(){
 		$(this).css('height',mialtoboton+'px');
+		$(this).css('line-height','14px');
 	});
 	
 	
@@ -2237,7 +2238,7 @@ function botonesCalculadora(){
     height=($(window).height() * 0.70) / 4 ;
     heightc=($(window).height() * 0.45) / 4 ;
     $(".numero").css("height", height +"px");
-    $(".numeroc").css("height", heightc +"px");
+    //$(".numeroc").css("height", heightc +"px");
 }
 
 function ClickNumero(num){
@@ -2607,7 +2608,17 @@ function Ready(){
 		}
   });*/
   $('#popupprecios').modal('hide');
-	
+
+  $('.modal').on('shown.bs.modal',function(){
+		$('body').css('padding-right','0px');
+		$('body,html').css('overflow-y','hidden');
+  });
+			
+  $('.modal').on('hidden.bs.modal',function(){
+		$('body').css('padding-right','0px');
+		$('body,html').css('overflow-y','auto');
+  }); 
+  
   if(localStorage.getItem("con_shop")=='true'){
     /*$('#productos').fadeOut();
     $('#productosnew').fadeIn();*/

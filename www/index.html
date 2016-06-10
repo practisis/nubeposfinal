@@ -62,7 +62,6 @@
 					position: absolute;
 					right: 0;
 					top: 0px;
-					z-index:4;
 					background-color: rgba(255, 255, 255, 1);
                     padding: 0px;
                     width: 100%;
@@ -367,17 +366,17 @@
 						<li onclick="VerificarPermiso('productos');" id='productosIndex'><a id='menu_3' href="javascript:void(0);"><span style='display:inline;' class='fa fa-list-alt'></span>&nbsp;<label id='lab_menu_3'>Productos</label></a></li>
 						<li onclick="envia('dashboard')"><a id='menu_4' href="javascript:void(0);"><span style='display:inline;' class='fa fa-line-chart'></span>&nbsp;<label id='lab_menu_4'>Resultados</label></a></li>
 						<li onclick="VerificarPermiso('configuracion');"><a id='menu_5' href="javascript:void(0);"><span style='display:inline;' class='fa fa-cog'></span>&nbsp;<label id='lab_menu_5'>Configuración</label></a></li>
-						<!---<li onclick="envia('cloud')" id='cloudIndex'><a id='menu_5' href="javascript:void(0);"><span style='display:inline;' class='fa fa-cloud'></span>&nbsp;<label id='lab_menu_5'>Cloud</label></a></li>
+						<!--<li onclick="envia('cloud')" id='cloudIndex'><a id='menu_5' href="javascript:void(0);"><span style='display:inline;' class='fa fa-cloud'></span>&nbsp;<label id='lab_menu_5'>Cloud</label></a></li>
 						<li id='cloudIndexOff' style='display:none;'><a href="javascript:void(0);" style='color:#2EC1CC;'><span style='display:inline;color:#2EC1CC;' class='fa fa-times'></span>&nbsp;<label id='lab_menu_5'>Cloud<br></label></a></li>-->
 					</ul>
 					
 				  <ul class="nav navbar-nav navbar-right">
 					<li id='cloudIndex'><a><i class='fa fa-signal' style='color:white;'></i></a></li>
-					<!---<li class="dropdown">
+					<!--<li class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span style='display:inline;' class='fa fa-cog'></span>&nbsp;<label id='lab_menu_6'>Config</label><span class="caret"></span></a>
-					  <ul class="dropdown-menu">--->
+					  <ul class="dropdown-menu">-->
 					   <!--<li><a href="centvia://?udn=Impresion&utt=NubePOS&cru=nubeposv%3a%2f%2f&cruf=nubeposv%3a%2f%2f&c_=!+0+200+200+540+1%0d%0aTEXT+4+0+20+10+Prueba+de+Impresion%0d%0aTEXT+7+0+20+60+NubePOS%0d%0aENDML%0d%0aCONCAT+250+300%0d%0aENDCONCAT%0d%0a%0d%0aPRINT%0d%0a" target="_blank"><span style='display:inline;' class='glyphicon glyphicon-print'></span>&nbsp;Config</a></li>-->
-					   <!---<li onclick="envia('printconfig');"><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-print'></span>&nbsp;<label id='lab_menu_7'>Impresoras</label></a></li>
+					   <!--<li onclick="envia('printconfig');"><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-print'></span>&nbsp;<label id='lab_menu_7'>Impresoras</label></a></li>
 					   <li onclick='VerificarPermiso("configuracion");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-wrench'></span>&nbsp;<label id='lab_menu_8'>Configuración</label></a></li>
 					   <li onclick='envia("empresa");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-user'></span>&nbsp;<label id='lab_menu_9'>Empresa</label></a></li>
 					   <li onclick='envia("log");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-book'></span>&nbsp;<label id='lab_menu_10'>Log</label></a></li>-->
@@ -464,7 +463,7 @@
 				</tr>
 			</table>
 		</div>
-		<!---modal permiso--->
+		<!--modal permiso-->
 		<div class="modal fade" tabindex="-1" role="dialog" id='modalpermiso'>
 		  <div class="modal-dialog">
 			<div class="modal-content">
@@ -485,7 +484,7 @@
 			</div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
-		<!---fin modal--->
+		<!--fin modal-->
 		
 		
 		<div  id="version_escoje" class='panel-default' style='z-index:1060;'>
@@ -557,7 +556,7 @@
     		<div class="popover-content">
             <div class='row' style="padding-top: 25px;">
     			<div class="col-sm-12" style="text-align: center;">
-    			    <img src="img/logoava.png" width="150" alt="">
+    			    <img src="img/logoava.png" width="150" alt="" />
                 </div>
     		</div>
     		<div class='row' style="padding-top: 15px;">
@@ -574,7 +573,7 @@
                 <div class="col-xs-2">
                 </div>
     			<div class="col-xs-8" id='trans_label_70' style="text-align:justify;">
-    			    El principal componente de AvaPOS es Ava, tu asistente personal de gerencia. Ava es un robot con inteligencia artificial que te ayuda a manejar tu negocio por medio de chats en WhatsApp.
+    			   Ava es un robot con inteligencia artificial que te ayuda a manejar tu negocio por medio de chats en WhatsApp.
                 </div>
                 <div class="col-xs-2">
                 </div>
@@ -652,7 +651,7 @@
 			<br/><br/>
         </div>
 
-		<!---modal cantidad--->
+		<!--modal cantidad-->
 		<div class="modal fade" role="dialog" id='popupprecios' data-backdrop='static'>
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
@@ -722,9 +721,9 @@
 				</div>
 			</div>
 		</div>
-		<!---fin modal cantidad--->
+		<!--fin modal cantidad-->
 
-<!----popup factura guardada---->
+<!--popup factura guardada-->
 <div  class="modal fade" id="popupsavefactura" role="dialog" data-backdrop="static">
 		<div class="modal-dialog modal-lg">
 			<div class='modal-content text-center'>
@@ -759,10 +758,10 @@
 			</div>
 		</div>
 </div>
-<!--fin factura guardada--->
+<!--fin factura guardada-->
 
 
-<!---popup creado--->
+<!--popup creado-->
 <div  class="modal fade" id="popupsaveproducts" role="dialog" data-backdrop="static">
 	<div class="modal-dialog modal-lg">
 		<div class='modal-content text-center'>
@@ -782,7 +781,7 @@
 		</div>
 	</div>
 </div>
-<!---fin creado--->
+<!--fin creado-->
 
 <!--terminos y condiciones-->
 <div  id="terminos_condiciones" class='panel-default' style='z-index:1051;'>
@@ -879,7 +878,7 @@
     </div>
 </div>
 
-<!---modal ayuda-->
+<!--modal ayuda-->
 		<div class="modal fade" id="myDash" role="dialog" data-backdrop='static'>
 			<img id='flechamenu' src='images/flechamenu.png' style='display:none; position:absolute; top:60px; left:10%; width:160px; z-index:5;'/>
 			<img id='flechamenumovil' src='images/flechamenumovil.png' style='display:none; position:absolute; top:60px; left:67%; width:160px; z-index:5;'/>
@@ -899,7 +898,7 @@
 			  </div>
 			</div>
 		</div>
-<!---fin ayuda-->
+<!--fin ayuda-->
 
 </body>
 <link href="slide/bootstrap-switch.css" rel="stylesheet"/>

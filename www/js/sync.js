@@ -569,12 +569,13 @@ function registrarUser(){
 
 function LaunchBoarding(){
 	$('.navbar').slideDown();
-	if($(window).width()<500){
-		$('#flechamenumovil').css('display','');
+	//alert($(window).width());
+	if(parseInt($(window).width())<550){
+		$('#flechamenumovil').css('display','block');
 		$('#flechamenu').css('display','none');
 	}
 	else{
-		$('#flechamenu').css('display','');
+		$('#flechamenu').css('display','block');
 		$('#flechamenumovil').css('display','none');
 	}
 	$('#myDash').modal('show');

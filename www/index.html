@@ -486,28 +486,9 @@
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
 		<!---fin modal--->
-
-        <!---modal ayuda-->
-		<div class="modal fade" id="myDash" role="dialog" data-backdrop='static'>
-			<img id='flechamenu' src='images/flechamenu.png' style='display:none; position:absolute; top:60px; left:10%; width:160px; z-index:5;'/>
-			<img id='flechamenumovil' src='images/flechamenumovil.png' style='display:none; position:absolute; top:60px; left:67%; width:160px; z-index:5;'/>
-			<div class="modal-dialog">
-			  <!-- Modal content-->
-			  <div class="modal-content">
-				<div class="modal-header">
-				  <button type="button" class="close" data-dismiss="modal">&times;</button>
-				  <h4 class="modal-title" id='trans_label_90'>Avapos Instrucciones de Navegación</h4>
-				</div>
-				<div class="modal-body">
-				  <p class='ayudainicialp' id='trans_label_91'>Este es el menú principal de AvaPOS, puedes navegar por todas las opciones, por ejemplo puedes empezar vendiendo.</p>
-				</div>
-				<div class="modal-footer">
-				  <button type="button" class="btn btn-default trans_end" data-dismiss="modal">Finalizar</button>
-				</div>
-			  </div>
-			</div>
-		</div>
-		<!---fin ayuda-->
+		
+		
+		
 		
 		
 		<div  id="version_escoje" class='panel-default' style='z-index:1051;'>
@@ -667,8 +648,8 @@
             </div>
     		<br/>
     		<div>
-    			<center><button type="button" class="btn btn-lg btn-success trans_active_ava" onclick='guardatelefono()' style="font-size: 20px;">Activar AVA</button></center>
-                <center style="padding-top: 15px;"><span id="trans_label_81" onclick='omitirtelefono();' style="cursor: pointer;">Omitir</span></center>
+    			<center><button type="button" class="btn btn-lg btn-success trans_active_ava" onclick='guardatelefono()' style="font-size: 20px;">Activar AVA</button>&nbsp;<button></button>&nbsp;<button class='btn btn-success btn-lg' id='trans_label_81' onclick='omitirtelefono();'>Omitir</button></center>
+                <!--<center style="padding-top: 15px;"><span id="trans_label_81" onclick='omitirtelefono();' style="cursor: pointer;">Omitir</span></center>-->
     		</div>
         </div>
 
@@ -899,6 +880,28 @@
     </div>
 </div>
 
+<!---modal ayuda-->
+		<div class="modal fade" id="myDash" role="dialog" data-backdrop='static'>
+			<img id='flechamenu' src='images/flechamenu.png' style='display:none; position:absolute; top:60px; left:10%; width:160px; z-index:5;'/>
+			<img id='flechamenumovil' src='images/flechamenumovil.png' style='display:none; position:absolute; top:60px; left:67%; width:160px; z-index:5;'/>
+			<div class="modal-dialog">
+			  <!-- Modal content-->
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <button type="button" class="close" data-dismiss="modal">&times;</button>
+				  <h4 class="modal-title" id='trans_label_90'>Avapos Instrucciones de Navegación</h4>
+				</div>
+				<div class="modal-body">
+				  <p class='ayudainicialp' id='trans_label_91'>Este es el menú principal de AvaPOS, puedes navegar por todas las opciones, por ejemplo puedes empezar vendiendo.</p>
+				</div>
+				<div class="modal-footer">
+				  <button type="button" class="btn btn-default trans_end" data-dismiss="modal">Finalizar</button>
+				</div>
+			  </div>
+			</div>
+		</div>
+<!---fin ayuda-->
+
 </body>
 <link href="slide/bootstrap-switch.css" rel="stylesheet"/>
 <script src="slide/bootstrap-switch.js"></script>
@@ -961,13 +964,39 @@
             }
 
 			$('#myDash').on('show.bs.modal',function(){
-				$(this).find('.modal-dialog').css('top','150px');
+				if(parseInt($(window).width())>550){
+					$(this).find('.modal-dialog').css('top','150px');
+				}else{
+					$(this).find('.modal-dialog').css('top','75px');
+				}
 			});
 			
 			$('#myDash').on('shown.bs.modal',function(){
 				var hmenu=parseFloat($('.navbar').css('height'));
 				$(this).find('.modal-backdrop').css('top',hmenu);
+				if(parseInt($(window).width())>550){
 				setTimeout(function(){$('#listademenus').effect('highlight',{'color':'#CCC', "opacity": ".5"},2000)},2500);
+				}
+				else{
+				setTimeout(function(){$('.navbar-toggle').effect('highlight',{'color':'#CCC', "opacity": ".5"},2000)},2500);
+				}
+				$('body,#myDash').css('padding-right','0px');
+				$('body,html').css('overflow-y','hidden');
+			});
+			
+			$('#myDash').on('hidden.bs.modal',function(){
+				$('body,#myDash').css('padding-right','0px');
+				$('body,html').css('overflow-y','auto');
+			}); 
+			
+			$('#popupprecios').on('shown.bs.modal',function(){
+				$('body,#myDash').css('padding-right','0px');
+				$('body,html').css('overflow-y','hidden');
+			});
+			
+			$('#popupprecios').on('hidden.bs.modal',function(){
+				$('body,#myDash').css('padding-right','0px');
+				$('body,html').css('overflow-y','auto');
 			}); 
 			
             window.addEventListener('native.keyboardshow', keyboardShowHandler);

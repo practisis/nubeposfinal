@@ -89,7 +89,7 @@ function ActivarCategoria(cual,categoria){
 						impuestosid+='2';
 					}*/
 				}
-				if($(window).height()>500){
+				if($(window).height()>550){
 						Init31();
 					}
 					else{
@@ -103,7 +103,7 @@ function ActivarCategoria(cual,categoria){
 	
 	
 	$('.producto').hide();
-	if($(window).height()>500){
+	if($(window).height()>550){
 			Init31();
 		}
 		else{
@@ -2750,7 +2750,7 @@ function Ready(){
 	
 	//idioma
 	
-	if($(window).height()>500){
+	if($(window).height()>550){
 			Init31();
 		}
 		else{
@@ -3520,7 +3520,7 @@ function ActivarCategoriaMenu(cual,categoria){
 								var agregar='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>';
 								$('#listaProductos').append(agregar);
 							}
-							if($(window).height()>500){
+							if($(window).height()>550){
 									Init31();
 								}
 								else{
@@ -3549,7 +3549,7 @@ function ActivarCategoriaMenu(cual,categoria){
 	$('#listacat li a').css("height",maxw);
 	
 	//$('.categoria_producto_'+ categoria).show();
-	if($(window).height()>500){
+	if($(window).height()>550){
 			Init31();
 		}
 		else{

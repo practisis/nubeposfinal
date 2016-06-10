@@ -139,6 +139,37 @@
 <script>
 	var digitado=false;
 	$(document).ready(function(){
+
+    var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(
+	function (tx){
+		//console.log('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc');
+		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? group by nombre order by id",["true"],function(tx,results3){
+							console.log(results3);
+							var impuestos='';
+							var impuestosid='';
+							if(results3.rows.length>0){
+								console.log("encuentra impuestos");
+								var cuan=0;
+								for(var r=0;r<results3.rows.length;r++){
+									var imp=results3.rows.item(r);
+
+										if(cuan>0){
+											impuestos+="@";
+											impuestosid+="@";
+										}
+
+									impuestos+=parseFloat(imp.porcentaje)/100;
+									impuestosid+=imp.timespan;
+									cuan++;
+								}
+								console.log(impuestos+'/'+impuestosid);
+								$('#impuestosactivos').html(impuestos);
+								$('#impuestosactivosid').html(impuestosid);
+								}
+		});
+	});
+
 		$('#precioproducto,#precioConImpuestos').on("click",function(){
 			digitado=false;
 			if($(this).val()!='')
@@ -754,7 +785,7 @@
 				sumaimpuesto+=0.10;
 
 			if($('#coniva').is(":checked"))
-				sumaimpuesto+=0.12;*/	
+				sumaimpuesto+=0.12;*/
 			if($('#coniva').is(':checked')){
 				var cadimp=$('#impuestosactivos').html();
 				var aplican="";

@@ -7,6 +7,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +22,8 @@ import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.os.Bundle;
+import android.os.Handler;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -35,11 +42,26 @@ import com.uforge.plugins.RasterDocument.RasSpeed;
 import com.uforge.plugins.RasterDocument.RasTopMargin;
 import com.uforge.plugins.StarBitmap;
 
+import com.epson.epsonio.Finder;
+import com.epson.epsonio.DeviceInfo;
+import com.epson.epsonio.FilterOption;
+import com.epson.epsonio.DevType;
+import com.epson.epsonio.EpsonIoException;
+import com.epson.epsonio.IoStatus;
+import com.epson.eposprint.Print;
+
 /**
  * @author Luca Del Bianco
  * This class handles the basic printing functions needed to print using the Star SDK
  */
 public class StarIOAdapter extends CordovaPlugin {
+	
+	/*global var for epson*/
+	//final static int DISCOVERY_INTERVAL = 500;
+	//ArrayList<HashMap<String, String>> printerList=new ArrayList<HashMap<String, String>>();
+	//ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+	//ScheduledFuture<?> future;
+	Handler handler = new Handler();
 	
 	public enum RasterCommand {
 		Standard, Graphics
@@ -55,7 +77,8 @@ public class StarIOAdapter extends CordovaPlugin {
         final StarIOAdapter currentPluginInstance = this;
         final JSONArray Arguments = args;
         final CallbackContext currentCallbackContext = callbackContext;
-
+		final Context micontext=this.cordova.getActivity().getApplicationContext();
+	
         if (action.equals("check")) {
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
@@ -141,6 +164,235 @@ public class StarIOAdapter extends CordovaPlugin {
                         currentCallbackContext.error(e.getMessage());
                     }
                 }
+            });
+            return true;
+        }else if (action.equals("searchEpson")) {
+            cordova.getActivity().runOnUiThread(new Runnable() {
+				public void run(){
+					int errStatus = IoStatus.SUCCESS;
+					//Acquire a list of devices 
+					try {
+						////Wi-Fi/Ethernet device    
+						//Finder.start(micontext, DevType.TCP,"255.255.255.255"); 
+						////Bluetooth device    
+						Finder.start(micontext, DevType.BLUETOOTH,null); 
+						////USB device    
+						//Finder.start(micontext, DevType.USB, "null");
+
+						handler.postDelayed(new UpdateListThread(),500);
+						
+					//Exception processing 
+					} catch ( EpsonIoException e ) { 
+						errStatus = e.getStatus();
+						System.out.println("status: "+e.getStatus());
+						if(e.getStatus()==IoStatus.ERR_PARAM)
+							System.out.println("error: Parametro invalido");
+						if(e.getStatus()==IoStatus.ERR_ILLEGAL)
+							System.out.println("error: El API se ha llamado cuando una busqueda ya estaba en progreso");
+						if(e.getStatus()==IoStatus.ERR_PROCESSING)
+							System.out.println("error: No se puede ejecutar el proceso");
+						if(e.getStatus()==IoStatus.ERR_MEMORY)
+							System.out.println("error: No se puede guardar en la memoria");
+						if(e.getStatus()==IoStatus.ERR_FAILURE)
+							System.out.println("error: Ocurrió un error inesperado");
+					}
+				}
+				
+				class UpdateListThread extends Thread {
+						DeviceInfo[] lista = null;
+						@Override
+						public void run(){
+							System.out.println("corre run");
+							if(lista!=null){
+								for (int i = 0; i < lista.length; i++) {
+									String name = lista[i].getPrinterName();
+									String address = lista[i].getDeviceName();
+									System.out.println(name+'/'+address);
+								}
+							}else{
+								System.out.println("nulo");
+							}
+							try{
+								Finder.stop();	
+							}catch(EpsonIoException e){
+								System.out.println("status stop: "+e.getStatus());
+							}
+						}
+							
+						public UpdateListThread(){
+							System.out.println("corre constructor");
+							try{
+								lista=Finder.getDeviceInfoList(FilterOption.PARAM_DEFAULT);
+							}catch(EpsonIoException e){
+								System.out.println("status lista: "+e.getStatus());
+							}
+						}
+							
+				}
+			/*@Override
+			// find thread 
+			public synchronized void run() {
+				try{
+					// start find thread scheduler
+					//scheduler = Executors.newSingleThreadScheduledExecutor();
+					// find start
+					findStart();
+				}catch(EpsonIoException e){
+					System.out.println("status: "+e.getStatus());
+					if(e.getStatus()==IoStatus.ERR_PARAM)
+						System.out.println("error: Parametro invalido");
+					if(e.getStatus()==IoStatus.ERR_ILLEGAL)
+						System.out.println("error: El API se ha llamado cuando una busqueda ya estaba en progreso");
+					if(e.getStatus()==IoStatus.ERR_PROCESSING)
+						System.out.println("error: No se puede ejecutar el proceso");
+					if(e.getStatus()==IoStatus.ERR_MEMORY)
+						System.out.println("error: No se puede guardar en la memoria");
+					if(e.getStatus()==IoStatus.ERR_FAILURE)
+						System.out.println("error: Ocurrió un error inesperado");
+				}
+				
+				class UpdateListThread extends Thread {
+							DeviceInfo[] list = null;
+
+							public UpdateListThread(DeviceInfo[] listDevices) {
+								//System.out.println("Entra a actualizar");
+								list = listDevices;
+							}
+
+							@Override
+							public void run() {
+								if (list == null) {
+									if (printerList.size() > 0) {
+										printerList.clear();
+										DestroyThread();
+										//printerListAdapter.notifyDataSetChanged();
+									}
+								}
+								else if (list.length != printerList.size()) {
+									printerList.clear();
+
+									for (int i = 0; i < list.length; i++) {
+										String name = list[i].getPrinterName();
+										String address = list[i].getDeviceName();
+
+										HashMap<String, String> item = new HashMap<String, String>();
+										item.put("PrinterName", name);
+										item.put("Address", address);
+										System.out.println(name+'/'+address);
+										printerList.add(item);
+									}
+									DestroyThread();
+									//printerListAdapter.notifyDataSetChanged();
+								}
+							}
+				}
+				try {
+					DeviceInfo[] deviceList = Finder.getDeviceInfoList(FilterOption.PARAM_DEFAULT);
+					handler.post(new UpdateListThread(deviceList));
+				}
+				catch (Exception e) {
+					DestroyThread();
+					return;
+				}*/
+			//}
+			
+			
+			/*private void DestroyThread() {
+					// stop find 
+					if (future != null) {
+						future.cancel(false);
+						while (!future.isDone()) {
+							try {
+								Thread.sleep(DISCOVERY_INTERVAL);
+							}
+							catch (Exception e) {
+								break;
+							}
+						}
+						future = null;
+					}
+
+					if (scheduler != null) {
+						scheduler.shutdown();
+
+						scheduler = null;
+					}
+
+					// stop old finder
+					while (true) {
+						try {
+							Finder.stop();
+							break;
+						}
+						catch (EpsonIoException e) {
+							if (e.getStatus() != IoStatus.ERR_PROCESSING) {
+								break;
+							}
+						}
+					}
+				}*/
+			
+			 // find start / restart 
+			/*private void findStart() throws EpsonIoException {
+				if (scheduler == null) {
+					return;
+				}
+
+				// stop old finder 
+				while (true) {
+					try {
+						Finder.stop();
+						break;
+					}
+					catch (EpsonIoException e) {
+						if (e.getStatus() != IoStatus.ERR_PROCESSING) {
+							break;
+						}
+					}
+				}
+
+				// stop find thread 
+				if (future != null) {
+					future.cancel(false);
+					while (!future.isDone()) {
+						try {
+							Thread.sleep(DISCOVERY_INTERVAL);
+						}
+						catch (Exception e) {
+							break;
+						}
+					}
+
+					future = null;
+				}
+
+				// clear list 
+				printerList.clear();
+				//printerListAdapter.notifyDataSetChanged();
+				//DestroyThread();
+
+				try {
+					Finder.start(micontext,DevType.TCP, "255.255.255.255");
+				}
+				catch (EpsonIoException e) {
+					System.out.println(e.getStatus());
+					if(e.getStatus()==IoStatus.ERR_PARAM)
+						System.out.println("error: Parametro invalido");
+					if(e.getStatus()==IoStatus.ERR_ILLEGAL)
+						System.out.println("error: El API se ha llamado cuando una busqueda ya estaba en progreso");
+					if(e.getStatus()==IoStatus.ERR_PROCESSING)
+						System.out.println("error: No se puede ejecutar el proceso");
+					if(e.getStatus()==IoStatus.ERR_MEMORY)
+						System.out.println("error: No se puede guardar en la memoria");
+					if(e.getStatus()==IoStatus.ERR_FAILURE)
+						System.out.println("error: Ocurrió un error inesperado");
+					return;
+				}
+
+				// start thread
+				//future = scheduler.scheduleWithFixedDelay(this, 0, DISCOVERY_INTERVAL, TimeUnit.MILLISECONDS);
+				future = scheduler.scheduleWithFixedDelay(this, 0, DISCOVERY_INTERVAL, TimeUnit.MILLISECONDS);
+			}*/
             });
             return true;
         }
@@ -2843,6 +3095,39 @@ public class StarIOAdapter extends CordovaPlugin {
         }
 	}
 	
+	
+	
+	 /**
+     * This method search all Epson printers
+     * @param callbackContext the callback context of the action
+     */
+    private void searchAllEpson(CallbackContext callbackContext, String portNameSearch, Runnable runable){
+		/*ArrayList<String> portNames =new ArrayList<String>();
+		//String portNames="";
+        Context context = this.cordova.getActivity().getApplicationContext();
+		String portarray="";
+		//int x=0;
+        try {
+			portNames = PrinterFunctions.buscarEpson(context,runable);
+			if(portNames.size()>0){
+				int cont=0;
+				for(int x=0;x<portNames.size();x++) {
+					if(cont>0){
+						portarray=portarray+"||";
+					}
+					portarray=portarray+portNames.get(x);
+					cont++;
+				}
+				callbackContext.success(portarray);
+			}else{
+				callbackContext.error("No printers Epson found.");
+			}
+		}catch ( EpsonIoException e) {
+            callbackContext.error(e.getMessage());
+        }*/
+	}
+	
+	
 	 /**
      * This method print an image given the path
      * @param callbackContext the callback context of the action
@@ -2983,6 +3268,53 @@ public class StarIOAdapter extends CordovaPlugin {
 			word="checks";
 		}
 		return word;
+	}
+	
+	
+	
+	
+    public static ArrayList<String> buscarEpson(Context context,Runnable runable) throws EpsonIoException{
+		ArrayList <String> epsonLista = new ArrayList <String>();
+		/*try{*/
+			 // start find thread scheduler
+				//scheduler = Executors.newSingleThreadScheduledExecutor();
+			// find start
+				//findStart(context,runable);
+			/*while (true) {
+				try {
+					Finder.stop();
+					break;
+				}
+				catch (EpsonIoException e) {
+					if (e.getStatus() != IoStatus.ERR_PROCESSING) {
+						break;
+					}
+				}
+			}
+			System.out.println("device: "+DevType.TCP);
+			Finder.start(context,DevType.TCP, "192.168.1.60");
+			DeviceInfo[] deviceList = Finder.getDeviceInfoList(FilterOption.PARAM_DEFAULT);
+				for (int i = 0; i < deviceList.length; i++) {
+					String name = deviceList[i].getPrinterName();
+					String address = deviceList[i].getDeviceName();
+					String item=name+"||"+address;
+					epsonLista.add(item);
+				}*/
+		/*}
+		catch(EpsonIoException e){
+			System.out.println("status: "+e.getStatus());
+			if(e.getStatus()==IoStatus.ERR_PARAM)
+				System.out.println("error: Parametro invalido");
+			if(e.getStatus()==IoStatus.ERR_ILLEGAL)
+				System.out.println("error: El API se ha llamado cuando una busqueda ya estaba en progreso");
+			if(e.getStatus()==IoStatus.ERR_PROCESSING)
+				System.out.println("error: No se puede ejecutar el proceso");
+			if(e.getStatus()==IoStatus.ERR_MEMORY)
+				System.out.println("error: No se puede guardar en la memoria");
+			if(e.getStatus()==IoStatus.ERR_FAILURE)
+				System.out.println("error: Ocurrió un error inesperado");
+		}*/
+		return epsonLista;
 	}
 }
 

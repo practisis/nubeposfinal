@@ -67,6 +67,7 @@
 		<item name='trans_label_35'>Choose one card to pay</item>
 		<item name='trans_label_36'>Write the check ammount</item>
 		<item name='trans_label_37'>Write the ammount</item>
+		<item name='trans_label_38'>Sign Up! Enter your information and create your PractiPOS account.</item>
 	</labels>
 	<placeholder>
 		<item name='trans_buscar'>Search</item>

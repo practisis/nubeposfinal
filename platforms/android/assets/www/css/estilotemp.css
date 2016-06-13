@@ -24,6 +24,14 @@
 	/*border-top:2px dashed #d1d3d4;*/
 	/*padding-top:5px;*/
 }
+
+#divtotal,#divtotal2{
+	background-color:black;
+	color:#5cb85c;
+	font-size:30px;
+	text-align:center;
+	padding:5px;
+}
 .numpad{
 	background-color:#FDFDFD;
 	text-align:center;
@@ -35,8 +43,8 @@
 	text-align:center;
 	/*border-right:1px solid #CCC;*/
 	/*-webkit-box-shadow: inset 1px 2px 15px -9px rgba(90,91,91,0.9);
--moz-box-shadow: inset 1px 2px 15px -9px rgba(90,91,91,0.9);
-box-shadow: inset 1px 2px 15px -9px rgba(90,91,91,0.9);*/
+	-moz-box-shadow: inset 1px 2px 15px -9px rgba(90,91,91,0.9);
+	box-shadow: inset 1px 2px 15px -9px rgba(90,91,91,0.9);*/
 }
 .detalle{
 	text-align:left;
@@ -210,7 +218,7 @@ box-shadow: inset 1px 2px 15px -9px rgba(90,91,91,0.9);*/
 	-moz-box-shadow: inset 3px 2px 30px -10px rgba(90,91,91,1);
 	box-shadow: inset 3px 2px 30px -10px rgba(90,91,91,1);*/
 }
-.numero,.numeroc,.numerod{
+.numero,.numeroc,.numerod,.numerom,.numeron{
 	text-align:center;
 	/*border-radius:5px;*/
 	/*border:1px solid #5a5b5d;*/
@@ -227,8 +235,6 @@ box-shadow: inset 1px 2px 15px -9px rgba(90,91,91,0.9);*/
 	/*-webkit-box-shadow: inset 3px 2px 30px   -10px rgba(90,91,91,1);
 	-moz-box-shadow: inset 3px 2px 30px -10px rgba(90,91,91,1);
 	box-shadow: inset 3px 2px 30px -10px rgba(90,91,91,1);*/
-	
-	
 }
 .fondonum{
 	position:absolute;
@@ -239,7 +245,7 @@ box-shadow: inset 1px 2px 15px -9px rgba(90,91,91,0.9);*/
 	/*background-color:rgba(0,165,171,1);*/
 	/*color:#FFF;*/
 }
-.cantidad,.cantidadd{
+.cantidad,.cantidadd,.cantidadm,.cantidadn{
 	text-align:right;
 	border:1px solid rgba(90,91,93,0.7);
 	width:100%;
@@ -349,12 +355,14 @@ box-shadow: inset 1px 2px 15px -9px rgba(90,91,91,0.9);*/
 	font-family:Lato,Arial;
 }
 #listaProductos{
+	
 	width:100%;
 	overflow-x:hidden;
 	overflow-y:auto;
 	border-left:0px solid #BBB;
 	border-right:0px solid #BBB;
 	background-color:white;
+	padding-top:15px;
 	/*padding:10px;*/
 }
 #listaCategorias{
@@ -698,7 +706,7 @@ margin-top:10px;
     /*width:320px;*/
     margin-left: auto;
     margin-right: auto;
-    font-size: 14px;
+    font-size: 18px;
     margin-top: 5px;
   }
   .totalvista{
@@ -726,20 +734,11 @@ margin-top:10px;
     }
 	
 	.cuadroClientes{
-		z-index:901;
-		width:100%;
 		padding-bottom:15px;
-		height:380px;
-		overflow:hidden; 
-		border:solid 1px #808081;
-		border-radius:6px;
-		position:absolute;
-		top:0px;
 		background-color:white;
 		text-align:left;
 		padding:0px;
 		text-align:center;
-		left:0px;
 	}
 	
 	.camposcolor{
@@ -1181,10 +1180,11 @@ margin-top:10px;
 }
 
 .touchpago{
-	border:1px solid #CCC;
+	/*border:1px solid #CCC;
 	border-radius:5px;
 	padding:10px;
-	margin-top:10px;
+	margin-top:10px;*/
+	border:1px solid #ddd;
 }
 .touchpago .row .col-lg-6 .btn,.touchpago .col-xs-3 .btn{
 	width:100%;
@@ -1202,4 +1202,50 @@ margin-top:10px;
 	text-align:right;
 	color:#CCC;
 	cursor:pointer;
+}
+.divmesas{
+	width:100%;
+	height:100%;
+	background-color:white;
+	position:absolute;
+	top:0px;
+	left:0px;
+	/*padding:10px;*/
+	z-index:2;
+	display:none;
+	background-image:url("../images/piso.jpg");
+	
+}
+
+.jumbo-green{
+	background-color:#54B847;
+	color:white;
+	padding:10px 10px 10px 10px;
+	padding-right:20px;
+	padding-left:20px;
+}
+
+.jumbo-blue{
+	background-color:#3A4D80;
+	color:#DDD;
+	padding:10px 10px 10px 10px;
+	padding-right:20px;
+	padding-left:20px;
+}
+
+.jumbo-red{
+	background-color:#B3252A;
+	color:white;
+	padding:10px 10px 10px 10px;
+	padding-right:20px;
+	padding-left:20px;
+}
+
+.jumbotron
+{
+	padding-right:20px;
+	padding-left:20px;
+	padding-top:10px;
+	padding-bottom:10px;
+	border-radius:0px;
 }

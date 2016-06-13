@@ -1,7 +1,9 @@
+var msjcloud=0;
 var campos=new Array();
 campos["PRODUCTOS"]=['id_local|integer primary key AUTOINCREMENT','id|integer','formulado|text','codigo|text','precio|real','categoriaid|text','cargaiva|integer','productofinal|integer','materiaprima|integer','timespan|text UNIQUE','ppq|real default 0','color|text','servicio|integer default 0','estado|integer default 1','sincronizar|boolean default "true"','tieneimpuestos|boolean default "true"'];
 
-campos["CONFIG"]=['id|integer primary key AUTOINCREMENT','nombre|text, razon|text','ruc|integer','telefono|integer','email|text','direccion|text','printer|text','serie|text default "001"','establecimiento|text default "001"','sincronizar|boolean default "false"','encabezado|integer default 3','largo|integer default 18','nombreterminal|text default "Tablet 1"','pais|text default ""','id_idioma|integer default 1','sin_documento|boolean default "false"','con_nombre_orden|boolean default "false"','con_propina|boolean default "false"','con_tarjeta|boolean default "false"','con_shop|boolean default "false"'];
+
+campos["CONFIG"]=['id|integer primary key AUTOINCREMENT','nombre|text, razon|text','ruc|integer','telefono|integer','email|text','direccion|text','printer|text','serie|text default "001"','establecimiento|text default "001"','sincronizar|boolean default "false"','encabezado|integer default 3','largo|integer default 18','nombreterminal|text default "Tablet 1"','pais|text default ""','id_idioma|integer default 1','sin_documento|boolean default "false"','con_nombre_orden|boolean default "false"','con_propina|boolean default "false"','con_tarjeta|boolean default "false"','con_shop|boolean default "false"','con_notasorden|boolean default "true"',' con_comanderas|boolean default "true"','printercom|text default ""',' con_localhost|boolean default "true"','ip_servidor|text default ""','con_mesas|boolean default "true"','logo|text default ""','id_version_nube|integer default 0','pide_telefono|boolean default "false"','telefono_inte|text default ""','mensajefinal|text default ""','paquete|integer default 1','terminos_condiciones|boolean default "true"','id_locales|integer default 0','key|text default ""','numero_contribuyente|integer default 0','obligado_contabilidad|boolean default "false"','prueba_produccion|boolean default "true"','tiene_factura_electronica|boolean default "false"','email_fact|text default ""','mensaje_factura|text default ""'];
 
 campos["LOGACTIONS"]=['id|integer primary key AUTOINCREMENT','time|numeric','descripcion|text','datos|text'];
 
@@ -13,21 +15,30 @@ campos["MENU"]=['id|integer primary key AUTOINCREMENT', 'fila|integer default 0'
 
 campos["PERMISOS"]=['id|integer primary key AUTOINCREMENT',' clave|text default "" UNIQUE','historial|boolean default false','configuracion|boolean default false','anular|boolean default false', 'impcierre|boolean default false','productos|boolean default false','activo|boolean default false','vertotales|boolean default false','irnube|boolean default false'];
 
-campos["empresa"]=['id|integer primary key AUTOINCREMENT','nombre|nteger',' nombreempresa|text','id_barra|text','barra_arriba|text'];
+campos["empresa"]=['id|integer primary key AUTOINCREMENT','nombre|nteger','nombreempresa|text','id_barra|text','barra_arriba|text'];
 
 campos["CATEGORIAS"]=['id|integer primary key AUTOINCREMENT', 'categoria|text', 'activo|integer', 'existe|integer' , 'timespan|text UNIQUE', 'sincronizar|boolean default "true"'];
 
 campos["CLIENTES"]=['id|integer primary key AUTOINCREMENT','nombre|text', 'cedula|text UNIQUE', 'email|text', 'direccion|text', 'telefono|text','existe|integer','timespan|TEXT','sincronizar|boolean default "true"'];
 
-campos["FACTURAS"]=['id|integer primary key AUTOINCREMENT','timespan|text','clientName|','RUC|','address|','tele|','fetchJson|','paymentsUsed|','cash|','cards|','cheques|','vauleCxC|','paymentConsumoInterno|','tablita|','aux|' ,'acc|','echo|real default 0','fecha|','anulada|integer default 0','sincronizar|boolean default "false"','total|real','subconiva|real','subsiniva|real','iva|real','servicio|real','descuento|real','nofact|text','dataimpuestos|text default ""'];
+campos["FACTURAS"]=['id|integer primary key AUTOINCREMENT','timespan|text','clientName|','RUC|','address|','tele|','fetchJson|','paymentsUsed|','cash|','cards|','cheques|','vauleCxC|','paymentConsumoInterno|','tablita|','aux|' ,'acc|','echo|real default 0','fecha|','anulada|integer default 0','sincronizar|boolean default "false"','total|real','subconiva|real','subsiniva|real','iva|real','servicio|real','descuento|real','nofact|text','dataimpuestos|text default ""','propina|numeric default 0','order_id|text default ""'];
 
 campos["PRESUPUESTO"]=['id|integer primary key AUTOINCREMENT','timespan|text','valor|real','fecha|integer UNIQUE','transacciones|integer'];
 
-campos["IMPUESTOS"]=['id|integer primary key AUTOINCREMENT','nombre|text default ""','porcentaje|numeric default 0.00','activo|boolean default "true"','timespan|text default "" UNIQUE'];
+campos["IMPUESTOS"]=['id|integer primary key AUTOINCREMENT','nombre|text default ""','porcentaje|numeric default 0.00','activo|boolean default "true"','timespan|text default "" UNIQUE','sincronizar|boolean default "false"'];
 
 campos["MODIFICADORES"]=['id|integer primary key AUTOINCREMENT','no_modificador|integer default 0','id_formulado|text default ""','nombre|text default ""','valor|numeric default 0.00','activo|boolean default true','id_formulado_descuento|text default ""','timespan|text default "" UNIQUE'];
 
+campos["TIPO_MESA"]=['id|integer primary key AUTOINCREMENT','imagen_activa|text default "mesapequenaanchaa.png"','imagen_inactiva|text default "mesapequenaanchai.png"','es_mesa|boolean default "true"','timespan|text default "" UNIQUE'];
+		
+campos["MESAS"]=['id|integer primary key AUTOINCREMENT','left|real default 0','top|real default 0','id_tipomesa|text default ""','activo|boolean default "true"','nombre|text default ""','timespan|text default "" UNIQUE','enuso|boolean default "false"','tab|integer default 1'];
 
+campos["MESAS_DATOS"]=['id|integer primary key AUTOINCREMENT','id_mesa|text default ""','cliente|text default ""','id_cliente|text default ""','activo|boolean default "true"','id_factura|text default ""','hora_activacion|integer default 0','hora_desactivacion|integer default 0','pax|integer default 0','timespan|text default "" UNIQUE','sincronizar|boolean default "false"'];
+
+campos["MESAS_CONSUMOS"]=['id|integer primary key AUTOINCREMENT','id_mesa|text default ""','details|text default ""','agregados|text default ""','notas|text default ""','hora|integer default 0','id_real|integer default 0'];
+
+campos["LOCALES"]=['id|integer primary key AUTOINCREMENT','local|text default ""','activo|boolean default "true"','timespan|text default "" UNIQUE'];
+		
 
 //console.log(campos);
 
@@ -41,11 +52,13 @@ function updateOnlineStatus(condition) {
 					var conexionInternet = $('#conexion').val();
 					console.log(conexionInternet)
 					if(conexionInternet == 'ONLINE' ){
-						$('#cloudIndex').css('display','block');
-						$('#cloudIndexOff').css('display','none');
+						//$('#cloudIndex').css('display','block');
+						//$('#cloudIndexOff').css('display','none');
+						$('#cloudIndex').css('color','white');
 					}else if(conexionInternet == 'OFFLINE' ){
-						$('#cloudIndex').css('display','none');
-						$('#cloudIndexOff').css('display','block');
+						//$('#cloudIndex').css('display','none');
+						//$('#cloudIndexOff').css('display','block');
+						$('#cloudIndex').css('color','#606061');
 					}
 	}
 
@@ -229,6 +242,31 @@ var app = {
 			return cordova.exec(success_callback, error_callback, "StarIOAdapter", "searchall", [port_search]);
 		};
 		
+		/*Print a logo image*/
+		window.StarIOAdapter.printlogo=function(logoname,port_search, success_callback, error_callback){
+			//alert("todas buscar");
+			if(error_callback == null) {
+				error_callback = handle_error_callback;
+			}
+			return cordova.exec(success_callback, error_callback, "StarIOAdapter", "printlogo", [logoname , port_search]);
+		};
+		
+		window.StarIOAdapter.opendrawer=function(port_search,success_callback, error_callback){
+			//alert("todas buscar");
+			if(error_callback == null) {
+				error_callback = handle_error_callback;
+			}
+			return cordova.exec(success_callback, error_callback,"StarIOAdapter", "opendrawer", [port_search]);
+		};
+		
+		window.StarIOAdapter.searchEpson=function(port_search, success_callback, error_callback){
+			//alert("todas buscar");
+			if(error_callback == null) {
+				error_callback = handle_error_callback;
+			}
+			return cordova.exec(success_callback, error_callback, "StarIOAdapter", "searchEpson", [port_search]);
+		};
+		
         /*var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
         db.transaction(iniciaDB, errorCB, successCB);
         console.log(db);*/
@@ -249,12 +287,10 @@ var app = {
         var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
         //tx.executeSql('DROP TABLE IF EXISTS PRODUCTOS');
         tx.executeSql('CREATE TABLE IF NOT EXISTS PRODUCTOS (id_local integer primary key AUTOINCREMENT,id integer, formulado text, codigo text, precio real, categoriaid text,cargaiva integer,productofinal integer,materiaprima integer,timespan text UNIQUE,ppq real default 0,color text,servicio integer default 0,estado integer default 1, sincronizar boolean default "true",tieneimpuestos boolean default "true")');
-		
-		VerificarCampos('PRODUCTOS');
-		
-		
 
-		tx.executeSql('CREATE TABLE IF NOT EXISTS CONFIG (id integer primary key AUTOINCREMENT, nombre text, razon text , ruc integer, telefono integer , email text , direccion text, printer text,serie text default "001",establecimiento text default "001",sincronizar boolean default "false",encabezado integer default 3,largo integer default 18, nombreterminal text default "Tablet 1",pais text default "",id_idioma integer default 1,sin_documento boolean default "false",con_nombre_orden boolean default "false",con_propina boolean default "false",con_tarjeta boolean default "false",con_shop boolean default "false")');
+		VerificarCampos('PRODUCTOS');
+
+		tx.executeSql('CREATE TABLE IF NOT EXISTS CONFIG (id integer primary key AUTOINCREMENT, nombre text, razon text , ruc integer, telefono integer , email text , direccion text, printer text,serie text default "001",establecimiento text default "001",sincronizar boolean default "false",encabezado integer default 3,largo integer default 18, nombreterminal text default "Tablet 1",pais text default "",id_idioma integer default 1,sin_documento boolean default "false",con_nombre_orden boolean default "false",con_propina boolean default "false",con_tarjeta boolean default "false",con_shop boolean default "false",con_notasorden boolean default "true", con_comanderas boolean default "true", printercom text default "", con_localhost boolean default "true",ip_servidor text default "",con_mesas boolean default "false",logo text default "",id_version_nube integer default 0,pide_telefono boolean default "false",telefono_inte text default "",mensajefinal text default "",paquete integer default 1,terminos_condiciones boolean default "true",id_locales integer default 0,key text default "",numero_contribuyente integer default 0,obligado_contabilidad boolean default "false",prueba_produccion boolean default "true",tiene_factura_electronica boolean default "false",email_fact text default "",mensaje_factura text default "")');
 
 		VerificarCampos('CONFIG');
 		
@@ -283,13 +319,17 @@ var app = {
 
 		VerificarCampos('PERMISOS');
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS IMPUESTOS (id integer primary key AUTOINCREMENT, nombre text default "",porcentaje numeric default 0.00,activo boolean default true,timespan text default "" UNIQUE)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS IMPUESTOS (id integer primary key AUTOINCREMENT, nombre text default "",porcentaje numeric default 0.00,activo boolean default true,timespan text default "" UNIQUE,sincronizar boolean default "false")');
 		
 		VerificarCampos('IMPUESTOS');
 		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS MODIFICADORES (id integer primary key AUTOINCREMENT,no_modificador integer default 0,id_formulado text default "",nombre text default "",valor numeric default 0.00,activo boolean default true,id_formulado_descuento text default "",timespan text default "" UNIQUE)');
 		
 		VerificarCampos('MODIFICADORES');
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS PROPINAS (id integer primary key AUTOINCREMENT,valor numeric default 0,es_porcentaje boolean default "false",activo boolean default "true",timespan text default "" UNIQUE)');
+		
+		VerificarCampos('PROPINAS');
 		
 		/*var mitimemenu=getTimeSpan();
 		tx.executeSql('INSERT INTO MENU (fila,columna,idcatmenu,idproducto,timespan) values (?,?,?,?,?)',[1,2,mitimecat,'14522044131343980',mitimemenu]);*/
@@ -340,7 +380,7 @@ var app = {
 		
 		VerificarCampos('CLIENTES');
         //tx.executeSql('DROP TABLE IF EXISTS FACTURAS');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS FACTURAS (id integer primary key AUTOINCREMENT,timespan text ,clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux ,acc,echo real default 0,fecha,anulada integer default 0,sincronizar boolean default "false",total real,subconiva real,subsiniva real,iva real,servicio real,descuento real,nofact text,dataimpuestos text default "");');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS FACTURAS (id integer primary key AUTOINCREMENT,timespan text ,clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux ,acc,echo real default 0,fecha,anulada integer default 0,sincronizar boolean default "false",total real,subconiva real,subsiniva real,iva real,servicio real,descuento real,nofact text,dataimpuestos text default "",propina numeric default 0,order_id text default "");');
 		
 		VerificarCampos("FACTURAS");
 		
@@ -353,7 +393,32 @@ var app = {
 		tx.executeSql('CREATE TABLE IF NOT EXISTS PRESUPUESTO (id integer primary key AUTOINCREMENT,timespan text,valor real,fecha integer UNIQUE,transacciones integer);');
 		
 		VerificarCampos('PRESUPUESTO');
-    }
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS TIPO_MESA (id integer primary key AUTOINCREMENT,imagen_activa text default "mesapequenaanchaa.png",imagen_inactiva text default "mesapequenaanchai.png",es_mesa boolean default "true",timespan text default "" UNIQUE);');
+		
+		VerificarCampos('TIPO_MESA');
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MESAS (id integer primary key AUTOINCREMENT,left real default 0,top real default 0, id_tipomesa text default "",activo boolean default "false",nombre text default "",timespan text default "" UNIQUE,enuso boolean default "false",tab integer default 1);');
+
+		VerificarCampos('MESAS');
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MESAS_DATOS (id integer primary key AUTOINCREMENT,id_mesa text default "",cliente text default "",id_cliente text default "",activo boolean default "true",id_factura text default "",hora_activacion integer default 0,hora_desactivacion integer default 0,pax integer default 0,timespan text default "" UNIQUE,sincronizar boolean default "false");');
+		
+		VerificarCampos('MESAS_DATOS');
+
+        tx.executeSql('CREATE TABLE IF NOT EXISTS MESAS_CONSUMOS (id integer primary key AUTOINCREMENT,id_mesa text default "",details text default "",agregados text default "",notas text default "",hora integer default 0,id_real integer default 0)');
+		
+		VerificarCampos('MESAS_CONSUMOS');
+
+        //setea el session storage de la mesa
+		sessionStorage.setItem("mesa_activa","");
+		//
+
+        tx.executeSql('CREATE TABLE IF NOT EXISTS LOCALES (id integer primary key AUTOINCREMENT, local text default "",activo boolean default "true",timespan text default "" UNIQUE);');
+
+		VerificarCampos('LOCALES');
+
+	}
 
 	function VerificarCampos(tabla){
 		
@@ -403,12 +468,14 @@ var app = {
     //
     function errorCB(err){
         console.log("Error processing SQL: "+err.message);
+       //alert("Error processing SQL: "+err.message);
     }
 
     // Transaction success callback
     //
     function successCB() {
         console.log("success!");
+        //alert("success!");
     }
   
     /*Funciones Ana:*/
@@ -584,9 +651,10 @@ var app = {
             var inhtml='';
             for (var i=0; i < results.rows.length; i++){
                 var row = results.rows.item(i);
-                //console.log(row);
                 $('#idfactura').val(row.id);
                 $('#cliente').val(row.clientName);
+                $('#order_id').val(row.order_id);
+                //alert(row.order_id);
 
 				//si no tiene permisos
 				if(localStorage.getItem("permisos")=="true"){
@@ -659,6 +727,12 @@ var app = {
 				var subs="";
 				subs+="<table class='table table-hovered'>";
 				subs+="<tr><td style='text-align:right;'>SUBTOTAL</td><td style='text-align:right;'> $"+subtotal.toFixed(2)+"</td></tr>";
+				
+				/*descuento*/
+				if(descAplicado>0){
+						subs+="<tr><td style='text-align:right;' class='trans_discount'>Descuento</td><td style='text-align:right;'> $"+parseFloat(row.descuento).toFixed(2)+"</td></tr>";
+				}
+				
 				if(row.dataimpuestos!=""){
 					var detagregados=row.dataimpuestos;
 					var vdetagregados=detagregados.split('@');
@@ -678,9 +752,10 @@ var app = {
 				if(formaDePago == '1'){
 					$('#detaFormPago').html('Efectivo');
 					$('#detaFormPagoValor').html(parseFloat(row.cash).toFixed(2));
-					totalpagof+=parseFloat(row.cash);
+					totalpagof+=Math.abs(parseFloat(row.cash));
 					$('#detaFormPago').parent().fadeIn();
 				}
+				
 				if(formaDePago == '2'){
 					var datocard=row.cards.split('|');
 					$('#detaFormPago').html('Tarjeta');
@@ -747,12 +822,7 @@ var app = {
 				if((tot-totalpagof)<0){
 					$('#tabladetformaspago').append('<tr><td><b>Vuelto</b></td><td style="text-align:right;">'+(-1*(tot-totalpagof)).toFixed(2)+'</td></tr>');
 				}
-
-				if((descAplicado)>0){
-					$('#tabladetformaspago').append('<tr><td><b>Descuento</b></td><td style="text-align:right;">'+descAplicado+'</td></tr>');
-				}
-
-
+				
                 if(row.anulada==1){
                     $('#factanulada').fadeIn();
                 }
@@ -760,8 +830,60 @@ var app = {
         },errorCB,successCB);
         });
     }
-    
+
     function VerDatosFactura(id){
+
+      if(localStorage.getItem("con_localhost") == 'true'){
+       var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+       $.post(apiURL,{
+  		id_emp : localStorage.getItem("empresa"),
+  		action : 'VerFactura',
+  		id_barra : localStorage.getItem("idbarra"),
+  		deviceid:$("#deviceid").html(),
+          idfactura : id
+  		}).done(function(response){
+  			if(response!='block' && response!='Desactivado'){
+  				console.log(response);
+                  var res = response.split("||");
+                  $('#idfactura').val(id);
+                  $('#numerofactura').html(res[0]);
+                  $('#cliente').val(res[1]);
+                  $('#fecha').val(res[2]);
+                  $('#itemsfacturados').html(" "+res[4]);
+                  $('#total').html(res[3]);
+                  $('#invoiceTotal').html(res[3]);
+                  $('#cuerpodetalle').html(res[5]);
+                  $('#subtotales').html(res[6]);
+                  $('#tabladetformaspago').html(res[7]);
+                  $('#order_id').val(res[9]);
+                  if(res[8]=='1' || res[8]==1){
+					$('#btnanularf,#reimprimir').css('display','none');
+                    $('#factanulada').fadeIn();
+				  }
+
+  			}else if(response=='Desactivado'){
+  			    envia('cloud');
+  				setTimeout(function(){
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#desactivo').fadeIn();
+  				},100);
+  			}else{
+  				envia('cloud');
+  				setTimeout(function(){
+  					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+  					$('.navbar').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#bloqueo').fadeIn();
+  				},100);
+
+  			}
+
+  		}).fail(function(){
+  			updateOnlineStatus("OFFLINE");
+  			setTimeout(function(){SincronizadorNormal()},180000);
+  		});
+      }else{
         var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
         db.transaction(function(tx){
         tx.executeSql('SELECT * FROM FACTURAS WHERE id='+id+';',[],function(tx,results){
@@ -771,7 +893,8 @@ var app = {
                 //console.log(row);
                 $('#idfactura').val(row.id);
                 $('#cliente').val(row.clientName);
-				
+                $('#order_id').val(row.order_id);
+
 				//si no tiene permisos
 				if(localStorage.getItem("permisos")=="true"){
 					tx.executeSql("SELECT id from permisos where clave like ? and anular=? and activo=?",[localStorage.getItem("claveuser"),"true","true"],function(tx,results2){
@@ -834,21 +957,40 @@ var app = {
 						}
 					}
 					
-					subtotal+=parseFloat(variosprods[n].cant_prod)*(parseFloat(variosprods[n].precio_prod)+valoragregados);
+					var sublinea=parseFloat(variosprods[n].cant_prod)*(parseFloat(variosprods[n].precio_prod)+valoragregados);
+					subtotal+=sublinea;
 					
-                    intabla+="<tr><td style='text-align:left;'>"+variosprods[n].nombre_producto+agregados+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].cant_prod)+"</td><td style='text-align:right;'>"+(parseFloat(variosprods[n].precio_prod)+valoragregados).toFixed(2)+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].precio_total).toFixed(2)+"</td></tr>";
+					var lineaimp='';
+					if(variosprods[n].impuesto_prod!=''&&variosprods[n].impuesto_prod!=null){
+						lineaimp='(*i)';
+					}
+					
+                    intabla+="<tr><td style='text-align:left;'>"+variosprods[n].nombre_producto+lineaimp+agregados+"</td><td style='text-align:right;'>"+parseFloat(variosprods[n].cant_prod)+"</td><td style='text-align:right;'>"+(parseFloat(variosprods[n].precio_prod)+valoragregados).toFixed(2)+"</td><td style='text-align:right;'>"+parseFloat(sublinea).toFixed(2)+"</td></tr>";
 					itemsfact+=parseInt(parseInt(variosprods[n].cant_prod));
                 }
 				
 				var subs="";
 				subs+="<table class='table table-hovered'>";
+				
+				
+				
 				subs+="<tr><td style='text-align:right;'>SUBTOTAL</td><td style='text-align:right;'> $"+subtotal.toFixed(2)+"</td></tr>";
 				if(row.dataimpuestos!=""){
 					var detagregados=row.dataimpuestos;
 					var vdetagregados=detagregados.split('@');
 					for(var t=0;t<vdetagregados.length;t++){
 						var dataagr=vdetagregados[t].split('|');
-						subs+="<tr><td style='text-align:right;'>"+dataagr[1]+"</td><td style='text-align:right;'> $"+parseFloat(dataagr[3]).toFixed(2)+"</td></tr>";
+						subs+="<tr><td style='text-align:right;'>"+dataagr[1]+" ("+(parseFloat(dataagr[2])*100).toFixed(2)+"%)</td><td style='text-align:right;'> $"+parseFloat(dataagr[3]).toFixed(2)+"</td></tr>";
+					}
+				}
+				
+				if(descAplicado>0){
+					subs+="<tr><td style='text-align:right;'>DESCUENTO</td><td style='text-align:right;'> $"+parseFloat(descAplicado).toFixed(2)+"</td></tr>";
+				}
+				
+				if(datosfact.Pagar[0].factura.propina!=null){
+					if(parseFloat(datosfact.Pagar[0].factura.propina)>0){
+						subs+="<tr><td style='text-align:right;' class='trans_propina'>Propina</td><td style='text-align:right;'> $"+parseFloat(datosfact.Pagar[0].factura.propina).toFixed(2)+"</td></tr>";
 					}
 				}
 				
@@ -862,7 +1004,7 @@ var app = {
 				if(formaDePago == '1'){
 					$('#detaFormPago').html('Efectivo');
 					$('#detaFormPagoValor').html(parseFloat(row.cash).toFixed(2));
-					totalpagof+=parseFloat(row.cash);
+					totalpagof+=Math.abs(parseFloat(row.cash));
 					$('#detaFormPago').parent().fadeIn();
 				}
 				if(formaDePago == '2'){
@@ -900,6 +1042,7 @@ var app = {
 							$('#detaFormPago').html('Efectivo');
 							$('#detaFormPagoValor').html(parseFloat(row.cash).toFixed(2));
 							$('#detaFormPago').parent().fadeIn();
+							totalpagof+=parseFloat(row.cash);
 						}
 						if(fpago[t]==2){
 							var datocard=row.cards.split('|');
@@ -907,6 +1050,7 @@ var app = {
 							//console.log(datocard);
 							$('#detaFormPagoValor1').html(parseFloat(datocard[2].substring(0,datocard[2].length - 1)).toFixed(2));
 							$('#detaFormPago1').parent().fadeIn();
+							totalpagof+=parseFloat(datocard[2].substring(0,datocard[2].length - 1));
 						}
 						
 						if(fpago[t]==3){
@@ -915,6 +1059,7 @@ var app = {
 							//console.log(datocard);
 							$('#detaFormPagoValor2').html(parseFloat(datocheque[2].substring(0,datocheque[2].length - 1)).toFixed(2));
 							$('#detaFormPago2').parent().fadeIn();
+							totalpagof+=parseFloat(datocheque[2].substring(0,datocheque[2].length - 1));
 						}
 
 						if(fpago[t]==4){
@@ -923,17 +1068,15 @@ var app = {
 							//console.log(datocard);
 							$('#detaFormPagoValor3').html(parseFloat(datocheque).toFixed(2));
 							$('#detaFormPago3').parent().fadeIn();
+							totalpagof+=parseFloat(datocheque);
 						}
 					}
                 }
 				
 				var tot=parseFloat($('#total').html());
+				//alert(tot+"/"+totalpagof);
 				if((tot-totalpagof)<0){
 					$('#tabladetformaspago').append('<tr><td><b>Vuelto</b></td><td style="text-align:right;">'+(-1*(tot-totalpagof)).toFixed(2)+'</td></tr>');
-				}
-				
-				if((descAplicado)>0){
-					$('#tabladetformaspago').append('<tr><td><b>Descuento</b></td><td style="text-align:right;">'+descAplicado+'</td></tr>');
 				}
 
 				
@@ -943,6 +1086,7 @@ var app = {
             }
         },errorCB,successCB);
         });
+      }
     }
     
     function CambiarFormaPagoFactura(){
@@ -996,7 +1140,7 @@ function showalert(msg){
     $('#alert').html(msg);
     $('html, body').animate( { scrollTop : 0 },500,function(){
         $('#alert').slideDown('slow',function(){
-            setTimeout(function(){hidealert()},1500);
+            setTimeout(function(){hidealert()},3500);
         });
     });
 }
@@ -1010,8 +1154,15 @@ function showalertred(msg){
     $('#alertred').html(msg);
     $('html, body').animate( { scrollTop : 0 },500,function(){
         $('#alertred').slideDown('slow',function(){
-            setTimeout(function(){hidealertred()},1500);
+            setTimeout(function(){hidealertred()},3500);
         });
+    });
+}
+
+function showalertredquiet(msg){
+    $('#alertred').html(msg);
+    $('#alertred').slideDown('slow',function(){
+            setTimeout(function(){hidealertred()},10000);
     });
 }
 
@@ -1073,13 +1224,20 @@ function VerificarClave(){
 					else{
 						$('#modalpermiso').modal("hide");
 						$('#miclave').val("");
+						if(localStorage.getItem("idioma")==1)
 						showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+					    else if(localStorage.getItem("idioma")==2)
+						showalert("You don't have enough privileges to access, or the password is incorrect.");
+					
 						localStorage.setItem("claveuser","");
 					}
 				}else{
 					$('#modalpermiso').modal("hide");
 					$('#miclave').val("");
-					showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+					if(localStorage.getItem("idioma")==1)
+						showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("You don't have enough privileges to access, or the password is incorrect.");
 					localStorage.setItem("claveuser","");
 				}
 			});}
@@ -1087,16 +1245,16 @@ function VerificarClave(){
 	}
 }
 function VerificarPermiso(donde){
-	
 		if(localStorage.getItem("permisos")=="true"){
 			
 			if(localStorage.getItem("claveuser")==""||localStorage.getItem("claveuser")==null){
-				
 				if(donde!=''){
 					$('#modalpermiso').modal("show");
 					$('#accesodonde').val(donde);
 				}
 			}else{
+				
+				//alert(donde+"/"+localStorage.getItem("permisos"));
 				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 				var miclave=localStorage.getItem("claveuser");
 				db.transaction(function(tx1){
@@ -1111,15 +1269,21 @@ function VerificarPermiso(donde){
 								envia('historialst');
 							}else if(donde=='configuracion'&&it.configuracion=="true"){
 								envia('config');
-							}else if(donde=='productos'&&it.productos=="true"){
+							}else if(donde=='productos'){
 								envia('listaproductos');
 							}else if(donde=='nube'&&it.irnube=="true"){
 								IraNube(document.getElementById('linklogin'));
 							}else if(donde=='nube'&&it.irnube=="false"){
+								if(localStorage.getItem("idioma")==1)
 								showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+								else if(localStorage.getItem("idioma")==2)
+								showalert("You don't have enough privileges to access, or the password is incorrect.");
 							}
 						}else{
+							if(localStorage.getItem("idioma")==1)
 							showalert("No tiene suficientes privilegios para acceder o su clave es incorrecta.");
+							else if(localStorage.getItem("idioma")==2)
+							showalert("You don't have enough privileges to access, or the password is incorrect.");
 							localStorage.setItem("claveuser","");
 						}
 					}
@@ -1127,6 +1291,7 @@ function VerificarPermiso(donde){
 				});
 			}
 		}else{
+			//alert(donde);
 			if(donde=='historial'){
 				envia('historial');
 			}else if(donde=='configuracion'){
@@ -1137,4 +1302,171 @@ function VerificarPermiso(donde){
 				IraNube(document.getElementById('linklogin'));
 			}
 		}
+        
+}
+
+function VerificarColombiaNit(numero){
+	var primos=[71,67,59,53,47,43,41,37,29,23,19,17,13,7,3];
+	var numero=numero.replace("-","");
+	//console.log(numero);
+	if(!numero.length==10){
+		//console.log("no 10");
+		return false;
+	}else{
+		var validar=numero.substring(0,9);
+		validar="000000"+validar;
+		//console.log(validar);
+		var suma=0;
+		for(var i=0;i<=14;i++){
+			suma+=parseInt(validar[i])*primos[i];
+		}
+		//console.log(suma);
+		var res=suma%11;
+		var digitocheck=0;
+		if(res==0||res==1){
+			digitocheck=res;
+		}else{
+			digitocheck=11-res;
+		}
+	
+		if(digitocheck==numero[9]){
+			return true;
+		}
+		else{
+			//console.log(res+"/"+numero[9]);
+			return false;
+		}
+	}
+}
+		
+function VerificarChileRut(numero){
+	var rutLimpio='';
+    var digitoVerificador='';
+    var suma=0;
+    var contador= 2;
+	var valida=false;
+	var retorno=false;
+     
+	rutLimpio =numero.replace(/-/g,"");
+    rutLimpio =rutLimpio.replace(/ /g,"");
+    rutLimpio =rutLimpio.replace(/[.]/g,"");
+    
+	rutLimpio = rutLimpio.substring(0,rutLimpio.length-1);
+    digitoVerificador = numero.substring(numero.length - 1,numero.length);
+	
+	console.log(rutLimpio+"/"+digitoVerificador);
+	
+	for(var i=rutLimpio.length-1;i>=0;i--){
+		if(contador>7){
+			contador=2;
+		}
+		
+		suma+=parseInt(rutLimpio[i])*contador;
+		contador++;
+		valida=true;
+	}
+	
+	if(valida){
+		var dv=11-(suma%11);
+		var digVer=dv.toString();
+		if(dv==10)
+			digVer="K";
+		if(dv==11)
+			digVer="0";
+		
+		console.log(digVer);
+		if(digVer==digitoVerificador.toUpperCase())
+			return true;
+		else
+			return false;
+	}
+}
+
+function VerificarArgentinaCuit(numero){
+	cuitLimpio =numero.replace(/-/g,"");
+    cuitLimpio =cuitLimpio.replace(/ /g,"");
+    cuitLimpio =cuitLimpio.replace(/[.]/g,"");
+	console.log(cuitLimpio);
+	
+	var n=cuitLimpio[0]*6+cuitLimpio[1]*7+cuitLimpio[2]*8+cuitLimpio[3]*9+cuitLimpio[4]*4+cuitLimpio[5]*5+cuitLimpio[6]*6+cuitLimpio[7]*7+cuitLimpio[8]*8+cuitLimpio[9]*9;
+	
+	console.log(n);
+	
+	n = n%11;
+	
+	console.log(n);
+
+	if(parseInt(n) == parseInt(cuitLimpio[10]))
+		return true;
+	else
+		return false;
+}
+
+
+function VerificarPeruSunat(numero){
+	
+	rucLimpio =numero.replace(/-/g,"");
+    rucLimpio =rucLimpio.replace(/ /g,"");
+    rucLimpio =rucLimpio.replace(/[.]/g,"");
+	console.log(rucLimpio);
+	
+	var dos=rucLimpio.substring(0,2);
+	if(!(dos==10||dos==15||dos==17||dos==20)){
+		return false;
+	}
+	
+	var suma=rucLimpio[0]*5+rucLimpio[1]*4+rucLimpio[2]*3+rucLimpio[3]*2+rucLimpio[4]*7+rucLimpio[5]*6+rucLimpio[6]*5+rucLimpio[7]*4+rucLimpio[8]*3+rucLimpio[9]*2;
+	
+	console.log(suma);
+	
+	n = suma/11;
+	console.log(n);
+	
+	n=11-(suma-(parseInt(n)*11));
+	console.log(n);
+
+	if(parseInt(n) == parseInt(rucLimpio[10]))
+		return true;
+	else
+		return false;
+	return true;
+}
+
+function VerificarMexicoRfc(cadena){
+	var i = 0;
+    var confirmacion = true;
+	cadena =cadena.replace(/-/g,"");
+    cadena =cadena.replace(/ /g,"");
+    cadena =cadena.replace(/[.]/g,"");
+    if (cadena.length > 11 && cadena.length < 14)
+    {
+        if (cadena.length == 12)
+        {
+            cadena = "-" + cadena;
+            i = 1;
+        }
+        for (var j = i; j <= 3; j++)
+        {
+            if (parseInt(cadena[j])>0)
+                confirmacion = false;
+        }
+        for (var j = 4; j <= 9; j++)
+        {
+            if (!(parseInt(cadena[j])>=0&&parseInt(cadena[j])<=9))
+                confirmacion = false;
+        }
+        if (!confirmacion)
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+    
+	if (confirmacion)
+        return true;
+    else
+        return false;
 }

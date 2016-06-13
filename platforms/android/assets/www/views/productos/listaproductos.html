@@ -8,16 +8,13 @@
 </style>
 	<div  class="row" >
 		<div class="col-lg-12">
-			<div class="row">
+			<div class="row sumarow" >
 				<div class="col-sm-12" >
 					<h3 style="margin-left:15px;" class='trans_products'>Lista de Productos</h3>
 				</div>
 			</div>
-
-			
-			
 			<!--<div class="row"> <!-- Row Header Search.. -->
-			<div class="row"> <!-- Row Header Search.. -->
+			<div class="row sumarow"> <!-- Row Header Search.. -->
 				<div class="col-sm-12" align="center">
 					<div class="row"> 
 						<!--<div class="col-md-3" align="left">
@@ -25,7 +22,7 @@
 								   <div id="includeDropCategory" style="display:none;"></div>
 							<!---</div>
 						</div>-->
-						<div class="col-lg-4 col-md-4 col-xs-4" align="left">
+						<div class="col-lg-4 col-md-4 col-xs-6" align="left">
 							<div class="input-group" style="width:100%;">
 								<input  type="text" style="min-width:100px;"  class="form-control trans_buscar" placeholder="Escriba un producto..." id="searchKeyword">
 								<span class="input-group-btn">
@@ -33,7 +30,7 @@
 								</span>
 							</div><!-- /input-group -->
 						</div>
-						<div class='col-md-8 col-lg-8 col-xs-8' style='text-align:right;'>
+						<div class='col-md-8 col-lg-8 col-xs-6' style='text-align:right;'>
 							<button type='button' class='btn btn-success trans_new_prod' id='nuevoProducto'  style="display:none;" onclick="envia('nuevoproducto');">Nuevo Producto</button>
 						</div>
 						
@@ -50,27 +47,26 @@
 				</div>
 				
 			</div> <!-- END Row Header Search.. -->
-			<br/>
-			<div class="row" align="center" > <!-- Row Table of products.. -->
-				
-					<div class="col-sm-12">	
-						
-						
-  
-					
-						
-						
-					</div>
-			</div>
-			<div class='row'>
+			<div class='row sumarow'>
 				<div class='col-lg-3 col-md-3 col-xs-3' style='margin-bottom:5px; text-align:left;'>
 					<label class='label label-default'><span id='trans_label_7'>Resultados</span>: <span id='nproductos'></span> <span id="trans_label_9">productos</span>.</label>
 				</div>
 			</div>
 			<div class="row" align="center" > <!-- Row Table of products.. -->
 					<div class="col-sm-12">
-						<table class="table table-striped" style="margin-bottom:0px;"><thead><tr><th style="width:30%;" class="trans_prod">Nombre</th><th style=" width:30%;" class="trans_categ">Categoría</th><th style="width:10%; text-align:right;" class="trans_precio">Precio</th><th style="width:10%; text-align:center;" class="trans_imp" >Aplica Impuestos</th><th style="text-align:center; width:10%; display:none;"></th><th style="width:10%;"></th></tr></thead></table>
-						<div id="recibeTodosLosProductos" style="font-size:14px; overflow-y:auto;" class="table-responsive">
+						<table class="table table-striped" style="margin-bottom:0px;">
+                          <thead>
+                            <tr>
+                              <th style="width:25%;" class="trans_prod">Nombre</th>
+                              <th style=" width:25%;" class="trans_categ">Categoría</th>
+                              <th style="width:10%;" class="trans_code">Código</th>
+                              <th style="width:10%; text-align:right;" class="trans_precio">Precios $</th>
+                              <th style="width:10%; text-align:center;" class="trans_imp" >Aplica Impuestos</th>
+                              <th style="text-align:center; width:5%; display:none;"></th><th style="width:15%;"></th>
+                            </tr>
+                          </thead>
+                        </table>
+						<div id="recibeTodosLosProductos" style="font-size:14px; overflow-y:auto; min-height:200px;" class="table-responsive">
 						</div>
 						<input id='totalpags' style='display:none;'/>
 					</div>
@@ -95,13 +91,13 @@
 		<input type='hidden' style='display:none;' id='timeproduct'/>
 		<div class="modal-dialog modal-xs">
 			<div class="modal-content">
-				<div class="modal-header">
+				<div class="modal-header trans_delete">
 					Eliminar Producto
 				</div>
 				<div class='modal-body'>
-					Está seguro que desea eliminar el producto <b><span id='nombreelim'></span></b> ?
+					<label id='trans_label_41'>Está seguro que desea eliminar el producto </label> <b><span id='nombreelim'></span></b> ?
 					<div style='margin-top:20px;'>
-						<button class='btn btn-lg btn-danger' onclick='EliminarProduct();'>SI</button>
+						<button class='btn btn-lg btn-danger trans_yes' onclick='EliminarProduct();'>SI</button>
 						<button class='btn btn-lg btn-danger' onclick='$("#timeproduct").val(""); $("#nombreelim").html(""); $("#modaleliminar").modal("hide");'>NO</button>
 					</div>
 				</div>
@@ -147,7 +143,7 @@
     border-radius: 0 5px 5px 0;        
 }
 
-/* --------------- */   
+/* --------------- */
 
 .pricing-table h3 {
     font-size: 20px;
@@ -273,50 +269,68 @@ getSearch();
 
 $(document).ready(function(){
 	//idioma
-	var xmlidioma=$.get("lang/en.xml",function(d){
-		var itemestructura=$(d).find("estructura")[0];
-		var itemplaceholder=$(itemestructura).find("placeholder")[0];
-		var itemtitles=$(itemestructura).find("titles")[0];
-		var itembuttons=$(itemestructura).find("botones")[0];
-		var itemlabels=$(itemestructura).find("labels")[0];
-		var todosplaceholder=$(itemplaceholder).find("item");
-		var todostitles=$(itemtitles).find("item");
-		var todosbuttons=$(itembuttons).find("item");
-		var todoslabels=$(itemlabels).find("item");
-		for(var k=0;k<todosplaceholder.length;k++){
-			var miitemname=$(todosplaceholder[k]).attr("name");
-				//alert(miitemname);
-			$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
-		}
+		var linklang="es";
+		if(localStorage.getItem("idioma")==2)
+			linklang="en";
 			
-			for(var k=0;k<todostitles.length;k++){
-				var miitemname=$(todostitles[k]).attr("name");
+			var xmlidioma=$.get("lang/"+linklang+".html",function(datos){
+			d=JSON.parse(datos);
+			var itemestructura=d.estructura;
+			//console.log(itemestructura);
+			var itemmen=itemestructura.menu;
+			var itemplaceholder=itemestructura.placeholder;
+			var itemtitles=itemestructura.titles;
+			var itembuttons=itemestructura.botones;
+			var itemlabels=itemestructura.labels;
+			var todostitles=itemtitles.item;
+			var todosbuttons=itembuttons.item;
+			var todoslabels=itemlabels.item;
+			var todositems=itemmen.item;	
+			var todosplaceholder=itemplaceholder.item;
+			
+			for(var k=0;k<todosplaceholder.length;k++){
+				var miitemname=todosplaceholder[k].name;
 				//alert(miitemname);
-				$('.'+miitemname).html($(todostitles[k]).html());
+				$('.'+miitemname).prop("placeholder",todosplaceholder[k].text);
 			}
 			
-			for(var k=0;k<todosbuttons.length;k++){
-				var miitemname=$(todosbuttons[k]).attr("name");
-				//alert(miitemname);
-				$('.'+miitemname).html($(todosbuttons[k]).html());
+			for(var k=0;k<todositems.length;k++){
+					var miitem=todositems[k];
+					$('#lab_menu_'+(k+1)).html(miitem);
 			}
-			
-			for(var k=0;k<todoslabels.length;k++){
-							var miitemname=$(todoslabels[k]).attr("name");
-							$('#'+miitemname).html($(todoslabels[k]).html());
-						}
-			
+					
+				for(var k=0;k<todostitles.length;k++){
+					var miitemname=todostitles[k].name;
+					//alert(miitemname);
+					$('.'+miitemname).html(todostitles[k].text);
+				}
+				
+				for(var k=0;k<todosbuttons.length;k++){
+					var miitemname=todosbuttons[k].name;
+					//alert(miitemname);
+					$('.'+miitemname).html(todosbuttons[k].text);
+				}
+				
+				for(var k=0;k<todoslabels.length;k++){
+					//console.log(todoslabels[k].name+"/"+todoslabels[k].name);
+					var miitemname=todoslabels[k].name;
+					$('#'+miitemname).html(todoslabels[k].text);
+				}
+				
+		});
+
+	var suma=parseFloat($('.navbar').css('height'))+85;
+	$('.sumarow').each(function(){
+		suma+=parseFloat($(this).css('height'));
 	});
+	console.log(suma);
 
-
-
-
-	$('#recibeTodosLosProductos').css("height",parseFloat($(window).height())*45/100);
+	$('#recibeTodosLosProductos').css("height",parseFloat($(window).height())-suma);
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(
 	function (tx){
 		//console.log('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc');
-		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? order by id",["true"],function(tx,results3){
+		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? group by nombre order by id",["true"],function(tx,results3){
 							console.log(results3);
 							var impuestos='';
 							var impuestosid='';
@@ -325,10 +339,12 @@ $(document).ready(function(){
 								var cuan=0;
 								for(var r=0;r<results3.rows.length;r++){
 									var imp=results3.rows.item(r);
-									if(cuan>0){
-										impuestos+="@";
-										impuestosid+="@";
-									}
+									
+										if(cuan>0){
+											impuestos+="@";
+											impuestosid+="@";
+										}
+									
 									impuestos+=parseFloat(imp.porcentaje)/100;
 									impuestosid+=imp.timespan;
 									cuan++;
@@ -436,7 +452,11 @@ function getSearch(){
 		//console.log(resulta);
 		var inhtml='<table class="table table-striped"><tbody>';
 		if(resulta.rows.length==0){
-			$('#recibeTodosLosProductos').append('<center><div class="alert alert-success" role="alert"><h3>No Tiene Productos Ingresados</h3></div></center>');
+			if(localStorage.getItem("idioma")==1)
+				$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p></div>');
+			else
+				$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>No products</h1><p>Please, enter all your products to begin.</p></div>');
+				
 			setTimeout(function() {
 				$('#nuevoProducto').effect('highlight');
 			}, 3000);
@@ -497,11 +517,12 @@ function getSearch(){
 					categoria=$('.categoriasPrecargadas[timespan='+row.categoriaid+']').text();
 					inhtml+='\
 					<tr  iddb="'+row.id+'" categoria="'+categoria+'" codedb="'+row.codigo+'" formulado="'+row.formulado+'"  clase="listProduct" timespanCat="'+row.categoriaid+'">\
-							<td  style="width:30%;">'+row.formulado+'</td>';
-							inhtml+='<td style="width:30%;">'+categoria+'</td>\
-								<td style="text-align:right; width:10%;">'+parseFloat(precioConImpuestos).toFixed(2)+'</td><td style="text-align:center; width:10%;">'+checkiva2+'\
-								</td><td style="text-align:center; display:none; width:10%;">'+checkServ2+'</td><td style="text-align:right;  width:10%;">';
-							inhtml+='<button class="btn btn-default btn-sm" style="display:none; margin-right:10px;" onclick="editProduct(\''+row.timespan+'\')" ><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<button class="btn btn-default btn-sm" style="display:none;" onclick="VerificarEliminar('+row.id_local+",'"+row.formulado+"'"+');"><span class="glyphicon glyphicon-trash"></span></button></td>\
+							<td  style="width:25%;">'+row.formulado+'</td>';
+                            inhtml+='<td style="width:25%;">'+categoria+'</td>';
+							inhtml+='<td style="width:10%;">'+row.codigo+'</td>';
+                            inhtml+='<td style="text-align:right; width:10%;">'+parseFloat(precioConImpuestos).toFixed(2)+'</td><td style="text-align:center; width:10%;">'+checkiva2+'\
+								</td><td style="text-align:center; display:none; width:5%;">'+checkServ2+'</td><td style="text-align:right;  width:15%;">';
+							inhtml+='<button class="btn btn-default" style="display:none; margin-right:15px;" onclick="editProduct(\''+row.timespan+'\')" ><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<button class="btn btn-default" style="display:none;" onclick="VerificarEliminar('+row.id_local+",'"+row.formulado+"'"+');"><span class="glyphicon glyphicon-trash"></span></button></td>\
 						\
 					</tr>\
 					';
@@ -521,6 +542,9 @@ function LlenarTablaProd(datos){
 		$('#recibeTodosLosProductos').append(datos);
 		$("[name='my-checkbox']").bootstrapSwitch();
 		//consulta permisos
+        if(localStorage.getItem("con_localhost") == 'true'){
+          document.getElementById('nuevoProducto').style.display='none';
+        }else{
 		//si no tiene permisos
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
@@ -542,10 +566,9 @@ function LlenarTablaProd(datos){
 		}
 		});
 	//permisos
+        }
 		///
 }
-
-
 
 function editProduct(id){
 	editarProductoID=id;
@@ -683,7 +706,11 @@ function VerificarEliminar(timeSpan,nombre){
 				var p=misprod[k];
 				if(p.id_producto==timeSpan){
 					console.log('encontrado en facturacion');
-					showalert("El producto no puede ser eliminado, ya que se encuentra facturado.");
+					if(localStorage.getItem("idioma")==1)
+						showalert("El producto no puede ser eliminado, ya que se encuentra facturado.");
+					else if(localStorage.getItem("idioma")==2)
+						showalert("The product can not be eliminated, as it is in an invoice.");
+					
 					esta=true;
 					break;
 				}

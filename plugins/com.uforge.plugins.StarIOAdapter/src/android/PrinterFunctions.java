@@ -1,14 +1,20 @@
 package com.uforge.plugins;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.Context;
-
 import com.starmicronics.stario.PortInfo;
 import com.starmicronics.stario.StarIOPort;
 import com.starmicronics.stario.StarIOPortException;
 import com.starmicronics.stario.StarPrinterStatus;
+
+import com.epson.epsonio.Finder;
+import com.epson.epsonio.DeviceInfo;
+import com.epson.epsonio.FilterOption;
+import com.epson.epsonio.DevType;
+import com.epson.epsonio.EpsonIoException;
+import com.epson.epsonio.IoStatus;
+import com.epson.eposprint.Print;
+
 
 
 public class PrinterFunctions
@@ -24,8 +30,15 @@ public class PrinterFunctions
         StarIOPort port = null;
         StarPrinterStatus status = null;
         try {
-            port = StarIOPort.getPort(portName, portSettings, 10000, context);
-
+			
+			String needle="BT:";
+			if(portName.toLowerCase().contains(needle.toLowerCase()))
+			   //portSettings  = "portable;escpos;l";
+			    portSettings  = "portable;l";
+				 //port = StarIOPort.getPort(portName, portSettings, 10000);
+				
+			port = StarIOPort.getPort(portName, portSettings, 10000, context);
+			//port = StarIOPort.getPort(portName, "portable;u;l", 10000, context);
             try {
                 Thread.sleep(500);
             }
@@ -53,14 +66,23 @@ public class PrinterFunctions
      * @param portNameSearch the name of the printer to search (example BT: or TCP:xxx.xxx.xxx.xxx)
      * @return
      */
-    public static String getFirstPrinter(String portNameSearch) {
+    public static String getFirstPrinter(String portNameSearch, Context context) {
         String portName = "";
         List<PortInfo> portList;
         try {
-            portList  = StarIOPort.searchPrinter(portNameSearch);
+				String needle="USB:";
+				if(portNameSearch.toLowerCase().contains( needle.toLowerCase())){
+					portList  = StarIOPort.searchPrinter(portNameSearch,context);
+				}else{
+					portList  = StarIOPort.searchPrinter(portNameSearch);	
+					//portList  = StarIOPort.searchPrinter(portNameSearch,context);	
+				}
+				
+           // portList  = StarIOPort.searchPrinter("USB:SN:12345678");
 
             for (PortInfo portInfo : portList) {
                 portName = portInfo.getPortName();
+                //portName = portInfo.getModelName();
                 break;
             }
         } catch (StarIOPortException e) {
@@ -68,6 +90,95 @@ public class PrinterFunctions
         }
         return portName;
     }
+	
+    /**
+     * Using the portNameSearch parameter, this method searches for all printers that corresponds to the
+     * search
+     * @param portNameSearch the name of the printer to search (example BT: or TCP:xxx.xxx.xxx.xxx)
+     * @return
+     */
+    public static ArrayList<String> getPrinters(String portNameSearch,Context context) throws StarIOPortException{
+        //String portName = "";
+		ArrayList<String> arrayPortName = new ArrayList<String>();
+		ArrayList<String> arraybt=BuscarBluetooth();
+		ArrayList<String> arrayusb=BuscarUSB(context);
+        if(arraybt.size()>0){
+			arrayPortName.addAll(arraybt);
+		}
+		if(arrayusb.size()>0){
+			arrayPortName.addAll(arrayusb);
+		}
+        return arrayPortName;
+    }
+	
+	
+	
+	private static ArrayList<String> BuscarBluetooth(){
+		List<PortInfo> portListBT;
+		ArrayList<String> arrayPortName=new ArrayList<String>();
+		try{
+		portListBT  = StarIOPort.searchPrinter("BT:");
+		if(portListBT.size()>0){
+				for (PortInfo theportInfoBT : portListBT) {
+						String theportNameBT = theportInfoBT.getPortName();
+						String theidNameBT=theportInfoBT.getPortName();
+
+					if (theportInfoBT.getMacAddress().equals("") == false) {
+						theportNameBT += "\n - " + theportInfoBT.getMacAddress();
+						if (theportInfoBT.getModelName().equals("") == false) {
+							theportNameBT += "\n - " + theportInfoBT.getModelName();
+						}
+					}
+
+					/*arrayPortName.add(portNameBT);
+					String theportNameBT = theportInfoBT.getPortName();*/
+					arrayPortName.add(theidNameBT+"@"+theportNameBT);
+			
+				   //break;
+				}
+			}
+		}catch (StarIOPortException e) {
+            e.printStackTrace();
+        }
+        return arrayPortName;
+	}
+	
+	private static ArrayList<String> BuscarUSB(Context context){
+		List<PortInfo> portList;
+		ArrayList<String> arrayPortName=new ArrayList<String>();
+		try{
+			portList  = StarIOPort.searchPrinter("USB:",context);
+			for (PortInfo theportInfo : portList) {
+				String theportName = theportInfo.getPortName();
+				String theidName=theportInfo.getPortName();
+
+				if (theportInfo.getMacAddress().equals("") == false) {
+							theportName += "\n - " + theportInfo.getMacAddress();
+							if (theportInfo.getModelName().equals("") == false) {
+								theportName += "\n - " + theportInfo.getModelName();
+							}
+				} else {
+							if (!theportInfo.getModelName().equals("")) {
+								theportName += "\n - " + theportInfo.getModelName();
+							}
+							if (!theportInfo.getUSBSerialNumber().equals(" SN:")) {
+								theportName += "\n - " + theportInfo.getUSBSerialNumber();
+							}
+				}
+
+						/*arrayPortName.add(portName);
+							String theportName = theportInfo.getPortName();*/
+						
+						arrayPortName.add(theidName+"@"+theportName);
+				
+					   //break;
+			}
+			
+		}catch (StarIOPortException e) {
+            e.printStackTrace();
+        }
+        return arrayPortName;
+	}
 
     /*private static byte[] convertFromListByteArrayTobyteArray(List<Byte> ByteArray) {
         byte[] byteArray = new byte[ByteArray.size()];
@@ -107,7 +218,7 @@ public class PrinterFunctions
                 using StarIOPort3.1.jar (support USB Port)
                 Android OS Version: upper 2.2
             */
-            port = StarIOPort.getPort(portName, portSettings, 10000, context);
+            port = StarIOPort.getPort(portName,portSettings,30000, context);
             /*
                 using StarIOPort.jar
                 Android OS Version: under 2.1
@@ -127,17 +238,18 @@ public class PrinterFunctions
                *If receipt print is success but timeout error occurs(Show message which is "There was no response of the printer within the timeout period."),
                  need to change value of timeout more longer in "StarIOPort.getPort" method. (e.g.) 10000 -> 30000
              */
-            StarPrinterStatus status = port.retreiveStatus();
-//          StarPrinterStatus status = port.beginCheckedBlock();
+            //StarPrinterStatus status = port.retreiveStatus();
+            StarPrinterStatus status = port.beginCheckedBlock();
 
-            if (status.offline) {
+            if (true==status.offline) {
                 throw new StarIOPortException("A printer is offline");
             }
 
             byte[] commandToSendToPrinter = convertFromListByteArrayTobyteArray(byteList);
             port.writePort(commandToSendToPrinter, 0, commandToSendToPrinter.length);
 
-//          status = port.endCheckedBlock();
+			//port.setEndCheckedBlockTimeoutMillis(30000);
+			status = port.endCheckedBlock();
 
             if (status.coverOpen) {
                 throw new StarIOPortException("Printer cover is open");
@@ -158,7 +270,9 @@ public class PrinterFunctions
                 try {
                     StarIOPort.releasePort(port);
                 }
-                catch (StarIOPortException e) { }
+                catch (StarIOPortException e) { 
+					throw e;
+				}
             }
         }
     }

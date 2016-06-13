@@ -2,20 +2,103 @@
 	.numero table{
 		font-size:25px;font-weight:bolder;
 	}
+    .numerocnew{
+	text-align:center;
+	cursor:pointer;
+	width:100%;
+	margin-top:5px;
+	font-size:28px;
+    }
+    .cantidadnew{
+	text-align:right;
+	border:1px solid rgba(90,91,93,0.7);
+	width:100%;
+	cursor:pointer;
+	/*float:left;*/
+	padding-right:10px;
+	margin-left:auto;
+	margin-right:auto;
+	background:#404041;
+	color:#79ba43;
+	font-size:25px;
+	height:40px;
+	/*text-shadow:1px 1px 1px #70cbcd;*/
+    }
+    #resultBuscadornew{
+	position:absolute;
+	background-color:rgba(255,255,255,1);
+	border-left:1px solid #CCC;
+	border-right:1px solid #CCC;
+	border-bottom:1px solid #CCC;
+	color:#404041;
+	overflow:hidden;
+	width:91%;
+	display:none;
+	z-index:5;
+    }
 </style>
-<script type="text/javascript" src="js/funciones.js"></script>
-<script type="text/javascript" src="js/payment.js"></script>
-<div id='jsonproductos' style='display:none;'></div>
-<!--link para llamar a la funcion scannerBarcode-->
-<!--link-->
-<!--<div class="page page-default" style='background-color:white;'>--->
-
-<audio id="beep1" src="views/nubepos/sonidos/blip7.wav" preload="auto"></audio>
-<div style='display:none;' id='jsonclientes'></div>
-<section id="content2">
+<!--<section id="content2">-->
 <div class='row' id='row1'>
 <div  id='central'>
-	<div class='productos col-md-8' id='productos' align='center'>
+<div class='col-md-8' id='productosnew' align='center' style="display: none;margin-top:10px;">
+    <div class='row'>
+      <div class='col-md-12' >
+      	<div class="input-group">
+      	<span class="input-group-addon" onclick="$('inputbuscnew').val('');"><span class='fa fa-barcode fa-4x'></span></span>
+      	<input type='text' id='inputbuscnew' name='inputbuscnew' autofocus="true" placeholder='Buscar' onkeyup='BuscarSugerencias2new(this.value,event);' class='form-control input-lg trans_buscar' style="height: 100px;font-size: 40px;"/>
+      	</div>
+      	<div id="resultBuscadornew" class='resultBuscadornew'>
+      		<table id='tableresultsnew' width='100%' cellspacing='0px' cellpadding='0px'>
+      		</table>
+      	</div>
+      </div>
+    </div>
+    <div>
+        <div class='row'>
+            <br>
+    		<div class='col-xs-12'>
+    			<div class='cantidadnew' id='modificaCantidadActualnew'>0</div>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='1'>1</button>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='2'>2</button>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='3'>3</button>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='4'>4</button>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='5'>5</button>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='6'>6</button>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='7'>7</button>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='8'>8</button>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='9'>9</button>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='0'>0</button>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='p'>.</button>
+    		</div>
+    		<div class='col-xs-4' align='center'>
+    			<button class='numerocnew btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button>
+    		</div>
+    	</div>
+    </div>
+</div>
+	<div class='productos col-md-8' id='productos' align='center' style="display: block;">
 		<div class='row'>
 		<div class='col-md-12' id='menuproductos'>
 		<div class="row" style='margin-top:5px;display:none;' id="avisadorpeque" >
@@ -45,6 +128,11 @@
 				<span class='contentListaProductos ' id='contentListaProductos' >
 					<div id='listaProductos' class='' style='display:block;overflow-y:visible;'></div>
 				</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12" style='margin-top:15px;'>
+				<span id='nombre_mesa' onclick='envia("puntodeventa");'></span>
 			</div>
 		</div>
 		<table cellspacing="0px" cellpadding="0px" width='98%' style='margin-top:10px;' align='center'>
@@ -235,7 +323,7 @@
         <!--fin calculadora--->
 		
 	<div class='col-md-4'>
-	<div class='row'>
+	<div class='row sumarow'>
 	<div  id='buscador' style='margin-top:10px;'>
 
 		<div style='display:none;'>
@@ -278,7 +366,7 @@
 									</table>
 								</th>
 								<th style="width:50%; text-align:left; padding-left:20px;"  class='trans_prod'>Producto</th>
-								<th style="text-align:right; padding-right:20px;">$ Total</th>
+								<th style="text-align:right; padding-right:20px;"><span onclick='AbrirDrawer();'>$Total</span></th>
 							</tr>
 						</table>
 					</td>
@@ -300,15 +388,39 @@
 			</table>
 		</div>
 		<div class='col-lg-12 col-xs-12 col-md-12' style='text-align:right; background-color:white;'>
+			<div class='row'>
+			<div class='col-lg-12'>
+				<div id='divtotal'>
+					<span>TOTAL</span> 
+					<span id='total'>0.00</span>
+				</div>
+			</div>
+			</div>
+			<div class='row'>
+				<div class='col-lg-5 col-md-6 col-xs-6' style='padding-top:5px; padding-right:0px; text-align:right;'>
+				<span><button type='button' class='btn btn-default trans_mesas' style='display:none; margin-bottom:5px; margin-right:5px;' id='btn_mesas' data-toggle="tooltip" data-placement="top" title="" onclick="ImprimirPrecuenta();"><span class="fa fa-print fa-2x"></span></button>
+				<button type='button' class='btn btn-default btn-lg' style='margin-bottom:5px; margin-right:5px;' id='btn_descuento' onclick="showPopup(); return false;"><span class='fa fa-minus'></span>&nbsp;<span class='fa fa-dollar'></span></button>
+				</span>
+				</div>
+				<div class='col-lg-7 col-md-6 col-xs-6' style='padding-top:5px; padding-left:0px;'>
+				<span>
+				<button type='button' class='btn btn-default btn-block' id='btn_pagar' style='margin-bottom:5px; margin-right:5px; text-transform:uppercase;' onclick="VerPropinas(); return false;"><span class='trans_pay' id='spanaction'>PAGAR</span></button>
+				<button type='button' class='btn btn-success btn-lg trans_save btn-block' style='margin-bottom:5px; margin-top:0px; margin-right:5px; display:none; text-transform:uppercase;' data-toggle="tooltip" data-placement="top" title="" id='btn_gpedidos' onclick="SaveMesa();">GUARDAR</button>
+				</span>
+				</div>
+			</div>
+			
+			
 			<!--<div class='row'>
 				<div class='col-xs-6'>
 					<center>-->
-						<button type='button' class='btn btn-default trans_desc' style='margin-bottom:5px; margin-right:5px;' id='btn_descuento' onclick="showPopup(); return false;">DESCUENTO</button>
+			
 					<!--</center>
 				</div>
 				<div class='col-xs-6'>
 					<center>	-->
-						<button type='button' class='btn btn-success' id='btn_pagar' style='margin-bottom:5px;' onclick="AntesDePagar(); return false;"><span class='trans_pay'>PAGAR</span>&nbsp;<span id='total'>0.00</span></button>
+			
+			
 					<!--</center>
 				</div>
 			</div>-->
@@ -329,28 +441,264 @@
 	</div>
 	</div>
 	</div>
+</div>
 
-	<!---<div class='descuento' id='descuento'>
-		<div id='divInDesc' style='margin:10px; width:45%; height:100%; float:left;'>
-		<div class='boton' id='btn_descuento' onclick="showPopup(); return false;">DESC.</div>
-		</div>
-		<div id='divInCierre' style='margin:10px; width:45%; height:100%; float:left;'>
-		<div class='boton' id='btn_cierre' onclick='$("#ModuloCierre").show();'>CIERRE</div>
+<div id="paymentModule" class='row' style='display:none; background-color:white; height:100%;'>
+	<div class='col-lg-12 col-md-12 col-xs-12'>
+		<div class='container-fluid'>
+			<div style="display: none;" id="json"></div>
+			<input id="order_id" name="order_id" type="hidden" value="" readonly="readonly" style='display:none;'>
+			<input id="respuestatarjeta" name="respuestatarjeta" type="hidden" value="" readonly="readonly" style='display:none;'>
+			<table style="width:100%; display:none;" cellspacing="0" cellpadding="0" id='tablaformaspago'>
+			</table>
+			<div class='row' id='easypay'>
+				<div class='col-lg-12 col-md-12 col-xs-12'>
+					<h3 id='trans_label_32'>Formas de Pago</h3>
+					<div style='width:100%; text-align:right; padding-right:5px; padding-top:5px;cursor:pointer;color:#1495C0; position:absolute; top:0px; right:12px; cursor:pointer;'>
+						<i class="fa fa-chevron-circle-left fa-3x" title='Volver...' onclick='cancelPayment();'></i>
+					</div>
+					<div class='container-fluid'>
+					<div class='row' style='margin-top:10px;'>
+						<div id='divtotal2'>TOTAL: $
+								<span id="invoiceTotal" class="payOverview">0.00</span>
+						</div>
+					</div>
+					<div class='row' style='background-color:#DDD; padding-bottom:10px; padding-top:10px;'>
+						<div class='col-xs-6' >
+							<div class="row">
+								<div class='col-md-5 col-lg-5 col-xs-12' style='padding-right:0px; '>
+									<div style='margin-top:5px; text-align:left;'><b><span class='trans_nfact'>Factura No.</span>&nbsp;&nbsp;</b><span id='seriesfact'></span></div>
+									<input id='invoiceNrComplete' type='hidden' style='display:none;'/>
+								</div>
+								<div class='col-md-4 col-lg-4 col-xs-12'>
+								<input id="invoiceNr" class='form-control input input-lg' onchange='VerificarNumero(this.value);' type='text'  maxlength='9'/>
+								</div>
+								<div class='col-md-3 col-lg-3 col-xs-0'>
+								</div>
+							</div>
+						</div>
+						<div class='col-xs-6' style='text-align:right;'>
+							<div class='row'>
+								<div class='col-lg-12 col-md-12 col-sm-12'>
+									<span name='busquedacliente' id='busquedacliente'>9999999999999</span> - 	
+									<span style='color:#404041; font-weight:bold;' id='clientefind' class='trans_customer'>Consumidor Final</span>
+									<button style='margin-left:5px;' onclick="BuscarCliente(13);" type='button' class='btn btn-default btn-lg trans_cliente'>Cambiar Cliente</button>&nbsp;		
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class='row'>
+					<div class="list-group" style='text-align:left; margin-bottom:0px;'>
+						<div class="list-group-item" style='padding:0px;'>
+						<div class='row'>
+							<div class='col-lg-12'>
+								<table width='100%'><tr>
+								<td width='95%'>
+								<div onclick="changePaymentCategory('1','Efectivo');" style='padding:15px;'><span id='caretEfectivo' class='fa fa-caret-down'></span>&nbsp;<span id='trans_label_84' style='font-size:18px; font-weight:bold;'>Efectivo</span></div>
+								</td>
+								<td style='vertical-align:middle'>
+							    <span class="badge" style='float:right;' id='paymentEfectivoa'>$ 0.00</span>
+								</td>
+								<td>
+								<button onclick='ResetPagos(1);'class='btn btn-default basurero' style='margin-left:5px;margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
+								</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						</div>
+						<div id='touchefectivo' style='display:none; padding:15px;' class='touchpago  container-fluid'>
+						<!--<span id='trans_label_34'>Elige tu pago en efectivo</span>-->
+							<div style='text-align:left;'>
+								<div class='' style='text-align:left; display:inline;'>
+								<button onclick='subirefectivo(this);' id='justo' class='btn btn-lg btn-primary den' style='margin:5px;' data-value='' type='button'></button>
+								</div>
+								<div class='' style='text-align:left; display:inline;'>
+								<button onclick='subirefectivo(this);' id='redondeado' class='btn btn-lg btn-primary den' style='margin:5px;'  data-value='' type='button'></button>
+								</div>
+								<div class='' style='text-align:left; display:none;'>
+								<button onclick='subirefectivo(this);' id='altaden' class='btn btn-lg btn-primary den' style='margin:5px;'  data-value='' type='button'></button>
+								</div>
+								<div class='' style='text-align:left; display:none;'>
+								<button onclick='subirefectivo(this);' id='prox10' class='btn btn-lg btn-primary den' style='margin:5px;'  data-value='' type='button'></button>
+								</div>
+								<div class='' style='text-align:left; display:none;'>
+								<button onclick='subirefectivo(this);' id='prox20' class='btn btn-lg btn-primary den' style='margin:5px;'  data-value='' type='button'></button>
+								</div>
+								<div class='' style='text-align:left; display:inline;'>
+								<button onclick='$("#paymentEfectivo").click();' id='other' class='btn btn-lg btn-primary den trans_otro' style='margin-right: 10px;' data-value='' type='button' >OTHER</button>
+								</div>
+							</div>
+						</div>
+					  
+					  <div class="list-group-item" style='padding:0px;'>
+					  <div class='row'>
+							<div class='col-lg-12'>
+								<table width='100%'><tr>
+								<td width='95%'>
+									<div onclick="changePaymentCategory('2','Tarjetas');" style='padding:15px;' ><span id='caretTarjetas' class='fa fa-caret-right'></span>&nbsp;<span id='trans_label_85' style='font-size:18px; font-weight:bold;'>Tarjetas</span></div>
+								</td>
+								<td style='vertical-align:middle'>
+									<span class="badge" id='paymentTarjetasa' style='float:right;'>$ 0.00</span>
+								</td>
+								<td>
+									<button onclick='ResetPagos(2);'class='btn btn-default basurero' style='margin-left:5px; margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
+								</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						</div>
+						<div id='touchtarjetas' style='display:none; padding:15px;' class='touchpago  container-fluid'>
+							<!--<div class='col-lg-12 col-md-12 col-xs-12'>-->
+							<!--<div id='trans_label_35'>Elige la tarjeta con la que vas a pagar</div>-->
+							<div class="input-group" style='display:none;' id='cardgroup'>
+								<span class="input-group-addon trans_valorus" id="basic-addon1" >Valor US</span>
+								<input onchange='valorcardchange();' class='form-control input-lg pop' id='valortarjeta' value='0.00' readonly />
+							</div>
+							<div id='lastarjetas' style='margin-top:15px;'>
+							</div>
+							<!--</div>-->
+						</div>
+					   <div class="list-group-item" style='display:none; padding:0px;' id='licheques'>
+					    <div class='row'>
+							<div class='col-lg-12'>
+								<table width='100%'><tr>
+								<td width='95%'>
+									<div onclick="changePaymentCategory('3','Cheques');" style='padding:15px;'><span id='caretCheques' class='fa fa-caret-right'></span>&nbsp;<span style='font-size:18px; font-weight:bold;' id='trans_label_86'>Cheques</span></div>
+								</td>
+								<td  style='vertical-align:middle'>
+									 <span class="badge" id='paymentChequesa' style='float:right;'>$ 0.00</span>
+								</td>
+								<td>
+								<button onclick='ResetPagos(3);'class='btn btn-default basurero'  style='margin-left:5px; margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
+								</td>
+								</tr></table>
+							</div>
+						</div>	
+						</div>						
+						<div id='touchcheques' style='display:none; padding:15px;' class='touchpago  container-fluid'>
+							<!--<div class='col-lg-12 col-md-12 col-xs-12'>-->
+							<!---<div id='trans_label_36'>Ingresa el monto del cheque</div>-->
+							<table width='100%' style=''>
+								<tr><td>
+								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
+								<span class="input-group-addon trans_checknumber" id="basic-addon1" style='width:20%;'> Cheque No.</span>
+								<input type='number' id='chequeno1' name='chequeno1' class='form-control input-lg' value='' placeholder='0000' onclick='this.select();'/>
+								</div></td>
+								</tr>
+								<tr>
+								<td>
+								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
+								<span class="input-group-addon trans_valorus" id="basic-addon1" style='width:20%;' >Valor US</span>
+								<input onchange='valorchequechange();' class='form-control input-lg cheque pop' id='valorcheque1' onkeypress="isalphanumeric(event);" name='valorcheque1' value='0.00' readonly data-container='#touchcheques'/>
+								</div>
+								</td></tr>
+							</table>
+							<!--</div>-->
+						</div>
+					  
+					   <div class="list-group-item" style='display:none; padding:0px;' id='licxc'>
+					    <div class='row'>
+							<div class='col-lg-12'>
+								<table width='100%'><tr>
+								<td width='95%'>
+									<div onclick="changePaymentCategory('4','CxC');" style='padding:15px;'><span id='caretCxC' class='fa fa-caret-right'></span>&nbsp;<span style='font-size:18px; font-weight:bold;' id='trans_label_87'>CxC</span></div>
+								</td>
+								<td  style='vertical-align:middle'>
+									 <span class="badge" id='paymentCxCa' style='float:right;'>$ 0.00</span>
+								</td>
+								<td>
+									<button onclick='ResetPagos(4);'class='btn btn-default basurero'   style='margin-left:5px; margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
+								</td>
+								</tr></table>
+							</div>
+						</div>
+						</div>
+						<div id='touchcxc' style='display:none; padding:15px;' class='touchpago container-fluid'>
+							<!--<div class='col-lg-12 col-md-12 col-xs-12'>-->
+								<!--<div id='trans_label_37'>Ingresa el monto que se va a cancelar</div>-->
+								<table width='100%' style=''>
+								<tr><td>
+								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
+								<span class="input-group-addon trans_justification" id="basic-addon1" style='width:20%;' >Justificación</span>
+								<input type='text' class='form-control input input-lg' id='justcxc' name='justcxc' onclick='this.select();'/>
+								</div>
+								</td></tr>
+								<tr><td>
+								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
+								<span class="input-group-addon trans_valorus" id="basic-addon1" style='width:20%;' >Valor US</span>
+								<input onchange='valorcxcchange();' class='form-control input input-lg pop' id='valorcxc' name='valorcxc' readonly data-container='#touchcxc'/>
+								</div>
+								</td></tr></table>
+							<!--</div>-->
+						</div>
+					 
+					</div>
+					</div>
+					<div class='row'>
+						<div class='col-xs-12'>
+						<div class='row' style='background-color:#DDD; padding-top:10px; padding-bottom:10px;'>
+						<div class='col-md-6' style="padding-top:10px;padding-bottom:10px;">
+						<table class="cuadrototal" style='display:none;' border="0" cellpadding="0px" cellspacing="0px" width='100%'>
+							<tr>
+								<td class="" align='right' id='trans_label_33'>
+									 PAGADO
+								</td>
+								<td id="invoicePaid" class='' style='' align='right'>
+									0.00
+								</td>
+							
+								<td id="invoiceDebt" class="trans_change" style='' align='right'>
+									FALTANTE
+								</td>
+								<td id="changeFromPurchase" class='' style='' align='right'>
+									0
+								</td>
+								<td id="labelprop" class="trans_propina" style='' align='right'>
+									PROPINA
+								</td>
+								<td id="invoiceprop" class='' style='' align='right'>
+									0.00
+								</td>
+							</tr>
+						</table>
+						</div>
+						<div class="col-md-6">
+						<table align='right'>
+                            <tr>
+								<td>
+									 <button class='btn btn-default btn-lg' id='pagoavan' style='margin-right:3px;' onclick='PagoAvanzado();'><span class='trans_advance'>Pago Avanzado</span></button>
+								</td>
+								<td>
+									  <button  class='btn btn-default btn-lg trans_pagosimple' id='lisimple' style='display:none; margin-right:3px;' onclick='PagoSimple();' style='display:none;'>Pago Simple</button>
+								</td>
+								<td>
+    							    <button id="cancelButton" class='btn btn-default btn-lg trans_cancel' onclick="cancelPayment(); return false;" style='margin-right:5px;'>Cancelar</button>
+                                </td>
+								<td>
+									<button id="nombre_orden" class='btn btn-lg btn-default trans_ordern' onclick="$('#popupNameorder').modal('show');" style='margin-right:5px;display: none;' type='button'>Nombre Orden</button>
+								</td>
+                                <td>
+        						<button style="float:right; margin-right:3px; display:none;" id="payButton" class="btn btn-success btn-lg trans_pay" onclick="VerificarComandas();"><span class='trans_pay'>PAGAR</span></button>
+								</td>
+    						</tr>
+						</table>
+						 </div>
+						 </div>
+					</div>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class='row' id='clientever' style='display:none;'>
+				<div class='col-lg-12 col-md-12 col-xs-12'>
+					<div id='newCliente' class='container-fluid'></div>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class='totalpagar' id='totalpagar'>
-	<div id='dinInTotalPagar' style='margin:10px;'>
-		<div class='conttotal' id='conttotal'>
-		<div>Valor a pagar:</div>
-		<div class='total' id='total'></div>
-		</div>
-		<div class='botonr' id='btn_pagar' style='width:47%; float:left;' onclick="AntesDePagar(); return false;">PAGAR</div>
-	</div>
-	</div>-->
-<!--<div class='row' id='row3'>--->
-
- </div>
- </div>
+</div>
  
  
  
@@ -358,7 +706,7 @@
 <div  class="modal fade" id="popupDiscount" role="dialog" data-backdrop="static">
 	<div class="modal-dialog modal-sm">
 	<div class='modal-content text-center'>
-		<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupDiscount").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>
+		<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' ><i class="fa fa-chevron-circle-left fa-2x"  onclick='$("#popupDiscount").modal("hide");' title='Volver...'></i></div>
 		<div class='modal-header'><h2 class='trans_desc'>DESCUENTO</h2></div>
 		<span id='msjDescuentoError'></span>
 		<div class="modal-body divdescuento" style='color:#404041; position:relative;'>
@@ -422,7 +770,9 @@
 	<div class="modal-dialog">
 	<div class='modal-content text-center'>
 		<!--<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupModificadores").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>-->
-		<div class='modal-header'><h4 id='titlemodificador'>Modificadores</h4></div>
+		<div class='modal-header'>
+		<div style='width:100%; text-align:right; padding-right:5px; padding-top:10px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;'><i onclick='$("#popupModificadores").modal("hide");' class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>
+		<h4 id='titlemodificador'>Modificadores</h4></div>
 		<span id='msjDescuentoError'></span>
 		<input type='hidden' style='display:none;' id='id_formulado_modificadores'/>
 		<div class="modal-body" style='color:#404041; position:relative;'>
@@ -434,6 +784,26 @@
 	</div>
 	</div>
 </div>
+
+
+<!--pop up propina--->
+<div  class="modal fade" id="popupPropina" role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
+	<div class='modal-content text-center'>
+		<!--<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupModificadores").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>-->
+		<div class='modal-header'><h4 id='titlemodificador' class='trans_propina'>Propinas</h4></div>
+		<span id='msjpropinasError'></span>
+		<div class="modal-body" style='color:#404041; position:relative;'>
+			<div class='row'>
+				<div class='col-lg-12' id='divpropinas'>
+				</div>
+				<button style='margin-top:10px;' type="button" class="btn btn-primary btn-lg trans_save" onclick="GuardarPropina();">Guardar</button>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+<!--- ---->
 
 <!---pop up order name ------>
 <div  class="modal fade" id="popupNameorder" role="dialog" data-backdrop="static">
@@ -456,11 +826,128 @@
 	</div>
 </div>
 
+<!--- ---->
+
+<!---pop up Nota------>
+<div  class="modal fade" id="popupNota" role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
+	<div class='modal-content text-center'>
+		<!--<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupModificadores").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>-->
+		<div class='modal-header'><h4><span id='trans_label_53'>Nota para </span><span id='itemnota'></span></h4></div>
+		<span id='msjnotaError'></span>
+		<input class='form-control input-lg' id='notaid' style='display:none;'/>
+		<div class="modal-body" style='color:#404041; position:relative;'>
+			<div class='row'>
+				<div class='col-lg-10'>
+					<textarea class='form-control input-lg trans_note' autofocus='true' id='textonota' placeholder='Ingrese la nota...'></textarea>
+				</div>
+				<div class='col-lg-2'>
+					<button type='button' style='margin-top:10px;' class='btn btn-primary trans_save' onclick="AgregarNota();">Listo</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+
+<!--- ---->
+
+<!---pop up Empleados------>
+<div  class="modal fade" id="popupEmpleados" role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
+	<div class='modal-content text-center'>
+		<div class='modal-header'>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4><span id='trans_label_113'>Escoja Mesero</span></h4>
+        </div>
+		<span id='msjempleadoError'></span>
+		<input class='form-control input-lg' id='empleadoid' style='display:none;'/>
+		<div class="modal-body" style='color:#404041; position:relative;'>
+			<div class='row'>
+				<div id="listaempleados" class='col-md-9'>
+
+				</div>
+				<div class='col-md-3'>
+					<button type='button' class='btn btn-primary trans_continue' onclick="SaveMesaLocal();">Continuar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+
+<!--- ---->
+
+<!---pop up Activar Mesa------>
+<div  class="modal fade" id="popupActivarMesa" role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
+	<div class='modal-content text-center'>
+		<!--<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupModificadores").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>-->
+		<div class='modal-header'><h4><span id='trans_label_59'>Activar Mesa: </span><span id='itemmesa'></span></h4></div>
+		<span id='msjmesaError'></span>
+		<input class='form-control input-lg' id='mesaid' style='display:none;'/>
+		<div class="modal-body" style='color:#404041; position:relative;'>
+			<div class='row'>
+				<div class='col-lg-12' style='text-align:left;'>
+					<label id='trans_label_60'>Número de PAX:</label>
+				</div>
+				<div class='col-lg-12'>
+					<div class='row'>
+						<div class='col-xs-12'>
+							<div class='cantidadm' id='addPax' cambio='false'>1</div>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numerom btn btn-default btn-lg' cual='1'>1</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numerom btn btn-default btn-lg' cual='2'>2</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numerom btn btn-default btn-lg' cual='3'>3</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numerom btn btn-default btn-lg' cual='4'>4</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numerom btn btn-default btn-lg' cual='5'>5</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numerom btn btn-default btn-lg' cual='6'>6</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numerom btn btn-default btn-lg' cual='7'>7</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numerom btn btn-default btn-lg' cual='8'>8</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numerom btn btn-default btn-lg' cual='9'>9</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numerom btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-lg-12'>
+					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-success btn-lg trans_active' onclick="ActivarMesa();">ACTIVAR</button>
+					<button type='button' style='margin-top:10px; text-transform:uppercase;' class='btn btn-default btn-lg trans_cancel' onclick="$('#addPax').attr('cambio','false'); $('#popupActivarMesa').modal('hide');">CANCELAR</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+
+<!--- ---->
+
+
 	<div  class="modal fade" id="popupCantidad" role="dialog" data-backdrop="static">
 		<div class="modal-dialog modal-sm">
 			<div class='modal-content text-center'>
 				<div class='modal-header'>
-						<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' onclick='$("#popupCantidad").modal("hide");'><i class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>
+						<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' ><i onclick='$("#popupCantidad").modal("hide");' class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>
 					<h3 class='trans_cantc'>Nueva Cantidad</h3>
 				</div>
 				<span id='msjCantidadError'></span>
@@ -473,7 +960,9 @@
 						<div class='col-xs-12'>
 							<div class='cantidad' id='modificaCantidadActual'>0</div>
 						</div>
-						<div class='col-xs-4' align='center'>
+					</div>
+					<div class='row'>
+						<div class='col-lg-4 col-md-4 col-xs-4' align='center'>
 							<button class='numeroc btn btn-default btn-lg' cual='1'>1</button>
 						</div>
 						<div class='col-xs-4' align='center'>
@@ -482,6 +971,8 @@
 						<div class='col-xs-4' align='center'>
 							<button class='numeroc btn btn-default btn-lg' cual='3'>3</button>
 						</div>
+					</div>
+					<div class='row'>
 						<div class='col-xs-4' align='center'>
 							<button class='numeroc btn btn-default btn-lg' cual='4'>4</button>
 						</div>
@@ -491,6 +982,8 @@
 						<div class='col-xs-4' align='center'>
 							<button class='numeroc btn btn-default btn-lg' cual='6'>6</button>
 						</div>
+					</div>
+					<div class='row'>
 						<div class='col-xs-4' align='center'>
 							<button class='numeroc btn btn-default btn-lg' cual='7'>7</button>
 						</div>
@@ -500,6 +993,8 @@
 						<div class='col-xs-4' align='center'>
 							<button class='numeroc btn btn-default btn-lg' cual='9'>9</button>
 						</div>
+					</div>
+					<div class='row'>
 						<div class='col-xs-4' align='center'>
 							<button class='numeroc btn btn-default btn-lg' cual='0'>0</button>
 						</div>
@@ -510,516 +1005,64 @@
 							<button class='numeroc btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button>
 						</div>
 					</div>
+				</div>
 					<input type='hidden' id='recibeIdentificadorTr' />
 					<input type='hidden' id='productoIDAcambiar'  />
 					<div class='btn btn-default trans_cancel' onclick="closePopup2(); return false;" id='btn_cancelar' style='margin:10px;'>Cancelar</div>
-					<div id='btn_agregar1' class='btn btn-success trans_change' onclick='cambiarCantidad()' style='margin:10px;'>Cambiar</div>
-					<div id='btn_agregar2' class='btn btn-success trans_change' onclick='cambiarCantidad2()' style='margin:10px;display:none;'>Cambiar</div>
+					<div id='btn_agregar1' class='btn btn-success trans_cantchange' onclick='cambiarCantidad()' style='margin:10px;'>Cambiar</div>
+					<div id='btn_agregar2' class='btn btn-success trans_cantchange' onclick='cambiarCantidad2()' style='margin:10px;display:none;'>Cambiar</div>
 					
 				</div>
 			</div>
 		</div>
-	</div>
-
-
-<div id="popupScan" style="display: none; background: rgba(255,255,255,0.8); width: 100%; height: 100%; top: 0; left: 0; position: absolute;text-align: center;">
-		<br/>
-		<br/>
-		<div id="popupScaner" style="margin-top: 1000px; box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.75); background-color: #ffffff; color: #000000; margin-left: auto; margin-right: auto;">
-			<div class="encabezadorojo" style='position:relative; height:30px; font-size:20px;'>SCAN<img src='images/xcierre.png' style='position:absolute; top:3px; right:5px; cursor:pointer;' onclick='$("#popupScan").fadeOut();'/></div>
-			<br/>
-			<div id="discountAdded" style="display: none; text-align: center; color: green">OK!</div>
-			<table cellspacing='0px' cellpadding='0px' align='center' width='90%'>
-				<tr>
-					<!--<td class='labelgris'><div id='labeladdDiscount' style='font-size:16px; height:25px;'>$Total descuento</div></td>-->
-					<td align='left'><input type="number" min='0' onkeypress='soloNumerost(event);'  id="addDiscount" value="" class='valor' style='width:100%; font-size:16px; text-align:center; padding-right:10px; height:40px;' autofocus /></td>
-				</tr>
-			</table>
-			<br/>
-			<br/>
-			<div style='background-color:#E0DEDE; padding-top:20px; padding-bottom:20px;'>
-			<table style="margin-left: auto; margin-right: auto;">
-				<tr>
-					<td>
-						<input type="button" value="scan" onclick="dale();" ontouch="dale();" style="margin-top: 230px; width: 100px; height: 30px; font-size: 1em"/>
-					</td>
-					<td>
-						<div style="position: relative;">
-							<div class='actionredbutton' onclick='$("#popupScan").fadeOut();' id='btn_cancelar' style='padding:5px; font-size:18px;'>Cancelar</div>
-						</div>
-					</td>
-				</tr>
-			</table>
-			</div>
-		</div>
-	</div>
 	
-	
-	
-	
-	<input type='hidden' style='display:none;' value='001-001-000050' id='nextnumber'/>
-	<div id="factura" style='display:none;'>
+<input type='hidden' style='display:none;' value='001-001-000050' id='nextnumber'/>
+<div id="factura" style='display:none;'>
 		<input type="hidden" id="subtotalSinIva" value="0"/>
 		<input type="hidden" id="subtotalIva" value="0"/>
 		<input type="text" id="descuentoFactura" value="0"/>
 		<input type="hidden" id="totalmiFactura" value="0"/>
 		<input type="hidden" id="timespanFactura" value="0"/>
-	</div>
-	<div id="controller" style='display:none;'>
+		<input type="hidden" id="propinaFactura" value="0"/>
+</div>
+<div id="controller" style='display:none;'>
 		<input type="hidden" id="pager" value="1"/>
 		<input type="hidden" id="category" value="1"/>
 		<input type="hidden" id="maxPage" value="1"/>
-	</div>
-	
-
-<div id="paymentModule" class='' style='display:none; position:absolute; top:0px; left:0%; width:100%; z-index:2; background-color:#fff; height:200%'>
-<div id="pay" class="" style='width:100%;'>
-	<div class="ventanaprincipal" style='height:200%;'>
-		
-		<!---<div class='col-lg-12'>-->
-		<div id="opaco" style="width:100%; height:100%; position:absolute; top:0%; left:0%; background-color:rgba(255,255,255,0.7); z-index:3; display:none;">
-		<div id="newCliente" style='height:200%;background-color:rgba(255,255,255,1);margin-top:-8px;'></div>
-		</div>
-		<!--<div id="positionClosePreCuenta" style="position: absolute; left: 96%; top: 0%; z-index: 20;"><img onclick="cancelPayment(); return false;" style="cursor: pointer;" src="../images/xcierre.png"/></div>-->
-		<div style="display: none;" id="json"></div>
-		<div id="referenceToReset" style="height:100%; background-color:#DDD;">
-				<input id="acc" name="acc" type="hidden" value="">
-				<input id="echo" name="echo" type="hidden" value=""> 
-				<div class='row'>
-				<div class='col-xs-12'>
-				<div class='row' style='background-color:#fff;'>
-						<div class='col-xs-12'>
-						<div style='margin-top:10px; margin-bottom:20px;'>
-						<h3 style='margin-top:0px;' id='trans_label_32'>Ingreso de Pagos</h3>
-							<div style='width:100%; text-align:right; padding-right:5px; padding-top:5px;cursor:pointer;color:#1495C0; position:absolute; top:0px; right:12px; cursor:pointer;'>
-								<i class="fa fa-chevron-circle-left fa-3x" title='Volver...' onclick='$("#paymentModule").slideUp();'></i>
-							</div>
-						</div>
-						</div>
-				</div>
-				<div class='row' style='background-color:#DDD; padding-top:20px; padding-bottom:20px;'>
-					
-						<!--<button type='button' class='btn btn-danger bnt-sm' style='position:absolute; top:25px; right:12px; cursor:pointer;' onclick='$("#paymentModule").modal("hide");'><span class='glyphicon glyphicon-remove-circle' ></span></button>-->
-						
-						<table width="100%" cellpadding="0" cellspacing="0" style='display:none;'>
-							<tr>
-								<td style="width:20%;">
-								</td>
-								<td width="30%" style="display: none;">
-									Nombre: <span id="payClientName"></span>
-								</td>
-								<td width="30%" style="display: none;">
-									Cedula: <span id="payClientIDCard"></span>
-								</td>
-								<td style="width: 80%;">
-									Factura: #
-								</td>
-							</tr>
-						</table>
-					
-				<div class='col-xs-6'>
-					<div class="row">
-						<div class='col-md-5' style='padding-right:0px; '>
-							<div style='margin-top:5px; text-align:left;'><b><span class='trans_nfact'>Factura No.</span>&nbsp;&nbsp;</b><span id='seriesfact'></span></div>
-							<input id='invoiceNrComplete' type='hidden' style='display:none;'/>
-						</div>
-						<div class='col-md-3'>
-						<input id="invoiceNr" class='form-control input' onchange='VerificarNumero(this.value);' type='number' onkeypress="isalphanumeric(event);" maxlength='09'/>
-						</div>
-						<div class='col-md-4'>
-						</div>
-					</div>
-				</div>
-				<div class='col-xs-6' style='text-align:right;'>
-					<span name='busquedacliente' id='busquedacliente'>9999999999999</span> - 	
-					<span style='color:#404041; font-weight:bold;' id='clientefind'>Consumidor Final</span>
-					<button style='margin-left:5px;' onclick="BuscarCliente(13);" type='button' class='btn btn-default btn trans_cliente'>Cambiar Cliente</button>&nbsp;		
-				</div>
-				</div>
-				</div>
-				</div>
-				<div class='row' style="background-color:#fff;">
-				<div class='col-md-5'>
-					<div style="vertical-align:top; width:100%;" colspan='2'>
-						<div class="ventanaformapago" style='overflow-y:auto; overflow-x:hidden; width=100%;'>
-							<table style="width:100%;" cellspacing="0" cellpadding="0" id='tablaformaspago'>
-							</table>
-						</div>
-						<div style='text-align:left; font-size:12px;'>
-						<div onclick='PagoAvanzado();' id='pagoavan' style='padding-left:10px;' class='trans_advance'>Pago Avanzado</div>
-						</div>
-						<!--<div style='padding-top:10px; text-align:right; margin-bottom:10px;'><button class='btn btn-xs btn-success'>Pago Avanzado</button></div>-->
-					</div>
-				</div>
-				<div class='col-md-7'>
-						<div class='tipopago panel'>
-							<div class='touchpago' id='touchefectivo'>
-								<span id='trans_label_34'>Elige tu pago en efectivo</span>
-								<div class='' style='margin-bottom:3px; margin-top:15px; text-align:left;'>
-								<!---<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='100' type='button'>100</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='50' type='button'>50</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='20' type='button'>20</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='10' type='button'>10</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='5' type='button'>5</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='1' type='button'>1</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='0.50' type='button'>0.50</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='0.25' type='button'>0.25</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='0.10' type='button'>0.10</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='0.05' type='button'>0.05</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-primary' data-value='0.01' type='button'>0.01</button>
-								</div>
-								<div class='col-lg-4'>
-								<button onclick='subirefectivo(this);' class='btn btn-lg btn-danger' data-value='-1' type='button'>Borrar</button>
-								</div>--->
-							
-								<div class='' style='text-align:left; display:inline;'>
-								<button onclick='subirefectivo(this);' id='justo' class='btn btn-lg btn-primary den' data-value='' type='button'>
-								</div>
-								<div class='' style='text-align:left; display:inline;'>
-								<button onclick='subirefectivo(this);' id='redondeado' class='btn btn-lg btn-primary den' data-value='' type='button'></button>
-								</div>
-								<div class='' style='text-align:left; display:none;'>
-								<button onclick='subirefectivo(this);' id='altaden' class='btn btn-lg btn-primary den' data-value='' type='button'></button>
-								</div>
-								<div class='' style='text-align:left; display:none;'>
-								<button onclick='subirefectivo(this);' id='prox10' class='btn btn-lg btn-primary den' data-value='' type='button'></button>
-								</div>
-								<div class='' style='text-align:left; display:none;'>
-								<button onclick='subirefectivo(this);' id='prox20' class='btn btn-lg btn-primary den' data-value='' type='button'></button>
-								</div>
-								</div>
-								
-							</div>
-							<div class="touchpago col-xs-12" id='touchtarjetas' style='display:none;'>
-								<span id='trans_label_35'>Elige la tarjeta con la que vas a pagar</span>
-								<div class='col-lg-12 col-md-12 col-xs-12' style='padding:0px;'>
-								<div class="input-group" style='margin-top:5px; margin-bottom:5px; display:none;' id='cardgroup'>
-								<span class="input-group-addon" id="basic-addon1" >Valor US</span>
-								<input type='number' onchange='valorcardchange();' class='form-control input-lg' id='valortarjeta' value='0.00' onclick='this.select();'/>
-								</div>
-								</div>
-									<div id='lastarjetas' style='margin-top:15px;'>
-								    </div>
-							</div>
-							<div class="touchpago" id='touchcheques'  style='display:none;'>
-								<span id='trans_label_36'>Ingresa el monto del cheque</span>
-								<table width='100%' style='margin-top:15px;'>
-								<tr><td>
-								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon" id="basic-addon1" style='width:20%;'> Cheque No.</span>
-								<input type='number' id='chequeno1' name='chequeno1' class='form-control input-lg' value='' placeholder='0000' onclick='this.select();'/>
-								</div></td>
-								</tr>
-								<tr>
-								<td>
-								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon" id="basic-addon1" style='width:20%;' >Valor US</span>
-								<input type='number' onchange='valorchequechange();' class='form-control input-lg cheque' id='valorcheque1' onkeypress="isalphanumeric(event);" name='valorcheque1' value='0.00' onclick='this.select();'/>
-								</div>
-								</td></tr>
-								</table>
-							</div>
-							<div class="touchpago" id='touchcxc'  style='display:none;'>
-								<span id='trans_label_37'>Ingresa el monto que se va a cancelar</span>
-								<table width='100%' style='margin-top:15px;'>
-								<tr><td>
-								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon" id="basic-addon1" style='width:20%;' >Justificación</span>
-								<input type='text' class='form-control input input-lg' id='justcxc' name='justcxc' onclick='this.select();'/>
-								</div>
-								</td></tr>
-								<tr><td>
-								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon" id="basic-addon1" style='width:20%;' >Valor US</span>
-								<input type='number' onchange='valorcxcchange();' class='form-control input input-lg' id='valorcxc' name='valorcxc' value='0.00' onclick='this.select();' onkeypress="isalphanumeric(event);"/>
-								</div>
-								</td></tr></table>
-							</div>
-						</div>
-						
-						
-						
-				</div>
-				</div>
-				<div class="row">
-					<div class='col-xs-12'>
-						<div class='row' style='background-color:#DDD; padding-top:20px; padding-bottom:20px;'>
-						<div class='col-md-5'></div>
-						<div class='col-md-3' style="padding-top:10px;">
-						<table class="cuadrototal" border="0" cellpadding="0px" cellspacing="0px" width='100%'>
-							<tr>
-								<td class="" align='right' id='trans_label_33'>
-									 PAGADO
-								</td>
-								<td id="invoicePaid" class='' style='' align='right'>
-									0.00
-								</td>
-							
-								<td id="invoiceDebt" class="trans_change" style='' align='right'>
-									FALTANTE
-								</td>
-								<td id="changeFromPurchase" class='' style='' align='right'>
-									0
-								</td>
-							</tr>
-						</table>
-						</div>
-						<div class="col-md-4">
-						<table align='right'>
-                            <tr>
-								<td>
-    							    <button id="cancelButton" class='btn btn-default btn-lg trans_cancel' onclick="cancelPayment(); return false;" style='margin-right:5px;'>Cancelar</button>
-                                </td>
-								<td>
-									<button class='btn btn-lg btn-primary trans_ordern' onclick="$('#popupNameorder').modal('show');" style='margin-right:5px;' type='button'>Nombre Orden</button>
-								</td>
-                                <td>
-        						<button style="float:right; margin-right:3px;" id="payButton" class="btn btn-success btn-lg" onclick="performPurchase('table'); return false;"><span class='trans_pay'>PAGAR</span> $<span id="invoiceTotal" class="payOverview">
-									0.00</span></button>
-								</td>
-                                <td>
-        						    <div style="display:none; min-width:80px; width:80px; height:30px; min-height:30px; padding-top:5px;" id="payButtonActivated" class='actiongreenbutton'><span class='trans_pay'>PAGAR</span> <span id="invoiceTotal" class="payOverview">
-									0.00</span></div>
-                                </td>
-                                
-    						</tr>
-						</table>
-						 </div>
-						 </div>
-					</div>
-				</div>
-		</div>
-	<!--</div>--->
-	</div>
-	</div>
-	</div>
-<div id="printFactura" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none;">
-	<div style="box-shadow: 0px 0px 6px 0px rgba(50, 50, 50, 0.75); background-color: #fff;  width: 60%; margin-left: auto;  margin-right: auto; margin-top: 20px; border-top-left-radius: 15px; border-top-right-radius: 15px;">
-		<table style="font-size: 10px; color: #000; width: 100%;" cellspacing="0" cellpadding="0">
-			<tr class="encabezadorojo">
-				<td colspan="2" style="height:35px; text-align:center; border-top-right-radius:15px; border-top-left-radius:15px; position:relative;">
-					Impresi&oacute;n
-					<img src='images/xcierre.png' style='position:absolute; top:2px; right:5px; cursor:pointer;' onclick='$("#printFactura").fadeOut();'/>
-				</td>
-			</tr>
-			<tr>
-				<td style="padding:0px 5px;">
-					<strong>Factura:</strong>
-				</td>
-				<td>
-					<input type="text" class="inputnoborder" id="numFac" readonly="readonly" />
-				</td>
-			</tr>
-			<tr>
-				<td style="padding:0px 5px;">
-					<strong>Nombre:</strong>
-				</td>
-				<td>
-					<input type="text" class="inputnoborder" id="nomCli" readonly="readonly" />
-				</td>
-			</tr>
-			<tr>
-				<td style="padding:0px 5px;">
-					<strong>C.I./R.U.C.:</strong>
-				</td>
-				<td>
-					<input type="text" class="inputnoborder" id="docCli" readonly="readonly" />
-				</td>
-			</tr>
-			<tr>
-				<td style="padding:0px 5px;" colspan="2">
-					<strong>Forma de Pago:</strong>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<table width="100%" id="printFormsPayments">
-						
-					</table>
-				</td>
-			</tr>
-		</table>
-		<table style="font-size: 10px; color: #000; width: 100%;" cellspacing="0" cellpadding="0">
-			<tr>
-				<td colspan="4" style="padding:0px 5px;">
-					<table width="100%" id="printProducts" border="1">
-						<tr>
-							<td>
-								Cant.
-							</td>
-							<td>
-								Descripcion
-							</td>
-							<td>
-								V/Unitario.
-							</td>
-							<td>
-								V/T.
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="text" class="inputnoborder" />
-				</td>
-				<td>
-					<input type="text" class="inputnoborder" />
-				</td>
-				<td>
-					<strong>Subtotal sin I.V.A.:</strong>
-				</td>
-				<td id="subsiniva">
-					
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" />
-				</td>
-				<td>
-					<input type="hidden" />
-				</td>
-				<td>
-					<strong>Subtotal con I.V.A.:</strong>
-				</td>
-				<td id="subconiva">
-					
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" />
-				</td>
-				<td>
-					<input type="hidden" />
-				</td>
-				<td>
-					<strong>I.V.A.:</strong>
-				</td>
-				<td id="impuestos">
-					
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" />
-				</td>
-				<td>
-					<input type="hidden" />
-				</td>
-				<td>
-					<strong>Descuento:</strong>
-				</td>
-				<td id="descFac">
-					
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" />
-				</td>
-				<td>
-					<input type="hidden" />
-				</td>
-				<td>
-					<strong>TOTAL:</strong>
-				</td>
-				<td id="totalPagado">
-					
-				</td>
-			</tr>
-			<tr>
-				<td colspan="4" style="vertical-align: middle; height: 50px; background-color: #E0DEDE;">
-					<table align='center'>
-						<tr>
-							
-							<td>
-								<div id="cancelButton" class='actionredbutton' onclick="cancelPayment(); return false;" style='min-width:80px; width:80px; height:30px; min-height:30px; padding-top:5px;'>Cancelar</div>
-							</td>
-							<td>
-							<div style="width:80px; min-width:80px; height:30px; min-height:30px; float:right; padding-top:5px;" id="printpay" class="actiongreenbutton" onclick="impresionMovil()">Imprimir</div>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-	</div>
-</div>
-</div>
-</div>
-<div class="modal fade" id="modalcierre" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="dialog">
-    <div class="modal-content">
-	<div class="modal-header"><h2>Cierre de Caja</h2></div>
-	<div class='modal-body'>
-	<table cellspacing='0px' cellpadding='0px' width='100%'>
-	<tr><td valign='top' width='18%'>
-		<table cellpadding='0px' cellspacing='0px' width='100%' id='menu'>
-			<tr><td height='50px'><!--<div id='btnforma0' class='buttons' onclick='Desplazar(0);' style='color:#808284; font-weight:bold;  font-size:14px;'>Totales</div>--></td></tr>
-		</table>
-	</td>
-	<td valign='top' style='position:relative; overflow:hidden;'>
-		<div id='forma0' style='width:100%;' class='divformas'>
-			<br/>
-			<table width='75%' cellspacing='10px' cellpadding='0px' align='center'>
-			<tr>
-			</tr>
-			</table>
-			<br/>
-			<div class="input-group" style='margin-left:auto; margin-right:auto;'>
-			<span class="input-group-addon" id='labelgris'>Cantidad</span><input type='number' min='0' onkeypress='soloNumerost(event);' value='0' id='nmonedas' den='' idden='' onchange='ColocarCantidad();' class='form-control input-lg'/></div>
-			<br/>
-			<div style='font-size:20px; font-weight:bold; text-align:center;'> Total Efectivo: $ <input id='totalEfectivo' class='totalesc' value='0.00' elemento='subtotales' formapago='0' style='width:150px; border:none; font-size:20px; font-weight:bold;'/></div>
-			<br/>
-			<div align='center'>
-			<button class='btn btn-danger' onclick='Desplazar(0);'>Ver Totales</button>
-			</div>
-			<br/>
-		</div>
-		<div id='forma0' style='position:absolute; top:0px; left:-1000px; width:100%;' class='divformas'>
-		<br/>
-			<table align='center' width='40%' cellpadding='0px' cellspacing='0px'>
-				<tr class='tablaenc'><td><b>Forma Pago</b></td><td align='right' style='padding-right:10px;'><b>Valor</b></td></tr>
-			</table>
-			<br/>
-			<div style='font-size:20px; font-weight:bold; text-align:center;'> Total USD <span id='totalCierre' class='totalesc'>0.00</span></div>
-			<br/>
-			<div align='center'>
-			<div class='actionredbutton' style='min-height:20px;' onclick='CerrarCaja();'>Cerrar Caja</div>
-			</div>
-		</div>
-	</td>
-	</tr>
-	</table>
-	</div>
-	</div>
-	</div>
 </div>
 
-</section>
+<!--div para diseño de mesas---->
+<div id='divmesas' class='divmesas'>
+	<div class='row'  style='background-color:white;'>
+		<div class='col-lg-12'>
+		<!-- Centered Tabs -->
+		<ul class="nav nav-tabs nav-left">
+		  <li class="active" id="litab1"><a href="#contentmesas_1" data-toggle="tab" >Area 1</a></li>
+		  <li id="litab2"><a href="#contentmesas_2" data-toggle="tab" >Area 2</a></li>
+		  <li id="litab3"><a href="#contentmesas_3" data-toggle="tab" >Area 3</a></li>
+		  <li id="litab4"><a href="#contentmesas_4" data-toggle="tab" >Area 4</a></li>
+		</ul>
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col-lg-12' style='position:relative; background-image:url("images/piso.jpg");' id='colmesas'>
+		<div class="tab-content">
+		<div id='contentmesas_1' class='contentmesas tab-pane fade in active'>
+		</div>
+		<div id='contentmesas_2' class='contentmesas tab-pane fade'>
+		</div>
+		<div id='contentmesas_3' class='contentmesas tab-pane fade'>
+		</div>
+		<div id='contentmesas_4' class='contentmesas tab-pane fade'>
+		</div>
+		</div>
+		</div>
+	</div>
+</div>
+<!---fin diseno mesas ---->
 
-<!--</div>-->
+<div id='jsonproductos' style='display:none;'></div>
+<audio id="beep1" src="views/nubepos/sonidos/blip7.mp3" preload="auto"></audio>
+<div style='display:none;' id='jsonclientes'></div>
+<script type="text/javascript" src="js/funciones.js"></script>
+<script type="text/javascript" src="js/payment.js"></script>

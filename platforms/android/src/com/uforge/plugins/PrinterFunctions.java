@@ -1,6 +1,8 @@
 package com.uforge.plugins;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
 import android.content.Context;
 import com.starmicronics.stario.PortInfo;
 import com.starmicronics.stario.StarIOPort;
@@ -21,7 +23,6 @@ public class PrinterFunctions
         StarIOPort port = null;
         StarPrinterStatus status = null;
         try {
-			
 			String needle="BT:";
 			if(portName.toLowerCase().contains(needle.toLowerCase()))
 			   //portSettings  = "portable;escpos;l";
@@ -170,7 +171,7 @@ public class PrinterFunctions
         }
         return arrayPortName;
 	}
-
+	
     /*private static byte[] convertFromListByteArrayTobyteArray(List<Byte> ByteArray) {
         byte[] byteArray = new byte[ByteArray.size()];
         for(int index = 0; index < byteArray.length; index++) {

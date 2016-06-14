@@ -36,7 +36,7 @@ function SyncStart(){
 		db.transaction(function(tx){
 			tx.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1',[],function(tx,results){
 				if(results.rows.item(0).cp==0||results.rows.item(0).cp==null){
-					LaunchBoarding();
+					//LaunchBoarding();
 				}
 			});
 
@@ -469,7 +469,7 @@ function registrarUser(){
 			 showalertred('Enter a valid e-mail.');
         $("#newEmail").val('');
      }else if(newConfirm != newPass){
-		$("#cargandoTabs").fadeOut();
+		$("#cargandoTabs").modal('hide');
 		if(localStorage.getItem("idioma")==1)
 			showalertred('Las contraseñas son distintas.');
 		else if(localStorage.getItem("idioma")==2)
@@ -482,7 +482,7 @@ function registrarUser(){
 		else if(localStorage.getItem("idioma")==2)
 			 showalertred('You must accept the terms and conditions.');
      }else{
-			$("#cargandoTabs").fadeIn();
+			$("#cargandoTabs").modal('show');
     		var nombre=newEmpresa;
     		var celular='';
     		var email=newEmail;
@@ -519,7 +519,7 @@ function registrarUser(){
     		}).done(function(data){
 				//alert(data);
                 if(data=='existe'){
-						$("#cargandoTabs").fadeOut();
+						$("#cargandoTabs").modal('hide');
 						if(localStorage.getItem("idioma")==1)
                         showalertred('El correo ingresado ya existe en el sistema, vuelva a ingresar otro correo.');
 						else if(localStorage.getItem("idioma")==1)
@@ -541,11 +541,11 @@ function registrarUser(){
 						//localStorage.setItem("permisosya",true);
 						//localStorage.setItem("mesasya",true);
 
-                        setTimeout(function(){
-                          if(localStorage.getItem("id_version_nube") == '0'){
-            	            $('#version_escoje').fadeIn('slow');
-                            document.getElementById('main').style.display='none';
-                          }
+                        /*setTimeout(function(){
+                          if(localStorage.getItem("id_version_nube") == '0'){*/
+            	        $('#version_escoje').fadeIn('slow');
+                        document.getElementById('main').style.display='none';
+                         /* }
                           if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
                             var paisuax = localStorage.getItem("pais");
                             if(paisuax != ''){
@@ -555,7 +555,7 @@ function registrarUser(){
               	            $('#pide_telefono').fadeIn('slow');
                             document.getElementById('main').style.display='none';
                           }
-                        }, 3000);
+                        }, 3000);*/
 
 						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','','',false);});
@@ -605,7 +605,7 @@ function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direcc
 			tx2.executeSql("INSERT INTO empresa (nombre,nombreempresa,id_barra,barra_arriba) VALUES (?,?,?,?)",[nombre,nombre,deviceid,id_barra_arriba],
 			function(tx2,res){
 				if(!desde_login){
-					LaunchBoarding();
+					//LaunchBoarding();
 					//envia("dashboard");
 					envia("puntodeventa");
 				}else{
@@ -679,7 +679,7 @@ function UserLogin(){
                       $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
                       ponerCodigoPais();
                     }
-      	            $('#pide_telefono').fadeIn('slow');
+      	            $('#pide_telefono').modal('show');
                     document.getElementById('main').style.display='none';
                   }
 

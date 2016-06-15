@@ -23,44 +23,15 @@
 			<link rel="stylesheet" href="css/estilotemp.css">
 			<script type="text/javascript" src="js/jsapi"></script>
 			<style>
-				.nav-glyphish-example .ui-btn { padding-top: 40px !important; }
-				.nav-glyphish-example .ui-btn:after { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
-				#chat:after { background:  url("../_assets/img/glyphish-icons/09-chat2.png") 50% 50% no-repeat; background-size: 24px 22px; }
-				#email:after { background:  url("../_assets/img/glyphish-icons/18-envelope.png") 50% 50% no-repeat; background-size: 24px 16px;  }
-				#login:after { background:  url("../_assets/img/glyphish-icons/30-key.png") 50% 50% no-repeat;  background-size: 12px 26px; }
-				#beer:after { background:  url("../_assets/img/glyphish-icons/88-beermug.png") 50% 50% no-repeat;  background-size: 22px 27px; }
-				#coffee:after { background:  url("../_assets/img/glyphish-icons/100-coffee.png") 50% 50% no-repeat;  background-size: 20px 24px; }
-				#skull:after { background:  url("../_assets/img/glyphish-icons/21-skull.png") 50% 50% no-repeat;  background-size: 22px 24px; }
-				#cont_escalable { display:block; }
-				.col-sm-offset-1{
-						margin:0px;
-				}
                 #version_escoje {
-					bottom: 0;
+					bottom: 0px;
 					display: none;
-					left: 0;
+					left: 0px;
 					outline: 0 none;
 					overflow-y: auto;
 					overflow-x: hidden;
 					position: absolute;
-					right: 0;
-					top: 0px;
-					z-index:4;
-					background-color: rgba(255, 255, 255, 1);
-                    padding: 0px;
-                    width: 100%;
-                    height: 100%;
-                    font-size:14px;
-				}
-                #pide_telefono {
-					bottom: 0;
-					display: none;
-					left: 0;
-					outline: 0 none;
-					overflow-y: auto;
-					overflow-x: hidden;
-					position: absolute;
-					right: 0;
+					right: 0px;
 					top: 0px;
 					background-color: rgba(255, 255, 255, 1);
                     padding: 0px;
@@ -68,17 +39,30 @@
                     height: 100%;
                     font-size:14px;
 				}
+				
+				#pide_telefono {
+					display: none;
+					left: 0px;
+					overflow-y: auto;
+					overflow-x: hidden;
+					position: absolute;
+					top: 0px;
+					background-color: rgba(255, 255, 255, 1);
+                    width: 100%;
+                    height: 100%;
+                    font-size:14px;
+				}
+				
                 #pide_local {
-					bottom: 0;
+					bottom: 0px;
 					display: none;
-					left: 0;
+					left: 0px;
 					outline: 0 none;
 					overflow-y: auto;
 					overflow-x: hidden;
 					position: absolute;
-					right: 0;
+					right: 0px;
 					top: 0px;
-					z-index:4;
 					background-color: rgba(255, 255, 255, 1);
                     padding: 0px;
                     width: 100%;
@@ -86,34 +70,28 @@
                     font-size:14px;
 				}
                 #terminos_condiciones {
-					bottom: 0;
+					bottom: 0px;
 					display: none;
-					left: 0;
+					left: 0px;
 					outline: 0 none;
 					overflow-y: auto;
 					overflow-x: hidden;
 					position: absolute;
-					right: 0;
+					right: 0px;
 					top: 0px;
-					z-index:4;
 					background-color: rgba(255, 255, 255, 1);
                     padding: 0px;
                     width: 100%;
                     height: 100%;
                     font-size:14px;
 				}
-				.popover-example .popover {
-					position: relative;
-					display: block;
-					margin: 20px;
-				}
 			</style>
             <script type="text/javascript">
             function guardaversion(){
-              $("#cargandoTabs").fadeIn();
+              $("#cargandoTabs").modal('show');
               var version = $('input:radio[name=id_version]:checked').val();
               if(version === undefined){
-                $("#cargandoTabs").fadeOut();
+                $("#cargandoTabs").modal('hide');
                 if(localStorage.getItem("idioma")==2){
                  alert('You must choose a version for your system.');
                 }else{
@@ -145,12 +123,12 @@
 			    db.transaction(function(tx1){
 			      tx1.executeSql("UPDATE CONFIG SET id_version_nube=?,sincronizar='true',con_shop='"+auxshop+"',con_mesas='"+auxmesas+"' where id=1",[version],
     			  function(tx1,results1){
-    			   $("#cargandoTabs").fadeOut();
+    			   $("#cargandoTabs").modal('hide');
                    $('#version_escoje').fadeOut('slow');
                    localStorage.setItem("id_version_nube",version);
                    document.getElementById('main').style.display='block';
                    if(localStorage.getItem("telefono_inte") == ''){
-      			    $('#pide_telefono').fadeIn('slow');
+      			    $('#pide_telefono').fadeIn();
                     document.getElementById('main').style.display='none';
                    }
     			  });
@@ -158,7 +136,7 @@
               }
             }
             function guardatelefono(){
-              $("#cargandoTabs").fadeIn();
+              $("#cargandoTabs").modal('show');
               var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
             	db.transaction(
             	function (tx){
@@ -179,7 +157,7 @@
               var primernumero = numeroTelefono.value.charAt(0);
 
               if(codigoPa=='' || codigoPa=='0'){
-                $("#cargandoTabs").fadeOut();
+                $("#cargandoTabs").modal('hide');
                 if(localStorage.getItem("idioma")==2){
                  alert('The country code is mandatory');
                 }else{
@@ -195,21 +173,21 @@
                 document.getElementById('numero_telefonico').value = numeroTelefono.value.substr(1);
                 guardatelefono();
               }else if(numeroTelefono.value==''){
-                $("#cargandoTabs").fadeOut();
+                $("#cargandoTabs").modal('hide');
                 if(localStorage.getItem("idioma")==2){
                  alert('The phone number is required');
                 }else{
                  alert('El número de teléfono es obligatorio');
                 }
               }else if(expresionRegular2.test(numeroTelefono.value)){
-                $("#cargandoTabs").fadeOut();
+                $("#cargandoTabs").modal('hide');
                 if(localStorage.getItem("idioma")==2){
                  alert('Error there Blanks');
                 }else{
                  alert('Error existen espacios en blanco');
                 }
               }else if(!expresionRegular1.test(numeroTelefono.value)){
-                $("#cargandoTabs").fadeOut();
+                $("#cargandoTabs").modal('hide');
                 if(localStorage.getItem("idioma")==2){
                  alert('Incorrect phone number');
                 }else{
@@ -232,8 +210,8 @@
             			    db.transaction(function(tx1){
             			      tx1.executeSql("UPDATE CONFIG SET telefono_inte=?,sincronizar='true',pide_telefono='true' where id=1",[numeroTelefono.value],
                 			  function(tx1,results1){
-                			   $("#cargandoTabs").fadeOut();
-                               $('#pide_telefono').fadeOut('slow');
+                			   $("#cargandoTabs").modal('hide');
+                               $('#pide_telefono').fadeOut();;
                                document.getElementById('main').style.display='block';
                                localStorage.setItem("telefono_inte",numeroTelefono.value);
                                localStorage.setItem("pide_telefono",'true');
@@ -241,14 +219,14 @@
                 			  });
             			    },errorCB,successCB);
                         }else if(response == '2'){
-                          $("#cargandoTabs").fadeOut();
+                          $("#cargandoTabs").modal('hide');
                             if(localStorage.getItem("idioma")==2){
                              alert('Telephone number used in another account , please enter a number not registered in the system.');
                             }else{
                              alert('Número de teléfono utilizado en otra cuenta, por favor ingrese un número no registrado en el sistema.');
                             }
                         }else{
-                          $("#cargandoTabs").fadeOut();
+                          $("#cargandoTabs").modal('hide');
                             if(localStorage.getItem("idioma")==2){
                              alert('Invalid phone number , the reasons may be : not having intalado income whatsapp or wrong number , please check this information and reenter \ nThank for your understanding.');
                             }else{
@@ -264,9 +242,11 @@
 
               });
             	},errorCB,successCB);
+				
+				LaunchBoarding();
             }
             function omitirtelefono(){
-              $("#cargandoTabs").fadeIn();
+              $("#cargandoTabs").modal('show');
               var numeroTelefono = '000000000';
 
               if(localStorage.getItem("idioma")==2){
@@ -280,22 +260,26 @@
     			    db.transaction(function(tx1){
     			      tx1.executeSql("UPDATE CONFIG SET telefono_inte=?,sincronizar='true' where id=1",[numeroTelefono],
         			  function(tx1,results1){
-        			    $("#cargandoTabs").fadeOut();
-                       $('#pide_telefono').fadeOut('slow');
+        			   $("#cargandoTabs").modal('hide');
+                       $('#pide_telefono').fadeIn();
                        document.getElementById('main').style.display='block';
                        localStorage.setItem("telefono_inte",numeroTelefono);
                        envia('puntodeventa');
+					   LaunchBoarding();
         			  });
     			    },errorCB,successCB);
               }else{
               }
-
+			  
+			 
             }
+			
             function ponerCodigoPais(){
               var codigoPais = document.getElementById('paiswhat').value;
               document.getElementById('codigo_pais').value = codigoPais;
               //alert(codigoPais);
             }
+			
             function guardaterminos(){
               var newTerminos = document.getElementById('terminosp').checked;
 
@@ -310,7 +294,7 @@
     			    db.transaction(function(tx1){
     			      tx1.executeSql("UPDATE CONFIG SET terminos_condiciones=?,sincronizar='true' where id=1",[newTerminos],
         			  function(tx1,results1){
-        			    $("#cargandoTabs").fadeOut();
+        			    $("#cargandoTabs").modal('hide');
                        $('#terminos_condiciones').fadeOut('slow');
                        document.getElementById('main').style.display='block';
                        localStorage.setItem("terminos",newTerminos);
@@ -334,7 +318,7 @@
     			    db.transaction(function(tx1){
     			      tx1.executeSql("UPDATE CONFIG SET id_locales=?,sincronizar='true' where id=1",[newLocal],
         			  function(tx1,results1){
-        			    $("#cargandoTabs").fadeOut();
+        			    $("#cargandoTabs").modal('hide');
                        $('#pide_local').fadeOut('slow');
                        document.getElementById('main').style.display='block';
                        localStorage.setItem("id_locales",newLocal);
@@ -347,7 +331,7 @@
             }
             </script>
 		</head>
-		<body>
+<body>
 			<nav class="navbar navbar-inverse" style='z-index:3; border-top-left-radius:0px; border-top-right-radius:0px;'>
 			  <div class="container-fluid" >
 				<div class="navbar-header">
@@ -366,36 +350,22 @@
 						<li onclick="VerificarPermiso('productos');" id='productosIndex'><a id='menu_3' href="javascript:void(0);"><span style='display:inline;' class='fa fa-list-alt'></span>&nbsp;<label id='lab_menu_3'>Productos</label></a></li>
 						<li onclick="envia('dashboard')"><a id='menu_4' href="javascript:void(0);"><span style='display:inline;' class='fa fa-line-chart'></span>&nbsp;<label id='lab_menu_4'>Resultados</label></a></li>
 						<li onclick="VerificarPermiso('configuracion');"><a id='menu_5' href="javascript:void(0);"><span style='display:inline;' class='fa fa-cog'></span>&nbsp;<label id='lab_menu_5'>Configuración</label></a></li>
-						<!--<li onclick="envia('cloud')" id='cloudIndex'><a id='menu_5' href="javascript:void(0);"><span style='display:inline;' class='fa fa-cloud'></span>&nbsp;<label id='lab_menu_5'>Cloud</label></a></li>
-						<li id='cloudIndexOff' style='display:none;'><a href="javascript:void(0);" style='color:#2EC1CC;'><span style='display:inline;color:#2EC1CC;' class='fa fa-times'></span>&nbsp;<label id='lab_menu_5'>Cloud<br></label></a></li>-->
 					</ul>
 					
 				  <ul class="nav navbar-nav navbar-right">
 					<li id='cloudIndex'><a><i class='fa fa-signal' style='color:white;'></i></a></li>
-					<!--<li class="dropdown">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span style='display:inline;' class='fa fa-cog'></span>&nbsp;<label id='lab_menu_6'>Config</label><span class="caret"></span></a>
-					  <ul class="dropdown-menu">-->
-					   <!--<li><a href="centvia://?udn=Impresion&utt=NubePOS&cru=nubeposv%3a%2f%2f&cruf=nubeposv%3a%2f%2f&c_=!+0+200+200+540+1%0d%0aTEXT+4+0+20+10+Prueba+de+Impresion%0d%0aTEXT+7+0+20+60+NubePOS%0d%0aENDML%0d%0aCONCAT+250+300%0d%0aENDCONCAT%0d%0a%0d%0aPRINT%0d%0a" target="_blank"><span style='display:inline;' class='glyphicon glyphicon-print'></span>&nbsp;Config</a></li>-->
-					   <!--<li onclick="envia('printconfig');"><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-print'></span>&nbsp;<label id='lab_menu_7'>Impresoras</label></a></li>
-					   <li onclick='VerificarPermiso("configuracion");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-wrench'></span>&nbsp;<label id='lab_menu_8'>Configuración</label></a></li>
-					   <li onclick='envia("empresa");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-user'></span>&nbsp;<label id='lab_menu_9'>Empresa</label></a></li>
-					   <li onclick='envia("log");'><a href="javascript:void(0);" style='padding-top:10px; padding-bottom:10px; font-size:16px;'><span style='display:inline;' class='glyphicon glyphicon-book'></span>&nbsp;<label id='lab_menu_10'>Log</label></a></li>-->
-					   <!--<li onclick="envia('imprimeotro');" ><a href="javascript:void(0);"><span style='display:inline;' class='glyphicon glyphicon-user'></span>&nbsp;V</a></li>
-					  </ul>
-					</li>-->
-					
 				  </ul>
 				</div>
 			  </div>
 			</nav>
-			<div id='mybodycontent' style='position:relative;'>
+		<div id='mybodycontent' class='row'>
 			<div class='container-fluid'>
 				<div id='deviceid' style='display:none;'>a383bc4552bfb701f96a17a4541b5565</div>
 				<div id='devicemodel' style='display:none;'></div>
 				<div class="alert alert-success" role="alert" id='alert' style='display:none;'></div>
 				<div class="alert alert-danger" role="alert" id='alertred' style='display:none;'></div>
 				<div class='row'>
-					<div class='col-lg-12 col-md-12 col-sm-12 ui-mobile'>
+					<div class='col-lg-12 col-md-12 col-sm-12'>
 						<div class="row">
 							<div class="col-lg-12">
 							<!--<div id="main" style="width:100%; text-align:center; overflow-y:auto; overflow-x:hidden; height:100%;"></div>	-->
@@ -404,20 +374,9 @@
 						</div>
 					</div>
 				</div>
-				<div id="jsonformaspago" style="display: none;">{"FormaPago":[{"id":"1","nombre":"Efectivo","imagen":"Efectivo"},{"id":"2","nombre":"Tarjetas","imagen":"Tarjetas"},{"id":"3","nombre":"Cheques","imagen":"Bancos"},{"id":"4","nombre":"CxC","imagen":"CxC"}]}</div>
-				<div id="jsontarjetas" style="display: none;">{"Tarjetas":[{"id":"1","nombre":"Visa","imagen":"Tarjetas"},{"id":"2","nombre":"Mastercard","imagen":"Tarjetas"},{"id":"3","nombre":"Discover","imagen":"Bancos"},{"id":"4","nombre":"Diners","imagen":"CxC"},{"id":"5","nombre":"Amex","imagen":"CxC"}]}</div>
-				<div id='idiomaact' style="display: none;"></div>
-			
-			<div class="modal-backdrop fade in" id='cargandoTabs' style='z-index:2000;display:none;'>
-				<table width='100%' height='100%'>
-					<tr>
-						<td valign='middle' align='center'> 
-							<img src='images/loader.gif' style='width:100px;'/>
-						</td>
-					</tr>
-				</table>
-			</div>
-		
+			<div id="jsonformaspago" style="display: none;">{"FormaPago":[{"id":"1","nombre":"Efectivo","imagen":"Efectivo"},{"id":"2","nombre":"Tarjetas","imagen":"Tarjetas"},{"id":"3","nombre":"Cheques","imagen":"Bancos"},{"id":"4","nombre":"CxC","imagen":"CxC"}]}</div>
+			<div id="jsontarjetas" style="display: none;">{"Tarjetas":[{"id":"1","nombre":"Visa","imagen":"Tarjetas"},{"id":"2","nombre":"Mastercard","imagen":"Tarjetas"},{"id":"3","nombre":"Discover","imagen":"Bancos"},{"id":"4","nombre":"Diners","imagen":"CxC"},{"id":"5","nombre":"Amex","imagen":"CxC"}]}</div>
+			<div id='idiomaact' style="display: none;"></div>
 		<div id="status" style='display:none;'>
 			<p id="state"></p>
 			<div id='log'><input type='hidden' id='conexion' value=''/></div>
@@ -447,15 +406,26 @@
 		<div id="impuestosactivosid" style="color:red;display:none;"></div>
 		<div id="taxes" style="display: none;"></div>
 		<div id="idiva" style="display: none;"></div>
-		<div id="fadeCloud" style="display:none;width:100%;height:100%;position:absolute;left:0px;top:0px;background:rgba(255,255,255,0.7);"></div>
+		
+		
+		
+		
+		<div class="modal fade" id='cargandoTabs'>
+				<table width='100%' height='100%'>
+					<tr>
+						<td valign='middle' align='center'> 
+							<img src='images/loader.gif' style='width:100px;'/>
+						</td>
+					</tr>
+				</table>
 		</div>
-		</div>
-		<div style="overflow:hidden;position:absolute;left:0px;top:0px;width:100%;height:100%;background:rgba(40,40,41,1);display:block;z-index:5;" id="fade">
+		
+		<div style="overflow:hidden; position:absolute; left:0px; top:0px; width:100%; height:100%; background:rgba(40,40,41,1); display:block; z-index:5;" id="fade">
 			<table width="100%" height="100%" cellpadding="0" cellspacing="0" >
 				<tr>
 					<td valign="center" align="center" >
 						<div id="contentCenterFadeArea">
-							<img src="" id="logo" style="display:none;"><BR/>
+							<img src="" id="logo" style="display:none;"><br/>
 							<img src='images/loader.gif' width='30px'/>
 							<br/><label style="color:white;" id="putText">Loading..</label>
 						</div>
@@ -463,6 +433,7 @@
 				</tr>
 			</table>
 		</div>
+		
 		<!--modal permiso-->
 		<div class="modal fade" tabindex="-1" role="dialog" id='modalpermiso'>
 		  <div class="modal-dialog">
@@ -487,8 +458,8 @@
 		<!--fin modal-->
 		
 		
-		<div  id="version_escoje" class='panel-default' style='z-index:1060;'>
-    		<div class="popover-content" style="padding-top: 25px;">
+		<div  id="version_escoje" class='panel-default' style='z-index:6;'>
+    		<div style="padding-top: 25px;">
     		<div class='row' style="padding-top: 20px;">
     			<div class="col-sm-12" style="text-align: center;">
     			    <img src="img/logoava.png" width="150" alt="">
@@ -552,27 +523,19 @@
 		<br/><br/>
         </div>
 
-        <div  id="pide_telefono" class='panel-default' style='z-index:1060;'>
-    		<div class="popover-content">
-            <div class='row' style="padding-top: 25px;">
-    			<div class="col-sm-12" style="text-align: center;">
-    			    <img src="img/logoava.png" width="150" alt="" />
-                </div>
-    		</div>
+       <div id='pide_telefono' style='z-index:6;' class='col-lg-12'>
+			<div style='padding-top:40px; padding-bottom:20px; text-align:center;'>
+			<img src="img/logoava.png" width="150" alt="" />
+			</div>
     		<div class='row' style="padding-top: 15px;">
     			<div class="col-lg-12" id="trans_label_68" style="text-align: center;font-weight: bold;font-size: 40px;">
     			    Activar Inteligencia Artificial
                 </div>
     		</div>
-            <!--<div class='row'>
-    			<div class="col-sm-12" id='trans_label_69' style="text-align: center;">
-    			    Ava es tu asistente de gerencia virtual, actívala aquí
-                </div>
-    		</div>-->
             <div class='row'>
                 <div class="col-xs-2">
                 </div>
-    			<div class="col-xs-8" id='trans_label_70' style="text-align:justify;">
+    			<div class="col-xs-8" id='trans_label_70' style="text-align:justify; padding-top:20px;">
     			   Ava es un robot con inteligencia artificial que te ayuda a manejar tu negocio por medio de chats en WhatsApp.
                 </div>
                 <div class="col-xs-2">
@@ -590,10 +553,8 @@
     		</div>
             <br>
             <div class='row'>
-                <div class="col-xs-2">
-                </div>
-                <div class="col-xs-3">
-                    <select class="form-control input-md" id="paiswhat" name="paiswhat" size="1" required="" placeholder="País" onchange="ponerCodigoPais();">
+                <div class="col-lg-5 col-md-5">
+                    <select class="form-control input-lg" style='margin-bottom:20px;' id="paiswhat" name="paiswhat" size="1" required="" placeholder="País" onchange="ponerCodigoPais();">
                       <option id="trans_label_82" value="0" style="color: #E0DEDE">País</option>
                       <option value="1">Antigua y Barbuda</option>
                       <option value="54">Argentina</option>
@@ -633,23 +594,17 @@
                       <option value="58">Venezuela</option>
                   </select>
                 </div>
-                <div class="col-xs-2">
-                    <input id="codigo_pais" name="codigo_pais" type="number" class="form-control trans_code" placeholder="Código" readonly="readonly" style="text-align: center;">
+                <div class="col-lg-2 col-md-2">
+                    <input id="codigo_pais" name="codigo_pais" style='margin-bottom:20px;' type="number" class="form-control input-lg trans_code" placeholder="Código" readonly="readonly" style="text-align:center;">
                 </div>
-    			<div class="col-xs-3">
-                    <input id="numero_telefonico" name="numero_telefonico" type="tel" placeholder="Teléfono" class="form-control trans_phone">
-                </div>
-                <div class="col-xs-2">
+    			<div class="col-lg-5 col-md-5">
+                    <input id="numero_telefonico" style='margin-bottom:20px;' name="numero_telefonico" type="tel" placeholder="Teléfono" class="form-control trans_phone input-lg" />
                 </div>
     		</div>
-            </div>
-    		<br/>
-    		<div style='padding-bottom:20px; padding-top:20px;'>
+			<div class='row' style='margin-bottom:30px;'>
     			<center><button class='btn btn-default btn-lg' id='trans_label_81' onclick='omitirtelefono();'>Omitir</button>&nbsp;<button type="button" class="btn btn-lg btn-success trans_active_ava" onclick='guardatelefono()' style="font-size: 20px;">Activar AVA</button></center>
-                <!--<center style="padding-top: 15px;"><span id="trans_label_81" onclick='omitirtelefono();' style="cursor: pointer;">Omitir</span></center>-->
-    		</div>
-			<br/><br/>
-        </div>
+			</div>
+	</div>
 
 		<!--modal cantidad-->
 		<div class="modal fade" role="dialog" id='popupprecios' data-backdrop='static'>
@@ -784,8 +739,8 @@
 <!--fin creado-->
 
 <!--terminos y condiciones-->
-<div  id="terminos_condiciones" class='panel-default' style='z-index:1051;'>
-  <div class="popover-content" style="padding-top: 25px;">
+<div  id="terminos_condiciones" class='panel-default' style='z-index:6;'>
+  <div style="padding-top: 25px;">
   <div class='row' style="padding-top: 20px;">
   	<div class="col-sm-12" style="text-align: center;">
   	    <img src="img/logoava.png" width="150" alt="">
@@ -830,8 +785,8 @@
   </div>
 </div>
 
-<div  id="pide_local" class='panel-default' style='z-index:1051;'>
-    <div class="popover-content">
+<div  id="pide_local" class='panel-default' style='z-index:6;'>
+    <div>
         <div class='row' style="padding-top: 25px;">
           <div class="col-sm-12" style="text-align: center;">
             <img src="img/logoava.png" width="150" alt="">
@@ -899,11 +854,12 @@
 			</div>
 		</div>
 <!--fin ayuda-->
-
+</div>
+</div>
 </body>
 <link href="slide/bootstrap-switch.css" rel="stylesheet"/>
 <script src="slide/bootstrap-switch.js"></script>
-<script src="slide/highlight.js"></script>
+<!---<script src="slide/highlight.js"></script>--->
 <script>
 			//app.initialize();
 			google.load("visualization", "1", {packages:["corechart"]});
@@ -933,8 +889,11 @@
 	$( document ).ready(function(){
 			SyncStart();
 			digitado=false;
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(iniciaDB,errorCB,successCB);
+			
 			if(localStorage.getItem("id_version_nube") == '0'){
-			    $('#version_escoje').fadeIn('slow');
+			    $('#version_escoje').fadeIn();
                 document.getElementById('main').style.display='none';
             }
 
@@ -944,7 +903,7 @@
                 $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
                 ponerCodigoPais();
               }
-			    $('#pide_telefono').fadeIn('slow');
+			    $('#pide_telefono').fadeIn();
                 document.getElementById('main').style.display='none';
 
             }
@@ -1023,15 +982,8 @@
 					//alert("hide");
 					$('#pide_telefono').css("top","0px");
 			}
-
-			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-			db.transaction(iniciaDB,errorCB,successCB);
-			$('html').addClass('android-scroll-bar');
-			var alto = $( window ).height();
-			$('#contieneMensajes').css('height',(alto)*90/100);
-			$('.carousel').carousel({
-					interval: 4000
-			});
+			
+			//$('html').addClass('android-scroll-bar');
 				
 			//idioma
 			var linklang="es";			

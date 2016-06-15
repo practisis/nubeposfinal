@@ -391,7 +391,7 @@
 			<td  style='text-align:right;' id="trans_label_80">Imprimir Logo</td>
 			<td align='left'><input type='checkbox' id='printlogo' onclick='ActivarImprimirLogo();'  readonly />
 				<div style='margin-top:10px;'>
-				<button class='btn btn-success btn-sm' onclick='ActivarImprimirLogo();' id='activaprintlogo' >Activar</button>
+				<button class='btn btn-success btn-sm trans_active' onclick='ActivarImprimirLogo();' id='activaprintlogo' >Activar</button>
 				</div>
 			</td>
     	</tr>
@@ -399,9 +399,13 @@
 			<td  style='text-align:right;' id="trans_label_75">Mensaje Personalizado</td>
 			<td align='left'><input type='text' id='custommsg' class='form-control input' style='margin-bottom:10px;'/><button class='btn btn-success btn-sm trans_changemessage' onclick='CambiarMensaje();' id='cambiamensaje'>Cambiar Mensaje</button></td>
     	</tr>
-    	<tr style='display:none;'>
+    	<tr>
     		<td  style='text-align:right;' id="trans_label_77">Respaldo de Información</td>
-    		<td align='left'><input type='checkbox' id='backupinf' onclick='CambiarBackup();' readonly /></td>
+    		<td align='left'><input type='checkbox' id='backupinf' onclick='CambiarBackup();' readonly/>
+                <div style='margin-top:10px;'>
+				    <button class='btn btn-success btn-sm trans_active' onclick='ActivarBackup();' id='activabackup' >Activar</button>
+				</div>
+            </td>
     	</tr>
 		<tr style='display:none;'>
 			<td  style='text-align:right;' id="trans_label_78">Múltiple Tablet</td>
@@ -412,7 +416,7 @@
             <td align='left'>
                 <input data-size='small' type='checkbox' id='permisoscheck' class='switch' readonly="readonly"/>
                 <div style='margin-top:10px;'>
-				    <button class='btn btn-success btn-sm' onclick='ActivarPermisos();' id='activapermiso'>Activar</button>
+				    <button class='btn btn-success btn-sm trans_active' onclick='ActivarPermisos();' id='activapermiso'>Activar</button>
 				</div>
             </td>
         </tr>
@@ -898,8 +902,8 @@ $(document).ready(function(){
 		$('#linklogin69en').html('Upgrade Now');
 		$('#jumbo0es,#jumbo0en,#jumbo69es,#jumbo69en').attr('class','jumbotron');
 		$('#jumbo29es,#jumbo29en').attr('class','jumbotron jumbo-red');
-		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion").fadeIn();
-        $('#tablet_menu').bootstrapSwitch('readonly',true);
+		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion,#activapermiso").fadeIn();
+        $('#tablet_menu,#backupinf').bootstrapSwitch('readonly',true);
         $('#msjFac').attr('readonly',true);
         $('#grabaFac').attr({onclick:'ActivarFirma();'});
         $('#msjFac').attr({onclick:'ActivarMsjFactura();'});
@@ -914,11 +918,11 @@ $(document).ready(function(){
 		$('#linklogin69en').html('Upgrade Now');
 		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').attr('class','jumbotron');
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
-		$('#printlogo').bootstrapSwitch('readonly',false);
+		$('#printlogo,#backupinf').bootstrapSwitch('readonly',false);
         $('#produccion').bootstrapSwitch('readonly',true);
 		if(localStorage.getItem('imprimelogo')=="true")
 		$('#printlogo').bootstrapSwitch('state',true);
-		$("#activaprintlogo,#cambiamensaje").css("display","none");
+		$("#activaprintlogo,#cambiamensaje,#activabackup").css("display","none");
         $("#activadisenomenu,#permisos,#activaproduccion").fadeIn();
         $('#tablet_menu').bootstrapSwitch('readonly',true);
         $('#msjFac').attr('readonly',true);
@@ -935,13 +939,13 @@ $(document).ready(function(){
 		$('#linkloginen').html('Active');
 		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').attr('class','jumbotron');
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
-		$('#printlogo').bootstrapSwitch('readonly',false);
+		$('#printlogo,#backupinf').bootstrapSwitch('readonly',false);
         $('#produccion').bootstrapSwitch('readonly',false);
 		if(localStorage.getItem('imprimelogo')=="true")
 		$('#printlogo').bootstrapSwitch('state',true);
         $('#grabaFac').attr({onclick:'subirfirma();'});
         $('#msjFac').attr('readonly',false);
-		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion").css("display","none");
+		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion,#activabackup").css("display","none");
 	}
 	
 	/*fin planes*/
@@ -1023,6 +1027,14 @@ $(document).ready(function(){
 				showalertredquiet("<b>Atención:</b> Para poder contar con la opción de <b>Mensaje Facturación Electrónica</b> debes tener activado el <b>Plan Premium</b>.");
 			else
 				showalertredquiet("<b>Attention:</b> In order to have the <b>Message E-Billing</b> option, you must activate <b>Premium Plan</b>.");
+			msjcloud=0;
+		}
+
+        if(msjcloud==9){
+			if(localStorage.getItem('idioma')==1)
+				showalertredquiet("<b>Atención:</b> Para poder contar con la opción de <b>Respaldo de Información</b> debes tener activado el <b>Plan Profesional o Plan Premium</b>.");
+			else
+				showalertredquiet("<b>Attention:</b> In order to have the <b>Backup Information</b> option, you must activate <b>Professional Plan or Premium Plan</b>.");
 			msjcloud=0;
 		}
 	}
@@ -1133,7 +1145,7 @@ $(document).ready(function(){
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT nombreterminal as c,id_idioma,id_version_nube,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais,mensajefinal from CONFIG where id=1",[],function(tx1,results1){
+				tx1.executeSql("SELECT nombreterminal as c,id_idioma,id_version_nube,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais,mensajefinal,respaldar from CONFIG where id=1",[],function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c!=''){
 							$('#tablet_name').val(results1.rows.item(0).c);
@@ -1195,6 +1207,13 @@ $(document).ready(function(){
 							
                             //alert(results1.rows.item(0).con_localhost);
                             $('#con_localhost').val(results1.rows.item(0).con_localhost);
+
+                            if(results1.rows.item(0).respaldar=='true'){
+                                $('#backupinf').bootstrapSwitch('state', true);
+                            }else{
+                    			$('#backupinf').bootstrapSwitch('state', false);
+                    		}
+
 						}
 					}
 				});
@@ -1576,11 +1595,12 @@ $(document).ready(function(){
                 localStorage.setItem('con_notas',con_notas);
                 localStorage.setItem('con_comandas',con_comanderas);
                 localStorage.setItem('con_mesas',con_mesas);
-				
+                var con_backup = $('#backupinf').bootstrapSwitch('state');
+
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					
-				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub],
+				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=?,respaldar=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub,con_backup],
 				function(tx1,results1){
 					
 					var linklang="es";
@@ -2248,6 +2268,14 @@ function ActivarPermisos(){
   var paquete=localStorage.getItem("paquete");
   if(paquete==22 || paquete==36){
     msjcloud=5;
+    envia('config');
+  }
+}
+function ActivarBackup(){
+  //alert('entra imprlogo');
+  var paquete=localStorage.getItem("paquete");
+  if(paquete==22){
+    msjcloud=9;
     envia('config');
   }
 }

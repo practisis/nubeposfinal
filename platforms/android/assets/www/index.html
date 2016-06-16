@@ -23,35 +23,8 @@
 			<link rel="stylesheet" href="css/estilotemp.css">
 			<script type="text/javascript" src="js/jsapi"></script>
 			<style>
-                #version_escoje {
-					bottom: 0px;
-					display: none;
-					left: 0px;
-					outline: 0 none;
-					overflow-y: auto;
-					overflow-x: hidden;
-					position: absolute;
-					right: 0px;
-					top: 0px;
-					background-color: rgba(255, 255, 255, 1);
-                    padding: 0px;
-                    width: 100%;
-                    height: 100%;
-                    font-size:14px;
-				}
-				
-				#pide_telefono {
-					display: none;
-					left: 0px;
-					overflow-y: auto;
-					overflow-x: hidden;
-					position: absolute;
-					top: 0px;
-					background-color: rgba(255, 255, 255, 1);
-                    width: 100%;
-                    height: 100%;
-                    font-size:14px;
-				}
+
+			
 				
                 #pide_local {
 					bottom: 0px;
@@ -211,7 +184,7 @@
             			      tx1.executeSql("UPDATE CONFIG SET telefono_inte=?,sincronizar='true',pide_telefono='true' where id=1",[numeroTelefono.value],
                 			  function(tx1,results1){
                 			   $("#cargandoTabs").modal('hide');
-                               $('#pide_telefono').fadeOut();;
+                               $('#pide_telefono').fadeOut();
                                document.getElementById('main').style.display='block';
                                localStorage.setItem("telefono_inte",numeroTelefono.value);
                                localStorage.setItem("pide_telefono",'true');
@@ -246,7 +219,6 @@
 				LaunchBoarding();
             }
             function omitirtelefono(){
-              $("#cargandoTabs").modal('show');
               var numeroTelefono = '000000000';
 
               if(localStorage.getItem("idioma")==2){
@@ -261,7 +233,7 @@
     			      tx1.executeSql("UPDATE CONFIG SET telefono_inte=?,sincronizar='true' where id=1",[numeroTelefono],
         			  function(tx1,results1){
         			   $("#cargandoTabs").modal('hide');
-                       $('#pide_telefono').fadeIn();
+                       $('#pide_telefono').fadeOut();
                        document.getElementById('main').style.display='block';
                        localStorage.setItem("telefono_inte",numeroTelefono);
                        envia('puntodeventa');
@@ -269,6 +241,7 @@
         			  });
     			    },errorCB,successCB);
               }else{
+					
               }
 			  
 			 
@@ -458,7 +431,7 @@
 		<!--fin modal-->
 		
 		
-		<div  id="version_escoje" class='panel-default' style='z-index:6;'>
+		<!---<div  id="version_escoje" class='panel-default' style='z-index:6;'>
     		<div style="padding-top: 25px;">
     		<div class='row' style="padding-top: 20px;">
     			<div class="col-sm-12" style="text-align: center;">
@@ -521,9 +494,9 @@
     		</div>
         </div>
 		<br/><br/>
-        </div>
+        </div>-->
 
-       <div id='pide_telefono' style='z-index:6;' class='col-lg-12'>
+       <!---<div id='pide_telefono' style='z-index:6;' class='col-lg-12'>
 			<div style='padding-top:40px; padding-bottom:20px; text-align:center;'>
 			<img src="img/logoava.png" width="150" alt="" />
 			</div>
@@ -545,7 +518,7 @@
             <div class='row'>
                 <div class="col-xs-2">
                 </div>
-    			<div class="col-xs-8" id='trans_label_76' style="text-align:justify; font-weight: bold;font-size: 16px;">
+    			<div class="col-xs-8" id='trans_label_76' style="text-align:justify; font-weight: bold; font-size: 16px;">
     			    Para activar a Ava, necesitamos un número telefónico válido con WhatsApp. Nunca usaremos este teléfono para llamarte, ni para otros propósitos y jamás venderemos tu información. Serás contactado exclusivamente por Ava a este número por medio de  WhatsApp.
                 </div>
                 <div class="col-xs-2">
@@ -604,7 +577,7 @@
 			<div class='row' style='margin-bottom:30px;'>
     			<center><button class='btn btn-default btn-lg' id='trans_label_81' onclick='omitirtelefono();'>Omitir</button>&nbsp;<button type="button" class="btn btn-lg btn-success trans_active_ava" onclick='guardatelefono()' style="font-size: 20px;">Activar AVA</button></center>
 			</div>
-	</div>
+	</div>--->
 
 		<!--modal cantidad-->
 		<div class="modal fade" role="dialog" id='popupprecios' data-backdrop='static'>
@@ -893,8 +866,11 @@
 			db.transaction(iniciaDB,errorCB,successCB);
 			
 			if(localStorage.getItem("id_version_nube") == '0'){
+			
+				envia('config');
+				$('#escojeIdioma').fadeOut();
 			    $('#version_escoje').fadeIn();
-                document.getElementById('main').style.display='none';
+                //document.getElementById('main').style.display='none';
             }
 
             if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
@@ -903,21 +879,25 @@
                 $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
                 ponerCodigoPais();
               }
+				envia('config');
+			    $('#escojeIdioma').fadeOut();
 			    $('#pide_telefono').fadeIn();
-                document.getElementById('main').style.display='none';
+               // document.getElementById('main').style.display='none';
 
             }
 
             if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
+			  envia('config');
+			  $('#escojeIdioma').fadeOut();
               $('#pide_local').fadeIn('slow');
-              document.getElementById('main').style.display='none';
+              //document.getElementById('main').style.display='none';
             }
 
             ListarLocales();
 
             if(localStorage.getItem("terminos") == 'false'){
 			    $('#terminos_condiciones').fadeIn('slow');
-                document.getElementById('main').style.display='none';
+                //document.getElementById('main').style.display='none';
             }
 
 			$('#myDash').on('show.bs.modal',function(){

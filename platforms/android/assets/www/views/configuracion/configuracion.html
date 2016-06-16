@@ -197,6 +197,163 @@
 </div> <!--End row -->
 <input type="hidden" style='display:none;' id="idcategoria" />
 
+<div class='row' id='pide_telefono' style='display:none;'>
+<div class='container-fluid'>
+<div class='col-lg-12'>
+			<div style='padding-top:40px; padding-bottom:20px; text-align:center;'>
+			<img src="img/logoava.png" width="150" alt="" />
+			</div>
+    		<div class='row' style="padding-top: 15px;">
+    			<div class="col-lg-12" id="trans_label_68" style="text-align: center;font-weight: bold;font-size: 40px;">
+    			    Activar Inteligencia Artificial
+                </div>
+    		</div>
+            <div class='row'>
+                <div class="col-xs-2">
+                </div>
+    			<div class="col-xs-8" id='trans_label_70' style="text-align:justify; padding-top:20px;">
+    			   Ava es un robot con inteligencia artificial que te ayuda a manejar tu negocio por medio de chats en WhatsApp.
+                </div>
+                <div class="col-xs-2">
+                </div>
+    		</div>
+            <br><br>
+            <div class='row'>
+                <div class="col-xs-2">
+                </div>
+    			<div class="col-xs-8" id='trans_label_76' style="text-align:justify; font-weight: bold; font-size: 16px;">
+    			    Para activar a Ava, necesitamos un número telefónico válido con WhatsApp. Nunca usaremos este teléfono para llamarte, ni para otros propósitos y jamás venderemos tu información. Serás contactado exclusivamente por Ava a este número por medio de  WhatsApp.
+                </div>
+                <div class="col-xs-2">
+                </div>
+    		</div>
+            <br>
+            <div class='row'>
+                <div class="col-lg-5 col-md-5">
+                    <select class="form-control input-lg" style='margin-bottom:20px;' id="paiswhat" name="paiswhat" size="1" required="" placeholder="País" onchange="ponerCodigoPais();">
+                      <option id="trans_label_82" value="0" style="color: #E0DEDE">País</option>
+                      <option value="1">Antigua y Barbuda</option>
+                      <option value="54">Argentina</option>
+                      <option value="1">Bahamas</option>
+                      <option value="1">Barbados</option>
+                      <option value="501">Bélice</option>
+                      <option value="591">Bolivia</option>
+                      <option value="55">Brasil</option>
+                      <option value="1">Canadá</option>
+                      <option value="56">Chile</option>
+                      <option value="57">Colombia</option>
+                      <option value="506">Costa Rica</option>
+                      <option value="53">Cuba</option>
+                      <option value="1">Dominica</option>
+                      <option value="593">Ecuador</option>
+                      <option value="503">El Salvador</option>
+                      <option value="1">Estados Unidos</option>
+                      <option value="1">Granada</option>
+                      <option value="502">Guatemala</option>
+                      <option value="592">Guyana</option>
+                      <option value="509">Haití</option>
+                      <option value="504">Honduras</option>
+                      <option value="1">Jamaica</option>
+                      <option value="52">México</option>
+                      <option value="505">Nicaragua</option>
+                      <option value="507">Panamá</option>
+                      <option value="595">Paraguay</option>
+                      <option value="51">Perú</option>
+                      <option value="1">Puerto Rico</option>
+                      <option value="1">República Dominicana</option>
+                      <option value="1">San Cristóbal y Nevis</option>
+                      <option value="1">San Vicente y las Granadinas</option>
+                      <option value="1">Santa Lucía</option>
+                      <option value="597">Surinam</option>
+                      <option value="1">Trinidad y Tobago</option>
+                      <option value="598">Uruguay</option>
+                      <option value="58">Venezuela</option>
+                  </select>
+                </div>
+                <div class="col-lg-2 col-md-2">
+                    <input id="codigo_pais" name="codigo_pais" style='margin-bottom:20px;' type="number" class="form-control input-lg trans_code" placeholder="Código" readonly="readonly" style="text-align:center;">
+                </div>
+    			<div class="col-lg-5 col-md-5">
+                    <input id="numero_telefonico" style='margin-bottom:20px;' name="numero_telefonico" type="tel" placeholder="Teléfono" class="form-control trans_phone input-lg" />
+                </div>
+    		</div>
+			<div class='row' style='margin-bottom:30px;'>
+    			<center><button class='btn btn-default btn-lg' id='trans_label_81' onclick='omitirtelefono();'>Omitir</button>&nbsp;<button type="button" class="btn btn-lg btn-success trans_active_ava" onclick='guardatelefono()' style="font-size: 20px;">Activar AVA</button></center>
+			</div>
+	</div>
+	</div>
+</div>
+
+<div id="version_escoje" class='row' style='display:none;'>
+	<div class='col-lg-12'>
+    		<div style="padding-top: 25px;">
+    		<div class='row' style="padding-top: 20px;">
+    			<div class="col-sm-12" style="text-align: center;">
+    			    <img src="img/logoava.png" width="150" alt="">
+                </div>
+    		</div>
+            <div class='row' style="padding-top: 15px;">
+    			<div class="col-sm-12" id='trans_label_63' style="text-align: center;font-weight: bold;font-size: 24px;">
+    			    Selecciona el proceso de venta que realizas
+                </div>
+    		</div>
+            <div class='row'>
+    			<div class="col-sm-12" id='trans_label_64' style="text-align: center;">
+    			    Luego puedes cambiar esto en configuración
+                </div>
+    		</div>
+            <br>
+            <div class='row'>
+                <div class="col-xs-2">
+                </div>
+                <div class="col-xs-1" style="text-align: center;">
+                      <label><input type="radio" onclick='guardaversion();' id="id_version" name="id_version" value="2" style="width: 40px;height: 40px;"></label>
+                </div>
+                <div class="col-xs-7" id='trans_label_66' onclick="activaradio(2);">
+                    <span style="font-size: 18px"><b>Rápida</b></span> (la más popular)<br>
+                    Vende con una pantalla de botones, fácil de usar. Ideal para negocios de comida rápida, cafeterías, tiendas o ventas de servicios.
+                </div>
+                <div class="col-xs-2">
+                </div>
+    		</div>
+            <div class='row' style="padding-top: 20px;">
+                <div class="col-xs-2">
+                </div>
+                <div class="col-xs-1" style="text-align: center;">
+                      <label><input onclick='guardaversion();' type="radio" id="id_version" name="id_version" value="1" style="width: 40px;height: 40px;"></label>
+                </div>
+                <div class="col-xs-7" id='trans_label_65' onclick="activaradio(1);">
+                  <span style="font-size: 18px"><b>Solo Código de Barras</b></span> (requieres una pistola de código de barras)<br>
+                    Opción para negocios que manejan códigos de barras como forma principal de ventas. Interfaz y proceso de ventas basado en lectura o ingreso de códigos de barra.
+                </div>
+                <div class="col-xs-2">
+                </div>
+    		</div>
+            <div class='row' style="padding-top: 20px;">
+                <div class="col-xs-2">
+                </div>
+                <div class="col-xs-1" style="text-align: center;">
+                      <label><input onclick='guardaversion();' type="radio" id="id_version" name="id_version" value="3" style="width: 40px;height: 40px;"></label>
+                </div>
+                <div class="col-xs-7" id='trans_label_67' onclick="activaradio(3);">
+                  <span style="font-size: 18px"><b>Restaurante</b></span><br>
+                  Opción con mapa de mesas para restaurante. Permite almacenar pedidos en las mesas y facturar al final.
+                </div>
+                <div class="col-xs-2">
+                </div>
+    		</div>
+    		<br/><br/>
+    		<div style='padding-bottom:30px; padding-top:30px; display:none;'>
+    			<center><button type="button" class="btn btn-lg btn-success trans_continue" onclick='guardaversion()' style="font-size: 16px;">Continuar</button></center>
+    		</div>
+        </div>
+		<br/><br/>
+        </div>
+</div>
+
+
+
+
 
 
 <!----fin divs generales--->
@@ -478,7 +635,8 @@
 			</div>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="impuestostab">
-			<table class='table table-striped' id='confimpuestos' style='margin-top:30px; margin-bottom:20px;'>
+            <p style="text-align: right;margin-top:10px;"><button class='btn btn-success btn-md trans_impuesto' type='button' onclick='editarimpuesto(0);'>Nuevo Impuesto</button></p>
+			<table class='table table-striped' id='confimpuestos' style='margin-top:-10px; margin-bottom:20px;'>
 			<thead><tr><th class='trans_name'>Nombre</th><th class='trans_percent'>Porcentaje (%)</th><th class='trans_consider'>Considerar</th></tr></thead>
 			<tbody></tbody>
 			</table>
@@ -487,6 +645,60 @@
 					<button type='button' class='btn btn-success trans_save' onclick='GuardarNombre();'>Guardar</button>
 				</div>
 			</div>
+
+            <div style='background-color:rgba(0,0,0,0.8); ' class="modal fade" id="popimpuesto" tabindex="-1">
+              <div  class="modal-dialog modal-lg" style="position: absolute;top: 30px;left: 50%;width: 60%;height: 300px;margin-left: -30%;background-color: #FFFFFF; box-shadow: 2px 2px 5px #000000;display: block;overflow-x: hidden;overflow-y: auto;">
+                <div style="position: absolute;top: -5px;left: 25px;"><h3 class="trans_impuesto">Nuevo Impuesto</h3></div>
+                <br><br>
+            	<div class='panel-body' style='font-size:13px; color:#4c4c4c;'>
+                <div id='jsalertimpd' style='display:none;' class="alert alert-info" role="alert" style='font-size:12px;'></div>
+                <div id='jsalertimp' style='display:none;' class="alert alert-danger" role="alert" style='font-size:12px;'></div>
+            	  <div id='loaderimp' style='position:absolute; top:0px; left:0px; width:100%; height:100%; background-color:rgba(255,255,255,0.7); padding:10px; display:none;z-index: 15;'>
+                  <center><img src='img/loader.gif' style='margin-top:10%;width:100px;'/></center>
+                </div>
+                <div class='row'>
+                  <div class='col-md-4' style="text-align: right;">
+                      <label class="trans_name">Nombre</label>
+          		  </div>
+                  <div class='col-md-8'>
+                      <input type="text" id="impuesto" name="impuesto" class="form-control input-lg trans_name" placeholder="Nombre Impuesto" autocomplete="off" aria-describedby="sizing-addon2" value=""/>
+                  </div>
+                </div>
+                <br>
+                <div class='row'>
+                  <div class='col-md-4' style="text-align: right;">
+                      <label class='trans_percent'>Porcentaje</label>
+          		  </div>
+                  <div class='col-md-8'>
+                      <input type="number" id="porcentaje" name="porcentaje" class="form-control input-lg trans_percent" placeholder="Porcentaje Impuesto" autocomplete="off" aria-describedby="sizing-addon2" value=""/>
+                  </div>
+                </div>
+                <br>
+      		  <div class='row'>
+                  <div class='col-md-4' style="text-align: right;">
+                      <label class='trans_consider'>Activar</label>
+                  </div>
+                  <div class='col-md-8' style="text-align: left;">
+                      <input type="checkbox" id="activo" name="activo"/>
+                  </div>
+                </div>
+                <div class='row' style="display: none;">
+                  <div class='col-md-12'>
+                      <input type="text" id="idimp" name="idimp" class="form-control" placeholder="id" aria-describedby="sizing-addon2" value=""/>
+                  </div>
+                </div>
+
+            	</div>
+
+                <p style="text-align: right">
+                  <button class='btn btn-success btn-lg trans_save' type='button' onclick='grabarimpuesto();'>Guardar</button>
+                  <button class='btn btn-danger btn-lg trans_close' type='button' onclick='$("#popimpuesto").modal("hide");'>Cerrar</button>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </p>
+
+            	</div>
+              </div>
+
 		</div>
 		<div role="tabpanel" class="tab-pane" id="impresorastab">
 			<div class='row'>
@@ -822,7 +1034,45 @@
 </div>
 <script>
 $(document).ready(function(){
+
 	
+	        if(localStorage.getItem("id_version_nube") == '0'){
+			
+				//envia('config');
+				$('#pestanasconfig').fadeOut();
+			    $('#version_escoje').fadeIn();
+                //document.getElementById('main').style.display='none';
+            }
+
+            if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+              var paisuax = localStorage.getItem("pais");
+              if(paisuax != ''){
+                $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
+                ponerCodigoPais();
+              }
+				//envia('config');
+			    $('#pestanasconfig').fadeOut();
+			    $('#pide_telefono').fadeIn();
+               // document.getElementById('main').style.display='none';
+
+            }
+
+            if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
+			  //envia('config');
+			  $('#pestanasconfig').fadeOut();
+              $('#pide_local').fadeIn('slow');
+              //document.getElementById('main').style.display='none';
+            }
+
+            ListarLocales();
+
+            if(localStorage.getItem("terminos") == 'false'){
+			    $('#terminos_condiciones').fadeIn('slow');
+                //document.getElementById('main').style.display='none';
+            }
+
+	
+
 	///fin planes
 	//$('#demoGratis').css('height',parseInt($(window).height())*150/100);
 	//$('#fadeRow').css('height',parseInt($(window).height())*110/100);
@@ -1160,7 +1410,7 @@ $(document).ready(function(){
 									checked='checked';
 								var mifila='<tr><td style="text-align:left;">'+nombreimp.toUpperCase()+'</td><td  style="text-align:left;"><input id="impval_'+timespanimp+'" style="display:inline; width:60%;" type="text" class="input form-control imporcent" value="'+porcen+'"/><span style="display:inline;"> %</span></td><td  style="text-align:left;"><input id="impact_'+timespanimp+'" type="checkbox" '+checked+' data-size="mini"; /></td></tr>';
 								$('#confimpuestos tbody').append(mifila);
-								
+
 								if(esactivo=='true'){
 									$('#impact_'+timespanimp).bootstrapSwitch('state', true);
 								}else{
@@ -1241,6 +1491,8 @@ $(document).ready(function(){
 		});	},errorCB,function(){console.log("Leyendo Registros de Log")});
 		
 		saberDatosEmpresa();
+
+        $("[name='activo']").bootstrapSwitch('state',true);
 			
 	});
 	
@@ -2312,5 +2564,115 @@ function ActivarMsjFactura(){
     msjcloud=8;
     envia('config');
   }
+}
+function editarimpuesto(quien){
+  if(quien==0){
+    $('#popimpuesto').modal('show');
+    $('#idimp').val(quien);
+    $('#impuesto').val('');
+    $('#simbolo').val('*');
+    $('#porcentaje').val('');
+  }else{
+    /*alert(quien);
+    return false;*/
+    /*$.ajax({
+	  url: "/practipos2/ajax/administrador/terminales/impuestos.php",
+	  data:{que:'3',id:quien}
+	}).done(function(resp){
+		$('#loaderelim').fadeOut();
+		var data=resp.split('|');
+        //alert(data);
+		if(data[0]=='ok'){
+		  $('#popimpuesto').modal('show');
+		  $('#idimp').val(data[1]);
+          $('#impuesto').val(data[2]);
+          $('#simbolo').val(data[3]);
+          $('#porcentaje').val(data[4]);
+		  $('#activo').bootstrapSwitch('state', data[5]);
+		}else{
+		  var queidioma = $('#queidioma').val();
+          if(queidioma != 1){
+            $('#jsalertimp').html("The tax can not be charged.");
+          }else{
+            $('#jsalertimp').html("El impuesto no se puede cargar.");
+          }
+		}
+	});*/
+  }
+}
+function grabarimpuesto(){
+  $('#loaderimp').fadeIn();
+	var id = $('#idimp').val();
+    var impuesto = $('#impuesto').val();
+    var porcentaje = $('#porcentaje').val();
+	var activo=$('#activo').bootstrapSwitch('state');
+    var timespan_impuesto = getTimeSpan();
+
+    if(impuesto == '' || porcentaje == ''){
+      if(localStorage.getItem('idioma') == 2){
+        $('#jsalertimp').html("You must enter all fields to save.");
+      }else{
+        $('#jsalertimp').html("Debe ingresar todos los campos para poder guardar.");
+      }
+	  $('#jsalertimp').slideDown();
+      $('#loaderimp').fadeOut();
+      setTimeout(function() {
+	    $('#jsalertimp').slideUp();
+	  }, 3000);
+    }else{
+
+        var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+    	db.transaction(function(tx1){
+          if(id==0){
+          	tx1.executeSql("INSERT INTO IMPUESTOS (nombre,porcentaje,activo,timespan,sincronizar) VALUES(?,?,?,?,?)",[impuesto,porcentaje,activo,timespan_impuesto,"true"],function(tx1,res2){
+        		console.log("impuesto creado");
+                if(localStorage.getItem('idioma') == 2){
+                  $('#jsalertimp').html("The tax has been successfully created.");
+                }else{
+                  $('#jsalertimp').html("El impuesto se ha creado con éxito.");
+                }
+                $('#loaderimp').fadeOut();
+
+                $('#confimpuestos tbody').html('');
+            	tx1.executeSql("SELECT * FROM IMPUESTOS GROUP BY NOMBRE",[],function(tx1,results3){
+            		if(results3.rows.length>0){
+            			for(var t=0;t<results3.rows.length;t++){
+            				var itemimp=results3.rows.item(t);
+            				var esactivo=itemimp.activo;
+            				var porcen=itemimp.porcentaje;
+            				var nombreimp=itemimp.nombre;
+            				var timespanimp=itemimp.timespan;
+            				var checked='';
+            				if(esactivo=='true')
+            					checked='checked';
+            				var mifila='<tr><td style="text-align:left;">'+nombreimp.toUpperCase()+'</td><td  style="text-align:left;"><input id="impval_'+timespanimp+'" style="display:inline; width:60%;" type="text" class="input form-control imporcent" value="'+porcen+'"/><span style="display:inline;"> %</span></td><td  style="text-align:left;"><input id="impact_'+timespanimp+'" type="checkbox" '+checked+' data-size="mini"; /></td></tr>';
+            				$('#confimpuestos tbody').append(mifila);
+
+            				if(esactivo=='true'){
+            					$('#impact_'+timespanimp).bootstrapSwitch('state', true);
+            				}else{
+            					$('#impact_'+timespanimp).bootstrapSwitch('state', false);
+            				}
+            			}
+            		}
+            	});
+
+                $("#popimpuesto").modal("hide");
+
+        	});
+          }else{
+              if(localStorage.getItem('idioma') == 2){
+                $('#jsalertimp').html("The tax has been updated successfully.");
+              }else{
+                $('#jsalertimp').html("El impuesto se ha actualizado con éxito.");
+              }
+              $('#loaderimp').fadeOut();
+          }
+
+        }
+    	,errorCB,successCB);
+
+    }
+
 }
 </script>

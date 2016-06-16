@@ -543,8 +543,9 @@ function registrarUser(){
 
                         /*setTimeout(function(){
                           if(localStorage.getItem("id_version_nube") == '0'){*/
+						$('#demoGratis').fadeOut();
             	        $('#version_escoje').fadeIn('slow');
-                        document.getElementById('main').style.display='none';
+                        //document.getElementById('main').style.display='none';
                          /* }
                           if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
                             var paisuax = localStorage.getItem("pais");

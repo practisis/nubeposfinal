@@ -197,6 +197,271 @@
 </div> <!--End row -->
 <input type="hidden" style='display:none;' id="idcategoria" />
 
+<div class='row' id='pide_telefono' style='display:none;'>
+<div class='container-fluid'>
+<div class='col-lg-12'>
+			<div style='padding-top:40px; padding-bottom:20px; text-align:center;'>
+			<img src="img/logoava.png" width="150" alt="" />
+			</div>
+    		<div class='row' style="padding-top: 15px;">
+    			<div class="col-lg-12" id="trans_label_68" style="text-align: center;font-weight: bold;font-size: 40px;">
+    			    Activar Inteligencia Artificial
+                </div>
+    		</div>
+            <div class='row'>
+                <div class="col-xs-2">
+                </div>
+    			<div class="col-xs-8" id='trans_label_70' style="text-align:justify; padding-top:20px;">
+    			   Ava es un robot con inteligencia artificial que te ayuda a manejar tu negocio por medio de chats en WhatsApp.
+                </div>
+                <div class="col-xs-2">
+                </div>
+    		</div>
+            <br><br>
+            <div class='row'>
+                <div class="col-xs-2">
+                </div>
+    			<div class="col-xs-8" id='trans_label_76' style="text-align:justify; font-weight: bold; font-size: 16px;">
+    			    Para activar a Ava, necesitamos un número telefónico válido con WhatsApp. Nunca usaremos este teléfono para llamarte, ni para otros propósitos y jamás venderemos tu información. Serás contactado exclusivamente por Ava a este número por medio de  WhatsApp.
+                </div>
+                <div class="col-xs-2">
+                </div>
+    		</div>
+            <br>
+            <div class='row'>
+                <div class="col-lg-5 col-md-5">
+                    <select class="form-control input-lg" style='margin-bottom:20px;' id="paiswhat" name="paiswhat" size="1" required="" placeholder="País" onchange="ponerCodigoPais();">
+                      <option id="trans_label_82" value="0" style="color: #E0DEDE">País</option>
+                      <option value="1">Antigua y Barbuda</option>
+                      <option value="54">Argentina</option>
+                      <option value="1">Bahamas</option>
+                      <option value="1">Barbados</option>
+                      <option value="501">Bélice</option>
+                      <option value="591">Bolivia</option>
+                      <option value="55">Brasil</option>
+                      <option value="1">Canadá</option>
+                      <option value="56">Chile</option>
+                      <option value="57">Colombia</option>
+                      <option value="506">Costa Rica</option>
+                      <option value="53">Cuba</option>
+                      <option value="1">Dominica</option>
+                      <option value="593">Ecuador</option>
+                      <option value="503">El Salvador</option>
+                      <option value="1">Estados Unidos</option>
+                      <option value="1">Granada</option>
+                      <option value="502">Guatemala</option>
+                      <option value="592">Guyana</option>
+                      <option value="509">Haití</option>
+                      <option value="504">Honduras</option>
+                      <option value="1">Jamaica</option>
+                      <option value="52">México</option>
+                      <option value="505">Nicaragua</option>
+                      <option value="507">Panamá</option>
+                      <option value="595">Paraguay</option>
+                      <option value="51">Perú</option>
+                      <option value="1">Puerto Rico</option>
+                      <option value="1">República Dominicana</option>
+                      <option value="1">San Cristóbal y Nevis</option>
+                      <option value="1">San Vicente y las Granadinas</option>
+                      <option value="1">Santa Lucía</option>
+                      <option value="597">Surinam</option>
+                      <option value="1">Trinidad y Tobago</option>
+                      <option value="598">Uruguay</option>
+                      <option value="58">Venezuela</option>
+                  </select>
+                </div>
+                <div class="col-lg-2 col-md-2">
+                    <input id="codigo_pais" name="codigo_pais" style='margin-bottom:20px;' type="number" class="form-control input-lg trans_code" placeholder="Código" readonly="readonly" style="text-align:center;">
+                </div>
+    			<div class="col-lg-5 col-md-5">
+                    <input id="numero_telefonico" style='margin-bottom:20px;' name="numero_telefonico" type="tel" placeholder="Teléfono" class="form-control trans_phone input-lg" />
+                </div>
+    		</div>
+			<div class='row' style='margin-bottom:30px;'>
+    			<center><button class='btn btn-default btn-lg' id='trans_label_81' onclick='omitirtelefono();'>Omitir</button>&nbsp;<button type="button" class="btn btn-lg btn-success trans_active_ava" onclick='guardatelefono()' style="font-size: 20px;">Activar AVA</button></center>
+			</div>
+	</div>
+	</div>
+</div>
+
+
+<div class='row' id="pide_local" style='display:none;'>
+<div class='container-fluid'>
+<div class='col-lg-12'>
+<div class='panel-default'>
+    <div>
+        <div class='row' style="padding-top: 25px;">
+          <div class="col-sm-12" style="text-align: center;">
+            <img src="img/logoava.png" width="150" alt="">
+          </div>
+        </div>
+        <div class='row' style="padding-top: 15px;">
+          <div class="col-lg-12" id="trans_label_100" style="text-align: center;font-weight: bold;font-size: 40px;">
+            Escoje tu Local
+          </div>
+        </div>
+        <div class='row'>
+          <div class="col-xs-2">
+          </div>
+          <div class="col-xs-8" id='trans_label_101' style="text-align: center;">
+            Aquí podras escoger a que local pertenece este dispositivo.
+          </div>
+          <div class="col-xs-2">
+          </div>
+        </div>
+        <div class='row'>
+          <div class="col-xs-2">
+          </div>
+	      <div class="col-xs-8" id='trans_label_102' style="text-align: center;font-weight: bold;font-size: 16px;">
+	        Para ingresar un nuevo local lo puedes hacer dando click aquí.
+          </div>
+          <div class="col-xs-2">
+          </div>
+  		</div>
+        <br><br>
+        <div class='row'>
+          <div class="col-xs-3">
+          </div>
+          <div class="col-xs-6">
+            <select class="form-control input-md" id="idlocales" name="idlocales" size="1" required="">
+            </select>
+          </div>
+          <div class="col-xs-3">
+          </div>
+        </div>
+    </div>
+    <br/>
+    <div>
+    <center><button type="button" class="btn btn-lg btn-success trans_continue" onclick='guardalocal()' style="font-size: 20px;">Continuar</button></center>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+<div class='row'  id="terminos_condiciones" style='display:none;'>
+	<div class='container-fluid'>
+		<div class='col-lg-12'>
+			<!--terminos y condiciones-->
+			<div class='panel-default'>
+			  <div style="padding-top: 25px;">
+			  <div class='row' style="padding-top: 20px;">
+				<div class="col-sm-12" style="text-align: center;">
+					<img src="img/logoava.png" width="150" alt="">
+				</div>
+			  </div>
+			  <div class='row' style="padding-top: 15px;">
+				<div class="col-sm-12" id='trans_label_98' style="text-align: center;font-weight: bold;font-size: 24px;">
+					Términos y Condiciones
+				</div>
+			  </div>
+			  <br>
+			  <div class='row'>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-8" style="text-align: justify;">
+					<span id='trans_label_99' style="font-size: 18px;">
+						Los términos y condiciones del servicio de AvaPOS han sido actualizados para mejorar nuestro servicio y
+						trabajo con la comunidad de usuarios de AvaPOS. Para ver la los nuevos términos y condiciones del servicio AvaPOS,
+						por favor, de click <a href='javascript:void(0);' onclick='IrTerminos();'>aquí</a>.
+					</span>
+				</div>
+				<div class="col-xs-2">
+				</div>
+			  </div>
+			  <br>
+			  <div class='row'>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-8" style="text-align: center;">
+					<div class="form-group" style="text-align: left;font-size: 18px;">
+					  <input id="terminosp" name="terminosp" type="checkbox" style="width: 25px;height: 25px;">
+					  <span id='trans_label_97'>Acepto los <a href="https://www.practisis.net/avapos/terminosycondiciones.php" target="_blank">términos y condiciones</a>.</span>
+					</div>
+				</div>
+				<div class="col-xs-2">
+				</div>
+			  </div>
+			  <br/><br>
+			  <div>
+				<center><button type="button" class="btn btn-lg btn-success trans_continue" onclick='guardaterminos();' style="font-size: 16px;">Continuar</button>&nbsp;</center>
+			  </div>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="version_escoje" class='row' style='display:none;'>
+	<div class='col-lg-12'>
+    		<div style="padding-top: 25px;">
+    		<div class='row' style="padding-top: 20px;">
+    			<div class="col-sm-12" style="text-align: center;">
+    			    <img src="img/logoava.png" width="150" alt="">
+                </div>
+    		</div>
+            <div class='row' style="padding-top: 15px;">
+    			<div class="col-sm-12" id='trans_label_63' style="text-align: center;font-weight: bold;font-size: 24px;">
+    			    Selecciona el proceso de venta que realizas
+                </div>
+    		</div>
+            <div class='row'>
+    			<div class="col-sm-12" id='trans_label_64' style="text-align: center;">
+    			    Luego puedes cambiar esto en configuración
+                </div>
+    		</div>
+            <br>
+            <div class='row'>
+                <div class="col-xs-2">
+                </div>
+                <div class="col-xs-1" style="text-align: center;">
+                      <label><input type="radio" onclick='guardaversion();' id="id_version" name="id_version" value="2" style="width: 40px;height: 40px;"></label>
+                </div>
+                <div class="col-xs-7" id='trans_label_66' onclick="activaradio(2);">
+                    <span style="font-size: 18px"><b>Rápida</b></span> (la más popular)<br>
+                    Vende con una pantalla de botones, fácil de usar. Ideal para negocios de comida rápida, cafeterías, tiendas o ventas de servicios.
+                </div>
+                <div class="col-xs-2">
+                </div>
+    		</div>
+            <div class='row' style="padding-top: 20px;">
+                <div class="col-xs-2">
+                </div>
+                <div class="col-xs-1" style="text-align: center;">
+                      <label><input onclick='guardaversion();' type="radio" id="id_version" name="id_version" value="1" style="width: 40px;height: 40px;"></label>
+                </div>
+                <div class="col-xs-7" id='trans_label_65' onclick="activaradio(1);">
+                  <span style="font-size: 18px"><b>Solo Código de Barras</b></span> (requieres una pistola de código de barras)<br>
+                    Opción para negocios que manejan códigos de barras como forma principal de ventas. Interfaz y proceso de ventas basado en lectura o ingreso de códigos de barra.
+                </div>
+                <div class="col-xs-2">
+                </div>
+    		</div>
+            <div class='row' style="padding-top: 20px;">
+                <div class="col-xs-2">
+                </div>
+                <div class="col-xs-1" style="text-align: center;">
+                      <label><input onclick='guardaversion();' type="radio" id="id_version" name="id_version" value="3" style="width: 40px;height: 40px;"></label>
+                </div>
+                <div class="col-xs-7" id='trans_label_67' onclick="activaradio(3);">
+                  <span style="font-size: 18px"><b>Restaurante</b></span><br>
+                  Opción con mapa de mesas para restaurante. Permite almacenar pedidos en las mesas y facturar al final.
+                </div>
+                <div class="col-xs-2">
+                </div>
+    		</div>
+    		<br/><br/>
+    		<div style='padding-bottom:30px; padding-top:30px; display:none;'>
+    			<center><button type="button" class="btn btn-lg btn-success trans_continue" onclick='guardaversion()' style="font-size: 16px;">Continuar</button></center>
+    		</div>
+        </div>
+		<br/><br/>
+        </div>
+</div>
+
+
+
+
 
 
 <!----fin divs generales--->
@@ -878,6 +1143,44 @@
 <script>
 $(document).ready(function(){
 
+	        if(localStorage.getItem("id_version_nube") == '0'||localStorage.getItem("id_version_nube") == null){
+				//envia('config');
+				if(localStorage.getItem('idbarra')!=null){
+					$('#pestanasconfig').fadeOut();
+					$('#version_escoje').fadeIn();
+				}
+                //document.getElementById('main').style.display='none';
+            }
+
+            if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+              var paisuax = localStorage.getItem("pais");
+              if(paisuax != ''){
+                $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
+                ponerCodigoPais();
+              }
+				//envia('config');
+			    $('#pestanasconfig').fadeOut();
+			    $('#pide_telefono').fadeIn();
+               // document.getElementById('main').style.display='none';
+
+            }
+
+            if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
+			  //envia('config');
+			  $('#pestanasconfig').fadeOut();
+              $('#pide_local').fadeIn('slow');
+              //document.getElementById('main').style.display='none';
+            }
+
+            ListarLocales();
+
+            if(localStorage.getItem("terminos") == 'false'){
+			    $('#terminos_condiciones').fadeIn('slow');
+                //document.getElementById('main').style.display='none';
+            }
+
+	
+
 	///fin planes
 	//$('#demoGratis').css('height',parseInt($(window).height())*150/100);
 	//$('#fadeRow').css('height',parseInt($(window).height())*110/100);
@@ -1037,7 +1340,13 @@ $(document).ready(function(){
 			$('.navbar').slideUp();
 			$('#finalizado,#cuentaactiva,#mensajeperso').css('display','none');
 		}else{
-			$('#finalizado,#cuentaactiva,#mensajeperso,#pestanasconfig').fadeIn();
+			$('#finalizado,#cuentaactiva,#mensajeperso').fadeIn();
+			if(localStorage.getItem('id_version_nube')!=null&&localStorage.getItem('id_version_nube')!='0'&&localStorage.getItem('telefono_inte')!=null&&localStorage.getItem('telefono_inte')!=''&&localStorage.getItem('terminos')!=null&&localStorage.getItem('terminos')!='false'&&localStorage.getItem('id_locales')!=null&&localStorage.getItem('id_locales')!='0'){
+				$('#pestanasconfig').fadeIn();
+				$('.navbar').slideDown();
+			}else{
+				$('.navbar').slideUp();
+			}
 			$('#demoGratis').css("display","none");
             $('#escojeIdioma').css("display","none");
 		}

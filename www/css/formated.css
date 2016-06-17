@@ -1358,4 +1358,68 @@ body, html {
 	background-color: transparent !important;
 	cursor: pointer  !important;
 }
+
+
+#barrarribanav { 
+    display:none;
+}	
+#barraalternamovil{
+	display:block;
+}
+
+@media (min-width: 900px) { 	
+#barrarribanav { 
+    display:block;
+}	
+#barraalternamovil{
+	display:none;
+}
+#productos{
+	display:block;
+}
+#lapartedepagos{
+	display:none;
+}
+}
+
+.itemsmenu{
+	padding:10px;
+	padding-top: 20px;
+	color:#fff; 
+	height: 60px;
+	text-align:center;
+}
+
+.itemsmenuactive{
+	padding:10px;
+	padding-top: 20px;
+	color:#000000; 
+	background-color: #c0bebf;
+	height: 60px;
+	text-align:center;
+	text-decoration: underline;
+}
+
+.itemafac{
+	padding:10px;
+	padding-top: 20px;
+	color:#fff; 
+	background-color: #2e6da4;
+	height: 60px;
+	text-align:center;
+}
+
+.itemafacactivo{
+	padding:10px;
+	padding-top: 20px;
+	color:#fff; 
+	background-color: #337ab7;
+	height: 60px;
+	text-align:center;
+	text-decoration: underline;
+}
+
+
+
+
 	

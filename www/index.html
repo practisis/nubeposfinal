@@ -284,6 +284,7 @@
             </script>
 		</head>
 <body>
+			<div id="barrarribanav" >
 			<nav class="navbar navbar-inverse" style='z-index:3; border-top-left-radius:0px; border-top-right-radius:0px;'>
 			  <div class="container-fluid" >
 				<div class="navbar-header">
@@ -310,6 +311,38 @@
 				</div>
 			  </div>
 			</nav>
+			</div>
+			
+			<div id="barraalternamovil" style="background-color:#101010;">
+				<div class="row">
+					<div class="col-xs-3 itemsmenuactive" id="menuNew1" onclick="clickMenu(1);">
+					Facturar
+					</div>
+					<div class="col-xs-3 itemsmenu" id="menuNew2" onclick="clickMenu(2);">
+					Historial
+					</div>
+					<div class="col-xs-3 itemsmenu" id="menuNew3" onclick="clickMenu(3);" >
+					Productos
+					</div>
+					<div class="col-xs-1 itemsmenu"  id="menuNew4" onclick="clickMenu(4);">
+					<span style='display:inline;' class='fa fa-line-chart'></span>
+					</div>
+					<div class="col-xs-1 itemsmenu" id="menuNew5" onclick="clickMenu(5);">
+					<span style='display:inline;' class='fa fa-cog'></span>
+					</div>
+					<div class="col-xs-1 itemsmenu">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6 itemafacactivo" id="menuSubNew1" onclick="clickSubMenu(1);">
+						Productos
+					</div>
+					<div class="col-xs-6 itemafac" id="menuSubNew2" onclick="clickSubMenu(2);">
+						Total
+					</div>
+				</div>
+			</div>
+			
 		<div id='mybodycontent' class='row'>
 			<div class='container-fluid'>
 				<div id='deviceid' style='display:none;'>a383bc4552bfb701f96a17a4541b5565</div>
@@ -660,7 +693,7 @@
 						</div>
 						<div class='row'>
 							<div class='col-lg-12' style='text-align:center; margin-top:35px;'>
-								<button class='btn btn-lg btn-success' onclick='$("#popupsavefactura").modal("hide");' style='min-width:100px;'>OK</button>
+								<button class='btn btn-lg btn-success' onclick='$("#menuSubNew2").html("Total"); document.getElementById("lapartedepagos").style.display="none"; $("#popupsavefactura").modal("hide");' style='min-width:100px;'>OK</button>
 							</div>
 						</div>
 				</div>
@@ -996,6 +1029,82 @@ function IrLocales(){
   var pa = btoa(localStorage.getItem("userPasswod"));
   var url = 'https://www.practisis.net/indexredirect.php?rvpas='+pa+'&rvus='+us+'&mod=locales';
     window.open(url);
+}
+
+
+function clickMenu(cual){
+
+document.getElementById("menuNew1").className = "col-xs-3 itemsmenu";
+document.getElementById("menuNew2").className = "col-xs-3 itemsmenu";
+document.getElementById("menuNew3").className = "col-xs-3 itemsmenu";
+document.getElementById("menuNew4").className = "col-xs-1 itemsmenu";
+document.getElementById("menuNew5").className = "col-xs-1 itemsmenu";
+document.getElementById("menuSubNew1").style.display="none";
+document.getElementById("menuSubNew2").style.display="none";
+
+if (cual==1){
+	envia('puntodeventa');
+	document.getElementById("menuNew1").className = "col-xs-3 itemsmenuactive";
+	document.getElementById("menuSubNew1").style.display="block";
+	document.getElementById("menuSubNew2").style.display="block";
+	if(localStorage.getItem("con_shop")=='true'){
+	document.getElementById("productosnew").style.display="block";
+	}
+	else{
+	document.getElementById("productos").style.display="block";
+	}
+	document.getElementById("lapartedepagos").style.display="none";
+	
+}else if (cual==2){
+VerificarPermiso('historial');
+document.getElementById("menuNew2").className = "col-xs-3 itemsmenuactive";
+$("#menuSubNew2").html("Total");
+}
+else if (cual==3){
+VerificarPermiso('productos');
+document.getElementById("menuNew3").className = "col-xs-3 itemsmenuactive";
+$("#menuSubNew2").html("Total");
+}
+else if (cual==4){
+envia('dashboard');
+document.getElementById("menuNew4").className = "col-xs-1 itemsmenuactive";
+$("#menuSubNew2").html("Total");
+}
+else if (cual==5){
+VerificarPermiso('configuracion');
+document.getElementById("menuNew5").className = "col-xs-1 itemsmenuactive";
+$("#menuSubNew2").html("Total");
+}
+
+}
+
+function clickSubMenu(cual){
+
+document.getElementById("menuSubNew1").className = "col-xs-6 itemafac";
+document.getElementById("menuSubNew2").className = "col-xs-6 itemafac";
+
+if (cual==1){
+document.getElementById("menuSubNew1").className = "col-xs-6 itemafacactivo";
+document.getElementById("lapartedepagos").style.display="none";
+if(localStorage.getItem("con_shop")=='true'){
+	document.getElementById("productosnew").style.display="block";
+}
+else{
+	document.getElementById("productos").style.display="block";
+}
+
+}
+else{
+document.getElementById("menuSubNew2").className = "col-xs-6 itemafacactivo";
+document.getElementById("lapartedepagos").style.display="block";
+if(localStorage.getItem("con_shop")=='true'){
+	document.getElementById("productosnew").style.display="none";
+}else{
+	document.getElementById("productos").style.display="none";
+}
+
+}
+
 }
 
 	</script>

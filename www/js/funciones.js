@@ -314,7 +314,8 @@ function agregarCompra(item,origen){
 	});
 	console.log('los items facturados son'+sumcantidadComandada);
 	$('#itemsVendidos').html(sumcantidadComandada);
-	$('#espacioavisador').html("Tienes "+sumcantidadComandada+" pedidos. <a onclick='window.scrollTo(0,document.body.scrollHeight);'>Ver Cuenta al final.</a>");
+	//$('#espacioavisador').html("Tienes "+sumcantidadComandada+" pedidos. <a onclick='window.scrollTo(0,document.body.scrollHeight);'>Ver Cuenta al final.</a>");
+	$('#menuSubNew2').html("Total - Ver "+sumcantidadComandada+" pedidos");
 
 
 	//alert(sumTotal+'/');

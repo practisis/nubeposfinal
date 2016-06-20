@@ -1048,12 +1048,13 @@ if (cual==1){
 	document.getElementById("menuSubNew1").style.display="block";
 	document.getElementById("menuSubNew2").style.display="block";
 	if(localStorage.getItem("con_shop")=='true'){
-	document.getElementById("productosnew").style.display="block";
+		document.getElementById("productosnew").style.display="block";
 	}
 	else{
-	document.getElementById("productos").style.display="block";
+		document.getElementById("productos").style.display="block";
 	}
-	document.getElementById("lapartedepagos").style.display="none";
+	 
+	$("#lapartedepagos").css("display","none");
 	
 }else if (cual==2){
 VerificarPermiso('historial');
@@ -1079,32 +1080,27 @@ $("#menuSubNew2").html("Total");
 }
 
 function clickSubMenu(cual){
+	document.getElementById("menuSubNew1").className = "col-xs-6 itemafac";
+	document.getElementById("menuSubNew2").className = "col-xs-6 itemafac";
 
-document.getElementById("menuSubNew1").className = "col-xs-6 itemafac";
-document.getElementById("menuSubNew2").className = "col-xs-6 itemafac";
-
-if (cual==1){
-document.getElementById("menuSubNew1").className = "col-xs-6 itemafacactivo";
-document.getElementById("lapartedepagos").style.display="none";
-if(localStorage.getItem("con_shop")=='true'){
-	document.getElementById("productosnew").style.display="block";
-}
-else{
-	document.getElementById("productos").style.display="block";
-}
-
-}
-else{
-document.getElementById("menuSubNew2").className = "col-xs-6 itemafacactivo";
-document.getElementById("lapartedepagos").style.display="block";
-if(localStorage.getItem("con_shop")=='true'){
-	document.getElementById("productosnew").style.display="none";
-}else{
-	document.getElementById("productos").style.display="none";
-}
-
-}
-
+	if (cual==1){
+		document.getElementById("menuSubNew1").className = "col-xs-6 itemafacactivo";
+		document.getElementById("lapartedepagos").style.display="none";
+		if(localStorage.getItem("con_shop")=='true'){
+			document.getElementById("productosnew").style.display="block";
+		}else{
+			document.getElementById("productos").style.display="block";
+		}
+	}
+	else{
+		document.getElementById("menuSubNew2").className = "col-xs-6 itemafacactivo";
+		document.getElementById("lapartedepagos").style.display="block";
+		if(localStorage.getItem("con_shop")=='true'){
+			document.getElementById("productosnew").style.display="none";
+		}else{
+			document.getElementById("productos").style.display="none";
+		}
+	}
 }
 
 	</script>

@@ -314,7 +314,8 @@ function agregarCompra(item,origen){
 	});
 	console.log('los items facturados son'+sumcantidadComandada);
 	$('#itemsVendidos').html(sumcantidadComandada);
-	$('#espacioavisador').html("Tienes "+sumcantidadComandada+" pedidos. <a onclick='window.scrollTo(0,document.body.scrollHeight);'>Ver Cuenta al final.</a>");
+	//$('#espacioavisador').html("Tienes "+sumcantidadComandada+" pedidos. <a onclick='window.scrollTo(0,document.body.scrollHeight);'>Ver Cuenta al final.</a>");
+	$('#menuSubNew2').html("Total - Ver "+sumcantidadComandada+" pedidos");
 
 
 	//alert(sumTotal+'/');
@@ -1129,6 +1130,8 @@ function formarCategorias(){
 	function (tx){
 		tx.executeSql('SELECT c.* FROM CATEGORIAS c, PRODUCTOS p where c.timespan in (p.categoriaid) and p.productofinal=1 and p.estado=1 group by categoria ORDER BY categoria asc',[],function(tx,res){
 			if(res.rows.length>0){
+				if(localStorage.getItem("con_mesas")=='false')
+					$('#menuSubNew1,#menuSubNew2').fadeIn();
 				for(m=0;m<res.rows.length;m++){
 					selected = 'categoria';
 					var row=res.rows.item(m);
@@ -1143,6 +1146,7 @@ function formarCategorias(){
 				console.log(objcategoria);
 				ActivarCategoria(objcategoria,categoriaSelected);
 			}else{
+				$('#menuSubNew1,#menuSubNew2').css('display','none');
 				if(localStorage.getItem("idioma")==1)
 					$("#menuproductos").html('<div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Ingresar Productos</button></p></div>');
 				else if(localStorage.getItem("idioma")==2)
@@ -2607,6 +2611,19 @@ function Ready(){
 			}
 		}
   });*/
+   $('body').css('min-height',$(window).height());
+  
+  
+  if($(window).width()<900){
+	  $('#divmesas').css('min-height',$('body').height()-$('#barraalternamovil').height());
+	  $("#lapartedepagos").css("display","none");
+  }else{
+	  $("#lapartedepagos").css("display","block");
+	  $('#divmesas').css('min-height',$('body').height()-$('.navbar').height());
+  }
+  
+ 
+  
   $('#popupprecios').modal('hide');
 
   $('.modal').on('shown.bs.modal',function(){
@@ -2633,11 +2650,13 @@ function Ready(){
 			/*if(sessionStorage.getItem("mesa_activa")==""){
 			$('#divmesas').show();
   		}*/
+		$('#menuSubNew1,#menuSubNew1').css('display','none');
 		$('#btn_descuento').attr("class","btn btn-default btn-lg");
 		$('#btn_pagar').attr("class","btn btn-success btn-lg btn-block");
 		$('#btn_gpedidos').attr("class","btn btn-success btn-lg trans_save btn-block");
 		if($('#listaProductos').html()!=''){
 			$('#divmesas').show();
+			$("#menuSubNew1,#menuSubNew2").css("display","none");
 		}
   		$('#btn_mesas').show();
   		$('#btn_pagar').hide();
@@ -2653,6 +2672,8 @@ function Ready(){
 					if(results1.rows.item(0)!=null){
 						if(results1.rows.item(0).cuantos>0)
 							$('#divmesas').show();
+							$('#menuSubNew1,#menuSubNew2').css('display','none');
+						
 						}
 					}
 			});
@@ -4367,19 +4388,22 @@ function ActivarMesa(){
     					sessionStorage.setItem("mesa_name",resp[2]);
     					sessionStorage.setItem("mesa_pax",cant);
 
-                      $('#popupActivarMesa').modal("hide");
-                      $('#divmesas').hide();
+						$('#popupActivarMesa').modal("hide");
+						$('#divmesas').hide();
+						$('#menuSubNew1,#menuSubNew2').fadeIn();
+						
+						
                     }
 
     			}else if(response=='Desactivado'){
-    			    envia('cloud');
+    			    envia('config');
     				setTimeout(function(){
     					$('.navbar').slideUp();
     					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
     					$('#desactivo').fadeIn();
     				},100);
     			}else{
-    				envia('cloud');
+    				envia('config');
     				setTimeout(function(){
     					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
     					$('.navbar').slideUp();
@@ -4431,7 +4455,8 @@ function ActivarMesa(){
 			});
 			
 			$('#popupActivarMesa').modal("hide");
-      $('#divmesas').hide();
+			$('#divmesas').hide();
+			$('#menuSubNew1,#menuSubNew2').fadeIn();
 		},errorCB,successCB);
       //********************************fin normal****************************************
       }
@@ -4453,6 +4478,9 @@ function VerConsumos(idmesa){
 		sessionStorage.setItem("mesa_activa",idmesa);
 		sessionStorage.setItem("mesa_name",$('#mesaname_'+idmesa).html());
 	    $('#tablaCompra').html('');
+		
+		if($(window).width()<900)
+			$('#menuSubNew1,#menuSubNew2').fadeIn();
 
     if(localStorage.getItem("con_localhost") == 'true'){
       $('#btn_pagar').attr({onclick: ''});

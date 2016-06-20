@@ -22,43 +22,6 @@
 			<link rel="stylesheet" href="css/jquery-ui.css">
 			<link rel="stylesheet" href="css/estilotemp.css">
 			<script type="text/javascript" src="js/jsapi"></script>
-			<style>
-
-			
-				
-                #pide_local {
-					bottom: 0px;
-					display: none;
-					left: 0px;
-					outline: 0 none;
-					overflow-y: auto;
-					overflow-x: hidden;
-					position: absolute;
-					right: 0px;
-					top: 0px;
-					background-color: rgba(255, 255, 255, 1);
-                    padding: 0px;
-                    width: 100%;
-                    height: 100%;
-                    font-size:14px;
-				}
-                #terminos_condiciones {
-					bottom: 0px;
-					display: none;
-					left: 0px;
-					outline: 0 none;
-					overflow-y: auto;
-					overflow-x: hidden;
-					position: absolute;
-					right: 0px;
-					top: 0px;
-					background-color: rgba(255, 255, 255, 1);
-                    padding: 0px;
-                    width: 100%;
-                    height: 100%;
-                    font-size:14px;
-				}
-			</style>
             <script type="text/javascript">
             function guardaversion(){
               $("#cargandoTabs").modal('show');
@@ -97,12 +60,12 @@
 			      tx1.executeSql("UPDATE CONFIG SET id_version_nube=?,sincronizar='true',con_shop='"+auxshop+"',con_mesas='"+auxmesas+"' where id=1",[version],
     			  function(tx1,results1){
     			   $("#cargandoTabs").modal('hide');
-                   $('#version_escoje').fadeOut('slow');
+                   $('#version_escoje').css('display','none');
                    localStorage.setItem("id_version_nube",version);
-                   document.getElementById('main').style.display='block';
-                   if(localStorage.getItem("telefono_inte") == ''){
+                   //document.getElementById('main').style.display='block';
+                   if(localStorage.getItem("telefono_inte") == ''||localStorage.getItem("telefono_inte") == null){
       			    $('#pide_telefono').fadeIn();
-                    document.getElementById('main').style.display='none';
+                    //document.getElementById('main').style.display='none';
                    }
     			  });
 			    },errorCB,successCB);
@@ -183,12 +146,17 @@
             			    db.transaction(function(tx1){
             			      tx1.executeSql("UPDATE CONFIG SET telefono_inte=?,sincronizar='true',pide_telefono='true' where id=1",[numeroTelefono.value],
                 			  function(tx1,results1){
-                			   $("#cargandoTabs").modal('hide');
+                			   $("#cargandoTabs").modal('hide'); 
                                $('#pide_telefono').fadeOut();
-                               document.getElementById('main').style.display='block';
+                               //document.getElementById('main').style.display='block';
                                localStorage.setItem("telefono_inte",numeroTelefono.value);
                                localStorage.setItem("pide_telefono",'true');
-                               envia('puntodeventa');
+								if(localStorage.getItem("id_locales")!=null&&localStorage.getItem("id_locales")!='0'){
+									envia('puntodeventa');
+									LaunchBoarding();
+								}
+								else
+									$('#pide_local').fadeIn();
                 			  });
             			    },errorCB,successCB);
                         }else if(response == '2'){
@@ -218,6 +186,7 @@
 				
 				LaunchBoarding();
             }
+			
             function omitirtelefono(){
               var numeroTelefono = '000000000';
 
@@ -234,10 +203,17 @@
         			  function(tx1,results1){
         			   $("#cargandoTabs").modal('hide');
                        $('#pide_telefono').fadeOut();
-                       document.getElementById('main').style.display='block';
+                       //document.getElementById('main').style.display='block';
                        localStorage.setItem("telefono_inte",numeroTelefono);
-                       envia('puntodeventa');
-					   LaunchBoarding();
+					   if(localStorage.getItem("id_locales")!=null&&localStorage.getItem("id_locales")!='0'){
+							envia('puntodeventa');
+							LaunchBoarding();
+						}
+						else
+							$('#pide_local').fadeIn();
+                      
+					  
+					   //SyncStart();
         			  });
     			    },errorCB,successCB);
               }else{
@@ -269,14 +245,16 @@
         			  function(tx1,results1){
         			    $("#cargandoTabs").modal('hide');
                        $('#terminos_condiciones').fadeOut('slow');
-                       document.getElementById('main').style.display='block';
+                       //document.getElementById('main').style.display='block';
                        localStorage.setItem("terminos",newTerminos);
+					   $('.navbar').slideDown();
                        envia('puntodeventa');
         			  });
     			    },errorCB,successCB);
               }
 
             }
+			
             function guardalocal(){
               var newLocal = document.getElementById('idlocales').value;
 
@@ -293,9 +271,10 @@
         			  function(tx1,results1){
         			    $("#cargandoTabs").modal('hide');
                        $('#pide_local').fadeOut('slow');
-                       document.getElementById('main').style.display='block';
+                       //document.getElementById('main').style.display='block';
                        localStorage.setItem("id_locales",newLocal);
                        //$('.navbar').fadeIn();
+					   $('.navbar').slideDown();
                        envia('puntodeventa');
         			  });
     			    },errorCB,successCB);
@@ -338,6 +317,7 @@
 				<div class="alert alert-success" role="alert" id='alert' style='display:none;'></div>
 				<div class="alert alert-danger" role="alert" id='alertred' style='display:none;'></div>
 				<div class='row'>
+					<div class='container-fluid'>
 					<div class='col-lg-12 col-md-12 col-sm-12'>
 						<div class="row">
 							<div class="col-lg-12">
@@ -345,6 +325,7 @@
 							<div id="main" style="width:100%; text-align:center; overflow-x:hidden; height:100%;"></div>
 							</div>
 						</div>
+					</div>
 					</div>
 				</div>
 			<div id="jsonformaspago" style="display: none;">{"FormaPago":[{"id":"1","nombre":"Efectivo","imagen":"Efectivo"},{"id":"2","nombre":"Tarjetas","imagen":"Tarjetas"},{"id":"3","nombre":"Cheques","imagen":"Bancos"},{"id":"4","nombre":"CxC","imagen":"CxC"}]}</div>
@@ -711,101 +692,6 @@
 </div>
 <!--fin creado-->
 
-<!--terminos y condiciones-->
-<div  id="terminos_condiciones" class='panel-default' style='z-index:6;'>
-  <div style="padding-top: 25px;">
-  <div class='row' style="padding-top: 20px;">
-  	<div class="col-sm-12" style="text-align: center;">
-  	    <img src="img/logoava.png" width="150" alt="">
-    </div>
-  </div>
-  <div class='row' style="padding-top: 15px;">
-  	<div class="col-sm-12" id='trans_label_98' style="text-align: center;font-weight: bold;font-size: 24px;">
-  	    Términos y Condiciones
-    </div>
-  </div>
-  <br>
-  <div class='row'>
-    <div class="col-xs-2">
-    </div>
-    <div class="col-xs-8" style="text-align: justify;">
-        <span id='trans_label_99' style="font-size: 18px;">
-            Los términos y condiciones del servicio de AvaPOS han sido actualizados para mejorar nuestro servicio y
-            trabajo con la comunidad de usuarios de AvaPOS. Para ver la los nuevos términos y condiciones del servicio AvaPOS,
-            por favor, de click <a href='javascript:void(0);' onclick='IrTerminos();'>aquí</a>.
-        </span>
-    </div>
-    <div class="col-xs-2">
-    </div>
-  </div>
-  <br>
-  <div class='row'>
-    <div class="col-xs-2">
-    </div>
-    <div class="col-xs-8" style="text-align: center;">
-        <div class="form-group" style="text-align: left;font-size: 18px;">
-  		  <input id="terminosp" name="terminosp" type="checkbox" style="width: 25px;height: 25px;">
-          <span id='trans_label_97'>Acepto los <a href="https://www.practisis.net/avapos/terminosycondiciones.php" target="_blank">términos y condiciones</a>.</span>
-		</div>
-    </div>
-    <div class="col-xs-2">
-    </div>
-  </div>
-  <br/><br>
-  <div>
-  	<center><button type="button" class="btn btn-lg btn-success trans_continue" onclick='guardaterminos();' style="font-size: 16px;">Continuar</button>&nbsp;</center>
-  </div>
-  </div>
-</div>
-
-<div  id="pide_local" class='panel-default' style='z-index:6;'>
-    <div>
-        <div class='row' style="padding-top: 25px;">
-          <div class="col-sm-12" style="text-align: center;">
-            <img src="img/logoava.png" width="150" alt="">
-          </div>
-        </div>
-        <div class='row' style="padding-top: 15px;">
-          <div class="col-lg-12" id="trans_label_100" style="text-align: center;font-weight: bold;font-size: 40px;">
-            Escoje tu Local
-          </div>
-        </div>
-        <div class='row'>
-          <div class="col-xs-2">
-          </div>
-          <div class="col-xs-8" id='trans_label_101' style="text-align: center;">
-            Aquí podras escoger a que local pertenece este dispositivo.
-          </div>
-          <div class="col-xs-2">
-          </div>
-        </div>
-        <div class='row'>
-          <div class="col-xs-2">
-          </div>
-	      <div class="col-xs-8" id='trans_label_102' style="text-align: center;font-weight: bold;font-size: 16px;">
-	        Para ingresar un nuevo local lo puedes hacer dando click aquí.
-          </div>
-          <div class="col-xs-2">
-          </div>
-  		</div>
-        <br><br>
-        <div class='row'>
-          <div class="col-xs-3">
-          </div>
-          <div class="col-xs-6">
-            <select class="form-control input-md" id="idlocales" name="idlocales" size="1" required="">
-            </select>
-          </div>
-          <div class="col-xs-3">
-          </div>
-        </div>
-    </div>
-    <br/>
-    <div>
-    <center><button type="button" class="btn btn-lg btn-success trans_continue" onclick='guardalocal()' style="font-size: 20px;">Continuar</button></center>
-    </div>
-</div>
-
 <!--modal ayuda-->
 		<div class="modal fade" id="myDash" role="dialog" data-backdrop='static'>
 			<img id='flechamenu' src='images/flechamenu.png' style='display:none; position:absolute; top:60px; left:10%; width:160px; z-index:5;'/>
@@ -866,30 +752,31 @@
 			db.transaction(iniciaDB,errorCB,successCB);
 			
 			if(localStorage.getItem("id_version_nube") == '0'){
-			
+				//alert('hola');
 				envia('config');
-				$('#escojeIdioma').fadeOut();
-			    $('#version_escoje').fadeIn();
+				//$('#escojeIdioma').fadeOut();
+			    //$('#version_escoje').fadeIn();
                 //document.getElementById('main').style.display='none';
             }
-
-            if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
-              var paisuax = localStorage.getItem("pais");
+			
+			if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+             /* var paisuax = localStorage.getItem("pais");
               if(paisuax != ''){
                 $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
                 ponerCodigoPais();
-              }
+              }*/
 				envia('config');
-			    $('#escojeIdioma').fadeOut();
-			    $('#pide_telefono').fadeIn();
+			    //$('#escojeIdioma').fadeOut();
+			    //$('#pide_telefono').fadeIn();
                // document.getElementById('main').style.display='none';
 
             }
-
-            if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
+			
+			if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
 			  envia('config');
-			  $('#escojeIdioma').fadeOut();
-              $('#pide_local').fadeIn('slow');
+			  //envia('puntodeventa');
+			  //$('#escojeIdioma').fadeOut();
+              //$('#pide_local').fadeIn('slow');
               //document.getElementById('main').style.display='none';
             }
 

@@ -212,17 +212,7 @@
                 <div class="col-xs-2">
                 </div>
     			<div class="col-xs-8" id='trans_label_70' style="text-align:justify; padding-top:20px;">
-    			   Ava es un robot con inteligencia artificial que te ayuda a manejar tu negocio por medio de chats en WhatsApp.
-                </div>
-                <div class="col-xs-2">
-                </div>
-    		</div>
-            <br><br>
-            <div class='row'>
-                <div class="col-xs-2">
-                </div>
-    			<div class="col-xs-8" id='trans_label_76' style="text-align:justify; font-weight: bold; font-size: 16px;">
-    			    Para activar a Ava, necesitamos un número telefónico válido con WhatsApp. Nunca usaremos este teléfono para llamarte, ni para otros propósitos y jamás venderemos tu información. Serás contactado exclusivamente por Ava a este número por medio de  WhatsApp.
+    			   Ingresa tu número telefónico para que Ava se comunique contigo por Whatsapp. Ava es un robot de inteligencia artificial.
                 </div>
                 <div class="col-xs-2">
                 </div>
@@ -281,6 +271,114 @@
     			<center><button class='btn btn-default btn-lg' id='trans_label_81' onclick='omitirtelefono();'>Omitir</button>&nbsp;<button type="button" class="btn btn-lg btn-success trans_active_ava" onclick='guardatelefono()' style="font-size: 20px;">Activar AVA</button></center>
 			</div>
 	</div>
+	</div>
+</div>
+
+
+<div class='row' id="pide_local" style='display:none;'>
+<div class='container-fluid'>
+<div class='col-lg-12'>
+<div class='panel-default'>
+    <div>
+        <div class='row' style="padding-top: 25px;">
+          <div class="col-sm-12" style="text-align: center;">
+            <img src="img/logoava.png" width="150" alt="">
+          </div>
+        </div>
+        <div class='row' style="padding-top: 15px;">
+          <div class="col-lg-12" id="trans_label_100" style="text-align: center;font-weight: bold;font-size: 40px;">
+            Escoje tu Local
+          </div>
+        </div>
+        <div class='row'>
+          <div class="col-xs-2">
+          </div>
+          <div class="col-xs-8" id='trans_label_101' style="text-align: center;">
+            Aquí podras escoger a que local pertenece este dispositivo.
+          </div>
+          <div class="col-xs-2">
+          </div>
+        </div>
+        <div class='row'>
+          <div class="col-xs-2">
+          </div>
+	      <div class="col-xs-8" id='trans_label_102' style="text-align: center;font-weight: bold;font-size: 16px;">
+	        Para ingresar un nuevo local lo puedes hacer dando click aquí.
+          </div>
+          <div class="col-xs-2">
+          </div>
+  		</div>
+        <br><br>
+        <div class='row'>
+          <div class="col-xs-3">
+          </div>
+          <div class="col-xs-6">
+            <select class="form-control input-md" id="idlocales" name="idlocales" size="1" required="">
+            </select>
+          </div>
+          <div class="col-xs-3">
+          </div>
+        </div>
+    </div>
+    <br/>
+    <div>
+    <center><button type="button" class="btn btn-lg btn-success trans_continue" onclick='guardalocal()' style="font-size: 20px;">Continuar</button></center>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+<div class='row'  id="terminos_condiciones" style='display:none;'>
+	<div class='container-fluid'>
+		<div class='col-lg-12'>
+			<!--terminos y condiciones-->
+			<div class='panel-default'>
+			  <div style="padding-top: 25px;">
+			  <div class='row' style="padding-top: 20px;">
+				<div class="col-sm-12" style="text-align: center;">
+					<img src="img/logoava.png" width="150" alt="">
+				</div>
+			  </div>
+			  <div class='row' style="padding-top: 15px;">
+				<div class="col-sm-12" id='trans_label_98' style="text-align: center;font-weight: bold;font-size: 24px;">
+					Términos y Condiciones
+				</div>
+			  </div>
+			  <br>
+			  <div class='row'>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-8" style="text-align: justify;">
+					<span id='trans_label_99' style="font-size: 18px;">
+						Los términos y condiciones del servicio de AvaPOS han sido actualizados para mejorar nuestro servicio y
+						trabajo con la comunidad de usuarios de AvaPOS. Para ver la los nuevos términos y condiciones del servicio AvaPOS,
+						por favor, de click <a href='javascript:void(0);' onclick='IrTerminos();'>aquí</a>.
+					</span>
+				</div>
+				<div class="col-xs-2">
+				</div>
+			  </div>
+			  <br>
+			  <div class='row'>
+				<div class="col-xs-2">
+				</div>
+				<div class="col-xs-8" style="text-align: center;">
+					<div class="form-group" style="text-align: left;font-size: 18px;">
+					  <input id="terminosp" name="terminosp" type="checkbox" style="width: 25px;height: 25px;">
+					  <span id='trans_label_97'>Acepto los <a href="https://www.practisis.net/avapos/terminosycondiciones.php" target="_blank">términos y condiciones</a>.</span>
+					</div>
+				</div>
+				<div class="col-xs-2">
+				</div>
+			  </div>
+			  <br/><br>
+			  <div>
+				<center><button type="button" class="btn btn-lg btn-success trans_continue" onclick='guardaterminos();' style="font-size: 16px;">Continuar</button>&nbsp;</center>
+			  </div>
+			  </div>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -548,7 +646,7 @@
 			<td  style='text-align:right;' id="trans_label_80">Imprimir Logo</td>
 			<td align='left'><input type='checkbox' id='printlogo' onclick='ActivarImprimirLogo();'  readonly />
 				<div style='margin-top:10px;'>
-				<button class='btn btn-success btn-sm' onclick='ActivarImprimirLogo();' id='activaprintlogo' >Activar</button>
+				<button class='btn btn-success btn-sm trans_active' onclick='ActivarImprimirLogo();' id='activaprintlogo' >Activar</button>
 				</div>
 			</td>
     	</tr>
@@ -556,9 +654,13 @@
 			<td  style='text-align:right;' id="trans_label_75">Mensaje Personalizado</td>
 			<td align='left'><input type='text' id='custommsg' class='form-control input' style='margin-bottom:10px;'/><button class='btn btn-success btn-sm trans_changemessage' onclick='CambiarMensaje();' id='cambiamensaje'>Cambiar Mensaje</button></td>
     	</tr>
-    	<tr style='display:none;'>
+    	<tr>
     		<td  style='text-align:right;' id="trans_label_77">Respaldo de Información</td>
-    		<td align='left'><input type='checkbox' id='backupinf' onclick='CambiarBackup();' readonly /></td>
+    		<td align='left'><input type='checkbox' id='backupinf' onclick='CambiarBackup();' readonly/>
+                <div style='margin-top:10px;'>
+				    <button class='btn btn-success btn-sm trans_active' onclick='ActivarBackup();' id='activabackup' >Activar</button>
+				</div>
+            </td>
     	</tr>
 		<tr style='display:none;'>
 			<td  style='text-align:right;' id="trans_label_78">Múltiple Tablet</td>
@@ -569,7 +671,7 @@
             <td align='left'>
                 <input data-size='small' type='checkbox' id='permisoscheck' class='switch' readonly="readonly"/>
                 <div style='margin-top:10px;'>
-				    <button class='btn btn-success btn-sm' onclick='ActivarPermisos();' id='activapermiso'>Activar</button>
+				    <button class='btn btn-success btn-sm trans_active' onclick='ActivarPermisos();' id='activapermiso'>Activar</button>
 				</div>
             </td>
         </tr>
@@ -646,11 +748,11 @@
 				</div>
 			</div>
 
-            <div style='background-color:rgba(0,0,0,0.8); ' class="modal fade" id="popimpuesto" tabindex="-1">
-              <div  class="modal-dialog modal-lg" style="position: absolute;top: 30px;left: 50%;width: 60%;height: 300px;margin-left: -30%;background-color: #FFFFFF; box-shadow: 2px 2px 5px #000000;display: block;overflow-x: hidden;overflow-y: auto;">
-                <div style="position: absolute;top: -5px;left: 25px;"><h3 class="trans_impuesto">Nuevo Impuesto</h3></div>
-                <br><br>
-            	<div class='panel-body' style='font-size:13px; color:#4c4c4c;'>
+            <div class="modal fade" id="popimpuesto" tabindex="-1">
+              <div class="modal-dialog modal-lg">
+                <div class='modal-content'>
+				<div class='modal-header'><h3 class="trans_impuesto">Nuevo Impuesto</h3></div>
+            	<div class='modal-body' style='font-size:13px; color:#4c4c4c;'>
                 <div id='jsalertimpd' style='display:none;' class="alert alert-info" role="alert" style='font-size:12px;'></div>
                 <div id='jsalertimp' style='display:none;' class="alert alert-danger" role="alert" style='font-size:12px;'></div>
             	  <div id='loaderimp' style='position:absolute; top:0px; left:0px; width:100%; height:100%; background-color:rgba(255,255,255,0.7); padding:10px; display:none;z-index: 15;'>
@@ -674,7 +776,7 @@
                   </div>
                 </div>
                 <br>
-      		  <div class='row'>
+      		    <div class='row'>
                   <div class='col-md-4' style="text-align: right;">
                       <label class='trans_consider'>Activar</label>
                   </div>
@@ -689,17 +791,20 @@
                 </div>
 
             	</div>
+				<div class='modal-footer'>
+					<p style="text-align: right">
+					  <button class='btn btn-success btn-lg trans_save' type='button' onclick='grabarimpuesto();'>Guardar</button>
+					  <button class='btn btn-danger btn-lg trans_close' type='button' onclick='$("#popimpuesto").modal("hide");'>Cerrar</button>
+					  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</p>
+				</div>
+				</div>
+				</div>
 
-                <p style="text-align: right">
-                  <button class='btn btn-success btn-lg trans_save' type='button' onclick='grabarimpuesto();'>Guardar</button>
-                  <button class='btn btn-danger btn-lg trans_close' type='button' onclick='$("#popimpuesto").modal("hide");'>Cerrar</button>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </p>
+            </div>
+        </div>
 
-            	</div>
-              </div>
-
-		</div>
+		<!---</div>-->
 		<div role="tabpanel" class="tab-pane" id="impresorastab">
 			<div class='row'>
 				<div class='col-lg-12'>
@@ -1035,12 +1140,12 @@
 <script>
 $(document).ready(function(){
 
-	
-	        if(localStorage.getItem("id_version_nube") == '0'){
-			
+	        if(localStorage.getItem("id_version_nube") == '0'||localStorage.getItem("id_version_nube") == null){
 				//envia('config');
-				$('#pestanasconfig').fadeOut();
-			    $('#version_escoje').fadeIn();
+				if(localStorage.getItem('idbarra')!=null){
+					$('#pestanasconfig').fadeOut();
+					$('#version_escoje').fadeIn();
+				}
                 //document.getElementById('main').style.display='none';
             }
 
@@ -1093,8 +1198,8 @@ $(document).ready(function(){
 		$('#linklogin69en').html('Upgrade Now');
 		$('#jumbo0es,#jumbo0en,#jumbo69es,#jumbo69en').attr('class','jumbotron');
 		$('#jumbo29es,#jumbo29en').attr('class','jumbotron jumbo-red');
-		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion").fadeIn();
-        $('#tablet_menu').bootstrapSwitch('readonly',true);
+		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion,#activapermiso").fadeIn();
+        $('#tablet_menu,#backupinf').bootstrapSwitch('readonly',true);
         $('#msjFac').attr('readonly',true);
         $('#grabaFac').attr({onclick:'ActivarFirma();'});
         $('#msjFac').attr({onclick:'ActivarMsjFactura();'});
@@ -1109,11 +1214,11 @@ $(document).ready(function(){
 		$('#linklogin69en').html('Upgrade Now');
 		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').attr('class','jumbotron');
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
-		$('#printlogo').bootstrapSwitch('readonly',false);
+		$('#printlogo,#backupinf').bootstrapSwitch('readonly',false);
         $('#produccion').bootstrapSwitch('readonly',true);
 		if(localStorage.getItem('imprimelogo')=="true")
 		$('#printlogo').bootstrapSwitch('state',true);
-		$("#activaprintlogo,#cambiamensaje").css("display","none");
+		$("#activaprintlogo,#cambiamensaje,#activabackup").css("display","none");
         $("#activadisenomenu,#permisos,#activaproduccion").fadeIn();
         $('#tablet_menu').bootstrapSwitch('readonly',true);
         $('#msjFac').attr('readonly',true);
@@ -1130,13 +1235,13 @@ $(document).ready(function(){
 		$('#linkloginen').html('Active');
 		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').attr('class','jumbotron');
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
-		$('#printlogo').bootstrapSwitch('readonly',false);
+		$('#printlogo,#backupinf').bootstrapSwitch('readonly',false);
         $('#produccion').bootstrapSwitch('readonly',false);
 		if(localStorage.getItem('imprimelogo')=="true")
 		$('#printlogo').bootstrapSwitch('state',true);
         $('#grabaFac').attr({onclick:'subirfirma();'});
         $('#msjFac').attr('readonly',false);
-		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion").css("display","none");
+		$("#activaprintlogo,#cambiamensaje,#activadisenomenu,#permisos,#activaproduccion,#activabackup").css("display","none");
 	}
 	
 	/*fin planes*/
@@ -1220,6 +1325,14 @@ $(document).ready(function(){
 				showalertredquiet("<b>Attention:</b> In order to have the <b>Message E-Billing</b> option, you must activate <b>Premium Plan</b>.");
 			msjcloud=0;
 		}
+
+        if(msjcloud==9){
+			if(localStorage.getItem('idioma')==1)
+				showalertredquiet("<b>Atención:</b> Para poder contar con la opción de <b>Respaldo de Información</b> debes tener activado el <b>Plan Profesional o Plan Premium</b>.");
+			else
+				showalertredquiet("<b>Attention:</b> In order to have the <b>Backup Information</b> option, you must activate <b>Professional Plan or Premium Plan</b>.");
+			msjcloud=0;
+		}
 	}
 	/*fin mensajes alerta*/
 	
@@ -1232,7 +1345,13 @@ $(document).ready(function(){
 			$('.navbar').slideUp();
 			$('#finalizado,#cuentaactiva,#mensajeperso').css('display','none');
 		}else{
-			$('#finalizado,#cuentaactiva,#mensajeperso,#pestanasconfig').fadeIn();
+			$('#finalizado,#cuentaactiva,#mensajeperso').fadeIn();
+			if(localStorage.getItem('id_version_nube')!=null&&localStorage.getItem('id_version_nube')!='0'&&localStorage.getItem('telefono_inte')!=null&&localStorage.getItem('telefono_inte')!=''&&localStorage.getItem('terminos')!=null&&localStorage.getItem('terminos')!='false'&&localStorage.getItem('id_locales')!=null&&localStorage.getItem('id_locales')!='0'){
+				$('#pestanasconfig').fadeIn();
+				$('.navbar').slideDown();
+			}else{
+				$('.navbar').slideUp();
+			}
 			$('#demoGratis').css("display","none");
             $('#escojeIdioma').css("display","none");
 		}
@@ -1328,7 +1447,7 @@ $(document).ready(function(){
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT nombreterminal as c,id_idioma,id_version_nube,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais,mensajefinal from CONFIG where id=1",[],function(tx1,results1){
+				tx1.executeSql("SELECT nombreterminal as c,id_idioma,id_version_nube,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais,mensajefinal,respaldar from CONFIG where id=1",[],function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c!=''){
 							$('#tablet_name').val(results1.rows.item(0).c);
@@ -1390,6 +1509,13 @@ $(document).ready(function(){
 							
                             //alert(results1.rows.item(0).con_localhost);
                             $('#con_localhost').val(results1.rows.item(0).con_localhost);
+
+                            if(results1.rows.item(0).respaldar=='true'){
+                                $('#backupinf').bootstrapSwitch('state', true);
+                            }else{
+                    			$('#backupinf').bootstrapSwitch('state', false);
+                    		}
+
 						}
 					}
 				});
@@ -1771,11 +1897,12 @@ $(document).ready(function(){
                 localStorage.setItem('con_notas',con_notas);
                 localStorage.setItem('con_comandas',con_comanderas);
                 localStorage.setItem('con_mesas',con_mesas);
-				
+                var con_backup = $('#backupinf').bootstrapSwitch('state');
+
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					
-				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub],
+				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=?,respaldar=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub,con_backup],
 				function(tx1,results1){
 					
 					var linklang="es";
@@ -2443,6 +2570,14 @@ function ActivarPermisos(){
   var paquete=localStorage.getItem("paquete");
   if(paquete==22 || paquete==36){
     msjcloud=5;
+    envia('config');
+  }
+}
+function ActivarBackup(){
+  //alert('entra imprlogo');
+  var paquete=localStorage.getItem("paquete");
+  if(paquete==22){
+    msjcloud=9;
     envia('config');
   }
 }

@@ -2091,7 +2091,7 @@ function Init3(){
 	//pongo alto uniforme al mas grande.
 	$('.producto').each(function(){
 		$(this).css('height',mialtoboton+'px');
-		$(this).css('line-height','14px');
+		$(this).css('line-height','16px');
 	});
 	
 	

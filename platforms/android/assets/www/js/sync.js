@@ -22,16 +22,22 @@ function SyncStart(){
 	console.log(clientesya+'*'+productosya+'*'+categoriasya+'*'+presupuestoya+'*'+menucategoriasya+'*'+menuya+'*'+permisosya+'*'+idbarra+'*'+mesasya+'*'+localesya);
 	if((clientesya||productosya||categoriasya||presupuestoya||menucategoriasya||menuya||permisosya||idbarra||mesasya)&&localesya==false){
 		//envia('cloud');
-		envia('config');
+		//envia('config');
 		localStorage.setItem("idioma",2);
-		$('.navbar').slideDown();
+		//$('.navbar').slideDown();
 	}
 	if(localesya){
-		$('#fadeRow,#demoGratis').css("display","none");
+		//$('#fadeRow,#demoGratis').css("display","none");
+		$('#demoGratis').css("display","none");
 		yaesta=true;
-		$('.navbar').slideDown();
-		envia('puntodeventa');
+		//$('.navbar').slideDown();
+		//envia('puntodeventa');
 		//Init31();
+		if(localStorage.getItem('id_version_nube')!='0'&&localStorage.getItem('id_version_nube')!=null&&localStorage.getItem('telefono_inte')!=''&&localStorage.getItem('telefono_inte')!=null&&localStorage.getItem('id_locales')!='0'&&localStorage.getItem('id_locales')!=null&&localStorage.getItem('terminos')!='false'&&localStorage.getItem('terminos')!=null){
+			$('.navbar').slideDown();
+			envia('puntodeventa');
+		}
+			
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
 			tx.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1',[],function(tx,results){
@@ -79,7 +85,8 @@ function ExtraeDatosApi(donde){
 	}else if(donde==1){
 		console.log("Datos API 1: Categorias");
 		//$(".navbar").slideUp();
-		$("#demoGratis,#fadeRow,#finalizado").css("display","none");
+		//$("#demoGratis,#fadeRow,#finalizado").css("display","none");
+		$("#demoGratis,#finalizado").css("display","none");
 		$("#contentStepSincro,#cuentaactiva,#mensajeperso").fadeIn();
 		$("#txtSincro").html("0%");
 		var jsoncateg=JSON.parse($('#JSONCategoriasNube').html());
@@ -289,7 +296,7 @@ function ExtraeDatosApi(donde){
 
             var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
-              tx.executeSql('UPDATE CONFIG SET pais="'+ext[0].pais+'",id_idioma = "'+ext[0].idioma+'",sin_documento="'+ext[0].documento+'",con_nombre_orden="'+ext[0].orden+'",con_propina="'+ext[0].propina+'",con_tarjeta="'+ext[0].tarjeta+'",con_shop="'+ext[0].shop+'",ip_servidor="'+ext[0].ipservidor+'",con_mesas="'+ext[0].mesas+'",logo="'+ext[0].logo+'",id_version_nube="'+ext[0].id_version_nube+'",pide_telefono="'+ext[0].pide_telefono+'",telefono_inte="'+ext[0].telefono_inte+'",mensajefinal="'+ext[0].mensajefinal+'",terminos_condiciones="'+ext[0].terminos+'",id_locales="'+ext[0].id_locales+'",email_fact="'+ext[0].email_fact+'",key="'+ext[0].key+'",numero_contribuyente="'+ext[0].numero_contribuyente+'",obligado_contabilidad="'+ext[0].obligado_contabilidad+'",prueba_produccion="'+ext[0].prueba_produccion+'",tiene_factura_electronica="'+ext[0].tiene_factura_electronica+'",mensaje_factura="'+ext[0].msj_factura_electronica+'" WHERE id=1',[],function(tx,results){
+              tx.executeSql('UPDATE CONFIG SET pais="'+ext[0].pais+'",id_idioma = "'+ext[0].idioma+'",sin_documento="'+ext[0].documento+'",con_nombre_orden="'+ext[0].orden+'",con_propina="'+ext[0].propina+'",con_tarjeta="'+ext[0].tarjeta+'",con_shop="'+ext[0].shop+'",ip_servidor="'+ext[0].ipservidor+'",con_mesas="'+ext[0].mesas+'",logo="'+ext[0].logo+'",id_version_nube="'+ext[0].id_version_nube+'",pide_telefono="'+ext[0].pide_telefono+'",telefono_inte="'+ext[0].telefono_inte+'",mensajefinal="'+ext[0].mensajefinal+'",terminos_condiciones="'+ext[0].terminos+'",id_locales="'+ext[0].id_locales+'",email_fact="'+ext[0].email_fact+'",key="'+ext[0].key+'",numero_contribuyente="'+ext[0].numero_contribuyente+'",obligado_contabilidad="'+ext[0].obligado_contabilidad+'",prueba_produccion="'+ext[0].prueba_produccion+'",tiene_factura_electronica="'+ext[0].tiene_factura_electronica+'",mensaje_factura="'+ext[0].msj_factura_electronica+'",respaldar="'+ext[0].respaldar+'" WHERE id=1',[],function(tx,results){
 
   				console.log("actualizada empresa permisos");
 				if(ext[0].logo!=''&&ext[0].logo!=null){
@@ -429,6 +436,34 @@ function ExtraeDatosApi(donde){
 		}
 		/**/
 
+		
+		//evalua si se va a productos
+		 if(localStorage.getItem("id_version_nube") == '0'||localStorage.getItem("id_version_nube") == null){
+					$('#fadeRow').css('display','none');
+					$('#cargandoTabs').modal('hide');
+    	            $('#version_escoje').fadeIn('slow');
+                    //document.getElementById('main').style.display='none';
+         }
+
+         if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+                    var paisuax = localStorage.getItem("pais");
+                    if(paisuax != ''){
+                      $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
+                      ponerCodigoPais();
+                    }
+					$('#fadeRow').css('display','none');
+					$('#cargandoTabs').modal('hide');
+      	            $('#pide_telefono').fadeIn();
+                    //document.getElementById('main').style.display='none';
+         }
+
+         if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
+				$('#fadeRow').css('display','none');
+				$('#cargandoTabs').modal('hide');
+      	        $('#pide_local').fadeIn('slow');
+                // document.getElementById('main').style.display='none';
+                ListarLocales();
+         }
 
 		}
 }
@@ -526,6 +561,7 @@ function registrarUser(){
                         showalertred('The mail entered already exists in the system, please enter another.');
                         $("#newEmail").val('');
     			}else{
+						$("#cargandoTabs").modal('hide');
 						var datosback=data.split("||");
 						console.log(data);
         				localStorage.setItem("userRegister", newEmail);
@@ -543,8 +579,6 @@ function registrarUser(){
 
                         /*setTimeout(function(){
                           if(localStorage.getItem("id_version_nube") == '0'){*/
-						$('#demoGratis').fadeOut();
-            	        $('#version_escoje').fadeIn('slow');
                         //document.getElementById('main').style.display='none';
                          /* }
                           if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
@@ -608,20 +642,61 @@ function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direcc
 				if(!desde_login){
 					//LaunchBoarding();
 					//envia("dashboard");
-					envia("puntodeventa");
+					//envia("puntodeventa");
+					SyncStart();
+					$('#demoGratis').fadeOut();
+            	    $('#version_escoje').fadeIn('slow');
+					
 				}else{
-					tx2.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1 and estado=1',[],function(tx,results){
+					/*tx2.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1 and estado=1',[],function(tx,results){
 						if(results.rows.item(0).cp==0||results.rows.item(0).cp==null){
 							//LaunchBoarding();
 						}
-					});
-					//SyncStart();
+					});*/
+					//LaunchBoarding();
+					
+					/*alert(localStorage.getItem("id_version_nube"));
+					
+					if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+					  var paisuax = localStorage.getItem("pais");
+					  if(paisuax != ''){
+						$('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
+						ponerCodigoPais();
+					  }
+						//envia('config');
+						$('#pestanasconfig').fadeOut();
+						$('#pide_telefono').fadeIn();
+					   // document.getElementById('main').style.display='none';
+
+					}
+
+					if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
+					  //envia('config');
+					  $('#pestanasconfig').fadeOut();
+					  $('#pide_local').fadeIn('slow');
+					  //document.getElementById('main').style.display='none';
+					}
+
+					ListarLocales();
+
+					if(localStorage.getItem("terminos") == 'false'){
+						$('#terminos_condiciones').fadeIn('slow');
+						//document.getElementById('main').style.display='none';
+					}
+							
+					if(localStorage.getItem("id_version_nube") != '0'&&localStorage.getItem("id_version_nube") !=null){
+						envia('puntodeventa');
+						$('.navbar').slideDown();
+					}else{
+						$('#version_escoje').fadeIn();
+					}*/
+							//SyncStart();
 				}
 								
 			});						
 									
 	},errorCB,successCB);
-	SyncStart();
+	
 }
 
 
@@ -642,7 +717,7 @@ function UserLogin(){
 			else if(localStorage.getItem("idioma")==2)
 				showalert('Please, enter valid information.');
 		}
-		else{
+		else{	
 			var datosaux = data.split("||");
 
             if(datosaux[2] == '0'){
@@ -661,43 +736,24 @@ function UserLogin(){
               $('#noplan').fadeIn();
 
             }else{
-
-                localStorage.setItem("userRegister", quien);
+				
+				localStorage.setItem("userRegister", quien);
     			localStorage.setItem("userPasswod", pass);
     			localStorage.setItem("empresa",datosaux[0]);
     			localStorage.setItem("idbarra",datosaux[2]);
-
-                setTimeout(function(){
-                  //alert(localStorage.getItem("id_version_nube"));
-                  if(localStorage.getItem("id_version_nube") == '0'){
-    	            $('#version_escoje').fadeIn('slow');
-                    document.getElementById('main').style.display='none';
-                  }
-
-                  if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
-                    var paisuax = localStorage.getItem("pais");
-                    if(paisuax != ''){
-                      $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
-                      ponerCodigoPais();
-                    }
-      	            $('#pide_telefono').modal('show');
-                    document.getElementById('main').style.display='none';
-                  }
-
-                  if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
-      	            $('#pide_local').fadeIn('slow');
-                    document.getElementById('main').style.display='none';
-                    ListarLocales();
-                  }
-
-                }, 2000);
-
-    			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				
+				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
     			db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],'',true)});
-    			//$('.navbar').slideDown();
+				
+				SyncStart();
+
+      
+                  //alert(localStorage.getItem("id_version_nube"));
+				//$('.navbar').slideDown();
           }
 		}
 		$('#btnvalida2').html("Login");
+		$('#cargandoTabs').modal('show');
 	});
 }
 
@@ -711,7 +767,7 @@ var apiURL='https://practisis.net/connectnubepos/api2.php';
 	}).done(function(response){
 		//sincronizacion inicial
         if(response!='block' && response!='Desactivado'){
-			$('.navbar').slideDown();
+			//$('.navbar').slideDown();
     		var arraydatos=JSON.parse(response);
     		console.log(">>>>Iniciar >>>"+response);
     		JSONproductosNube=arraydatos.productos;
@@ -1123,7 +1179,7 @@ function DatosRecurrentes(cual){
                       //localStorage.setItem("paquete","36");
                       //localStorage.setItem("paquete","37");
 
-                      tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'",con_notasorden="'+item.notas+'",con_comanderas="'+item.comanderas+'",con_localhost="'+item.localhost+'",ip_servidor="'+item.ipservidor+'",con_mesas="'+item.mesas+'",logo="'+item.logo+'",id_version_nube="'+item.id_version_nube+'",pide_telefono="'+item.pide_telefono+'",telefono_inte="'+item.telefono_inte+'",mensajefinal="'+item.mensajefinal+'",terminos_condiciones="'+item.terminos+'",id_locales="'+item.id_locales+'",email_fact="'+item.email_fact+'",key="'+item.key+'",numero_contribuyente="'+item.numero_contribuyente+'",obligado_contabilidad="'+item.obligado_contabilidad+'",prueba_produccion="'+item.prueba_produccion+'",tiene_factura_electronica="'+item.tiene_factura_electronica+'",mensaje_factura="'+item.msj_factura_electronica+'" WHERE id=1',[],function(tx,results){
+                      tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'",con_notasorden="'+item.notas+'",con_comanderas="'+item.comanderas+'",con_localhost="'+item.localhost+'",ip_servidor="'+item.ipservidor+'",con_mesas="'+item.mesas+'",logo="'+item.logo+'",id_version_nube="'+item.id_version_nube+'",pide_telefono="'+item.pide_telefono+'",telefono_inte="'+item.telefono_inte+'",mensajefinal="'+item.mensajefinal+'",terminos_condiciones="'+item.terminos+'",id_locales="'+item.id_locales+'",email_fact="'+item.email_fact+'",key="'+item.key+'",numero_contribuyente="'+item.numero_contribuyente+'",obligado_contabilidad="'+item.obligado_contabilidad+'",prueba_produccion="'+item.prueba_produccion+'",tiene_factura_electronica="'+item.tiene_factura_electronica+'",mensaje_factura="'+item.msj_factura_electronica+'",respaldar="'+item.respaldar+'" WHERE id=1',[],function(tx,results){
 
 						console.log("actualizada empresa");
 						if(item.logo!=''&&item.logo!=null){
@@ -1136,7 +1192,7 @@ function DatosRecurrentes(cual){
 
                         if(localStorage.getItem("terminos") == 'false'){
             			    $('#terminos_condiciones').fadeIn('slow');
-                            document.getElementById('main').style.display='none';
+                            //document.getElementById('main').style.display='none';
                         }
 
 					  });
@@ -1644,7 +1700,7 @@ function PostaLaNube(arraydatos,cual,accion,t){
 		jsonc=item.fetchJson;
         //alert(jsonc);
 	}else if(accion=='Config'){
-		jsonc='{"nombreempresa":"'+item.nombre+'","razon":"'+item.razon+'","telefono":"'+item.telefono+'","ruc":"'+item.ruc+'","direccion":"'+item.direccion+'","email":"'+item.email+'","serie":"'+item.serie+'","establecimiento":"'+item.establecimiento+'","nombreterminal":"'+item.nombreterminal+'","idioma":"'+item.id_idioma+'","documento":"'+item.sin_documento+'","orden":"'+item.con_nombre_orden+'","propina":"'+item.con_propina+'","tarjeta":"'+item.con_tarjeta+'","shop":"'+item.con_shop+'","mesas":"'+item.con_mesas+'","id_version_nube":"'+item.id_version_nube+'","pide_telefono":"'+item.pide_telefono+'","telefono_inte":"'+item.telefono_inte+'","mensajefinal":"'+item.mensajefinal+'","terminos":"'+item.terminos_condiciones+'","id_locales":"'+item.id_locales+'","email_fact":"'+item.email_fact+'","key":"'+item.key+'","numero_contribuyente":"'+item.numero_contribuyente+'","obligado_contabilidad":"'+item.obligado_contabilidad+'","prueba_produccion":"'+item.prueba_produccion+'","tiene_factura_electronica":"'+item.tiene_factura_electronica+'","msj_factura_electronica":"'+item.mensaje_factura+'"}';
+		jsonc='{"nombreempresa":"'+item.nombre+'","razon":"'+item.razon+'","telefono":"'+item.telefono+'","ruc":"'+item.ruc+'","direccion":"'+item.direccion+'","email":"'+item.email+'","serie":"'+item.serie+'","establecimiento":"'+item.establecimiento+'","nombreterminal":"'+item.nombreterminal+'","idioma":"'+item.id_idioma+'","documento":"'+item.sin_documento+'","orden":"'+item.con_nombre_orden+'","propina":"'+item.con_propina+'","tarjeta":"'+item.con_tarjeta+'","shop":"'+item.con_shop+'","mesas":"'+item.con_mesas+'","id_version_nube":"'+item.id_version_nube+'","pide_telefono":"'+item.pide_telefono+'","telefono_inte":"'+item.telefono_inte+'","mensajefinal":"'+item.mensajefinal+'","terminos":"'+item.terminos_condiciones+'","id_locales":"'+item.id_locales+'","email_fact":"'+item.email_fact+'","key":"'+item.key+'","numero_contribuyente":"'+item.numero_contribuyente+'","obligado_contabilidad":"'+item.obligado_contabilidad+'","prueba_produccion":"'+item.prueba_produccion+'","tiene_factura_electronica":"'+item.tiene_factura_electronica+'","msj_factura_electronica":"'+item.mensaje_factura+'","respaldar":"'+item.respaldar+'"}';
 	}else if(accion=='MESAS_DATOS'){
 		jsonc='{"id_mesa":"'+item.id_mesa+'","cliente":"'+item.cliente+'","id_cliente":"'+item.id_cliente+'","activo":"'+item.activo+'","id_factura":"'+item.id_factura+'","hora_activacion":"'+item.hora_activacion+'","hora_desactivacion":"'+item.hora_desactivacion+'","pax":"'+item.pax+'","timespan":"'+item.timespan+'"}';
 	}else if(accion=='IMPUESTOS'){
@@ -1721,7 +1777,7 @@ function downloadImage(url, fileName){
 }
 
 function verplanes(){
-  document.getElementById('main').style.height='650px';
+ //document.getElementById('main').style.height='650px';
   document.getElementById('trans_label_24').style.display='none';
   $('.nav-tabs').css('display','none');
   $('#noplan').fadeOut();

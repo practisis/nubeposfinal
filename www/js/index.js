@@ -862,17 +862,17 @@ var app = {
 				  }
 
   			}else if(response=='Desactivado'){
-  			    envia('cloud');
+  			    envia('config');
   				setTimeout(function(){
-  					$('.navbar').slideUp();
+  					$('.navbar,#barraalternamovil').slideUp();
   					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
   					$('#desactivo').fadeIn();
   				},100);
   			}else{
-  				envia('cloud');
+  				envia('config');
   				setTimeout(function(){
   					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
-  					$('.navbar').slideUp();
+  					$('.navbar,#barraalternamovil').slideUp();
   					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
   					$('#bloqueo').fadeIn();
   				},100);
@@ -1137,6 +1137,7 @@ var app = {
         
 
 function showalert(msg){
+	$('#cargandoTabs').modal('hide');
     $('#alert').html(msg);
     $('html, body').animate( { scrollTop : 0 },500,function(){
         $('#alert').slideDown('slow',function(){
@@ -1151,6 +1152,7 @@ function hidealert(){
 }
 
 function showalertred(msg){
+	$('#cargandoTabs').modal('hide');
     $('#alertred').html(msg);
     $('html, body').animate( { scrollTop : 0 },500,function(){
         $('#alertred').slideDown('slow',function(){

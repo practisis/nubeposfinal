@@ -1145,6 +1145,7 @@ $(document).ready(function(){
 				if(localStorage.getItem('idbarra')!=null){
 					$('#pestanasconfig').fadeOut();
 					$('#version_escoje').fadeIn();
+					$('#barraalternamovil').css('display','none');
 				}
                 //document.getElementById('main').style.display='none';
             }
@@ -1159,13 +1160,14 @@ $(document).ready(function(){
 			    $('#pestanasconfig').fadeOut();
 			    $('#pide_telefono').fadeIn();
                // document.getElementById('main').style.display='none';
-
+				$('#barraalternamovil').css('display','none');
             }
 
             if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
 			  //envia('config');
 			  $('#pestanasconfig').fadeOut();
               $('#pide_local').fadeIn('slow');
+			  $('#barraalternamovil').css('display','none');
               //document.getElementById('main').style.display='none';
             }
 
@@ -1173,6 +1175,7 @@ $(document).ready(function(){
 
             if(localStorage.getItem("terminos") == 'false'){
 			    $('#terminos_condiciones').fadeIn('slow');
+				$('#barraalternamovil').css('display','none');
                 //document.getElementById('main').style.display='none';
             }
 
@@ -1342,15 +1345,18 @@ $(document).ready(function(){
 		if(localStorage.getItem("idbarra")==null){
 			//$('#demoGratis').fadeIn();
             $('#escojeIdioma').fadeIn();
-			$('.navbar').slideUp();
+			$('.navbar,#barraalternamovil').slideUp();
 			$('#finalizado,#cuentaactiva,#mensajeperso').css('display','none');
 		}else{
 			$('#finalizado,#cuentaactiva,#mensajeperso').fadeIn();
 			if(localStorage.getItem('id_version_nube')!=null&&localStorage.getItem('id_version_nube')!='0'&&localStorage.getItem('telefono_inte')!=null&&localStorage.getItem('telefono_inte')!=''&&localStorage.getItem('terminos')!=null&&localStorage.getItem('terminos')!='false'&&localStorage.getItem('id_locales')!=null&&localStorage.getItem('id_locales')!='0'){
 				$('#pestanasconfig').fadeIn();
-				$('.navbar').slideDown();
+				if($(window).width()>900)
+					$('.navbar').slideDown();
+				else
+					$('#barraalternamovil').slideDown();
 			}else{
-				$('.navbar').slideUp();
+				$('.navbar,#barraalternamovil').slideUp();
 			}
 			$('#demoGratis').css("display","none");
             $('#escojeIdioma').css("display","none");

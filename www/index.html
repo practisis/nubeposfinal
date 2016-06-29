@@ -258,7 +258,11 @@
                        $('#terminos_condiciones').fadeOut('slow');
                        //document.getElementById('main').style.display='block';
                        localStorage.setItem("terminos",newTerminos);
-					   $('.navbar').slideDown();
+					   if($(window).width()>900)
+							$('.navbar').slideDown();
+					   else
+							$('#barraalternamovil').slideDown();
+					
                        envia('puntodeventa');
         			  });
     			    },errorCB,successCB);
@@ -285,7 +289,10 @@
                        //document.getElementById('main').style.display='block';
                        localStorage.setItem("id_locales",newLocal);
                        //$('.navbar').fadeIn();
-					   $('.navbar').slideDown();
+					   if($(window).width()>900)
+							$('.navbar').slideDown();
+					   else
+							$('#barraalternamovil').slideDown();
                        envia('puntodeventa');
         			  });
     			    },errorCB,successCB);

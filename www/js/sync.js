@@ -757,9 +757,10 @@ function UserLogin(){
 
 				//alert(localStorage.getItem("id_version_nube"));
 				//$('.navbar').slideDown();
+				$('#btnvalida2').html("Login");
+				$('#cargandoTabs').modal('show');
           }
-		  $('#btnvalida2').html("Login");
-		  $('#cargandoTabs').modal('show');
+		  
 		}
 		
 	});

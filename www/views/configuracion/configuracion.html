@@ -1145,6 +1145,7 @@ $(document).ready(function(){
 				if(localStorage.getItem('idbarra')!=null){
 					$('#pestanasconfig').fadeOut();
 					$('#version_escoje').fadeIn();
+					$('#cargandoTabs').modal('hide');
 					$('#barraalternamovil').css('display','none');
 				}
                 //document.getElementById('main').style.display='none';
@@ -1159,6 +1160,7 @@ $(document).ready(function(){
 				//envia('config');
 			    $('#pestanasconfig').fadeOut();
 			    $('#pide_telefono').fadeIn();
+				$('#cargandoTabs').modal('hide');
                // document.getElementById('main').style.display='none';
 				$('#barraalternamovil').css('display','none');
             }
@@ -1167,6 +1169,7 @@ $(document).ready(function(){
 			  //envia('config');
 			  $('#pestanasconfig').fadeOut();
               $('#pide_local').fadeIn('slow');
+			  $('#cargandoTabs').modal('hide');
 			  $('#barraalternamovil').css('display','none');
               //document.getElementById('main').style.display='none';
             }
@@ -1176,6 +1179,7 @@ $(document).ready(function(){
             if(localStorage.getItem("terminos") == 'false'){
 			    $('#terminos_condiciones').fadeIn('slow');
 				$('#barraalternamovil').css('display','none');
+				$('#cargandoTabs').modal('hide');
                 //document.getElementById('main').style.display='none';
             }
 
@@ -1357,6 +1361,7 @@ $(document).ready(function(){
 					$('#barraalternamovil').slideDown();
 			}else{
 				$('.navbar,#barraalternamovil').slideUp();
+				$('#cargandoTabs').modal('hide');
 			}
 			$('#demoGratis').css("display","none");
             $('#escojeIdioma').css("display","none");

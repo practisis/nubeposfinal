@@ -841,8 +841,10 @@
 
 			$('#myDash').on('show.bs.modal',function(){
 				if(parseInt($(window).width())>550){
+					$('.navbar').slideDown();
 					$(this).find('.modal-dialog').css('top','150px');
 				}else{
+					$('#barraalternamovil').slideDown();
 					$(this).find('.modal-dialog').css('top','75px');
 				}
 			});

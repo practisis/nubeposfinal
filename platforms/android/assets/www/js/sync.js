@@ -441,7 +441,8 @@ function ExtraeDatosApi(donde){
 		 if(localStorage.getItem("id_version_nube") == '0'||localStorage.getItem("id_version_nube") == null){
 					$('#fadeRow').css('display','none');
 					$('#cargandoTabs').modal('hide');
-    	            $('#version_escoje').fadeIn('slow');
+    	            //$('#version_escoje').fadeIn('slow');
+					guardaversion('0');
                     //document.getElementById('main').style.display='none';
          }
 
@@ -593,7 +594,7 @@ function registrarUser(){
                         }, 3000);*/
 
 						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','','',false);});
+						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','','',false,pais);});
 						
                 }
     		});
@@ -616,7 +617,7 @@ function LaunchBoarding(){
 	$('#myDash').modal('show');
 }
 
-function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direccion,tablet,desde_login){
+function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direccion,tablet,desde_login, pais){
 	if(tablet==''){
 		tablet='Tablet '+$('#devicemodel').html();
 	}
@@ -645,7 +646,8 @@ function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direcc
 					//envia("puntodeventa");
 					SyncStart();
 					$('#demoGratis').fadeOut();
-            	    $('#version_escoje').fadeIn('slow');
+            	    //$('#version_escoje').fadeIn('slow');
+					guardaversion(pais);
 					
 				}else{
 					/*tx2.executeSql('SELECT count(*) as cp FROM PRODUCTOS WHERE id_local !=-1 and estado=1',[],function(tx,results){
@@ -743,7 +745,7 @@ function UserLogin(){
     			localStorage.setItem("idbarra",datosaux[2]);
 				
 				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-    			db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],'',true)});
+    			db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],'',true,'0')});
 				
 				SyncStart();
 

@@ -89,7 +89,7 @@ function ActivarCategoria(cual,categoria){
 						impuestosid+='2';
 					}*/
 				}
-				if($(window).height()>550){
+				if($(window).width()>550){
 						Init31();
 					}
 					else{
@@ -103,12 +103,12 @@ function ActivarCategoria(cual,categoria){
 	
 	
 	$('.producto').hide();
-	if($(window).height()>550){
+	if($(window).width()>550){
 			Init31();
-		}
-		else{
+	}
+	else{
 			Init3();	
-		}
+	}
 	
 	var maxw=0;
 	$('#listacat li').each(function(){
@@ -968,6 +968,8 @@ function cambiarCantidad(){
 						});
 						console.log('los items facturados son'+sumcantidadComandada);
 						$('#itemsVendidos').html(sumcantidadComandada);
+						$('#menuSubNew2').html("Total - Ver "+sumcantidadComandada+" pedidos");
+
 						/*$('#itemsVendidos').css('display','block');
 						$('#itemsVendidos').css('background-color','red');*/
 						
@@ -1132,6 +1134,7 @@ function formarCategorias(){
 			if(res.rows.length>0){
 				if(localStorage.getItem("con_mesas")=='false')
 					$('#menuSubNew1,#menuSubNew2').fadeIn();
+				
 				for(m=0;m<res.rows.length;m++){
 					selected = 'categoria';
 					var row=res.rows.item(m);
@@ -1152,6 +1155,7 @@ function formarCategorias(){
 				else if(localStorage.getItem("idioma")==2)
 					$("#menuproductos").html('<div class="jumbotron"><h1>No Products yet</h1><p>Please, enter all your products to begin.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Enter Products</button></p></div>');
 			}
+			
 		});				
 	},errorCB,successCB);
 }
@@ -1230,7 +1234,7 @@ function pagar(){
         			}else if(response=='Desactivado'){
         			    envia('cloud');
         				setTimeout(function(){
-        					$('.navbar').slideUp();
+        					$('.navbar,#barraalternamovil').slideUp();
         					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
         					$('#desactivo').fadeIn();
         				},100);
@@ -1238,7 +1242,7 @@ function pagar(){
         				envia('cloud');
         				setTimeout(function(){
         					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
-        					$('.navbar').slideUp();
+        					$('.navbar,#barraalternamovil').slideUp();
         					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
         					$('#bloqueo').fadeIn();
         				},100);
@@ -1681,6 +1685,9 @@ function borrarCompra(item){
 	});
 	console.log('los items facturados son'+sumcantidadComandada);
 	$('#itemsVendidos').html(sumcantidadComandada);
+	
+	$('#menuSubNew2').html("Total - Ver "+sumcantidadComandada+" pedidos");
+
 	/*$('#itemsVendidos').css('display','block');
 	$('#itemsVendidos').css('background-color','red');*/
 	
@@ -2149,7 +2156,7 @@ function Init31(){
 	
 	var navh=parseInt($('.navbar').css("height"));
 	$('#pay').css("height",(hd-navh));
-	if(w<600){
+	if(w<550){
 		$('.btn-lg').each(function(){
 			var actual=$(this).attr('class');
 			var nueva=actual.replace("btn-lg","btn-sm");
@@ -2613,13 +2620,17 @@ function Ready(){
   });*/
    $('body').css('min-height',$(window).height());
   
-  
-  if($(window).width()<900){
+  $('#menuSubNew2').html("Total");
+  if($(window).width()<=550){
+	  $('#barraalternamovil').slideDown();
 	  $('#divmesas').css('min-height',$('body').height()-$('#barraalternamovil').height());
 	  $("#lapartedepagos").css("display","none");
+	  $('.navbar').css('display','none');
   }else{
+	  $('.navbar').slideDown();
 	  $("#lapartedepagos").css("display","block");
 	  $('#divmesas').css('min-height',$('body').height()-$('.navbar').height());
+	  $('#barraalternamovil').css('display','none');
   }
   
  
@@ -2782,7 +2793,7 @@ function Ready(){
 	
 	//idioma
 	
-	if($(window).height()>550){
+	if($(window).width()>550){
 			Init31();
 		}
 		else{
@@ -3305,15 +3316,15 @@ function VerificarNumero(valor){
 			}else if(response=='Desactivado'){
 			    envia('cloud');
 				setTimeout(function(){
-					$('.navbar').slideUp();
+					$('.navbar,#barraalternamovil').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#desactivo').fadeIn();
 				},100);
 			}else{
-				envia('cloud');
+				envia('config');
 				setTimeout(function(){
 					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
-					$('.navbar').slideUp();
+					$('.navbar,#barraalternamovil').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#bloqueo').fadeIn();
 				},100);
@@ -3552,7 +3563,7 @@ function ActivarCategoriaMenu(cual,categoria){
 								var agregar='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>';
 								$('#listaProductos').append(agregar);
 							}
-							if($(window).height()>550){
+							if($(window).width()>550){
 									Init31();
 								}
 								else{
@@ -3581,7 +3592,7 @@ function ActivarCategoriaMenu(cual,categoria){
 	$('#listacat li a').css("height",maxw);
 	
 	//$('.categoria_producto_'+ categoria).show();
-	if($(window).height()>550){
+	if($(window).width()>550){
 			Init31();
 		}
 		else{
@@ -3725,7 +3736,7 @@ function VerificarAgregados(btnprod,origen){
   			}else if(response=='Desactivado'){
   			    envia('cloud');
   				setTimeout(function(){
-  					$('.navbar').slideUp();
+  					$('.navbar,#barraalternamovil').slideUp();
   					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
   					$('#desactivo').fadeIn();
   				},100);
@@ -3733,7 +3744,7 @@ function VerificarAgregados(btnprod,origen){
   				envia('cloud');
   				setTimeout(function(){
   					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
-  					$('.navbar').slideUp();
+  					$('.navbar,#barraalternamovil').slideUp();
   					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
   					$('#bloqueo').fadeIn();
   				},100);
@@ -3980,7 +3991,7 @@ function VerPropinas(){
   			}else if(response=='Desactivado'){
   			    envia('cloud');
   				setTimeout(function(){
-  					$('.navbar').slideUp();
+  					$('.navbar,#barraalternamovil').slideUp();
   					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
   					$('#desactivo').fadeIn();
   				},100);
@@ -3988,7 +3999,7 @@ function VerPropinas(){
   				envia('cloud');
   				setTimeout(function(){
   					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
-  					$('.navbar').slideUp();
+  					$('.navbar,#barraalternamovil').slideUp();
   					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
   					$('#bloqueo').fadeIn();
   				},100);
@@ -4240,7 +4251,7 @@ function CargarMesas(){
 			}else if(response=='Desactivado'){
 			    envia('cloud');
 				setTimeout(function(){
-					$('.navbar').slideUp();
+					$('.navbar,#barraalternamovil').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#desactivo').fadeIn();
 				},100);
@@ -4248,7 +4259,7 @@ function CargarMesas(){
 				envia('cloud');
 				setTimeout(function(){
 					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
-					$('.navbar').slideUp();
+					$('.navbar,#barraalternamovil').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#bloqueo').fadeIn();
 				},100);
@@ -4398,7 +4409,7 @@ function ActivarMesa(){
     			}else if(response=='Desactivado'){
     			    envia('config');
     				setTimeout(function(){
-    					$('.navbar').slideUp();
+    					$('.navbar,#barraalternamovil').slideUp();
     					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
     					$('#desactivo').fadeIn();
     				},100);
@@ -4406,7 +4417,7 @@ function ActivarMesa(){
     				envia('config');
     				setTimeout(function(){
     					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
-    					$('.navbar').slideUp();
+    					$('.navbar,#barraalternamovil').slideUp();
     					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
     					$('#bloqueo').fadeIn();
     				},100);
@@ -4479,7 +4490,7 @@ function VerConsumos(idmesa){
 		sessionStorage.setItem("mesa_name",$('#mesaname_'+idmesa).html());
 	    $('#tablaCompra').html('');
 		
-		if($(window).width()<900)
+		if($(window).width()<550)
 			$('#menuSubNew1,#menuSubNew2').fadeIn();
 
     if(localStorage.getItem("con_localhost") == 'true'){
@@ -4668,7 +4679,7 @@ function VerConsumos(idmesa){
 			}else if(response=='Desactivado'){
 			    envia('cloud');
 				setTimeout(function(){
-					$('.navbar').slideUp();
+					$('.navbar,#barraalternamovil').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#desactivo').fadeIn();
 				},100);
@@ -4676,7 +4687,7 @@ function VerConsumos(idmesa){
 				envia('cloud');
 				setTimeout(function(){
 					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
-					$('.navbar').slideUp();
+					$('.navbar,#barraalternamovil').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#bloqueo').fadeIn();
 				},100);
@@ -4910,7 +4921,7 @@ function SaveMesa(){
 			}else if(response=='Desactivado'){
 			    envia('cloud');
 				setTimeout(function(){
-					$('.navbar').slideUp();
+					$('.navbar,#barraalternamovil').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#desactivo').fadeIn();
 				},100);
@@ -4918,7 +4929,7 @@ function SaveMesa(){
 				envia('cloud');
 				setTimeout(function(){
 					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
-					$('.navbar').slideUp();
+					$('.navbar,#barraalternamovil').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#bloqueo').fadeIn();
 				},100);
@@ -5262,7 +5273,7 @@ function SaveMesaLocal(){
 			}else if(response=='Desactivado'){
 			    envia('cloud');
 				setTimeout(function(){
-					$('.navbar').slideUp();
+					$('.navbar,#barraalternamovil').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#desactivo').fadeIn();
 				},100);
@@ -5270,7 +5281,7 @@ function SaveMesaLocal(){
 				envia('cloud');
 				setTimeout(function(){
 					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
-					$('.navbar').slideUp();
+					$('.navbar,#barraalternamovil').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
 					$('#bloqueo').fadeIn();
 				},100);

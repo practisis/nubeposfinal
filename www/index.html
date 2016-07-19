@@ -258,7 +258,7 @@
                        $('#terminos_condiciones').fadeOut('slow');
                        //document.getElementById('main').style.display='block';
                        localStorage.setItem("terminos",newTerminos);
-					   if($(window).width()>900)
+					   if($(window).width()>550)
 							$('.navbar').slideDown();
 					   else
 							$('#barraalternamovil').slideDown();
@@ -289,7 +289,7 @@
                        //document.getElementById('main').style.display='block';
                        localStorage.setItem("id_locales",newLocal);
                        //$('.navbar').fadeIn();
-					   if($(window).width()>900)
+					   if($(window).width()>550)
 							$('.navbar').slideDown();
 					   else
 							$('#barraalternamovil').slideDown();
@@ -803,48 +803,34 @@
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(iniciaDB,errorCB,successCB);
 			
-			if(localStorage.getItem("id_version_nube") == '0'){
-				//alert('hola');
+			/*if(localStorage.getItem("id_version_nube") == '0'){
 				envia('config');
-				//$('#escojeIdioma').fadeOut();
-			    //$('#version_escoje').fadeIn();
-                //document.getElementById('main').style.display='none';
             }
 			
 			if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
-             /* var paisuax = localStorage.getItem("pais");
-              if(paisuax != ''){
-                $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
-                ponerCodigoPais();
-              }*/
 				envia('config');
-			    //$('#escojeIdioma').fadeOut();
-			    //$('#pide_telefono').fadeIn();
-               // document.getElementById('main').style.display='none';
-
             }
 			
 			if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
 			  envia('config');
-			  //envia('puntodeventa');
-			  //$('#escojeIdioma').fadeOut();
-              //$('#pide_local').fadeIn('slow');
-              //document.getElementById('main').style.display='none';
             }
 
             ListarLocales();
 
             if(localStorage.getItem("terminos") == 'false'){
-			    $('#terminos_condiciones').fadeIn('slow');
+			    //$('#terminos_condiciones').fadeIn('slow');
                 //document.getElementById('main').style.display='none';
-            }
+				envia('config');
+            }*/
 
 			$('#myDash').on('show.bs.modal',function(){
 				if(parseInt($(window).width())>550){
 					$('.navbar').slideDown();
+					$('#barraalternamovil').css('display','none');
 					$(this).find('.modal-dialog').css('top','150px');
 				}else{
 					$('#barraalternamovil').slideDown();
+					$('.navbar').css('display','none');
 					$(this).find('.modal-dialog').css('top','75px');
 				}
 			});

@@ -34,11 +34,16 @@ function SyncStart(){
 		//envia('puntodeventa');
 		//Init31();
 		if(localStorage.getItem('id_version_nube')!='0'&&localStorage.getItem('id_version_nube')!=null&&localStorage.getItem('telefono_inte')!=''&&localStorage.getItem('telefono_inte')!=null&&localStorage.getItem('id_locales')!='0'&&localStorage.getItem('id_locales')!=null&&localStorage.getItem('terminos')!='false'&&localStorage.getItem('terminos')!=null){
-			if($(window).width()>900)
+			if($(window).width()>550)
 				$('.navbar').slideDown();
 			else
 				$('#barraalternamovil').slideDown();
-			envia('puntodeventa');
+			
+			//alert("va por aqui");
+			setTimeout(function(){envia('puntodeventa')},3000);
+			
+		}else{
+			envia('config');
 		}
 			
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -609,15 +614,15 @@ function registrarUser(){
 function LaunchBoarding(){
 	
 	//alert($(window).width());
-	if(parseInt($(window).width())<550){
+	if(parseInt($(window).width())<=550){
 		$('#flechamenumovil').css('display','block');
 		$('#flechamenu').css('display','none');
-		$('.navbar').slideDown();
+		$('#barraalternamovil').slideDown();
 	}
 	else{
 		$('#flechamenu').css('display','block');
 		$('#flechamenumovil').css('display','none');
-		$('#barraalternamovil').slideDown();
+		$('.navbar').slideDown();
 	}
 	$('#myDash').modal('show');
 }

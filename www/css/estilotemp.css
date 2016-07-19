@@ -863,7 +863,7 @@ margin-top:10px;
     }
 }
 
-@media (max-width: 600px) and (min-width: 200px) {
+@media (max-width: 550px) and (min-width: 200px) {
   
   .columna2{
     width: 20%;

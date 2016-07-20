@@ -184,6 +184,23 @@
 
 						  <div id="varias">
 						  </div>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
+						  <br/>
 					</div>
 					<div class="col-md-2"></div>
 
@@ -212,17 +229,21 @@
                 <div class="col-xs-2">
                 </div>
     			<div class="col-xs-8" id='trans_label_70' style="text-align:justify; padding-top:20px;">
-    			   Ingresa tu número telefónico para que Ava se comunique contigo por Whatsapp. Ava es un robot de inteligencia artificial.
+				   Ava es un robot de inteligencia artificial. Puedes comunicarte con Ava por medio de Telegram.
                 </div>
                 <div class="col-xs-2">
                 </div>
     		</div>
             <br>
+			<div class='row' style='margin-bottom:30px;'>
+    			<center><button type="button" class="btn btn-lg btn-success trans_active_ava" onclick='guardatelefono()' style="font-size: 20px;">Start AvaPOS</button></center>
+				<!--<button class='btn btn-default btn-lg' id='trans_label_81' onclick='omitirtelefono();'>Omitir</button>&nbsp;-->
+			</div>
             <div class='row'>
                 <div class="col-lg-5 col-md-5">
-                    <select class="form-control input-lg" style='margin-bottom:20px;' id="paiswhat" name="paiswhat" size="1" required="" placeholder="País" onchange="ponerCodigoPais();">
+                    <select style="visibility:hidden" class="form-control input-lg" style='margin-bottom:20px;' id="paiswhat" name="paiswhat" size="1"  placeholder="País" onchange="ponerCodigoPais();">
                       <option id="trans_label_82" value="0" style="color: #E0DEDE">País</option>
-                      <option value="1">Antigua y Barbuda</option>
+                      <!--<option value="1">Antigua y Barbuda</option>
                       <option value="54">Argentina</option>
                       <option value="1">Bahamas</option>
                       <option value="1">Barbados</option>
@@ -257,19 +278,17 @@
                       <option value="597">Surinam</option>
                       <option value="1">Trinidad y Tobago</option>
                       <option value="598">Uruguay</option>
-                      <option value="58">Venezuela</option>
+                      <option value="58">Venezuela</option>-->
                   </select>
                 </div>
                 <div class="col-lg-2 col-md-2">
-                    <input id="codigo_pais" name="codigo_pais" style='margin-bottom:20px;' type="number" class="form-control input-lg trans_code" placeholder="Código" readonly="readonly" style="text-align:center;">
+                    <input style="visibility:hidden" id="codigo_pais" name="codigo_pais" style='margin-bottom:20px;' type="number" class="form-control input-lg trans_code" placeholder="Código" readonly="readonly" style="text-align:center;">
                 </div>
     			<div class="col-lg-5 col-md-5">
-                    <input id="numero_telefonico" style='margin-bottom:20px;' name="numero_telefonico" type="tel" placeholder="Teléfono" class="form-control trans_phone input-lg" />
+                    <input style="visibility:hidden"  id="numero_telefonico" style='margin-bottom:20px;' name="numero_telefonico" type="tel" placeholder="Teléfono" class="form-control trans_phone input-lg" />
                 </div>
     		</div>
-			<div class='row' style='margin-bottom:30px;'>
-    			<center><button class='btn btn-default btn-lg' id='trans_label_81' onclick='omitirtelefono();'>Omitir</button>&nbsp;<button type="button" class="btn btn-lg btn-success trans_active_ava" onclick='guardatelefono()' style="font-size: 20px;">Activar AVA</button></center>
-			</div>
+			
 	</div>
 	</div>
 </div>

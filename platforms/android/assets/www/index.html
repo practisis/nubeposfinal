@@ -96,56 +96,61 @@
             				}
                         }
 
-              var numeroTelefono=document.getElementById('numero_telefonico');
+              var numeroTelefono=0; //document.getElementById('numero_telefonico');
               var expresionRegular1=/^([0-9]+){9}$/;
               var expresionRegular2=/\s/;
-              var codigoPa = document.getElementById('codigo_pais').value
+              var codigoPa = 0; //document.getElementById('codigo_pais').value
               var numtelefono = '';
-              var primernumero = numeroTelefono.value.charAt(0);
+              var primernumero = 0;//numeroTelefono.value.charAt(0);
 
-              if(codigoPa=='' || codigoPa=='0'){
-                $("#cargandoTabs").modal('hide');
-                if(localStorage.getItem("idioma")==2){
-                 alert('The country code is mandatory');
-                }else{
-                 alert('El código del país es obligatorio');
-                }
-              }else if(primernumero == '0' && codigoPa == '593'){
-                /*$("#cargandoTabs").fadeOut();
+              //if(codigoPa=='' || codigoPa=='0'){
+               // $("#cargandoTabs").modal('hide');
+               // if(localStorage.getItem("idioma")==2){
+                // alert('The country code is mandatory');
+                //}else{
+                 //alert('El código del país es obligatorio');
+                //}
+              //}
+			  /*else if(primernumero == '0' && codigoPa == '593'){
+                $("#cargandoTabs").fadeOut();
                 if(localStorage.getItem("idioma")==2){
                  alert('Your phone number is not leading 0.');
                 }else{
                  alert('Su número de teléfono no debe anteponer el 0.');
-                }*/
+                }
                 document.getElementById('numero_telefonico').value = numeroTelefono.value.substr(1);
                 guardatelefono();
-              }else if(numeroTelefono.value==''){
+              }*/
+			  /*else if(numeroTelefono.value==''){
                 $("#cargandoTabs").modal('hide');
                 if(localStorage.getItem("idioma")==2){
                  alert('The phone number is required');
                 }else{
                  alert('El número de teléfono es obligatorio');
                 }
-              }else if(expresionRegular2.test(numeroTelefono.value)){
-                $("#cargandoTabs").modal('hide');
+              }*/
+			  /*else if(expresionRegular2.test(numeroTelefono.value)){
+                /*$("#cargandoTabs").modal('hide');
                 if(localStorage.getItem("idioma")==2){
                  alert('Error there Blanks');
                 }else{
                  alert('Error existen espacios en blanco');
                 }
-              }else if(!expresionRegular1.test(numeroTelefono.value)){
-                $("#cargandoTabs").modal('hide');
+              }*/
+			  /*else if(!expresionRegular1.test(numeroTelefono.value)){
+                /*$("#cargandoTabs").modal('hide');
                 if(localStorage.getItem("idioma")==2){
                  alert('Incorrect phone number');
                 }else{
                  alert('Número de teléfono incorrecto');
                 }
-              }else{
+              }
+			  */
+			  //else{
                 numtelefono = codigoPa+numeroTelefono.value;
                 //alert(localStorage.getItem("empresa")+'**'+minombre+'**'+'adslindlil123DSPODPSMNDddddDAPO111das'+'**'+numtelefono)
-                var apiURL='http://chatdesk.net/examples/tienewa.php';
+                var apiURL='http://chatdesk.net/examples/tienetelegram.php';
                  $.post(apiURL,{
-                    u : numtelefono,
                     id : "adslindlil123DSPODPSMNDddddDAPO111das",
                     nombre : minombre,
             		db : localStorage.getItem("empresa")
@@ -173,16 +178,16 @@
                         }else if(response == '2'){
                           $("#cargandoTabs").modal('hide');
                             if(localStorage.getItem("idioma")==2){
-                             alert('Telephone number used in another account , please enter a number not registered in the system.');
+                             alert('Inteligence cant start. Please reinstall the app. Error: 201988123.');
                             }else{
-                             alert('Número de teléfono utilizado en otra cuenta, por favor ingrese un número no registrado en el sistema.');
+                             alert('Inteligencia no se puede activar. Por favor resintalar la app. Error:201012132');
                             }
                         }else{
                           $("#cargandoTabs").modal('hide');
                             if(localStorage.getItem("idioma")==2){
-                             alert('Invalid phone number , the reasons may be : not having intalado income whatsapp or wrong number , please check this information and reenter \ nThank for your understanding.');
+                             alert('Inteligence cant start. Please reinstall the app. Error: 20198818');
                             }else{
-                             alert('Número de teléfono no válido, las razones pueden ser: no tener intalado whatsapp o ingreso erroneo del numero, por favor verifique estos datos y vuelva a ingresar.\nGracias por su comprensión.');
+                             alert('Inteligencia no se puede activar. Por favor resintalar la app. Error:201012');
                             }
                         }
 
@@ -190,7 +195,7 @@
             			updateOnlineStatus("OFFLINE");
             			setTimeout(function(){SincronizadorNormal()},180000);
             		});
-              }
+             // }
 
               });
             	},errorCB,successCB);

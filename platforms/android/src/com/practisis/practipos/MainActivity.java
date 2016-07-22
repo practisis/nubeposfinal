@@ -27,20 +27,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;*/
 
-
 import android.os.Bundle;
 /*import android.os.Handler;
 import android.content.Context;*/
 
-/*import com.epson.epsonio.*;
-import com.epson.eposprint.*;
-import com.epson.epsonio.Finder;
-import com.epson.epsonio.DeviceInfo;
-import com.epson.epsonio.FilterOption;
-import com.epson.epsonio.DevType;
-import com.epson.epsonio.EpsonIoException;
-import com.epson.epsonio.IoStatus;
-import com.epson.eposprint.Print;*/
 //import android.view.WindowManager;
 
 
@@ -51,7 +41,7 @@ public class MainActivity extends CordovaActivity
     ArrayList<HashMap<String, String>> printerList = null;
     ScheduledExecutorService scheduler;
     ScheduledFuture<?> future;
-    Handler handler = new Handler();
+    final Handler mhandler = new Handler();
 	static int INTENTOS=0;*/
 	
 	
@@ -60,113 +50,34 @@ public class MainActivity extends CordovaActivity
     {
         super.onCreate(savedInstanceState);
 		loadUrl(launchUrl);
-		//super.setIntegerProperty("loadUrlTimeoutValue",70000);
-        // Set by <content src="index.html" /> in config.xml
-		// init printer list control
-        //printerList = new ArrayList<HashMap<String, String>>();
-		
-		 // start find thread scheduler
-        //scheduler = Executors.newSingleThreadScheduledExecutor();
+		/*// init printer list control
+        printerList = new ArrayList<HashMap<String, String>>();
+		// start find thread scheduler
+        scheduler = Executors.newSingleThreadScheduledExecutor();
         // find start
-        //findStart();
-		//getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		miHilo();*/
+    }
+	
+	
+	/*protected void miHilo(){*/
+		//mi hilo intento
+		/*Thread t= new Thread(){
+			public void run(){
+				try{
+					Thread.sleep(10000);
+				}catch(InterruptedException e){
+					e.printStackTrace();
+				}
+				mhandler.post(ejecutarAccion);
+			}
+		};
+		t.start();*/
 		
-    }
-	
-	 /*@Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        // stop find 
-        if (future != null) {
-            future.cancel(false);
-            while (!future.isDone()) {
-                try {
-                    Thread.sleep(DISCOVERY_INTERVAL);
-                }
-                catch (Exception e) {
-                    break;
-                }
-            }
-            future = null;
-        }
-
-        if (scheduler != null) {
-            scheduler.shutdown();
-
-            scheduler = null;
-        }
-
-        // stop old finder
-        while (true) {
-            try {
-                Finder.stop();
-                break;
-            }
-            catch (EpsonIoException e) {
-                if (e.getStatus() != IoStatus.ERR_PROCESSING) {
-                    break;
-                }
-            }
-        }
-    }
-	
-	@Override
-    // find thread 
-    public void run() {
-        class UpdateListThread extends Thread {
-            DeviceInfo[] list = null;
-
-            public UpdateListThread(DeviceInfo[] listDevices) {
-                System.out.println("Entra a actualizar");
-				INTENTOS=INTENTOS+1;
-                list = listDevices;
-            }
-
-            @Override
-            public void run() {
-                if (list == null) {
-                    if (printerList.size() > 0) {
-                        printerList.clear();
-                       // printerListAdapter.notifyDataSetChanged();
-                    }
-                }
-                else if (list.length != printerList.size()) {
-                    printerList.clear();
-
-                    for (int i = 0; i < list.length; i++) {
-                        String name = list[i].getPrinterName();
-                        String address = list[i].getDeviceName();
-
-                        HashMap<String, String> item = new HashMap<String, String>();
-                        item.put("PrinterName", name);
-                        item.put("Address", address);
-                        System.out.println("Impresora: "+name+"/"+address);
-                        printerList.add(item);
-
-                    }
-                    //printerListAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-
-        try {
-            DeviceInfo[] deviceList = Finder.getDeviceInfoList(FilterOption.PARAM_DEFAULT);
-            handler.post(new UpdateListThread(deviceList));
-        }
-        catch (Exception e) {
-            return;
-        }
-    }
-
-    // find start / restart 
-    private void findStart() {
-        if (scheduler == null) {
+		/*if (scheduler == null) {
             return;
         }
 
-        // stop old finder 
+        //stop old finder 
         while (true) {
             try {
                 Finder.stop();
@@ -201,7 +112,8 @@ public class MainActivity extends CordovaActivity
         try {
                 //Finder.start(this,DevType.BLUETOOTH, null);
 				//if(INTENTOS>10)
-				Finder.start(this,DevType.BLUETOOTH, null);
+				System.out.println("busca");
+				Finder.start(getBaseContext(),DevType.BLUETOOTH, null);
         }
         catch (EpsonIoException e) {
 			//errStatus = e.getStatus();
@@ -217,9 +129,105 @@ public class MainActivity extends CordovaActivity
 			if(e.getStatus()==IoStatus.ERR_FAILURE)
 				System.out.println("error: Ocurrió un error inesperado");
 			//future = scheduler.scheduleWithFixedDelay(this, 0, DISCOVERY_INTERVAL, TimeUnit.MILLISECONDS);
+			
+			String msg = "";
+            String errorMsg = "";
+            String warningMsg = "";
+			Result result = new Result();
+            result.setEpsonIoException(e);
+            result = null;
             return ;
         }
         // start thread
-        future = scheduler.scheduleWithFixedDelay(this, 0, DISCOVERY_INTERVAL, TimeUnit.MILLISECONDS);
+        future = scheduler.scheduleWithFixedDelay(ejecutarAccion, 0, DISCOVERY_INTERVAL, TimeUnit.MILLISECONDS);
+		
+	}*/
+	
+	/*final Runnable ejecutarAccion= new Runnable(){
+		public synchronized void run(){*/
+			/*System.out.println(INTENTOS);
+			INTENTOS=INTENTOS+1;*/
+			/*class UpdateListThread extends Thread {
+				DeviceInfo[] list = null;
+
+				public UpdateListThread(DeviceInfo[] listDevices) {
+					//System.out.println("Entra a actualizar");
+					INTENTOS=INTENTOS+1;
+					list = listDevices;
+				}
+
+				@Override
+				public void run() {
+					if (list == null) {
+						if (printerList.size() > 0) {
+							printerList.clear();
+						   // printerListAdapter.notifyDataSetChanged();
+						}
+					}
+					else if (list.length != printerList.size()) {
+						printerList.clear();
+
+						for (int i = 0; i < list.length; i++) {
+							String name = list[i].getPrinterName();
+							String address = list[i].getDeviceName();
+
+							HashMap<String, String> item = new HashMap<String, String>();
+							item.put("PrinterName", name);
+							item.put("Address", address);
+							System.out.println("Impresora: "+name+"/"+address);
+							printerList.add(item);
+
+						}
+						//printerListAdapter.notifyDataSetChanged();
+					}
+				}
+			}
+
+			try {
+				DeviceInfo[] deviceList = Finder.getDeviceInfoList(FilterOption.PARAM_DEFAULT);
+				//DeviceInfo[] deviceList=null;
+				mhandler.post(new UpdateListThread(deviceList));
+			}
+			catch (Exception e) {
+				return;
+			}
+		}
+	};*/
+	
+	/*@Override
+    public void onDestroy() {
+        super.onDestroy();
+        // stop find 
+        if (future != null) {
+            future.cancel(false);
+            while (!future.isDone()) {
+                try {
+                    Thread.sleep(DISCOVERY_INTERVAL);
+                }
+                catch (Exception e) {
+                    break;
+                }
+            }
+            future = null;
+        }
+
+        if (scheduler != null) {
+            scheduler.shutdown();
+
+            scheduler = null;
+        }
+
+        // stop old finder
+        while (true) {
+            try {
+                Finder.stop();
+                break;
+            }
+            catch (EpsonIoException e) {
+                if (e.getStatus() != IoStatus.ERR_PROCESSING) {
+                    break;
+                }
+            }
+        }
     }*/
 }

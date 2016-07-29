@@ -66,15 +66,27 @@
                 			if(idprinter.printer!=''){
                 				var now=new Date().getTime();
                 				tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Envia imprimir Cierre",respuesta]);
-                				StarIOAdapter.rawprint(respuesta,idprinter.printer, function() {
-                					if(localStorage.getItem("idioma")==1)
-                						showalert("Imprimiendo Cierre de Caja");
-                					else if(localStorage.getItem("idioma")==2)
-                						showalert("Printing close drawer");
+								if(localStorage.getItem("printtrade")==2){
+									StarIOAdapter.rawprint(respuesta,idprinter.printer, function() {
+										if(localStorage.getItem("idioma")==1)
+											showalert("Imprimiendo Cierre de Caja");
+										else if(localStorage.getItem("idioma")==2)
+											showalert("Printing close drawer");
 
-                					var now=new Date().getTime();
-                					tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió el Cierre",""]);
-                				});
+										var now=new Date().getTime();
+										tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió el Cierre",""]);
+									});
+								}else{
+									StarIOAdapter.printepson(respuesta,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+										if(localStorage.getItem("idioma")==1)
+											showalert("Imprimiendo Cierre de Caja");
+										else if(localStorage.getItem("idioma")==2)
+											showalert("Printing close drawer");
+
+										var now=new Date().getTime();
+										tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió el Cierre",""]);
+									});
+								}
                 			}else{
                 				if(localStorage.getItem("idioma")==1)
                 					showalert("No se ha configurado una impresora.");
@@ -253,16 +265,28 @@
 											var idprinter=results.rows.item(0);
 											if(idprinter.printer!=''){
 												var now=new Date().getTime();
-												tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Envia imprimir Cierre",respuesta]);
-												StarIOAdapter.rawprint(respuesta,idprinter.printer, function() {
-													if(localStorage.getItem("idioma")==1)
-														showalert("Imprimiendo Cierre de Caja");
-													else if(localStorage.getItem("idioma")==2)
-														showalert("Printing close drawer");
+												tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Envia imprimir Cierre",respuesta]);//alert(localStorage.getItem("printtrade")+"/"+localStorage.getItem("printmodel")+"/"+localStorage.getItem("printaddress"));
+												if(localStorage.getItem("printtrade")==2){
+													StarIOAdapter.rawprint(respuesta,idprinter.printer, function() {
+														if(localStorage.getItem("idioma")==1)
+															showalert("Imprimiendo Cierre de Caja");
+														else if(localStorage.getItem("idioma")==2)
+															showalert("Printing close drawer");
 
-													var now=new Date().getTime();
-													tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió el Cierre",""]);
-												});
+														var now=new Date().getTime();
+														tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió el Cierre",""]);
+													});
+												}else{
+													StarIOAdapter.printepson(respuesta,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+														if(localStorage.getItem("idioma")==1)
+															showalert("Imprimiendo Cierre de Caja");
+														else if(localStorage.getItem("idioma")==2)
+															showalert("Printing close drawer");
+
+														var now=new Date().getTime();
+														tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió el Cierre",""]);
+													});
+												}
 											}else{
 												if(localStorage.getItem("idioma")==1)
 													showalert("No se ha configurado una impresora.");

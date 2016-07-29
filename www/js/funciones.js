@@ -5040,12 +5040,11 @@ function SaveMesa(){
 				var miprint=res.rows.item(0);
 				if(localStorage.getItem("con_mesas")=="true"){
 					if(miprint.printercom!=null){
-						StarIOAdapter.rawprint(json,miprint.printercom, function() {
-						/*if(localStorage.getItem("idioma")==1)
-							showalert("Imprimiendo Comandas.");
-						else if(localStorage.getItem("idioma")==2)
-							showalert("Printing Kitchen Commands.");*/
-						});
+						if(localStorage.getItem("printtrade")==2){
+							StarIOAdapter.rawprint(json,miprint.printercom, function(){});
+						}else{
+							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){});
+						}
 					}else{
 						if(localStorage.getItem("idioma")==1)
 							showalert("No se ha configurado una impresora para comandas.");
@@ -5188,12 +5187,21 @@ function  ImprimirPrecuenta(){
 			if(res.rows.length>0){
 				var miprint=res.rows.item(0);
 				if(miprint.printer!=null){
-					StarIOAdapter.rawprint(json,miprint.printer, function() {
-							if(localStorage.getItem("idioma")==1)
-								showalert("Imprimiendo Precuenta.");
-							else if(localStorage.getItem("idioma")==2)
-								showalert("Printing Check.");
-					});
+					if(localStorage.getItem("printtrade")==2){
+						StarIOAdapter.rawprint(json,miprint.printer, function() {
+								if(localStorage.getItem("idioma")==1)
+									showalert("Imprimiendo Precuenta.");
+								else if(localStorage.getItem("idioma")==2)
+									showalert("Printing Check.");
+						});
+					}else{
+						StarIOAdapter.printepson(json,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+								if(localStorage.getItem("idioma")==1)
+									showalert("Imprimiendo Precuenta.");
+								else if(localStorage.getItem("idioma")==2)
+									showalert("Printing Check.");
+						});
+					}
 				}
 			}
 		});
@@ -5361,12 +5369,11 @@ function SaveMesaLocal(){
 				var miprint=res.rows.item(0);
 				if(localStorage.getItem("con_mesas")=="true"){
 					if(miprint.printercom!=null){
-						StarIOAdapter.rawprint(json,miprint.printercom, function() {
-						/*if(localStorage.getItem("idioma")==1)
-							showalert("Imprimiendo Comandas.");
-						else if(localStorage.getItem("idioma")==2)
-							showalert("Printing Kitchen Commands.");*/
-						});
+						if(localStorage.getItem("printtrade")==2){
+							StarIOAdapter.rawprint(json,miprint.printercom, function() {});
+						}else{
+							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){});
+						}
 					}else{
 						if(localStorage.getItem("idioma")==1)
 							showalert("No se ha configurado una impresora para comandas.");

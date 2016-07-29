@@ -1,4 +1,4 @@
-package com.practisis.practipos;
+package com.uforge.plugins;
 
 import com.epson.eposprint.EposException;
 import com.epson.epsonio.EpsonIoException;

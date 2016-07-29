@@ -7,11 +7,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
-/*import java.util.HashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;*/
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,9 +17,8 @@ import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
-/*import android.os.Bundle;
-import android.os.Handler;*/
-import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -43,13 +37,15 @@ import com.uforge.plugins.RasterDocument.RasSpeed;
 import com.uforge.plugins.RasterDocument.RasTopMargin;
 import com.uforge.plugins.StarBitmap;
 
-/*import com.epson.epsonio.Finder;
+import com.epson.epsonio.Finder;
 import com.epson.epsonio.DeviceInfo;
 import com.epson.epsonio.FilterOption;
 import com.epson.epsonio.DevType;
 import com.epson.epsonio.EpsonIoException;
 import com.epson.epsonio.IoStatus;
-import com.epson.eposprint.Print;*/
+import com.epson.eposprint.Print;
+import com.epson.eposprint.Builder;
+import com.epson.eposprint.EposException;
 
 /**
  * @author Luca Del Bianco
@@ -57,12 +53,8 @@ import com.epson.eposprint.Print;*/
  */
 public class StarIOAdapter extends CordovaPlugin {
 	
-	/*global var for epson*/
-	//final static int DISCOVERY_INTERVAL = 500;
-	//ArrayList<HashMap<String, String>> printerList=new ArrayList<HashMap<String, String>>();
-	//ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-	//ScheduledFuture<?> future;
-	//Handler handler = new Handler();
+    final Handler mhandler = new Handler();
+	boolean iniciadaepson=false;
 	
 	public enum RasterCommand {
 		Standard, Graphics
@@ -121,6 +113,23 @@ public class StarIOAdapter extends CordovaPlugin {
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
                     try {
+						
+						// stop old finder epson
+						if(iniciadaepson){
+							while (true) {
+								try {
+									Finder.stop();
+									iniciadaepson=false;
+									break;
+								}
+								catch (EpsonIoException e) {
+									if (e.getStatus() != IoStatus.ERR_PROCESSING) {
+										break;
+									}
+								}
+							}
+						}
+						
                         if(Arguments.length() < 1) {
                             throw new Exception("You must specify a portName search parameter");
                         }
@@ -168,12 +177,121 @@ public class StarIOAdapter extends CordovaPlugin {
             });
             return true;
         }else if (action.equals("searchEpson")) {
-            cordova.getActivity().runOnUiThread(new Runnable() {
-				public void run(){
-					Context context = cordova.getActivity().getApplicationContext();
-					Intent intent = new Intent("android.intent.action.DiscoverPrinterActivity");
-					cordova.getActivity().startActivity(intent);
+			cordova.getThreadPool().execute(new Runnable() {
+                public void run() {
+					try {
+							if(!iniciadaepson){
+								Finder.start(micontext,DevType.BLUETOOTH, null);
+								iniciadaepson=true;
+							}
+							Thread t= new Thread(){
+								public void run(){
+									try{
+										Thread.sleep(1500);
+									}catch(InterruptedException e){
+										e.printStackTrace();
+									}
+									mhandler.post(ejecutarAccion);
+								}
+							};
+							t.start();
+					}
+					catch (EpsonIoException e) {
+						//errStatus = e.getStatus();
+						System.out.println("status: "+e.getStatus());
+						if(e.getStatus()==IoStatus.ERR_PARAM)
+							System.out.println("error: Parametro invalido");
+						if(e.getStatus()==IoStatus.ERR_ILLEGAL)
+							System.out.println("error: El API se ha llamado cuando una busqueda ya estaba en progreso");
+						if(e.getStatus()==IoStatus.ERR_PROCESSING)
+							System.out.println("error: No se puede ejecutar el proceso");
+						if(e.getStatus()==IoStatus.ERR_MEMORY)
+							System.out.println("error: No se puede guardar en la memoria");
+						if(e.getStatus()==IoStatus.ERR_FAILURE)
+							System.out.println("error: Ocurrió un error inesperado");
+						//future = scheduler.scheduleWithFixedDelay(this, 0, DISCOVERY_INTERVAL, TimeUnit.MILLISECONDS);
+						return;
+					}
 				}
+				
+				final Runnable ejecutarAccion= new Runnable(){
+					public synchronized void run(){
+						try{
+							DeviceInfo[] deviceList = Finder.getDeviceInfoList(FilterOption.PARAM_DEFAULT);
+							if(deviceList!=null){
+								if (deviceList.length > 0) {
+									String epsonprinters="";
+									int cont=0;
+									for (int i = 0; i < deviceList.length; i++) {
+										String name = deviceList[i].getPrinterName();
+										String address = deviceList[i].getDeviceName();
+										String model ="TM-m10";
+										if(name.indexOf("t88v".toUpperCase())>-1) model="TM-T88V";
+										if(name.indexOf("t70".toUpperCase())>-1) model="TM-T70";
+										if(name.indexOf("u220".toUpperCase())>-1) model="TM-U220";
+										if(name.indexOf("u330".toUpperCase())>-1) model="TM-U330";
+										if(name.indexOf("p60".toUpperCase())>-1) model="TM-P60";
+										if(name.indexOf("p60ii".toUpperCase())>-1) model="TM-P60II";
+										if(name.indexOf("t20".toUpperCase())>-1) model="TM-T20";
+										if(name.indexOf("t82".toUpperCase())>-1) model="TM-T82";
+										if(name.indexOf("t81ii".toUpperCase())>-1) model="TM-T81II";
+										if(name.indexOf("t82ii".toUpperCase())>-1) model="TM-T82II";
+										if(name.indexOf("t83ii".toUpperCase())>-1) model="TM-T83II";
+										if(name.indexOf("t70ii".toUpperCase())>-1) model="TM-T70II";
+										if(name.indexOf("t90ii".toUpperCase())>-1) model="TM-T90II";
+										if(name.indexOf("t20ii".toUpperCase())>-1) model="TM-T20II";
+										if(name.indexOf("p20".toUpperCase())>-1) model="TM-P20";
+										if(name.indexOf("p80".toUpperCase())>-1) model="TM-P80";
+										if(name.indexOf("m10".toUpperCase())>-1) model="TM-m10";
+										System.out.println("Impresora:"+address+"/"+name+"/"+model);
+										if(cont>0)
+											epsonprinters=epsonprinters+"||";
+										epsonprinters=epsonprinters+address+"@"+name+"@"+model;
+										cont++;
+									}
+									currentCallbackContext.success(epsonprinters);
+								}
+							}else{
+								currentCallbackContext.error("No se encontraron impresoras");
+							}
+						}catch(EpsonIoException e){
+							System.out.println("Error lista status: "+e.getStatus());
+							currentCallbackContext.error(e.getStatus());
+						}
+						
+						// stop old finder
+						/*while (true) {
+							try {
+								Finder.stop();
+								break;
+							}
+							catch (EpsonIoException e) {
+								if (e.getStatus() != IoStatus.ERR_PROCESSING) {
+									break;
+								}
+							}
+						}*/
+					}
+				};
+			});
+            return true;
+		}
+		else if (action.equals("printepson")) {
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    try {
+						if(Arguments.length() < 3) {
+                            throw new Exception("You must specify a print address parameter");
+                        }
+						if(Arguments.length() < 2) {
+                            throw new Exception("You must specify a print model parameter");
+                        }
+						currentPluginInstance.runPrintSequence(currentCallbackContext,Arguments.getString(0),Arguments.getString(1),Arguments.getString(2));
+                    }catch(Exception e){
+							//System.out.println("Error lista status: "+e.getStatus());
+						currentCallbackContext.error(e.getMessage());
+					}
+                }
             });
             return true;
         }
@@ -2882,8 +3000,8 @@ public class StarIOAdapter extends CordovaPlugin {
      * This method search all Epson printers
      * @param callbackContext the callback context of the action
      */
-    private void searchAllEpson(CallbackContext callbackContext, String portNameSearch, Runnable runable){
-		/*ArrayList<String> portNames =new ArrayList<String>();
+    /*private void searchAllEpson(CallbackContext callbackContext, String portNameSearch, Runnable runable){
+		ArrayList<String> portNames =new ArrayList<String>();
 		//String portNames="";
         Context context = this.cordova.getActivity().getApplicationContext();
 		String portarray="";
@@ -2905,8 +3023,8 @@ public class StarIOAdapter extends CordovaPlugin {
 			}
 		}catch ( EpsonIoException e) {
             callbackContext.error(e.getMessage());
-        }*/
-	}
+        }
+	}*/
 	
 	
 	 /**
@@ -3049,6 +3167,33 @@ public class StarIOAdapter extends CordovaPlugin {
 			word="checks";
 		}
 		return word;
+	}
+		
+	@Override
+    public void onDestroy() {
+        super.onDestroy();
+        // stop old finder
+        while (true) {
+            try {
+                Finder.stop();
+                break;
+            }
+            catch (EpsonIoException e) {
+                if (e.getStatus() != IoStatus.ERR_PROCESSING) {
+                    break;
+                }
+            }
+        }
+    }
+	
+private void runPrintSequence(CallbackContext callbackContext,String message,String portName,String direction){
+		System.out.println("entra al run secuence");
+		PrinterFunctionsEpson printerFunctions= new PrinterFunctionsEpson();
+		boolean printsuccess=printerFunctions.SecuenciaPrint(callbackContext,portName,message,direction,this.cordova.getActivity().getApplicationContext());
+		if(!printsuccess){
+			callbackContext.error("No se realizó la impresión.");
+		}else
+			callbackContext.success();
 	}
 }
 

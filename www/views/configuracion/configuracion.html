@@ -829,10 +829,19 @@
 				<div class='col-lg-12'>
 					<div class='panel panel-default'>
 						<div class='panel-body'>
+							<div class='row'>
 							 <!--<h3 id="trans_label_19" style='text-align:left;'>Configuración de Impresoras</h3>-->
-							 <div class='col-lg-12' style='text-align:right;'>
-							 <button type='button' onclick='BuscarImpresoras();' class='btn btn-danger btn-lg trans_search'>Buscar Impresoras</button>
+							<div class='col-lg-9 col-md-9 col-sm-9 col-xs-9' style='text-align:right;'>
+								<select name='marca' id='marca' class='form-control input-lg' style='margin-right:5px];'>
+								<option value='1'>Epson</option>
+								<option value='2'>Star</option>
+								</select>
 							 </div>
+							 <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'>
+								<button type='button'  data-loading-text="Searching..." onclick='BuscarImpresoras();' class='btn btn-danger btn-lg trans_search' id='btnbuscarimp'>Buscar Impresoras</button>
+							 </div>
+							 </div>
+							 <div class='row'>
 							<div class='col-lg-12' style='padding:20px;'>
 							<h4 id='trans_label_54'>Impresoras para Facturar</h4>
 							<table class='table table-striped table-bordered' id='listaimpresoras'>
@@ -843,6 +852,8 @@
 								</tbody>
 							</table>
 							</div>
+							</div>
+							<div class='row'>
 							<div class='col-lg-12' style='padding:20px; display:none;' id='divcomandas'>
 							<h4 id='trans_label_55'>Impresoras para Comandar</h4>
 							<table class='table table-striped table-bordered' id='listaimpresorascomandas'>
@@ -852,14 +863,20 @@
 								<tbody>
 								</tbody>
 							</table>
+							</div>
+							</div>
+							<!---<div class='row'>
 							<div class='col-lg-12' style='text-align:right;'>
 								<button id='btnsetearc' class='btn btn-success' style='display:none;' onclick='SetearImpresora();'>Elegir</button>
 							</div>
-							</div>
+							</div>--->
+							<div class='row'>
 							<div class='col-lg-12' style='text-align:right;'>
-								<button id='btnsetear' class='btn btn-success trans_choose' style='display:none;' onclick='SetearImpresora();'>Elegir</button>
+								<button id='btnsetear' class='btn btn-success trans_choose' style='display:none; margin-right:5px;' onclick='SetearImpresora();'>Elegir</button>
 								<button id='btnprobar' class='btn btn-success trans_printest' style='display:none;' onclick='ImprimirTest();'>Imprimir Prueba</button>
 							</div>
+							</div>
+							<div class='row'>
 							<div class='col-lg-12' style='margin-top:20px;'>
 								<p style='text-align:left; padding-left:10px'><b id='trans_label_21'>Preferencias</b></p>
 								<div>
@@ -875,6 +892,7 @@
 										<button class="btn btn-success trans_update" type='button' onclick='ActualizarMedidas();'>Actualizar</button>
 									</div>
 								</div>
+							</div>
 							</div>
 						</div>
 					</div>
@@ -1158,6 +1176,7 @@
 </div>
 <script>
 $(document).ready(function(){
+			
 
 	        if(localStorage.getItem("id_version_nube") == '0'||localStorage.getItem("id_version_nube") == null){
 				//envia('config');
@@ -1459,7 +1478,10 @@ $(document).ready(function(){
 		else
 			$('#divcomandas').css("display","none");
 		
-		//Comenté aqui para probar las epson
+		//si ya existe impresora determinada
+		var extrade=localStorage.getItem("printtrade");
+		if(extrade!=null)
+			$('#marca').val(extrade);
 		BuscarImpresoras();
 	
 		if(localStorage.getItem("logo")!=''&&localStorage.getItem("logo")!=null&&localStorage.getItem("logo").logo!=''){
@@ -1655,6 +1677,8 @@ $(document).ready(function(){
 	
 	function BuscarImpresoras(){
 		//alert("hola impresora");
+		var marca=$('#marca').val();
+		
 		$('#listaimpresoras tbody').html('');
 		$('#listaimpresorascomandas tbody').html('');
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -1684,91 +1708,140 @@ $(document).ready(function(){
 		$('#listaimpresorascomandas tbody').append(linea1c);*/
 		
 		//StarIOAdapter.searchall("USB:SN:00123456",function(dataprint){
-		var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
-		if ( app ) {
-		StarIOAdapter.searchall("",function(dataprint){
-			//alert(dataprint);
-			//alert(res);
-			var todasimp=dataprint.split('||');
-			for(var m=0;m<todasimp.length;m++){
-				var res=todasimp[m].split('@');
-				//alert(res[0]+''+res[1]);
-				var linea="<tr><td style='vertical-align:middle;' onclick='$("+'"#print_'+res[0]+'"'+").click();'>"+res[1]+"</td><td><input style='width:35px; height:35px;' class='printerradio' data-value='"+res[0]+"' type='radio' name='printer' value='"+res[0]+"' id='print_"+res[0]+"'/></td></tr>";
-				
-				var lineac="<tr><td style='vertical-align:middle;' onclick='$("+'"#printc_'+res[0]+'"'+").click();'>"+res[1]+"</td><td><input style='width:35px; height:35px;' class='printerradioc' data-value='"+res[0]+"' type='radio' name='printerc' value='"+res[0]+"' id='printc_"+res[0]+"'/></td></tr>";
-				$('#listaimpresoras tbody').append(linea);
-				$('#listaimpresorascomandas tbody').append(lineac);
-			}
-			
-			
-			if($('#listaimpresoras tbody').html()!=''){
-					$('#btnsetear,#btnprobar').fadeIn();
-					var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-					db.transaction(function(tx){
-						tx.executeSql("SELECT printer,printercom FROM CONFIG where id=1",[],function(tx,results){
-							console.log(results);
-							var idprinter='';
-							if(results.rows.length>0){
-								var idprinter=results.rows.item(0);
-								if(idprinter.printer!=null){
-									//alert(idprinter.printer);
-									//$('#print_'+idprinter.printer).prop('checked','checked');
-									$('#print_'+idprinter.printer).prop('checked','true');
-									$('.printerradio').each(function(){
-										//alert($(this).attr("id"));
-										if($(this).attr("id")=="print_"+idprinter.printer){
-											$(this).prop("checked",true);
-											$(this).prop("checked","true");
-											$(this).prop("checked","checked");
-										}
-									});
-								}
-								
-								if(idprinter.printercom!=null){
-									//alert(idprinter.printer);
-									//$('#print_'+idprinter.printer).prop('checked','checked');
-									$('#printc_'+idprinter.printercom).prop('checked','true');
-									$('.printerradioc').each(function(){
-										//alert($(this).attr("id"));
-										if($(this).attr("id")=="printc_"+idprinter.printercom){
-											$(this).prop("checked",true);
-											$(this).prop("checked","true");
-											$(this).prop("checked","checked");
-										}
-									});
-								}
+		var appn = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+		if ( appn ) {
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){
+				tx.executeSql("SELECT printer,printercom,marcaprint,modelprint,addressprint FROM CONFIG where id=1",[],function(tx,results){
+					console.log(results);
+					var idprinter='';
+					if(results.rows.length>0){
+						var idprinter=results.rows.item(0);
+						if(idprinter.printer!=null){
+							localStorage.setItem("print",idprinter.printer);
+							localStorage.setItem("printc",idprinter.printercom);
+							localStorage.setItem("printtrade",idprinter.marcaprint);
+							
+							var midir=null;
+							var mimodel=null;
+							if(idprinter.addressprint!=null){
+								var datadir=idprinter.addressprint;
+								midir=datadir.split("||");
 							}
-						});},errorCB,successCB);
-			}else{
-				$('#btnsetear,#btnprobar,#btnsetearc').css("display","none");
-			}
-				
-		}, function(error){
-			//alert(error);
+							
+							if(midir!=null){
+								localStorage.setItem("printaddress",midir[0]);
+								localStorage.setItem("comaddress",midir[1]);
+							}
+								
+							if(idprinter.modelprint!=null){
+								var datamod=idprinter.modelprint;
+								mimodel=datamod.split("||");
+							}
+							
+							if(mimodel!=null){
+								localStorage.setItem("printmodel",mimodel[0]);
+								localStorage.setItem("commodel",mimodel[1]);
+							}
+						}
+						
+						if(idprinter.printercom!=null){
+							localStorage.setItem("printc",idprinter.printercom);
+						}
+					}
+			});},errorCB,successCB);
+			
+			if(marca==2){
+				var $btn = $('#btnbuscarimp').button('loading');
+				StarIOAdapter.searchall("",function(dataprint){
+					//alert(dataprint);
+					//alert(res);
+					var todasimp=dataprint.split('||');
+					if(todasimp.length>0) $('#btnsetear,#btnprobar,#btnsetearc').css("display","");
+					for(var m=0;m<todasimp.length;m++){
+						var res=todasimp[m].split('@');
+						//alert(res[0]+''+res[1]);
+						var linea="<tr><td style='vertical-align:middle;' onclick='$("+'"#print_'+$.trim(res[0])+'"'+").click();'>"+$.trim(res[1])+"</td><td><input style='width:35px; height:35px;' class='printerradio' data-value='"+$.trim(res[0])+"' type='radio' name='printer' value='"+$.trim(res[0])+"' id='print_"+$.trim(res[0])+"'/></td></tr>";
+						
+						var lineac="<tr><td style='vertical-align:middle;' onclick='$("+'"#printc_'+$.trim(res[0])+'"'+").click();'>"+$.trim(res[1])+"</td><td><input style='width:35px; height:35px;' class='printerradioc' data-value='"+$.trim(res[0])+"' type='radio' name='printerc' value='"+$.trim(res[0])+"' id='printc_"+$.trim(res[0])+"'/></td></tr>";
+						$('#listaimpresoras tbody').append(linea);
+						$('#listaimpresorascomandas tbody').append(lineac);
+					}
+					//alert(localStorage.getItem("print")+"/"+localStorage.getItem("printc"));
+					/*$('.printerradio,.printerradioc').each(function(){
+						alert($(this).attr('id'));
+					});*/
+					
+					$('#print_'+$.trim(localStorage.getItem("print"))).attr('checked',true);
+					$('#printc_'+$.trim(localStorage.getItem("printc"))).attr('checked',true);
+					$btn.button('reset');					
+				}, function(error){
+					//alert(error);
+					$btn.button('reset');
+					if(localStorage.getItem("idioma")==1)
+						//showalert("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
+						console.log("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
+					else if(localStorage.getItem("idioma")==2)
+						//showalert("There is a problem with the printer, go to configuration: " + error);
+						console.log("There is a problem with the printer, go to configuration: " + error);
+					
+				});
+			}else if(marca==1){
+				var $btn = $('#btnbuscarimp').button('loading');
+				//buscar epson
+				StarIOAdapter.searchEpson("",function(dataprinte){
+					//alert(dataprint);
+					//alert(res);
+					var todasimp=dataprinte.split('||');
+					if(todasimp.length>0) $('#btnsetear,#btnprobar,#btnsetearc').css("display","");
+					for(var m=0;m<todasimp.length;m++){
+						var res=todasimp[m].split('@');
+						//alert(res[0]+''+res[1]);
+						var linea="<tr><td style='vertical-align:middle;' onclick='$("+'"#print_'+res[1]+'"'+").click();'>"+res[1]+"</td><td><input style='width:35px; height:35px;' class='printerradio' data-value='"+res[1]+"' type='radio' name='printer' value='"+res[1]+"' id='print_"+res[1]+"' data-trade='epson' data-model='"+res[2]+"' data-id='"+res[0]+"' /></td></tr>";
+						
+						var lineac="<tr><td style='vertical-align:middle;' onclick='$("+'"#printc_'+res[1]+'"'+").click();'>"+res[1]+"</td><td><input style='width:35px; height:35px;' class='printerradioc' data-value='"+res[1]+"' type='radio' name='printerc' value='"+res[1]+"' id='printc_"+res[1]+"' data-trade='epson' data-model='"+res[2]+"' data-id='"+res[0]+"' /></td></tr>";
+						$('#listaimpresoras tbody').append(linea);
+						$('#listaimpresorascomandas tbody').append(lineac);
+					}	
+					$('#print_'+localStorage.getItem("print")).attr('checked',true);
+					$('#printc_'+localStorage.getItem("printc")).attr('checked',true);
+					$btn.button('reset');
+				}, function(error){
+					//alert(error);
+					$btn.button('reset');
+					if(localStorage.getItem("idioma")==1)
+						//showalert("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
+						console.log("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
+					else if(localStorage.getItem("idioma")==2)
+						//showalert("There is a problem with the printer, go to configuration: " + error);
+						console.log("There is a problem with the printer, go to configuration: " + error);
+					
+				});
+		}
+		if($('.printerradio').length==0){
+			$('#btnsetear,#btnprobar,#btnsetearc').css("display","none");
 			var linea="<tr><td>No print</td><td><input class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
 			
 			var lineac="<tr><td>No print</td><td><input class='printerradioc' data-value='0' type='radio' name='printerc' value='0' id='print_0' checked /></td></tr>";
 			
 			$('#listaimpresoras tbody').append(linea);
 			$('#listaimpresorascomandas tbody').append(lineac);
-			
-			if(localStorage.getItem("idioma")==1)
-				//showalert("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
-				console.log("Ocurrió un problema con la impresora, vaya a configuracion: " + error);
-			else if(localStorage.getItem("idioma")==2)
-				//showalert("There is a problem with the printer, go to configuration: " + error);
-				console.log("There is a problem with the printer, go to configuration: " + error);
-			
-		});
+		}
 		}
 	}
 	
 	function SetearImpresora(){
 		var laprinter='';
 		var laprinterc='';
+		var directionprint='';
+		var modelprint='';
+		var directionprintc='';
+		var modelprintc='';
 		
+		localStorage.setItem("printtrade",$('#marca').val());
 		laprinter=$('.printerradio:checked').val();
 		laprinterc=$('.printerradioc:checked').val();
+		
 		//alert($('input:radio[name=printer]:checked').val());
 		/*$('.printerradio').each(function(){
 			if($(this).is(":checked")){
@@ -1778,6 +1851,16 @@ $(document).ready(function(){
 		});*/
 		//alert(laprinter);
 		if(laprinter!=null||laprinterc!=null){
+			if($('.printerradio:checked').attr('data-id')!=null)
+				directionprint=$('.printerradio:checked').attr('data-id');
+			if($('.printerradio:checked').attr('data-model')!=null)
+				modelprint=$('.printerradio:checked').attr('data-model');
+				
+			if($('.printerradioc:checked').attr('data-id')!=null)
+				directionprintc=$('.printerradioc:checked').attr('data-id');
+			if($('.printerradioc:checked').attr('data-model')!=null)
+				modelprintc=$('.printerradioc:checked').attr('data-model');
+				
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			var cuantos=0;
 			if(laprinter==0)
@@ -1791,16 +1874,14 @@ $(document).ready(function(){
 				function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c>0){
-							tx1.executeSql("UPDATE CONFIG SET printer=?,printercom=? where id=1",[laprinter,laprinterc],function(tx1,results2){
-								
+							tx1.executeSql("UPDATE CONFIG SET printer=?,printercom=?,marcaprint=?,modelprint=?,addressprint=? where id=1",[laprinter,laprinterc,$('#marca').val(),modelprint+"||"+modelprintc,directionprint+"||"+directionprintc],function(tx1,results2){
 									if(localStorage.getItem("idioma")==1)
 										showalert("Se ha vinculado las impresoras: "+laprinter+","+laprinterc);
 									else if(localStorage.getItem("idioma")==2)
-										showalert("Linked printers: "+laprinter+","+laprinterc);
-								
+										showalert("Linked printers: "+laprinter+","+laprinterc);			
 							});
 						}else{
-							tx1.executeSql("INSERT INTO CONFIG (printer,printercom) VALUES (?,?)",[laprinter,laprinterc],function(tx1,results3){
+							tx1.executeSql("INSERT INTO CONFIG (printer,printercom,marcaprint,modelprint,addressprint) VALUES (?,?,?,?,?)",[laprinter,laprinterc,$('#marca').val(),modelprint+"||"+modelprintc,directionprint+"||"+directionprintc],function(tx1,results3){
 								if(localStorage.getItem("idioma")==1)
 									showalert("Se ha vinculado las impresoras: "+laprinter+","+laprinterc);
 								else if(localStorage.getItem("idioma")==2)
@@ -1809,6 +1890,16 @@ $(document).ready(function(){
 							});
 							
 						}
+						
+						if(directionprint!=null)
+							localStorage.setItem("printaddress",directionprint);
+						if(modelprint!=null)
+							localStorage.setItem("printmodel",modelprint);
+							
+						if(directionprintc!=null)
+							localStorage.setItem("comaddress",directionprintc);
+						if(modelprintc!=null)
+							localStorage.setItem("commodel",modelprintc);
 					}
 				});}
 			,errorCB,successCB);
@@ -1833,10 +1924,17 @@ $(document).ready(function(){
 	}
 	
 	function ImprimirTest(){
+	
+		/*StarIOAdapter.printepson($('#jsonprint').html(),"",function() {
+			alert("imprimiendo");
+		},function(error){
+			alert(error);
+		});*/
+		
 		//alert("test");
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);		
 		db.transaction(function(tx){
-			tx.executeSql("SELECT printer,printercom FROM CONFIG where id=1",[],function(tx,results){
+			tx.executeSql("SELECT printer,printercom,marcaprint,modelprint,addressprint FROM CONFIG where id=1",[],function(tx,results){
 			//console.log(results);
 			if(results.rows.length>0){
 				//alert(results.rows.item(0).printer);
@@ -1845,12 +1943,25 @@ $(document).ready(function(){
 				//alert(idprinter.printer+'/'+idprinter.printercom);
 				if(idprinter.printer!=null){
 					//alert(idprinter.printer);
-					StarIOAdapter.rawprint($('#jsonprint').html(),idprinter.printer, function() {
+					/*StarIOAdapter.rawprint($('#jsonprint').html(),idprinter.printer, function() {
 						if(localStorage.getItem("idioma")==1)
 							showalert("Imprimiendo Test Factura");
 						else if(localStorage.getItem("idioma")==2)
 							showalert("Printing Invoice Test");
-					});
+					});*/
+					//alert(idprinter.modelprint+"/"+idprinter.addressprint+"/"+idprinter.marcaprint);
+					if(idprinter.marcaprint==1){
+						var modeldata=idprinter.modelprint;
+						var mimodel=modeldata.split('||');
+						var addressdata=idprinter.addressprint;
+						var miaddress=addressdata.split('||');
+						StarIOAdapter.printepson($('#jsonprint').html(),mimodel[0],miaddress[0],function() {
+							if(localStorage.getItem("idioma")==1)
+								showalert("Imprimiendo Test Factura");
+							else if(localStorage.getItem("idioma")==2)
+								showalert("Printing Invoice Test");
+						})
+					}
 				}else{
 					if(localStorage.getItem("idioma")==1)
 						showalert("No se ha configurado una impresora.");
@@ -1859,19 +1970,30 @@ $(document).ready(function(){
 				}
 				
 				if(idprinter.printercom!=null){
-					StarIOAdapter.rawprint($('#jsonprint').html(),idprinter.printercom, function() {
+					/*StarIOAdapter.rawprint($('#jsonprint').html(),idprinter.printercom, function() {
 						if(localStorage.getItem("idioma")==1)
 							showalert("Imprimiendo Test Comanda");
 						else if(localStorage.getItem("idioma")==2)
 							showalert("Printing Command Test");
-					});
+					});*/
+					if(idprinter.marcaprint==1){
+						var modeldata=idprinter.modelprint;
+						var mimodel=modeldata.split('||');
+						var addressdata=idprinter.addressprint;
+						var miaddress=addressdata.split('||');
+						StarIOAdapter.printepson($('#jsonprint').html(),mimodel[1],miaddress[1], function() {
+							if(localStorage.getItem("idioma")==1)
+								showalert("Imprimiendo Test Comanda");
+							else if(localStorage.getItem("idioma")==2)
+								showalert("Printing Command Test");
+						});
+					}
 				}else{
 					if(localStorage.getItem("idioma")==1)
 						showalert("No se ha configurado una impresora.");
 					else if(localStorage.getItem("idioma")==2)
 						showalert("There is no configured printer.");
 				}
-				
 			}
 			});
 		},errorCB,successCB);

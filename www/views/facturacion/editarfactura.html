@@ -500,18 +500,33 @@ function ReimprimirFactura(){
                             var res = response.split("||");
                             var jsonfact=res[0];
     						if(jsonfact!=''){
-    							StarIOAdapter.rawprint(jsonfact+"reimpr",laprint, function() {
-    								if(localStorage.getItem("idioma")==1)
-    								showalert("Imprimiendo Factura.");
-    								else if(localStorage.getItem("idioma")==2)
-    									showalert("Printing Invoice.");
-    							},function(error) {
-    								if(localStorage.getItem("idioma")==1)
-    									showalert("Ocurrió un problema: " + error);
-    								else if(localStorage.getItem("idioma")==2)
-    									showalert("There is a problem: " + error);
+								if(localStorage.getItem("printtrade")==2){
+									StarIOAdapter.rawprint(jsonfact+"reimpr",laprint, function() {
+										if(localStorage.getItem("idioma")==1)
+										showalert("Imprimiendo Factura.");
+										else if(localStorage.getItem("idioma")==2)
+											showalert("Printing Invoice.");
+									},function(error) {
+										if(localStorage.getItem("idioma")==1)
+											showalert("Ocurrió un problema: " + error);
+										else if(localStorage.getItem("idioma")==2)
+											showalert("There is a problem: " + error);
 
-    							});
+									});
+								}else{
+									StarIOAdapter.printepson(jsonfact+"reimpr",localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+										if(localStorage.getItem("idioma")==1)
+										showalert("Imprimiendo Factura.");
+										else if(localStorage.getItem("idioma")==2)
+											showalert("Printing Invoice.");
+									},function(error) {
+										if(localStorage.getItem("idioma")==1)
+											showalert("Ocurrió un problema: " + error);
+										else if(localStorage.getItem("idioma")==2)
+											showalert("There is a problem: " + error);
+
+									});
+								}
     						}
 
             			}else if(response=='Desactivado'){
@@ -545,18 +560,33 @@ function ReimprimirFactura(){
 							if(results2.rows.length>0){
 								var jsonfact=results2.rows.item(0);
 								if(jsonfact.j!=''){
-									StarIOAdapter.rawprint(jsonfact.j+"reimpr",laprint, function() {
-										if(localStorage.getItem("idioma")==1)
-										showalert("Imprimiendo Factura.");
-										else if(localStorage.getItem("idioma")==2)
-											showalert("Printing Invoice.");
-									},function(error) {
-										if(localStorage.getItem("idioma")==1)
-											showalert("Ocurrió un problema: " + error);
-										else if(localStorage.getItem("idioma")==2)
-											showalert("There is a problem: " + error);
-										
-									});
+									if(localStorage.getItem("printtrade")==2){
+										StarIOAdapter.rawprint(jsonfact.j+"reimpr",laprint, function() {
+											if(localStorage.getItem("idioma")==1)
+											showalert("Imprimiendo Factura.");
+											else if(localStorage.getItem("idioma")==2)
+												showalert("Printing Invoice.");
+										},function(error) {
+											if(localStorage.getItem("idioma")==1)
+												showalert("Ocurrió un problema: " + error);
+											else if(localStorage.getItem("idioma")==2)
+												showalert("There is a problem: " + error);
+											
+										});
+									}else{
+										StarIOAdapter.printepson(jsonfact.j+"reimpr",localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+											if(localStorage.getItem("idioma")==1)
+											showalert("Imprimiendo Factura.");
+											else if(localStorage.getItem("idioma")==2)
+												showalert("Printing Invoice.");
+										},function(error) {
+											if(localStorage.getItem("idioma")==1)
+												showalert("Ocurrió un problema: " + error);
+											else if(localStorage.getItem("idioma")==2)
+												showalert("There is a problem: " + error);
+											
+										});
+									}
 								}
 							}
 						});

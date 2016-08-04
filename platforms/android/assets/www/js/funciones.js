@@ -3484,22 +3484,20 @@ function ActivarCategoriaMenu(cual,categoria){
 		});
 		/**/
 		
-		//tx.executeSql("SELECT MAX(fila) as max from menu where activo='true'",[],function(tx,res1){
-			//var maxfilas=0;
-			//if(res1.rows.length>0){
-				//if(res1.rows.item(0).max!=null&&res1.rows.item(0).max>0){
-					//maxfilas=res1.rows.item(0).max;
-					//for(var r=1;r<=maxfilas;r++){
-
-						console.log('SELECT p.*, m.idcatmenu as idc,m.timespan as mtimespan,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" ORDER BY p.formulado asc');
-                        //tx.executeSql('SELECT p.*, m.idcatmenu as idc,m.timespan as mtimespan,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" and fila='+r+' ORDER BY m.columna asc',[],function(tx,res){
-						tx.executeSql('SELECT p.*, m.idcatmenu as idc,m.timespan as mtimespan,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" ORDER BY p.formulado asc',[],function(tx,res){
+		tx.executeSql("SELECT MAX(fila) as max from menu where activo='true'",[],function(tx,res1){
+			var maxfilas=0;
+			if(res1.rows.length>0){
+				if(res1.rows.item(0).max!=null&&res1.rows.item(0).max>0){
+					maxfilas=res1.rows.item(0).max;
+					for(var r=1;r<=maxfilas;r++){
+						
+                        tx.executeSql('SELECT p.*, m.idcatmenu as idc,m.timespan as mtimespan,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" and fila='+r+' ORDER BY m.columna asc',[],function(tx,res){
 							console.log(res);
 							if(res.rows.length>0){
 								//alert('prods');
 								var t=1;
-							//var vectorpos=['<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>','<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>','<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria +'"></div>'];
-                            var vectorpos=[];
+                            var vectorpos=['<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>','<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>','<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>'];
+							var todos=res.rows.length;
 								for(m=0;m<res.rows.length;m++){
 									var row=res.rows.item(m);
 									if(isNaN(row.precio)){row.precio = 0;}
@@ -3509,50 +3507,16 @@ function ActivarCategoriaMenu(cual,categoria){
 										impuestos=$('#impuestosactivos').html();
 										impuestosid=$('#impuestosactivosid').html();
 									}
-									/*var impuestos='';
-									var impuestosid='';
-									if(row.cargaiva==1){
-										impuestos+='0.12';
-										impuestosid+='1';
-									}
-									if(row.servicio==1){
-										if(row.cargaiva==1){
-											impuestos+='@';
-											impuestosid+='@';
-										}
-										impuestos+='0.10';
-										impuestosid+='2';
-									}*/
 									var lineHeight='';
 									if(row.formulado.length>12)
 										lineHeight='line-height:18px;';
+									
                                     if(localStorage.getItem("con_localhost") == 'true'){
-                                      //alert(row.formulado+'**'+row.col);
-									  //vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.mtimespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
-                                      vectorpos[t]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.mtimespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
+                                      vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.mtimespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
                                     }else{
-                                      //vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
-                                      vectorpos[t]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
+                                      vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
                                     }
-									/*if(row.formulado.length>12)
-										lineHeight='line-height:18px;';
-									var resto=parseInt(row.col)-t;
-									var agregar='';
 									
-									if($('.producto').length<((parseInt(row.fila)-1)*3)+(parseInt(row.col)-1)){
-										//alert('falta');
-										agregar+='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'"></div>';
-									}
-									
-									//alert(resto);
-									if(resto>0){
-										for(var s=1;s<=resto;s++){*/
-											//agregar+='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'"></div>';
-										/*}
-									}*/
-									//$('#listaProductos').append(agregar);
-									//$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="agregarCompra(this); return false;" ontap="agregarCompra(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>');
-									t++;
 								}
 								for(var s=0;s<=vectorpos.length;s++){
 									$('#listaProductos').append(vectorpos[s]);
@@ -3575,10 +3539,10 @@ function ActivarCategoriaMenu(cual,categoria){
 							//para mostrar productos por pagina
 							showProducts(categoria);
 						});	
-					//}
-				//}
-			//}
-		//});
+					}
+				}
+			}
+		});
 	},errorCB,successCB);
 	$('.producto').hide();
 	

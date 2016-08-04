@@ -1001,24 +1001,24 @@ function noCliente(){
 										<tr>\
 											<td>\
 												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%" id="trans_label_11">&nbsp;Nombre*</span>\
-													<input  tabIndex="2" onkeyup="validacliente()" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
+													<input  tabIndex="2" onkeyup="validacliente()" id="nombreP" class="form-control input-lg" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
 											</td>\
 										</tr>\
 										\
 										<tr>\
 												<td>\
-											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon trans_tel"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control" type="number"/></div>				</td>\
+											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon trans_tel"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control input-lg" type="number"/></div></td>\
 										</tr>\
 										<tr>\
 												<td>\
 												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon trans_dir"  style="width:30%">&nbsp;Dirección</span>\
-													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
+													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control input-lg"/></div> \
 												</td>\
 										</tr>\
 										<tr>\
 												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon trans_mail"  style="width:30%">&nbsp;Email</span>\
 													\
-													<input tabIndex="4" id="emailP" class="form-control"/></div>\
+													<input tabIndex="4" id="emailP" class="form-control input-lg"/></div>\
 												</td>\
 										</tr>\
 										\
@@ -1034,10 +1034,10 @@ function noCliente(){
 									<table style="cursor:pointer;position: relative; margin: 0px auto;" cellspacing="5px">\
 										<tr>\
 											<td style="vertical-align:top;">\
-												<button onclick="noCliente();" tabindex="8" class="btn btn-default trans_cancel">Cancelar</button> \
+												<button onclick="noCliente();" tabindex="8" class="btn btn-lg btn-default trans_cancel">Cancelar</button> \
 											</td>\
 											<td style="vertical-align: top;">\
-												<button tabindex="7" class="btn btn-success trans_save" onclick="jsonNuevoCliente()">Guardar</button> \
+												<button tabindex="7" class="btn btn-lg btn-success trans_save" onclick="jsonNuevoCliente()">Guardar</button> \
 											</td>\
 										</tr>\
 									</table>\
@@ -1067,30 +1067,30 @@ function noCliente(){
 											<td>\
 										<div class="input-group" style="width:100%; margin-bottom:10px;"><span class="input-group-addon trans_cedula" style="width:30%">\
 													&nbsp;Cédula* \
-											</span><input tabIndex="1" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control"/> </div>\
+											</span><input tabIndex="1" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control input-lg"/> </div>\
 												</td>\
 										</tr>\
 										<tr>\
 											<td>\
 												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%" id="trans_label_11">&nbsp;Nombre*</span>\
-													<input  tabIndex="2" id="nombreP" class="form-control" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
+													<input  tabIndex="2" id="nombreP" class="form-control input-lg" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
 											</td>\
 										</tr>\
 										\
 										<tr>\
 												<td>\
-											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon trans_tel"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control" type="number"/></div>				</td>\
+											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon trans_tel"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control input-lg" type="number"/></div>				</td>\
 										</tr>\
 										<tr>\
 												<td>\
 												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon trans_dir"  style="width:30%">&nbsp;Dirección</span>\
-													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control"/></div> \
+													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control input-lg"/></div> \
 												</td>\
 										</tr>\
 										<tr>\
 												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon trans_mail"  style="width:30%">&nbsp;Email</span>\
 													\
-													<input tabIndex="4" id="emailP" class="form-control"/></div>\
+													<input tabIndex="4" id="emailP" class="form-control input-lg"/></div>\
 												</td>\
 										</tr>\
 										\
@@ -1106,10 +1106,10 @@ function noCliente(){
 									<table style="cursor:pointer;position: relative; margin: 0px auto;" cellspacing="5px">\
 										<tr>\
 											<td style="vertical-align:top;">\
-												<button onclick="noCliente();" tabindex="8" class="btn btn-default  trans_cancel">Cancelar</button> \
+												<button onclick="noCliente();" tabindex="8" class="btn-lg btn btn-default  trans_cancel">Cancelar</button> \
 											</td>\
 											<td style="vertical-align: top;">\
-												<button tabindex="7" class="btn btn-success trans_save" onclick="jsonNuevoCliente()">Guardar</button> \
+												<button tabindex="7" class="btn btn-success btn-lg trans_save" onclick="jsonNuevoCliente()">Guardar</button> \
 											</td>\
 										</tr>\
 									</table>\

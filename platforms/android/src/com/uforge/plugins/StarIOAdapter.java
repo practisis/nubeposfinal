@@ -187,7 +187,7 @@ public class StarIOAdapter extends CordovaPlugin {
 							Thread t= new Thread(){
 								public void run(){
 									try{
-										Thread.sleep(1500);
+										Thread.sleep(1000);
 									}catch(InterruptedException e){
 										e.printStackTrace();
 									}
@@ -3190,10 +3190,13 @@ private void runPrintSequence(CallbackContext callbackContext,String message,Str
 		System.out.println("entra al run secuence");
 		PrinterFunctionsEpson printerFunctions= new PrinterFunctionsEpson();
 		boolean printsuccess=printerFunctions.SecuenciaPrint(callbackContext,portName,message,direction,this.cordova.getActivity().getApplicationContext());
+		iniciadaepson=false;
 		if(!printsuccess){
+			System.out.println("error al abrir");
 			callbackContext.error("No se realizó la impresión.");
-		}else
+		}else{
 			callbackContext.success();
+		}
 	}
 }
 

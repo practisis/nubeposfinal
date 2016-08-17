@@ -872,7 +872,7 @@
 							</div>--->
 							<div class='row'>
 							<div class='col-lg-12' style='text-align:right;'>
-								<button id='btnsetear' class='btn btn-success trans_choose' style='display:none; margin-right:5px;' onclick='SetearImpresora();'>Elegir</button>
+								<button id='btnsetear' class='btn btn-success trans_choose' style='margin-right:5px;' onclick='SetearImpresora();'>Elegir</button>
 								<button id='btnprobar' class='btn btn-success trans_printest' style='display:none;' onclick='ImprimirTest();'>Imprimir Prueba</button>
 							</div>
 							</div>
@@ -1829,7 +1829,8 @@ $(document).ready(function(){
 				});
 		}
 		if($('.printerradio').length==0){
-			$('#btnsetear,#btnprobar,#btnsetearc').css("display","none");
+			$('#btnbuscarimp').button('reset');
+			$('#btnprobar').css("display","none");
 			var linea="<tr><td>No print</td><td><input class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
 			
 			var lineac="<tr><td>No print</td><td><input class='printerradioc' data-value='0' type='radio' name='printerc' value='0' id='print_0' checked /></td></tr>";

@@ -2900,6 +2900,7 @@ function Ready(){
 			}
 		}
   });*/
+   $('#cargandoTabs').modal('hide');
    $('body').css('min-height',$(window).height());
   
   $('#menuSubNew2').html("Total");
@@ -5291,8 +5292,9 @@ function SaveMesa(){
 					if(miprint.printercom!=null){
 						if(localStorage.getItem("printtrade")==2){
 							StarIOAdapter.rawprint(json,miprint.printercom, function(){});
-						}else{
-							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){});
+						}else if(localStorage.getItem("printtrade")==1){
+							$('#cargandoTabs').modal("show");
+							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){$('#cargandoTabs').modal("hide");});
 						}
 					}else{
 						if(localStorage.getItem("idioma")==1)
@@ -5443,8 +5445,10 @@ function  ImprimirPrecuenta(){
 								else if(localStorage.getItem("idioma")==2)
 									showalert("Printing Check.");
 						});
-					}else{
+					}else if(localStorage.getItem("printtrade")==1){
+						$('#cargandoTabs').modal("show");
 						StarIOAdapter.printepson(json,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+								$('#cargandoTabs').modal("hide");
 								if(localStorage.getItem("idioma")==1)
 									showalert("Imprimiendo Precuenta.");
 								else if(localStorage.getItem("idioma")==2)
@@ -5620,8 +5624,9 @@ function SaveMesaLocal(){
 					if(miprint.printercom!=null){
 						if(localStorage.getItem("printtrade")==2){
 							StarIOAdapter.rawprint(json,miprint.printercom, function() {});
-						}else{
-							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){});
+						}else if(localStorage.getItem("printtrade")==1){
+							$('#cargandoTabs').modal("show");
+							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){$('#cargandoTabs').modal("hide");});
 						}
 					}else{
 						if(localStorage.getItem("idioma")==1)

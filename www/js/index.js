@@ -38,29 +38,45 @@ campos["MESAS_DATOS"]=['id|integer primary key AUTOINCREMENT','id_mesa|text defa
 campos["MESAS_CONSUMOS"]=['id|integer primary key AUTOINCREMENT','id_mesa|text default ""','details|text default ""','agregados|text default ""','notas|text default ""','hora|integer default 0','id_real|integer default 0'];
 
 campos["LOCALES"]=['id|integer primary key AUTOINCREMENT','local|text default ""','activo|boolean default "true"','timespan|text default "" UNIQUE'];
-		
+
+
+function VerificarConexion(){
+	if(navigator.connection.type == Connection.NONE){
+		if(localStorage.getItem('idioma')==1)
+			showalertred("No se puede realizar la petición, por favor revise su conexión a Internet.");
+		else
+			showalertred("Cannot send the data, please check your internet conection.");
+		return false;
+	}else{
+		console.log("conectados por: "+navigator.connection.type);
+		return true;
+	}
+}
+
+
+
 
 //console.log(campos);
 
 function updateOnlineStatus(condition) {
-					var status = document.getElementById("status");
-					//var condition = navigator.onLine ? "ONLINE" : "OFFLINE";
-					var state = document.getElementById("state");
-					var log = document.getElementById("log");
-					$('#conexion').val(condition);
-					
-					var conexionInternet = $('#conexion').val();
-					console.log(conexionInternet)
-					if(conexionInternet == 'ONLINE' ){
-						//$('#cloudIndex').css('display','block');
-						//$('#cloudIndexOff').css('display','none');
-						$('#cloudIndex').css('color','white');
-					}else if(conexionInternet == 'OFFLINE' ){
-						//$('#cloudIndex').css('display','none');
-						//$('#cloudIndexOff').css('display','block');
-						$('#cloudIndex').css('color','#606061');
-					}
+	var status = document.getElementById("status");
+	//var condition = navigator.onLine ? "ONLINE" : "OFFLINE";
+	var state = document.getElementById("state");
+	var log = document.getElementById("log");
+	$('#conexion').val(condition);
+	
+	var conexionInternet = $('#conexion').val();
+	console.log(conexionInternet)
+	if(conexionInternet == 'ONLINE' ){
+		//$('#cloudIndex').css('display','block');
+		//$('#cloudIndexOff').css('display','none');
+		$('#signalinternet').css('color','white');
+	}else if(conexionInternet == 'OFFLINE' ){
+		//$('#cloudIndex').css('display','none');
+		//$('#cloudIndexOff').css('display','block');
+		$('#signalinternet').css('color','#606061');
 	}
+}
 
 function envia(donde){
 			//if(loopSicnronizador) clearInterval(loopSicnronizador);
@@ -146,6 +162,7 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
+		
        // app.receivedEvent('deviceready');
 	  // onDeviceReady();
 	},
@@ -176,7 +193,19 @@ var app = {
 		db.transaction(iniciaDB,errorCB,successCB);
 		window.addEventListener('native.keyboardshow', keyboardShowHandler);
 		document.addEventListener("pause", function(){localStorage.setItem("claveuser","");}, false);
+		document.addEventListener("offline",isoffline, false);
+		document.addEventListener("online", isonline, false);
 		//document.addEventListener("backbutton", function(){localStorage.setItem("claveuser","");}, false);
+		
+		function isoffline(){
+			$('#signalinternet').css('color','#606061');
+			$('#conexion').val('offline');
+		}
+		
+		function isonline(){
+			$('#signalinternet').css('color','white');
+			$('#conexion').val('online');
+		}
 		
 		function keyboardShowHandler(e){
 			//alert("show");

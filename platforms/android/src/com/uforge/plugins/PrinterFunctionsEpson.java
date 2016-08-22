@@ -53,6 +53,30 @@ public class PrinterFunctionsEpson{
 			this.printerName=portName;
 			Result result = new Result();
 			Builder builder = null;
+			
+			while (true) {
+				try {
+					Finder.stop();
+					break;
+				}
+				catch (EpsonIoException e) {
+					if (e.getStatus() != IoStatus.ERR_PROCESSING) {
+						break;
+					}
+				}
+			}
+			
+			try {
+				// Open 
+				Print printer = new Print(context);
+				printer.openPrinter(connectionType,this.openDeviceName);
+				printer.closePrinter();
+			}
+			catch (EposException e) {
+				System.out.println("no se abre la impresora");
+				result.setEposException(e);
+				return false;
+			}
 
 			// Run print sequence of sample receipt 
 			builder = createReceiptData(result,message);

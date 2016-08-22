@@ -217,8 +217,9 @@ function updateForm(value){
 	$('#changeFromPurchase').html(Math.abs(change).toFixed(2));
 	
 	if(pagonormal==true){
-		if(parseFloat($('#invoicePaid').html())>0)
+		if(parseFloat($('#invoicePaid').html())>0){
 			VerificarComandas();
+		}
 	}
 }
 
@@ -237,6 +238,8 @@ function antesperformPurchase(restaurant){
 
 
 function performPurchase(restaurant){
+	
+	//$('#cargandoTabs').modal("show");
 	//$('#printFactura').show();
 	$('#btn_descuento').html('DESC');
 	pagar();
@@ -582,6 +585,8 @@ function performPurchase(restaurant){
 
 
 function impresionMovil(mijson){
+	$('#cargandoTabs').modal("show");
+	//alert("entra a imprimir");
 	$('.productosComprados').remove();
 	$('#subsiniva').html('');
 	$('#subconiva').html('');
@@ -603,6 +608,7 @@ function impresionMovil(mijson){
 					var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
 					if ( app ) {
 						if(localStorage.getItem("printtrade")==2){
+							
 							StarIOAdapter.rawprint(mijson,localStorage.getItem("print"), function() {
 								var now=new Date().getTime();
 								//tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
@@ -613,7 +619,7 @@ function impresionMovil(mijson){
 								
 								ImprimeComanderas(mijson);
 							});
-						}else{
+						}else if(localStorage.getItem("printtrade")==1){
 							StarIOAdapter.printepson(mijson,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
 								var now=new Date().getTime();
 								//tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
@@ -621,9 +627,8 @@ function impresionMovil(mijson){
 									showalert("Imprimiendo Factura.");
 								else if(localStorage.getItem("idioma")==2)
 									showalert("Printing Invoice.");
-								
 								ImprimeComanderas(mijson);
-							});
+							},function(){showalertred("Ocurrió un error al imprimir: Revise su Impresora");});
 						}
 					}
 				}else{
@@ -653,11 +658,9 @@ function ImprimeComanderas(mijson){
 						if ( app ) {
 							if(localStorage.getItem("printtrade")==2){
 								StarIOAdapter.rawprint(mijson,localStorage.getItem("printc"), function() {});
-							}else{
+							}else if(localStorage.getItem("printtrade")==1){
 								StarIOAdapter.printepson(mijson,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function() {});
 							}
-							
-							
 						}
 					}else{
 							if(localStorage.getItem("idioma")==1)
@@ -1546,6 +1549,7 @@ function validarpago(){
 }
 
 function VerificarComandas(){
+	//$('#cargandoTabs').modal('show');
 	if(localStorage.getItem("con_mesas")=="true"){
 		 /*imprimir comandas*/
 		var json = '{"ComandasMesas": [{';
@@ -1604,14 +1608,15 @@ function VerificarComandas(){
 			if(localStorage.getItem("printc")!=null&&localStorage.getItem("printc")!=""){
 				if(localStorage.getItem("printtrade")==2){
 					StarIOAdapter.rawprint(json,localStorage.getItem("printc"), function(){});
-				}else{
-					StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function() {});
+				}else if(localStorage.getItem("printtrade")==1){
+					$('#cargandoTabs').modal("show");
+					StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function() {$('#cargandoTabs').modal("hide");});
 				}
 			}else{
-				if(localStorage.getItem("idioma")==1)
+				/*if(localStorage.getItem("idioma")==1)
 					showalert("No se ha configurado una impresora para comandas.");
 				else if(localStorage.getItem("idioma")==2)
-					showalert("There is no configured a command printer.");
+					showalert("There is no configured a command printer.");*/
 			}
 			//fin comanderas
 		}

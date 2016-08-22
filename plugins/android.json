@@ -30,6 +30,9 @@
         },
         "cordova-plugin-file-transfer": {
             "PACKAGE_NAME": "com.practisis.practipos"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "com.practisis.practipos"
         }
     },
     "dependent_plugins": {}

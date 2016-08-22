@@ -506,95 +506,96 @@ function SincronizadorNormal(){
 }
 
 function registrarUser(){
-	newEmpresa=$("#newEmpresa").val();
-    newPais=$("#newPais").val();
-	newEmail=$("#newEmail").val();
-	newPass=$("#newPass").val();
-	newConfirm=$("#newConfirm").val();
-    newIdioma = $("#id_idioma").val();
-    var newTerminos = document.getElementById('terminos').checked;
-    var expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    if(newEmpresa==''){
-		if(localStorage.getItem("idioma")==1)
-			showalertred('Debe ingresar el nombre de su negocio.');
-		else if(localStorage.getItem("idioma")==2)
-			showalertred('Please, enter a business name.');
-		
-        $("#newEmpresa").val('');
-     }else if(newPais=='' || newPais=='0'){
-        if(localStorage.getItem("idioma")==1)
-			showalertred('Debe ingresar su país para tu negocio.');
-		else if(localStorage.getItem("idioma")==2)
-			showalertred('Please, enter a country.');
-     }else if(newEmail=='' || !expr.test(newEmail)){
-		if(localStorage.getItem("idioma")==1)
-			showalertred('Debe ingresar un e-mail valido para su negocio.');
-		else if(localStorage.getItem("idioma")==2)
-			 showalertred('Enter a valid e-mail.');
-        $("#newEmail").val('');
-     }else if(newConfirm != newPass){
-		$("#cargandoTabs").modal('hide');
-		if(localStorage.getItem("idioma")==1)
-			showalertred('Las contraseñas son distintas.');
-		else if(localStorage.getItem("idioma")==2)
-    	    showalertred('The passwords are different.');
-        $("#newPass").val('');
-        $("#newConfirm").val('');
-     }else if(newTerminos == false){
-		if(localStorage.getItem("idioma")==1)
-			showalertred('Debe aceptar los términos y condiciones.');
-		else if(localStorage.getItem("idioma")==2)
-			 showalertred('You must accept the terms and conditions.');
-     }else{
+	if(VerificarConexion()){
+		newEmpresa=$("#newEmpresa").val();
+		newPais=$("#newPais").val();
+		newEmail=$("#newEmail").val();
+		newPass=$("#newPass").val();
+		newConfirm=$("#newConfirm").val();
+		newIdioma = $("#id_idioma").val();
+		var newTerminos = document.getElementById('terminos').checked;
+		var expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		if(newEmpresa==''){
+			if(localStorage.getItem("idioma")==1)
+				showalertred('Debe ingresar el nombre de su negocio.');
+			else if(localStorage.getItem("idioma")==2)
+				showalertred('Please, enter a business name.');
+			
+			$("#newEmpresa").val('');
+		 }else if(newPais=='' || newPais=='0'){
+			if(localStorage.getItem("idioma")==1)
+				showalertred('Debe ingresar su país para tu negocio.');
+			else if(localStorage.getItem("idioma")==2)
+				showalertred('Please, enter a country.');
+		 }else if(newEmail=='' || !expr.test(newEmail)){
+			if(localStorage.getItem("idioma")==1)
+				showalertred('Debe ingresar un e-mail valido para su negocio.');
+			else if(localStorage.getItem("idioma")==2)
+				 showalertred('Enter a valid e-mail.');
+			$("#newEmail").val('');
+		 }else if(newConfirm != newPass){
+			$("#cargandoTabs").modal('hide');
+			if(localStorage.getItem("idioma")==1)
+				showalertred('Las contraseñas son distintas.');
+			else if(localStorage.getItem("idioma")==2)
+				showalertred('The passwords are different.');
+			$("#newPass").val('');
+			$("#newConfirm").val('');
+		 }else if(newTerminos == false){
+			if(localStorage.getItem("idioma")==1)
+				showalertred('Debe aceptar los términos y condiciones.');
+			else if(localStorage.getItem("idioma")==2)
+				 showalertred('You must accept the terms and conditions.');
+		}else{
 			$("#cargandoTabs").modal('show');
-    		var nombre=newEmpresa;
-    		var celular='';
-    		var email=newEmail;
-    		var passw=newPass;
-    		var rpassw=newConfirm;
-    		var empresa=newEmpresa;
-    		var planPrecio=2;
-    		var nTerminales=1;
-    		var sistema=0;
-    		var franquicia=0;
-    		var pais=newPais;
-    		var versiones=7;
+			var nombre=newEmpresa;
+			var celular='';
+			var email=newEmail;
+			var passw=newPass;
+			var rpassw=newConfirm;
+			var empresa=newEmpresa;
+			var planPrecio=2;
+			var nTerminales=1;
+			var sistema=0;
+			var franquicia=0;
+			var pais=newPais;
+			var versiones=7;
 			var plan=0;
-            var id_idioma = 1;
+			var id_idioma = 1;
 			var iddevice=$('#deviceid').html();
 			//alert(iddevice+'/'+nombre+'/'+id_idioma+'/'+nombre);
-    		//$("#btnNewEmp").html('<img src="images/loader.gif"  width="50%" />');
-    		$.post("https://practisis.net/registro/registroNubePOS.php", {
-    			nombre : nombre,
-    			celular : celular,
-    			email :newEmail,
-    			pass : newPass,
-    			rpass : newConfirm,
-    			empresa : empresa,
-    			planPrecio : planPrecio,
-    			nTerminales : nTerminales,
-    			sistema : sistema,
-    			pais : pais,
-    			franquicia : franquicia,
-    			versiones : versiones,
-                id_idioma : newIdioma,
-                terminos : newTerminos,
+			//$("#btnNewEmp").html('<img src="images/loader.gif"  width="50%" />');
+			$.post("https://practisis.net/registro/registroNubePOS.php", {
+				nombre : nombre,
+				celular : celular,
+				email :newEmail,
+				pass : newPass,
+				rpass : newConfirm,
+				empresa : empresa,
+				planPrecio : planPrecio,
+				nTerminales : nTerminales,
+				sistema : sistema,
+				pais : pais,
+				franquicia : franquicia,
+				versiones : versiones,
+				id_idioma : newIdioma,
+				terminos : newTerminos,
 				deviceid:iddevice
-    		}).done(function(data){
+			}).done(function(data){
 				//alert(data);
-                if(data=='existe'){
+				if(data=='existe'){
 						$("#cargandoTabs").modal('hide');
 						if(localStorage.getItem("idioma")==1)
-                        showalertred('El correo ingresado ya existe en el sistema, vuelva a ingresar otro correo.');
+						showalertred('El correo ingresado ya existe en el sistema, vuelva a ingresar otro correo.');
 						else if(localStorage.getItem("idioma")==1)
-                        showalertred('The mail entered already exists in the system, please enter another.');
-                        $("#newEmail").val('');
-    			}else{
+						showalertred('The mail entered already exists in the system, please enter another.');
+						$("#newEmail").val('');
+				}else{
 						$("#cargandoTabs").modal('hide');
 						var datosback=data.split("||");
 						console.log(data);
-        				localStorage.setItem("userRegister", newEmail);
-        				localStorage.setItem("userPasswod", newPass);
+						localStorage.setItem("userRegister", newEmail);
+						localStorage.setItem("userPasswod", newPass);
 						localStorage.setItem("empresa",datosback[0]);
 						localStorage.setItem("idbarra",datosback[1]);
 						//localStorage.setItem("categoriasya",true);
@@ -606,28 +607,28 @@ function registrarUser(){
 						//localStorage.setItem("permisosya",true);
 						//localStorage.setItem("mesasya",true);
 
-                        /*setTimeout(function(){
-                          if(localStorage.getItem("id_version_nube") == '0'){*/
-                        //document.getElementById('main').style.display='none';
-                         /* }
-                          if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
-                            var paisuax = localStorage.getItem("pais");
-                            if(paisuax != ''){
-                              $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
-                              ponerCodigoPais();
-                            }
-              	            $('#pide_telefono').fadeIn('slow');
-                            document.getElementById('main').style.display='none';
-                          }
-                        }, 3000);*/
+						/*setTimeout(function(){
+						  if(localStorage.getItem("id_version_nube") == '0'){*/
+						//document.getElementById('main').style.display='none';
+						 /* }
+						  if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+							var paisuax = localStorage.getItem("pais");
+							if(paisuax != ''){
+							  $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
+							  ponerCodigoPais();
+							}
+							$('#pide_telefono').fadeIn('slow');
+							document.getElementById('main').style.display='none';
+						  }
+						}, 3000);*/
 
 						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','','',false,pais);});
-						
-                }
-    		});
-
-        }
+							
+					}
+				});
+		}
+	}
 }
 
 

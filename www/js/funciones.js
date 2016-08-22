@@ -1423,13 +1423,15 @@ function formarCategorias(){
                 $('#listaCategorias').hide();
 				if(localStorage.getItem("idioma")==1){
 				  if(localStorage.getItem("con_profesionales")=='true'){
-					$("#menuproductosaux").html('<br><ul role="tablist" id="listacat" class="nav nav-tabs"><li id="categoria_1" class="categoriaActiva esCategoria active" onclick="ActivarCategoriasp(this,1);" ontap="ActivarCategoriasp(this,1);" style="width: 248.364px; height: 44px;"><a style="height: 44px;">Categoría 1</a></li><li id="profes" class="categoriaActiva esCategoria" onclick="ActivarCategoriasp(this,-14);" ontap="ActivarCategoriasp(this,-14);" style="width: 248.364px; height: 44px;"><a style="height: 44px;">Personalizado</a></li></ul><div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Ingresar Productos</button></p></div>');
+				    $('#menuSubNew1,#menuSubNew2').fadeIn();
+					$("#menuproductosaux").html('<br><ul role="tablist" id="listacat" class="nav nav-tabs" style="width: 350px;"><li id="categoria_1" class="categoriaActiva esCategoria active" onclick="ActivarCategoriasp(this,1);" ontap="ActivarCategoriasp(this,1);" style="width: 150px; height: 44px;"><a style="height: 44px;">Categoría 1</a></li><li id="profes" class="categoriaActiva esCategoria" onclick="ActivarCategoriasp(this,-14);" ontap="ActivarCategoriasp(this,-14);" style="width: 150px; height: 44px;"><a style="height: 44px;">Personalizado</a></li></ul><div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Ingresar Productos</button></p></div>');
                   }else{
                     $("#menuproductosaux").html('<div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Ingresar Productos</button></p></div>');
                   }
                 }else if(localStorage.getItem("idioma")==2){
                     if(localStorage.getItem("con_profesionales")=='true'){
-  					  $("#menuproductosaux").html('<br><ul role="tablist" id="listacat" class="nav nav-tabs"><li id="categoria_1" class="categoriaActiva esCategoria" onclick="ActivarCategoriasp(this,1);" ontap="ActivarCategoriasp(this,1);" style="width: 248.364px; height: 44px;"><a style="height: 44px;">Category 1</a></li><li id="profes" class="categoriaActiva esCategoria" onclick="ActivarCategoriasp(this,-14);" ontap="ActivarCategoriasp(this,-14);" style="width: 248.364px; height: 44px;"><a style="height: 44px;">Custom</a></li></ul><div class="jumbotron"><h1>No Products yet</h1><p>Please, enter all your products to begin.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Enter Products</button></p></div>');
+                      $('#menuSubNew1,#menuSubNew2').fadeIn();
+  					  $("#menuproductosaux").html('<br><ul role="tablist" id="listacat" class="nav nav-tabs" style="width: 350px;"><li id="categoria_1" class="categoriaActiva esCategoria" onclick="ActivarCategoriasp(this,1);" ontap="ActivarCategoriasp(this,1);" style="width: 150px; height: 44px;"><a style="height: 44px;">Category 1</a></li><li id="profes" class="categoriaActiva esCategoria" onclick="ActivarCategoriasp(this,-14);" ontap="ActivarCategoriasp(this,-14);" style="width: 150px; height: 44px;"><a style="height: 44px;">Custom</a></li></ul><div class="jumbotron"><h1>No Products yet</h1><p>Please, enter all your products to begin.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Enter Products</button></p></div>');
                     }else{
                       $("#menuproductosaux").html('<div class="jumbotron"><h1>No Products yet</h1><p>Please, enter all your products to begin.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Enter Products</button></p></div>');
                     }
@@ -2900,7 +2902,6 @@ function Ready(){
 			}
 		}
   });*/
-   $('#cargandoTabs').modal('hide');
    $('body').css('min-height',$(window).height());
   
   $('#menuSubNew2').html("Total");
@@ -5292,9 +5293,8 @@ function SaveMesa(){
 					if(miprint.printercom!=null){
 						if(localStorage.getItem("printtrade")==2){
 							StarIOAdapter.rawprint(json,miprint.printercom, function(){});
-						}else if(localStorage.getItem("printtrade")==1){
-							$('#cargandoTabs').modal("show");
-							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){$('#cargandoTabs').modal("hide");});
+						}else{
+							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){});
 						}
 					}else{
 						if(localStorage.getItem("idioma")==1)
@@ -5445,10 +5445,8 @@ function  ImprimirPrecuenta(){
 								else if(localStorage.getItem("idioma")==2)
 									showalert("Printing Check.");
 						});
-					}else if(localStorage.getItem("printtrade")==1){
-						$('#cargandoTabs').modal("show");
+					}else{
 						StarIOAdapter.printepson(json,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
-								$('#cargandoTabs').modal("hide");
 								if(localStorage.getItem("idioma")==1)
 									showalert("Imprimiendo Precuenta.");
 								else if(localStorage.getItem("idioma")==2)
@@ -5624,9 +5622,8 @@ function SaveMesaLocal(){
 					if(miprint.printercom!=null){
 						if(localStorage.getItem("printtrade")==2){
 							StarIOAdapter.rawprint(json,miprint.printercom, function() {});
-						}else if(localStorage.getItem("printtrade")==1){
-							$('#cargandoTabs').modal("show");
-							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){$('#cargandoTabs').modal("hide");});
+						}else{
+							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){});
 						}
 					}else{
 						if(localStorage.getItem("idioma")==1)

@@ -344,7 +344,7 @@ $(document).ready(function(){
 											impuestos+="@";
 											impuestosid+="@";
 										}
-									
+
 									impuestos+=parseFloat(imp.porcentaje)/100;
 									impuestosid+=imp.timespan;
 									cuan++;
@@ -448,7 +448,7 @@ function getSearch(){
 			//alert(timespanCat + ">>" + formulado + "==" +cat );
 		}
 	});
-	tx.executeSql(' SELECT p.*, c.categoria as cat  , c.timespan as timespancat FROM PRODUCTOS AS p LEFT JOIN CATEGORIAS AS c ON p.categoriaid = c.timespan where p.estado = 1 order by p.formulado ASC',[],function(tx,resulta){
+	tx.executeSql(' SELECT p.*, c.categoria as cat  , c.timespan as timespancat FROM PRODUCTOS AS p LEFT JOIN CATEGORIAS AS c ON p.categoriaid = c.timespan where p.estado = 1 and p.timespan != "-14" order by p.formulado ASC',[],function(tx,resulta){
 		//console.log(resulta);
 		var inhtml='<table class="table table-striped"><tbody>';
 		if(resulta.rows.length==0){
@@ -456,7 +456,7 @@ function getSearch(){
 				$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p></div>');
 			else
 				$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>No products</h1><p>Please, enter all your products to begin.</p></div>');
-				
+
 			setTimeout(function() {
 				$('#nuevoProducto').effect('highlight');
 			}, 3000);

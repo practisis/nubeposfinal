@@ -657,6 +657,7 @@
               <option value="2" id="trans_label_73">Rápida</option>
               <option value="1" id="trans_label_72">Solo Código de Barras</option>
               <option value="3" id="trans_label_74">Restaurante</option>
+              <option value="4" id="trans_label_117">Profesionales</option>
              </select>
 			 <button id='irdisenomesas' style='display:none;' class='btn btn-sm btn-success trans_tabledesign' href='' onclick='IrDisenoMesas();'>Cambiar Diseño Mesas</button>
           </td>
@@ -2203,24 +2204,47 @@ function ver_version(){
   if(version_nub == '1'){
     localStorage.setItem("con_shop","true");
     localStorage.setItem("con_mesas","false");
+    localStorage.setItem("con_profesionales","false");
     $('#con_shop').bootstrapSwitch('state', true);
     $('#con_mesas').bootstrapSwitch('state', false);
 	$('#irdisenomesas').fadeOut();
   }else if(version_nub == '2'){
     localStorage.setItem("con_shop","false");
     localStorage.setItem("con_mesas","false");
+    localStorage.setItem("con_profesionales","false");
     $('#con_shop').bootstrapSwitch('state', false);
     $('#con_mesas').bootstrapSwitch('state', false);
 	$('#irdisenomesas').fadeOut();
   }else if(version_nub == '3'){
     localStorage.setItem("con_shop","false");
     localStorage.setItem("con_mesas","true");
+    localStorage.setItem("con_profesionales","false");
     $('#con_shop').bootstrapSwitch('state', false);
     $('#con_mesas').bootstrapSwitch('state', true);
 	$('#irdisenomesas').fadeIn();
+  }else if(version_nub == '4'){
+  	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function(tx){
+
+      tx.executeSql("INSERT OR IGNORE INTO CATEGORIAS(categoria,activo,existe,timespan,sincronizar)values('Personalizada','1','1','-14','true');",[],function(tx,results){
+      	console.log("insertada categ:"+results.insertId);
+      });
+
+      tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado,tieneimpuestos) VALUES("Personalizado", "1414" ,0,-14,0,1,0,"-14",0,"true","",1,"true");',[],function(tx,results){
+        console.log("insertado producto personalizado"+results.insertId);
+      });
+    },errorCB,function(){
+	});
+    localStorage.setItem("con_shop","false");
+    localStorage.setItem("con_mesas","false");
+    localStorage.setItem("con_profesionales","true");
+    $('#con_shop').bootstrapSwitch('state', false);
+    $('#con_mesas').bootstrapSwitch('state', false);
+	$('#irdisenomesas').fadeOut();
   }else{
     localStorage.setItem("con_shop","false");
     localStorage.setItem("con_mesas","false");
+    localStorage.setItem("con_profesionales","false");
     $('#con_shop').bootstrapSwitch('state', false);
     $('#con_mesas').bootstrapSwitch('state', false);
 	$('#irdisenomesas').fadeOut();

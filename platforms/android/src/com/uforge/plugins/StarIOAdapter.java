@@ -225,6 +225,8 @@ public class StarIOAdapter extends CordovaPlugin {
 									for (int i = 0; i < deviceList.length; i++) {
 										String name = deviceList[i].getPrinterName();
 										String address = deviceList[i].getDeviceName();
+										Integer type=deviceList[i].getDeviceType();
+										System.out.println("tipo:"+type);
 										String model ="TM-m10";
 										if(name.indexOf("t88v".toUpperCase())>-1) model="TM-T88V";
 										if(name.indexOf("t70".toUpperCase())>-1) model="TM-T70";

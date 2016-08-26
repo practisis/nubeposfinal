@@ -302,6 +302,26 @@ function ExtraeDatosApi(donde){
             localStorage.setItem("id_locales",ext[0].id_locales);
             localStorage.setItem("id_pais",ext[0].id_pais);
 
+            if(ext[0].id_version_nube == 4){
+              localStorage.setItem("con_profesionales","true");
+
+            var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+          	db.transaction(function(tx){
+
+                tx.executeSql("INSERT OR IGNORE INTO CATEGORIAS(categoria,activo,existe,timespan,sincronizar)values('Personalizada','1','1','-14','true');",[],function(tx,results){
+                	console.log("insertada categ:"+results.insertId);
+                });
+
+                tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado,tieneimpuestos) VALUES("Personalizado", "1414" ,0,-14,0,1,0,"-14",0,"true","",1,"true");',[],function(tx,results){
+                  console.log("insertado producto personalizado"+results.insertId);
+                });
+              },errorCB,function(){
+          	});
+
+            }else{
+              localStorage.setItem("con_profesionales","false");
+            }
+
             var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
               tx.executeSql('UPDATE CONFIG SET pais="'+ext[0].pais+'",id_idioma = "'+ext[0].idioma+'",sin_documento="'+ext[0].documento+'",con_nombre_orden="'+ext[0].orden+'",con_propina="'+ext[0].propina+'",con_tarjeta="'+ext[0].tarjeta+'",con_shop="'+ext[0].shop+'",ip_servidor="'+ext[0].ipservidor+'",con_mesas="'+ext[0].mesas+'",logo="'+ext[0].logo+'",id_version_nube="'+ext[0].id_version_nube+'",pide_telefono="'+ext[0].pide_telefono+'",telefono_inte="'+ext[0].telefono_inte+'",mensajefinal="'+ext[0].mensajefinal+'",terminos_condiciones="'+ext[0].terminos+'",id_locales="'+ext[0].id_locales+'",email_fact="'+ext[0].email_fact+'",key="'+ext[0].key+'",numero_contribuyente="'+ext[0].numero_contribuyente+'",obligado_contabilidad="'+ext[0].obligado_contabilidad+'",prueba_produccion="'+ext[0].prueba_produccion+'",tiene_factura_electronica="'+ext[0].tiene_factura_electronica+'",mensaje_factura="'+ext[0].msj_factura_electronica+'",respaldar="'+ext[0].respaldar+'" WHERE id=1',[],function(tx,results){
@@ -1191,8 +1211,28 @@ function DatosRecurrentes(cual){
                       //alert(item.id_locales);
                       localStorage.setItem("id_locales",item.id_locales);
                       localStorage.setItem("id_pais",item.id_pais);
+                      localStorage.setItem("factelectronica",item.tiene_factura_electronica);
                       //localStorage.setItem("paquete","36");
                       //localStorage.setItem("paquete","37");
+
+                      if(item.id_version_nube == 4){
+                        localStorage.setItem("con_profesionales","true");
+
+                        var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+                    	db.transaction(function(tx){
+
+                          tx.executeSql("INSERT OR IGNORE INTO CATEGORIAS(categoria,activo,existe,timespan,sincronizar)values('Personalizada','1','1','-14','true');",[],function(tx,results){
+                          	console.log("insertada categ:"+results.insertId);
+                          });
+
+                          tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado,tieneimpuestos) VALUES("Personalizado", "1414" ,0,-14,0,1,0,"-14",0,"true","",1,"true");',[],function(tx,results){
+                            console.log("insertado producto personalizado"+results.insertId);
+                          });
+                        },errorCB,function(){
+                    	});
+                      }else{
+                        localStorage.setItem("con_profesionales","false");
+                      }
 
                       tx.executeSql('UPDATE CONFIG SET nombre="'+item.nombreempresa+'",razon = "'+item.razon+'" , ruc="'+item.ruc+'",telefono ="'+item.telefono+'",direccion="'+item.direccion+'",serie="'+item.serie+'",establecimiento="'+item.establecimiento+'",nombreterminal="'+item.nombreterminal+'",pais="'+item.pais+'",id_idioma = "'+item.idioma+'",sin_documento="'+item.documento+'",con_nombre_orden="'+item.orden+'",con_propina="'+item.propina+'",con_tarjeta="'+item.tarjeta+'",con_shop="'+item.shop+'",con_notasorden="'+item.notas+'",con_comanderas="'+item.comanderas+'",con_localhost="'+item.localhost+'",ip_servidor="'+item.ipservidor+'",con_mesas="'+item.mesas+'",logo="'+item.logo+'",id_version_nube="'+item.id_version_nube+'",pide_telefono="'+item.pide_telefono+'",telefono_inte="'+item.telefono_inte+'",mensajefinal="'+item.mensajefinal+'",terminos_condiciones="'+item.terminos+'",id_locales="'+item.id_locales+'",email_fact="'+item.email_fact+'",key="'+item.key+'",numero_contribuyente="'+item.numero_contribuyente+'",obligado_contabilidad="'+item.obligado_contabilidad+'",prueba_produccion="'+item.prueba_produccion+'",tiene_factura_electronica="'+item.tiene_factura_electronica+'",mensaje_factura="'+item.msj_factura_electronica+'",respaldar="'+item.respaldar+'" WHERE id=1',[],function(tx,results){
 
@@ -1256,7 +1296,7 @@ function DatosRecurrentes(cual){
 					tx.executeSql('INSERT OR IGNORE INTO MENU_CATEGORIAS(orden,nombre,timespan,activo)VALUES('+item.orden+',"'+item.nombre+'","'+item.timespan+'","'+item.activo+'")',[],function(tx,results){
 						console.log("insertada categoria menu:"+results.insertId);
 					});
-					
+
 					tx.executeSql('UPDATE MENU_CATEGORIAS SET orden='+item.orden+' , nombre = "'+item.nombre+'", activo = "'+item.activo+'" WHERE timespan like "'+item.timespan+'"',[],function(tx,results){
 						console.log("actualizada categoria menu.");
 					});

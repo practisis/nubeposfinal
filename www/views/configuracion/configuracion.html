@@ -16,41 +16,36 @@
 </div>
 
 <div class="row" style="display:none; padding:20px;" id="fadeRow">
-					<div class='col-md-2'></div>
-					<div class="col-md-8">
-					<div class="text-center" id="contentLogin" style="min-height: 263px;">
-						<div class="modal-body" style="min-height: 266px;">
-						 <div id="divdatoslogin" style="overflow:auto;">
-						 <h1 style='vertical-align:bottom; font-size:45px;'><img style='margin-top:-40px;' src='img/logoava.png' width='150px;'/></h1>
-						  <h3 style="-webkit-margin-before: 1em; -webkit-margin-after: 1em; 	-webkit-margin-start: 0px;
-					-webkit-margin-end: 0px;" id="trans_label_40">Ingresa a tu sistema y <span style="color:#0893d2;">Empecemos!</span></h3>
-						  <form method="post" class="contact-form form-validate4" id="myloginform" novalidate="novalidate">
-							<div class="form-group">
-							  <input class="form-control input-lg trans_user" type="text" id="user2" name="usuario" placeholder="Usuario" required="" value="" tabindex='1' autocomplete="off" aria-required="true">
-							</div>
-							<div class="form-group">
-							  <input type="password" id="pass2" name="mipass" value="" class="form-control input-lg trans_pass" placeholder="Password" required="" tabindex='2' autocomplete="off" aria-required="true">
-							</div>
-							<div class="form-group">
-								<a id='trans_label_83' data-toggle="modal" onclick="quitarSignIn();" href="">¿No tienes una cuenta en AvaPOS? Créala aquí.</a><br/>
-							</div>
-						   <button class="btn btn-lg btn-success" tabindex='3'  id="btnvalida2" type="button" onclick="UserLogin();">Login</button>
-						  </form>
-						  </div>
-						  
-						  <div id="varias">
-						  </div>
-						</div>
-					  </div>
-					</div>
-					<div class='col-md-2'></div>
-
-
-					<div id="mensaje2"></div>
-					<input id="user" type="hidden" />
-					<input id="pass" type="hidden" />
-
-					<br><br><br><br><br><br><br><br><br>
+	<div class='col-md-2'></div>
+	<div class="col-md-8">
+	<div class="text-center" id="contentLogin" style="min-height: 263px;">
+		<div class="modal-body" style="min-height: 266px;">
+		 <div id="divdatoslogin" style="overflow:auto;">
+		 <h1 style='vertical-align:bottom; font-size:45px;'><img style='margin-top:-40px;' src='img/logoava.png' width='150px;'/></h1>
+		  <h3 style="-webkit-margin-before: 1em; -webkit-margin-after: 1em; -webkit-margin-start: 0px; -webkit-margin-end: 0px;" id="trans_label_40">Ingresa a tu sistema y <span style="color:#0893d2;">Empecemos!</span></h3>
+		  <form method="post" class="contact-form form-validate4" id="myloginform" novalidate="novalidate">
+			<div class="form-group">
+			  <input class="form-control input-lg trans_user" type="text" id="user2" name="usuario" placeholder="Usuario" required="" value="" tabindex='1' autocomplete="off" aria-required="true">
+			</div>
+			<div class="form-group">
+			  <input type="password" id="pass2" name="mipass" value="" class="form-control input-lg trans_pass" placeholder="Password" required="" tabindex='2' autocomplete="off" aria-required="true">
+			</div>
+			<div class="form-group">
+				<a id='trans_label_83' data-toggle="modal" onclick="quitarSignIn();" href="">¿No tienes una cuenta en AvaPOS? Créala aquí.</a><br/>
+			</div>
+		   <button class="btn btn-lg btn-success" tabindex='3'  id="btnvalida2" type="button" onclick="UserLogin();">Login</button>
+		  </form>
+		  </div>
+		  <div id="varias">
+		  </div>
+		</div>
+	</div>
+	</div>
+	<div class='col-md-2'></div>
+	<div id="mensaje2"></div>
+	<input id="user" type="hidden" />
+	<input id="pass" type="hidden" />
+	<br><br><br><br><br><br><br><br><br>
 </div>
 
 <div class="row" style="display:none; padding:20px;" id="noplan" >
@@ -2601,6 +2596,8 @@ function actualizar(){
 						}else{
 							$('#activafacturacionelectronica').bootstrapSwitch('state', false);
 						}
+						
+						localStorage.setItem("factelectronica",tiene_factura_electronica);
 
 					}
 					
@@ -2857,6 +2854,9 @@ if(nombreEstable == '' || razonSo == '' || rucFac == '' || emailFac == '' || dir
     	}else{
     		 $('#msjOkFac').html('Information entered Success.');
     	}
+		
+		//variable local de si tiene facturación electrónica
+		localStorage.setItem("factelectronica",activafacturacionelectronica);
 
         $('#nombreEsta').val(nombreEstable);
 		$('#razon').val(razonSo);

@@ -1509,3 +1509,11 @@ function VerificarMexicoRfc(cadena){
     else
         return false;
 }
+
+function GenerarClaveElectronica(cedula){
+	var digito1=parseInt(cedula[2])+5;
+	var digito2=parseInt(cedula[3])+7;
+	var digito3=parseInt(cedula[6])+parseInt(cedula[7]);
+	var letras=["A", "C", "E", "G", "I", "K", "M", "O", "Q", "S", "U", "W", "Y", "B", "D", "F", "H", "J", "L"];
+	return digito1.toString()+digito2.toString()+letras[digito3];
+}

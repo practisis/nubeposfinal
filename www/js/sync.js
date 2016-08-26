@@ -1211,6 +1211,7 @@ function DatosRecurrentes(cual){
                       //alert(item.id_locales);
                       localStorage.setItem("id_locales",item.id_locales);
                       localStorage.setItem("id_pais",item.id_pais);
+                      localStorage.setItem("factelectronica",item.tiene_factura_electronica);
                       //localStorage.setItem("paquete","36");
                       //localStorage.setItem("paquete","37");
 

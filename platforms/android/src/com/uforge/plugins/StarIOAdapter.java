@@ -384,6 +384,7 @@ public class StarIOAdapter extends CordovaPlugin {
 		String pax="";
 		String logo="";
 		String mensajefinal="Generado con avapos.com";
+		String factelectronica="";
 		Integer lang=1;
 		JSONArray cierreImpuestos= new JSONArray();
 		Integer lineastotales=30; //18cm-2lineas
@@ -422,6 +423,11 @@ public class StarIOAdapter extends CordovaPlugin {
 					mensajefinal=objcliente.getString("mensajefinal");
 			}
 			
+			if(objcliente.has("linkelectronica")){
+				if(!(objcliente.getString("linkelectronica").equals(JSONObject.NULL)||objcliente.getString("linkelectronica").equals("")))
+					factelectronica=objcliente.getString("linkelectronica");
+			}
+			 
 			subconiva=DoubleFormat(objfactura.getDouble("subtotal_iva"));
 			//iva=DoubleFormat(objfactura.getDouble("subtotal_iva")*0.12);
 			iva=DoubleFormat(objfactura.getDouble("iva"));
@@ -981,7 +987,17 @@ public class StarIOAdapter extends CordovaPlugin {
 					}else{
 						list.add(createCp1252("Change:"+String.valueOf(elvuelto)+"\r\n"));
 					}
-						
+					
+					if(!factelectronica.equals("")){
+						if(lang.equals(1)){
+							list.add(createCp1252("Revisa tu Factura Electrónica en\n"));
+						}else{
+							list.add(createCp1252("Check your electronic bill in:\n"));
+						}
+						String [] vectordata=factelectronica.split(",");
+						list.add(createCp1252(vectordata[0]+"\n"));
+						list.add(createCp1252(vectordata[1]+" -"+vectordata[2]+"\n"));
+					}
 				}
 				
 			}else if(tipo.equals("cierre")){

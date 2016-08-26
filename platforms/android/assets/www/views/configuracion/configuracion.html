@@ -16,41 +16,36 @@
 </div>
 
 <div class="row" style="display:none; padding:20px;" id="fadeRow">
-					<div class='col-md-2'></div>
-					<div class="col-md-8">
-					<div class="text-center" id="contentLogin" style="min-height: 263px;">
-						<div class="modal-body" style="min-height: 266px;">
-						 <div id="divdatoslogin" style="overflow:auto;">
-						 <h1 style='vertical-align:bottom; font-size:45px;'><img style='margin-top:-40px;' src='img/logoava.png' width='150px;'/></h1>
-						  <h3 style="-webkit-margin-before: 1em; -webkit-margin-after: 1em; 	-webkit-margin-start: 0px;
-					-webkit-margin-end: 0px;" id="trans_label_40">Ingresa a tu sistema y <span style="color:#0893d2;">Empecemos!</span></h3>
-						  <form method="post" class="contact-form form-validate4" id="myloginform" novalidate="novalidate">
-							<div class="form-group">
-							  <input class="form-control input-lg trans_user" type="text" id="user2" name="usuario" placeholder="Usuario" required="" value="" tabindex='1' autocomplete="off" aria-required="true">
-							</div>
-							<div class="form-group">
-							  <input type="password" id="pass2" name="mipass" value="" class="form-control input-lg trans_pass" placeholder="Password" required="" tabindex='2' autocomplete="off" aria-required="true">
-							</div>
-							<div class="form-group">
-								<a id='trans_label_83' data-toggle="modal" onclick="quitarSignIn();" href="">¿No tienes una cuenta en AvaPOS? Créala aquí.</a><br/>
-							</div>
-						   <button class="btn btn-lg btn-success" tabindex='3'  id="btnvalida2" type="button" onclick="UserLogin();">Login</button>
-						  </form>
-						  </div>
-						  
-						  <div id="varias">
-						  </div>
-						</div>
-					  </div>
-					</div>
-					<div class='col-md-2'></div>
-
-
-					<div id="mensaje2"></div>
-					<input id="user" type="hidden" />
-					<input id="pass" type="hidden" />
-
-					<br><br><br><br><br><br><br><br><br>
+	<div class='col-md-2'></div>
+	<div class="col-md-8">
+	<div class="text-center" id="contentLogin" style="min-height: 263px;">
+		<div class="modal-body" style="min-height: 266px;">
+		 <div id="divdatoslogin" style="overflow:auto;">
+		 <h1 style='vertical-align:bottom; font-size:45px;'><img style='margin-top:-40px;' src='img/logoava.png' width='150px;'/></h1>
+		  <h3 style="-webkit-margin-before: 1em; -webkit-margin-after: 1em; -webkit-margin-start: 0px; -webkit-margin-end: 0px;" id="trans_label_40">Ingresa a tu sistema y <span style="color:#0893d2;">Empecemos!</span></h3>
+		  <form method="post" class="contact-form form-validate4" id="myloginform" novalidate="novalidate">
+			<div class="form-group">
+			  <input class="form-control input-lg trans_user" type="text" id="user2" name="usuario" placeholder="Usuario" required="" value="" tabindex='1' autocomplete="off" aria-required="true">
+			</div>
+			<div class="form-group">
+			  <input type="password" id="pass2" name="mipass" value="" class="form-control input-lg trans_pass" placeholder="Password" required="" tabindex='2' autocomplete="off" aria-required="true">
+			</div>
+			<div class="form-group">
+				<a id='trans_label_83' data-toggle="modal" onclick="quitarSignIn();" href="">¿No tienes una cuenta en AvaPOS? Créala aquí.</a><br/>
+			</div>
+		   <button class="btn btn-lg btn-success" tabindex='3'  id="btnvalida2" type="button" onclick="UserLogin();">Login</button>
+		  </form>
+		  </div>
+		  <div id="varias">
+		  </div>
+		</div>
+	</div>
+	</div>
+	<div class='col-md-2'></div>
+	<div id="mensaje2"></div>
+	<input id="user" type="hidden" />
+	<input id="pass" type="hidden" />
+	<br><br><br><br><br><br><br><br><br>
 </div>
 
 <div class="row" style="display:none; padding:20px;" id="noplan" >
@@ -657,6 +652,7 @@
               <option value="2" id="trans_label_73">Rápida</option>
               <option value="1" id="trans_label_72">Solo Código de Barras</option>
               <option value="3" id="trans_label_74">Restaurante</option>
+              <option value="4" id="trans_label_117">Profesionales</option>
              </select>
 			 <button id='irdisenomesas' style='display:none;' class='btn btn-sm btn-success trans_tabledesign' href='' onclick='IrDisenoMesas();'>Cambiar Diseño Mesas</button>
           </td>
@@ -2203,24 +2199,47 @@ function ver_version(){
   if(version_nub == '1'){
     localStorage.setItem("con_shop","true");
     localStorage.setItem("con_mesas","false");
+    localStorage.setItem("con_profesionales","false");
     $('#con_shop').bootstrapSwitch('state', true);
     $('#con_mesas').bootstrapSwitch('state', false);
 	$('#irdisenomesas').fadeOut();
   }else if(version_nub == '2'){
     localStorage.setItem("con_shop","false");
     localStorage.setItem("con_mesas","false");
+    localStorage.setItem("con_profesionales","false");
     $('#con_shop').bootstrapSwitch('state', false);
     $('#con_mesas').bootstrapSwitch('state', false);
 	$('#irdisenomesas').fadeOut();
   }else if(version_nub == '3'){
     localStorage.setItem("con_shop","false");
     localStorage.setItem("con_mesas","true");
+    localStorage.setItem("con_profesionales","false");
     $('#con_shop').bootstrapSwitch('state', false);
     $('#con_mesas').bootstrapSwitch('state', true);
 	$('#irdisenomesas').fadeIn();
+  }else if(version_nub == '4'){
+  	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function(tx){
+
+      tx.executeSql("INSERT OR IGNORE INTO CATEGORIAS(categoria,activo,existe,timespan,sincronizar)values('Personalizada','1','1','-14','true');",[],function(tx,results){
+      	console.log("insertada categ:"+results.insertId);
+      });
+
+      tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado,tieneimpuestos) VALUES("Personalizado", "1414" ,0,-14,0,1,0,"-14",0,"true","",1,"true");',[],function(tx,results){
+        console.log("insertado producto personalizado"+results.insertId);
+      });
+    },errorCB,function(){
+	});
+    localStorage.setItem("con_shop","false");
+    localStorage.setItem("con_mesas","false");
+    localStorage.setItem("con_profesionales","true");
+    $('#con_shop').bootstrapSwitch('state', false);
+    $('#con_mesas').bootstrapSwitch('state', false);
+	$('#irdisenomesas').fadeOut();
   }else{
     localStorage.setItem("con_shop","false");
     localStorage.setItem("con_mesas","false");
+    localStorage.setItem("con_profesionales","false");
     $('#con_shop').bootstrapSwitch('state', false);
     $('#con_mesas').bootstrapSwitch('state', false);
 	$('#irdisenomesas').fadeOut();
@@ -2577,6 +2596,8 @@ function actualizar(){
 						}else{
 							$('#activafacturacionelectronica').bootstrapSwitch('state', false);
 						}
+						
+						localStorage.setItem("factelectronica",tiene_factura_electronica);
 
 					}
 					
@@ -2833,6 +2854,9 @@ if(nombreEstable == '' || razonSo == '' || rucFac == '' || emailFac == '' || dir
     	}else{
     		 $('#msjOkFac').html('Information entered Success.');
     	}
+		
+		//variable local de si tiene facturación electrónica
+		localStorage.setItem("factelectronica",activafacturacionelectronica);
 
         $('#nombreEsta').val(nombreEstable);
 		$('#razon').val(razonSo);

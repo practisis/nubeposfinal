@@ -40,6 +40,7 @@
 <!--<section id="content2">-->
 <div class='row' id='row1'>
 <div  id='central'>
+
 <div class='col-md-8' id='productosnew' align='center' style="display: none;margin-top:10px;">
     <div class='row'>
       <div class='col-md-12' >
@@ -101,6 +102,9 @@
 	<div class='productos col-md-8' id='productos' align='center'>
 		<div class='row'>
 		<div class='col-md-12' id='menuproductos'>
+
+        <div class='col-md-12' id='menuproductosaux'>
+        </div>
 		<div class="row" style='margin-top:5px;display:none;' id="avisadorpeque" >
 			<div class="col-xs-12" >
 			<span id="espacioavisador"></span>
@@ -116,7 +120,10 @@
 			</div>
 			<div class="col-xs-10" style='padding-left:0px;padding-right:0px;'>
 								<div id='listaCategorias'>
-									<div id='contenidoCategorias'><ul role="tablist" id='listacat' class='nav nav-tabs'></ul></div>
+									<div id='contenidoCategorias'>
+                                        <ul role="tablist" id='listacat' class='nav nav-tabs'>
+                                        </ul>
+                                    </div>
 								</div>
 			</div>
 			<div class="col-xs-1" style='padding-left:0px;'>
@@ -127,6 +134,49 @@
 			<div class="col-xs-12">
 				<span class='contentListaProductos ' id='contentListaProductos' >
 					<div id='listaProductos' class='' style='display:block;overflow-y:visible;'></div>
+                    <div class='col-md-12' id='prodprofesionales' align='center' style="display: none;font-size: 17px;background-color: #FFFFFF;height: 100%;">
+                          <br><br><br>
+                          <div class="row" style="text-align: left;">
+                              <div class="col-xs-1"></div>
+                              <div class="col-xs-10" style="font-weight: bold;"><span id="trans_label_118">Ingrese descripción Producto/Servicio</span></div>
+                              <div class="col-xs-1"></div>
+                          </div>
+                          <div class="row">
+                              <div class="col-xs-1"></div>
+                              <div class="col-xs-10"><input type='text' id='productoprof' name='productoprof' class='form-control input-lg trans_descripcion' placeholder="Descripción" style="height: 45px;font-size: 16px;background-color: #F0F0F0;"/></div>
+                              <div class="col-xs-1"></div>
+                          </div>
+                          <div class="row" style="text-align: left;margin-top: 10px;">
+                              <div class="col-xs-1"></div>
+                              <div class="col-xs-4"><b><span class="trans_sinimp">Precio Sin Imp.</span></b></div>
+                              <div class="col-xs-4"><b><span class="trans_precio">Precio Con Imp.</span></b></div>
+                              <div class="col-xs-2"><b><span class="trans_imp">Aplica Imp.</span></b></div>
+                              <div class="col-xs-1"></div>
+                          </div>
+                          <div class="row">
+                              <div class="col-xs-1">
+                                <select id='listacategoriasprof' onchange="sacaidcatprof();" class="form-control" style="height: 35px;font-size: 14px;display: none;"></select>
+                              </div>
+                              <div class="col-xs-4"><input type='text' id='precioprof' name='precioprof' onclick="verprecioprof(0);" class='form-control input-lg' style="height: 45px;font-size: 16px;text-align: right;" readonly="readonly" value="0.0000"/></div>
+                              <div class="col-xs-4"><input type='text' id='totalprof' name='totalprof' onclick="verprecioprof(1);" class='form-control input-lg' style="height: 45px;font-size: 16px;text-align: right;" readonly="readonly" value="0.0000"/></div>
+                              <div class="col-xs-2"><input id="ivaprof" name="ivaprof" onchange="calculaProdProf();" type="checkbox" checked="checked" style="width: 30px;height: 30px;"></div>
+                              <div class="col-xs-1"><input type="hidden" id='cantidadprof' name='cantidadprof' onclick="modificarCantidadProf();" class='form-control input-lg' style="height: 35px;font-size: 14px;text-align: center;" readonly="readonly" value="1"/></div>
+                          </div>
+                      <br><br><br>
+                      <div class='row'>
+                        <div class='col-xs-2'>
+                        </div>
+                        <div class='col-xs-8'>
+                          <input id="queprecioaux" name="queprecioaux" type="hidden" value="0">
+                          <button type="button" onclick="agregarCompraProf();" class="btn btn-primary btn-block btn-lg" style="margin-bottom:5px; margin-right:5px; text-transform:uppercase;height: 80px;font-size: 30px;font-weight: bold;" onclick="AgregarProdPref(); return false;">
+                              <span class="trans_agregar">Agregar a Factura>></span>
+                          </button>
+                        </div>
+                        <div class='col-xs-2'>
+                        </div>
+                      </div>
+
+                  </div>
 				</span>
 			</div>
 		</div>
@@ -136,27 +186,8 @@
 			</div>
 		</div>
 		<table cellspacing="0px" cellpadding="0px" width='98%' style='margin-top:10px;' align='center'>
-			<!--<tr>
-				<td align='right'>
-								<button onclick="slider('izquierda'); return false;" class='direccionales btn btn-success btn-xs'><span class='fa fa-chevron-left'></span></button>
-							</td>
-							<td>
-								<div id='listaCategorias'>
-									<div id='contenidoCategorias'><ul role="tablist" id='listacat' class='nav nav-tabs'></ul></div>
-								</div>
-							</td>
-							<td align='left'>
-								<button onclick="slider('derecha'); return false;" class='direccionales btn btn-success btn-xs'><span class='fa fa-chevron-right'></span></button>
-							</td>
-			</tr>--->
 			<tr>
-				<!--<td>
-				<div id='nav_izq' data-dir="left" class="directionProducts btn btn-primary" style='margin:5px; display:none;'><span class='glyphicon glyphicon-menu-left'></span></div></td>-->
-				<!--<td class='contentListaProductos ' id='contentListaProductos' colspan='3'>
-					<div id='listaProductos' class='' style='min-height:520px;display:block;overflow-y:visible;'></div>
-				</td>-->
-				<!--<td><div data-dir="right" class="directionProducts btn btn-primary" style='cursor:pointer; margin:5px; display:none;' id='nav_der'><span class='glyphicon glyphicon-menu-right'></span></div></td>-->
-					<div id='navegadoresh'>
+				<div id='navegadoresh'>
 						<table cellspacing='0px' cellpadding='0px' width='99%' align='center'>
 							<tr>
 								<td align='right'></td>
@@ -942,7 +973,7 @@
 
 <!--- ---->
 
-
+<!---pop up cantidad ---->
 	<div  class="modal fade" id="popupCantidad" role="dialog" data-backdrop="static">
 		<div class="modal-dialog modal-sm">
 			<div class='modal-content text-center'>
@@ -1011,10 +1042,78 @@
 					<div class='btn btn-default trans_cancel' onclick="closePopup2(); return false;" id='btn_cancelar' style='margin:10px;'>Cancelar</div>
 					<div id='btn_agregar1' class='btn btn-success trans_cantchange' onclick='cambiarCantidad()' style='margin:10px;'>Cambiar</div>
 					<div id='btn_agregar2' class='btn btn-success trans_cantchange' onclick='cambiarCantidad2()' style='margin:10px;display:none;'>Cambiar</div>
-					
+
 				</div>
 			</div>
 		</div>
+<!--- ---->
+
+<!---pop up cantidad profesional---->
+	<div  class="modal fade" id="popupCantidadProf" role="dialog" data-backdrop="static">
+		<div class="modal-dialog modal-sm">
+			<div class='modal-content text-center'>
+				<div class='modal-header'>
+						<div style='width:100%; text-align:right; padding-right:5px; padding-top:15px;cursor:pointer;color:#1495C0; position:absolute; top:10px; right:12px; cursor:pointer;' ><i onclick='$("#popupCantidad").modal("hide");' class="fa fa-chevron-circle-left fa-2x" title='Volver...'></i></div>
+					<h3 class='trans_cantc'>Nueva Cantidad</h3>
+				</div>
+				<span id='msjCantidadErrorProf'></span>
+				<div class="modal-body divcalculadora" style='color:#404041; position:relative;'>
+					<div class='row'>
+						<div class='col-xs-12'>
+							<div class='cantidad' id='modificaCantidadActualProf'>0</div>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-lg-4 col-md-4 col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='1'>1</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='2'>2</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='3'>3</button>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='4'>4</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='5'>5</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='6'>6</button>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='7'>7</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='8'>8</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='9'>9</button>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='0'>0</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='p'>.</button>
+						</div>
+						<div class='col-xs-4' align='center'>
+							<button class='numeroc btn btn-default btn-lg' cual='d'><span class='fa fa-long-arrow-left'></span></button>
+						</div>
+					</div>
+				</div>
+					<div class='btn btn-default trans_cancel' onclick="$('#popupCantidadProf').modal('hide');" id='btn_cancelar' style='margin:10px;'>Cancelar</div>
+					<div class='btn btn-success trans_cantchange' onclick='cambiarCantidadProf();' style='margin:10px;'>Cambiar</div>
+				</div>
+			</div>
+		</div>
+<!--- ---->
 	
 <input type='hidden' style='display:none;' value='001-001-000050' id='nextnumber'/>
 <div id="factura" style='display:none;'>
@@ -1060,6 +1159,37 @@
 	</div>
 </div>
 <!---fin diseno mesas ---->
+
+<!---pop up Categoria------>
+<div  class="modal fade" id="popupCat" role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
+	<div class='modal-content text-center'>
+		<div class='modal-header'><h4><span id='titulo_cat'>Nueva Categoría</span></h4></div>
+		<span id='msjcatError'></span>
+		<input class='form-control input-lg' id='notaid' style='display:none;'/>
+		<div class="modal-body" style='color:#404041; position:relative;'>
+			<div class='row'>
+                <div class='col-xs-2'>
+				</div>
+				<div class='col-lg-8'>
+					<input class="form-control input-lg" name='nombre_categoria' id='nombre_categoria' type='text' value=''/>
+				</div>
+                <div class='col-xs-2'>
+				</div>
+			</div>
+            <div style="width: 100%;height: 8px;"></div>
+            <div class='row'>
+				<div class='col-lg-12'>
+					<button type='button' style='margin-top:10px;' class='btn btn-lg btn-default trans_cancell' onclick="$('#popupCat').modal('hide');">Cancelar</button>
+                    &nbsp;&nbsp;&nbsp;
+                    <button type='button' style='margin-top:10px;' class='btn btn-lg btn-success trans_save' onclick="AgregarCategoria();"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+<!--- ---->
 
 <div id='jsonproductos' style='display:none;'></div>
 <audio id="beep1" src="views/nubepos/sonidos/blip7.mp3" preload="auto"></audio>
@@ -1205,4 +1335,366 @@ function BuscarSugerencias2newbarra(filtro){
 			},errorCB,successCB);
 		});
 }
+function ListarCategorias(){
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function(tx){
+	tx.executeSql('SELECT * FROM CATEGORIAS where timespan != "0" ORDER BY categoria asc;',[],function(tx,results){
+		//console.log(results.rows.length);
+		var inhtml='';
+		for (var i=0; i < results.rows.length; i++){
+			var row=results.rows.item(i);
+            if(i == 0){
+              $('#idcategoria').val(row.timespan);
+            }
+			inhtml+='<option value="'+row.timespan+'">'+row.categoria+'</option>';
+		}
+        inhtml+='<option value="0">Nueva Categoría</option>';
+
+		 LlenarComboCat(inhtml);
+
+	});
+	});
+}
+function LlenarComboCat(options){
+	$('#listacategoriasprof').append(options);
+}
+function AgregarCategoria(){
+  var cat = document.getElementById('nombre_categoria').value;
+  var timeSpanCat = getTimeSpan();
+  if(cat == ''){
+    alert('Debe ingresar el nombre de la categoría para poder guardar.');
+  }else{
+
+  var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function(tx){
+	tx.executeSql('INSERT INTO CATEGORIAS(categoria,activo,existe,timespan) SELECT "'+cat+'",1,0,"'+timeSpanCat+'" WHERE NOT EXISTS(SELECT 1 FROM CATEGORIAS WHERE categoria = "'+cat+'");',[],function(tx,results){
+	    var idInsertCatNew = timeSpanCat;
+		//console.log(results.rows.length);
+        ListarCategoriasNew(idInsertCatNew);
+
+	});
+	});
+
+  }
+}
+function ListarCategoriasNew(idInsertCatNew){
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function(tx){
+	tx.executeSql('SELECT * FROM CATEGORIAS where timespan != "0" ORDER BY categoria asc;',[],function(tx,results){
+		//console.log(results.rows.length);
+		var inhtml='';
+		for (var i=0; i < results.rows.length; i++){
+			var row=results.rows.item(i);
+			inhtml+='<option value="'+row.timespan+'">'+row.categoria+'</option>';
+		}
+        inhtml+='<option value="0">Nueva Categoría</option>';
+
+		 LlenarComboCatNew(inhtml,idInsertCatNew);
+
+	});
+	});
+}
+function LlenarComboCatNew(options,idInsertCatNew){
+	$('#listacategoriasprof').html(options);
+    alert('Categoria creada con exito!.');
+    $('#listacategoriasprof > option[value="'+idInsertCatNew+'"]').attr('selected', 'selected');
+    $('#idcategoria').val(idInsertCatNew);
+    $('#popupCat').modal('hide');
+}
+function sacaidcatprof(){
+  var timecat = document.getElementById('listacategoriasprof').value;
+  if(timecat == '0'){
+   $('#idcategoria').val(0);
+   $('#popupCat').modal("show");
+  }else{
+   $('#idcategoria').val(timecat);
+  }
+}
+function modificarCantidadProf(){
+	$('#popupCantidadProf').modal("show");
+	$('#modificaCantidadActualProf').html('1');
+}
+function cambiarCantidadProf(){
+	var cantidadActual = $('#modificaCantidadActualProf').html();
+    $('#cantidadprof').val(cantidadActual);
+	$('#popupCantidadProf').modal('hide');
+    calculaProdProf();
+}
+function calculaProdProf(){
+  var cual = $('#queprecioaux').val();
+
+  if(cual == 0){
+
+    var precioprof = parseFloat($('#precioprof').val());
+    var cantidadprof = parseFloat($('#cantidadprof').val());
+    //impuestos start
+          var productoImpuestos=$('#impuestosactivos').html();
+          var productoimpuesto = 0;
+          var conimpuestos = document.getElementById('ivaprof').checked;
+          if(conimpuestos){
+          	var porcentajes=productoImpuestos.split('@');
+          	for(var l in porcentajes){
+          		if(porcentajes[l]!=null&&porcentajes[l]!=""&&porcentajes[l]!='undefined')
+          			productoimpuesto+=parseFloat(porcentajes[l]);
+          	}
+          }
+  	//impuestos end
+      productoimpuesto = productoimpuesto+1;
+    var totalprof = (precioprof*cantidadprof)*productoimpuesto;
+    $('#totalprof').val(totalprof.toFixed(4));
+
+  }else if(cual == 1){
+
+    var precioprof = parseFloat($('#totalprof').val());
+    var cantidadprof = parseFloat($('#cantidadprof').val());
+    //impuestos start
+          var productoImpuestos=$('#impuestosactivos').html();
+          var productoimpuesto = 0;
+          var conimpuestos = document.getElementById('ivaprof').checked;
+          if(conimpuestos){
+          	var porcentajes=productoImpuestos.split('@');
+          	for(var l in porcentajes){
+          		if(porcentajes[l]!=null&&porcentajes[l]!=""&&porcentajes[l]!='undefined')
+          			productoimpuesto+=parseFloat(porcentajes[l]);
+          	}
+          }
+  	//impuestos end
+      productoimpuesto = productoimpuesto+1;
+    var totalprof = (precioprof*cantidadprof)/productoimpuesto;
+    $('#precioprof').val(totalprof.toFixed(4));
+
+  }
+
+  $('#queprecioaux').val('0');
+
+}
+function agregarCompraProf(){
+
+    if($('#productoprof').val() == '' || parseFloat($('#totalprof').val()) == '0'){
+      if(localStorage.getItem("idioma")==2){
+        alert('You must enter the description and price to add invoice.');
+      }else{
+        alert('Debe ingresar la descripción y precio para poder agregar a factura.');
+      }
+
+    }else{
+	var i = 1;
+	$('#descuentoFactura').val(0);
+	$('#resultBuscador').fadeOut('slow');
+	//variables facturacion
+	var subtotalSinIva = $('#subtotalSinIva').val();
+	var subtotalIva = $('#subtotalIva').val();
+
+	//variables compra
+	var total = 0;
+	var sumTotal = 0;
+	var taxTotal = 0;
+	var productoCantidad = parseFloat($('#cantidadprof').val());
+	if(currentCantidad != 0 && currentAction=='+') {
+		productoCantidad = currentCantidad;
+		currentAction='';
+		currentCantidad=0;
+
+	}
+
+	var productoID = -14;
+	var productoNombre = $('#productoprof').val();
+	var id_local = -14;
+	var productoPrecio = parseFloat($('#precioprof').val());
+	var subtotalSinIvaCompra = 0;
+	var subtotalIvaCompra = 0;
+    var productoImpuestosIndexes = '';
+	var productoImpuestos='';
+    var productoImpuestosaux='';
+    var sumaagregados = 0;
+    var productoAgregados = '';
+
+	//impuestos start
+        var productoimpuesto = 0;
+        var conimpuestos = document.getElementById('ivaprof').checked;
+        var cont = 0;
+        if(conimpuestos){
+          productoImpuestosIndexes=$('#impuestosactivosid').html();
+            $("#taxes input").each(function (index){
+
+              subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)));
+
+                productoImpuestosaux=$('#'+$(this).attr("id")).val();
+            	var porcentajes = productoImpuestosaux.split('|');
+                if(porcentajes[2]!=null&&porcentajes[2]!=""&&porcentajes[2]!='undefined'){
+                  productoImpuestos += porcentajes[2]+'@';
+                    productoimpuesto += parseFloat(porcentajes[2]);
+                    if($('#impuestoFactura-'+ porcentajes[0]).length == 0){
+                        var currentimp=(parseFloat(productoCantidad) *( parseFloat(productoPrecio)+sumaagregados) * parseFloat(porcentajes[2]));
+                        $('#factura').append('<input type="hidden" id="impuestoFactura-'+ porcentajes[0] +'" class="esImpuesto" data-id="'+ porcentajes[0] +'" data-nombre="'+ porcentajes[1] +'" data-valor="'+ porcentajes[2] +'" value="'+ currentimp +'"/>');
+                    }else{
+    					//var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
+    					var currentTax = $('#impuestoFactura-'+ porcentajes[0]).val();
+    					var calcimp=((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(porcentajes[2]));
+    					$('#impuestoFactura-'+ porcentajes[0]).val(parseFloat(currentTax) + parseFloat(calcimp));
+					}
+                }
+            });
+        }else{
+            subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)));
+        }
+			taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio))) * productoimpuesto);
+	//impuestos end
+
+	var max=0;
+	$('#tablaCompra tr').each(function(){
+		var idtr=$(this).attr("id");
+		//alert(idtr);
+		if(idtr!=null){
+			var dataid=idtr.split('_');
+			if(parseInt(dataid[1])>=max)
+				max=parseInt(dataid[1])+1;
+		}
+
+	});
+
+	var innerlinea="";
+	if(localStorage.getItem("con_notas")=="true"){
+		innerlinea=' onclick="MostrarNota(this)"; ';
+	}
+
+	var total = productoCantidad * (productoPrecio) + taxTotal;//YAESTA
+
+    productoImpuestos = productoImpuestos.substr(0,productoImpuestos.length -1);
+	$('#tablaCompra').append('<tr id="cant_'+max+'"><td class="lineadetalle" data-borrarcantidad="'+ productoCantidad +'" data-borrarimpuesto="'+ productoImpuestos +'" data-borrarimpuestoindexes="'+ productoImpuestosIndexes +'" data-borrarprecio="'+ productoPrecio +'" data-agregados="'+sumaagregados+'" onclick="borrarCompra(this); return false;" style="width: 5%;"><button type="button" class="btn btn-danger btn-xs product_del"><span class="glyphicon glyphicon-remove" ></span></button><input type="hidden" class="totales" value="'+ total +'"/></td><td onclick="modificarCantidad('+max+' , -14)" style="border-right:1px solid #909192; text-align: center; width:20%;" class="lineadetalle" "><input type="hidden" class="productDetails" value="'+ productoID +'|'+ productoNombre +'|'+ productoCantidad +'|'+ productoPrecio +'|'+ productoPrecio +'|'+ productoImpuestos +'|'+ (productoCantidad * (productoPrecio+sumaagregados) + taxTotal) +'|'+productoImpuestosIndexes+'|'+sumaagregados+'" data-detagregados="'+productoAgregados+'"  data-id_real="'+id_local+'"  /><input type="hidden" class="cantidadproductoscomandados" value="'+productoCantidad+'"/>'+productoCantidad +'</td><td style="border-right:1px solid #909192; padding:5px;text-align: left; width:50%; text-transform:capitalize;" class="lineadetalle"><span class="lineanota" data-id="'+max+'" '+innerlinea+'>'+productoNombre+'</span></td><td style="padding-right:20px; text-align: right;" class="lineadetalle">'+ (total).toFixed(4) +'</td></tr>');
+	$('.totales').each(function(){
+		sumTotal += parseFloat($.trim($(this).val()));
+		i++;
+	});
+
+	console.log (i+'cantidad');
+	var sumcantidadComandada = 0;
+	$('.cantidadproductoscomandados').each(function(){
+		sumcantidadComandada += parseFloat($.trim($(this).val()));
+	});
+	console.log('los items facturados son'+sumcantidadComandada);
+	$('#itemsVendidos').html(sumcantidadComandada);
+	$('#menuSubNew2').html("Total - Ver "+sumcantidadComandada+" pedidos");
+
+	$('#totalmiFactura').val(sumTotal);
+	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+
+	if($('#total').html().toString().length==9)
+		$('#divtotal').css('font-size','26px');
+	else if($('#total').html().toString().length>9)
+		$('#divtotal').css('font-size','26px');
+	else
+		$('#divtotal').css('font-size','30px');
+
+	if($('#total').html().toString().length>7){
+		$('.den').css('width',4.5*parseFloat($('.producto').css('height')));
+	}else{
+		$('.den').css('width',3*parseFloat($('.producto').css('height')));
+	}
+
+	$('#payButton').html('PAGAR');
+	$('#invoiceTotal').html(parseFloat(sumTotal).toFixed(2));
+	$('#justo').html('$ '+sumTotal.toFixed(2));
+	$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
+	$('#redondeado').html('$ '+Math.ceil(sumTotal).toFixed(2));
+	$('#redondeado').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
+	var alta=0;
+	for( var t in misdenominaciones){
+		if(misdenominaciones[t]>sumTotal)
+		{
+			alta=misdenominaciones[t];
+			break;
+		}
+	}
+	$('#altaden').html('$ '+alta.toFixed(2));
+	$('#altaden').attr('data-value',-1*alta.toFixed(2));
+	if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
+		$('#altaden').parent().css('display','inline');
+	else
+		$('#altaden').parent().css('display','none');
+
+	var prox10=0;
+	var iter=1;
+	var p10=iter*10;
+	while(p10<sumTotal){
+		iter++;
+		p10=iter*10;
+	}
+	$('#prox10').html('$ '+p10.toFixed(2));
+	$('#prox10').attr('data-value',-1*p10.toFixed(2));
+
+	if(p10>0&&p10!=alta)
+		$('#prox10').parent().css('display','inline');
+	else
+		$('#prox10').parent().css('display','none');
+
+	var prox20=0;
+	var iter=1;
+	var p20=iter*20;
+	while(p20<sumTotal){
+		iter++;
+		p20=iter*20;
+	}
+	$('#prox20').html('$ '+p20.toFixed(2));
+	$('#prox20').attr('data-value',-1*p20.toFixed(2));
+	if(p20>0&&p20!=p10)
+		$('#prox20').parent().css('display','inline');
+	else
+		$('#prox20').parent().css('display','none');
+
+	$('#subtotalSinIva').val(parseFloat(subtotalSinIva) + parseFloat(subtotalSinIvaCompra));
+	$('#subtotalIva').val(parseFloat(subtotalIva) + parseFloat(subtotalIvaCompra));
+	$('.cantidad').html('0');
+	$('#tableresults').html('');
+	$('#inputbusc').val('');
+    $('.cantidadnew').html('0');
+	$('#tableresultsnew').html('');
+	$('#inputbuscnew').val('');
+	$('#contentdetalle').animate({
+		scrollTop: $('#contentdetalle')[0].scrollHeight
+		}, 1000).clearQueue();
+	$('#tablaCompra tr:last-child').effect('highlight',{},'normal');
+	celdaenfocada=-1;
+	PlaySound(0);
+	$('.product_del').on('click',function(){
+			PlaySound(4);
+	});
+
+	$('#btn_pagar').attr('class','btn btn-success btn-block btn-lg');
+
+	if(localStorage.getItem("con_mesas")=="true"){
+		if(localStorage.getItem("idioma")==1)
+			$('#btn_gpedidos').html('guardar');
+		else if(localStorage.getItem("idioma")==2)
+			$('#btn_gpedidos').html('save');
+		$('#btn_gpedidos').show();
+		$('#btn_pagar').hide();
+	}
+
+    $('#productoprof').val('');
+    $('#precioprof').val('0.0000');
+    $('#totalprof').val('0.0000');
+    $('#cantidadprof').val('1');
+
+    }
+
+}
+function verprecioprof(quien){
+  if(quien == 0){
+    $('#titlenumeric').html('Precio Sin Imp.');
+    $('#popupprecios').modal('show');
+    $('#queprecioaux').val(quien);
+    $('.cantidadn').val($('#precioprof').val())
+  }else if(quien == 1){
+    $('#titlenumeric').html('Precio Con Imp.');
+    $('#popupprecios').modal('show');
+    $('#queprecioaux').val(quien);
+    $('.cantidadn').val($('#totalprof').val())
+  }
+}
+$(document).ready(function(){
+
+    ListarCategorias();
+
+});
 </script>

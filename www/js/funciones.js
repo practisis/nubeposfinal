@@ -1489,13 +1489,14 @@ function pagar(){
 	var encabezado=0;
 	var largo=0;
 		db.transaction(function (tx){
-			tx.executeSql('SELECT establecimiento,serie,largo,encabezado from config where id=1',[],function(tx,res2){
+			tx.executeSql('SELECT establecimiento,serie,largo,encabezado,tiene_factura_electronica from config where id=1',[],function(tx,res2){
 				serie=res2.rows.item(0).serie;
 				establecimiento=res2.rows.item(0).establecimiento;
 				//alert(serie+'/'+establecimiento);
 				$('#seriesfact').html(establecimiento+'-'+serie+'-');
 				localStorage.setItem("encabezado",res2.rows.item(0).encabezado);
 				localStorage.setItem("largo",res2.rows.item(0).largo);
+				localStorage.setItem("factelectronica",res2.rows.item(0).tiene_factura_electronica);
 			});
 
             if(localStorage.getItem("con_localhost") == 'true'){
@@ -1647,7 +1648,12 @@ function pagar(){
 	});
 	
 	idimpuestos = idimpuestos.substring(0,idimpuestos.length -1);
-	
+	var linkelectronica='';
+	if(localStorage.getItem("factelectronica")=='true'){
+		var mipass=GenerarClaveElectronica($('#cedulaP').val());
+		linkelectronica='http://www.practifactura.com/clientes, user: '+$('#cedulaP').val()+', password: '+mipass;
+		//alert(linkelectronica);
+	}
 	
 
     //alert(subtotalSinIva+'**'+subtotalIva+'**'+descuento+'**'+impuestos);
@@ -1663,7 +1669,8 @@ function pagar(){
 			json +=	'"email": "'+$('#emailP').val()+'",';
 			json +=	'"direccion": "'+$('#direccionP').val()+'",';
 			json +=	'"logo": "'+logo+'",';
-			json +=	'"mensajefinal": "'+mensajepie+'"';
+			json +=	'"mensajefinal": "'+mensajepie+'",';
+			json +=	'"linkelectronica": "'+linkelectronica+'"';
 			json +=	'},';
 			json += '"producto": [';
 		$('.productDetails').each(function(){

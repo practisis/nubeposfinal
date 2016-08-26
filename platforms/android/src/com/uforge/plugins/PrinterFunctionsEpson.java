@@ -141,6 +141,7 @@ public class PrinterFunctionsEpson{
 		String propina="";
 		String pax="";
 		String logo="";
+		String factelectronica="";
 		String mensajefinal="Generado con avapos.com";
 		Integer lang=1;
 		JSONArray cierreImpuestos= new JSONArray();
@@ -178,6 +179,11 @@ public class PrinterFunctionsEpson{
 			if(objcliente.has("mensajefinal")){
 				if(!(objcliente.getString("mensajefinal").equals(JSONObject.NULL)||objcliente.getString("mensajefinal").equals("")))
 					mensajefinal=objcliente.getString("mensajefinal");
+			}
+			
+			if(objcliente.has("linkelectronica")){
+				if(!(objcliente.getString("linkelectronica").equals(JSONObject.NULL)||objcliente.getString("linkelectronica").equals("")))
+					factelectronica=objcliente.getString("linkelectronica");
 			}
 			
 			subconiva=DoubleFormat(objfactura.getDouble("subtotal_iva"));
@@ -703,6 +709,21 @@ public class PrinterFunctionsEpson{
 						textData.append("Vuelto:"+String.valueOf(elvuelto)+"\n");
 					}else{
 						textData.append("Change:"+String.valueOf(elvuelto)+"\n");
+					}
+					
+					builder.addText(textData.toString());
+					textData.delete(0, textData.length());
+					builder.addFeedLine(1);
+					
+					if(!factelectronica.equals("")){
+						if(lang.equals(1)){
+							textData.append("Revisa tu Factura Electrónica en:\n");
+						}else{
+							textData.append("Check your electronic bill in:\n");
+						}
+						String [] vectordata=factelectronica.split(",");
+						textData.append(vectordata[0]+"\n");
+						textData.append(vectordata[1]+" -"+vectordata[2]+"\n");
 					}
 						
 				}

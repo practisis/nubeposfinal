@@ -995,6 +995,15 @@
 	}
 	
 	function ocultarTeclado(como){
+	  if(localStorage.getItem("con_profesionales")=='true' && como==1){
+	    var cual = $('#queprecioaux').val();
+        if(cual == 0){
+            $('#precioprof').val($('.cantidadn').val());
+        }else if(cual == 1){
+            $('#totalprof').val($('.cantidadn').val());
+        }
+        calculaProdProf();
+	  }else{
 		if(como==1){
 			var miinp=$('#inputtarget').val();
 			var inp=$('#'+miinp);
@@ -1006,6 +1015,7 @@
 			else if(miinp=='paymentEfectivo'||miinp=='valortarjeta'||miinp=='valorcheque1'||miinp=='valorcxc')
 				$(inp).change();
 		}
+      }
 		$('#popupprecios').modal('hide');
 	}
 

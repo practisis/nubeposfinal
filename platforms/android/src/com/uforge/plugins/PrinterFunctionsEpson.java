@@ -144,6 +144,7 @@ public class PrinterFunctionsEpson{
 		String factelectronica="";
 		String mensajefinal="Generado con avapos.com";
 		Integer lang=1;
+		String codigoprint="";
 		JSONArray cierreImpuestos= new JSONArray();
 		Integer lineastotales=30; //18cm-2lineas
 		Integer lineasencabezado=0; //3cm-2lineas
@@ -361,6 +362,12 @@ public class PrinterFunctionsEpson{
 				mesa=expjson.getString("mesa");
 				lang=expjson.getInt("lang");
 				tipo="comandasmesas";
+				
+			}else if(nombres.toString().contains("Barras")){
+				JSONArray jsonArray = jsonobject.getJSONArray("Barras");
+				JSONObject expjson=jsonArray.getJSONObject(0);
+				codigoprint=expjson.getString("codigo");
+				tipo="barras";
 			}
 			
 			if(lang==1){
@@ -1284,9 +1291,25 @@ public class PrinterFunctionsEpson{
 				}
 				builder.addTextDouble(Builder.FALSE, Builder.FALSE);
 				builder.addFeedLine(1);
+			}else if(tipo.equals("barras")){
+				// addBarcode API settings 
+				final int barcodeWidth = 2;
+				final int barcodeHeight = 100;
+				builder.addFeedLine(1);
+
+				// Add barcode data to command buffer 
+				builder.addBarcode(codigoprint,
+								   Builder.BARCODE_CODE39,
+								   Builder.HRI_BELOW,
+								   Builder.FONT_A,
+								   barcodeWidth,
+								   barcodeHeight);
+
 			}
 			builder.addFeedLine(1);
-			textData.append("--------------------------------\n");
+			if(!tipo.equals("barras")){
+				textData.append("--------------------------------\n");
+			}
 				if(tipo.equals("precuenta")){
 					if(lang.equals(1)){
 						textData.append("Datos de la Factura:\n");
@@ -1356,11 +1379,12 @@ public class PrinterFunctionsEpson{
 						textData.append(conmesas+conpax+"\n");
 					}
 				}
-				
-				textData.append(mensajefinal+"\n");
-				builder.addText(textData.toString());
-				textData.delete(0, textData.length());
-				builder.addFeedLine(2);
+				if(!tipo.equals("barras")){
+					textData.append(mensajefinal+"\n");
+					builder.addText(textData.toString());
+					textData.delete(0, textData.length());
+					builder.addFeedLine(2);
+				}
 				// Add command to cut receipt to command buffer 
 				builder.addCut(Builder.CUT_FEED);				
 		}

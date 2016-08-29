@@ -386,6 +386,7 @@ public class StarIOAdapter extends CordovaPlugin {
 		String mensajefinal="Generado con avapos.com";
 		String factelectronica="";
 		Integer lang=1;
+		String codigoprint="";
 		JSONArray cierreImpuestos= new JSONArray();
 		Integer lineastotales=30; //18cm-2lineas
 		Integer lineasencabezado=0; //3cm-2lineas
@@ -603,6 +604,12 @@ public class StarIOAdapter extends CordovaPlugin {
 				mesa=expjson.getString("mesa");
 				lang=expjson.getInt("lang");
 				tipo="comandasmesas";
+				
+			}else if(nombres.toString().contains("Barras")){
+				JSONArray jsonArray = jsonobject.getJSONArray("Barras");
+				JSONObject expjson=jsonArray.getJSONObject(0);
+				codigoprint=expjson.getString("codigo");
+				tipo="barras";
 			}
 			
 			if(lang==1){
@@ -1686,11 +1693,20 @@ public class StarIOAdapter extends CordovaPlugin {
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				
 				//list.add(createCp1252("--------------------------------\r\n"));
+			}else if(tipo.equals("barras")){
+				
+					// 1D barcode example
+					list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });
+					list.add(new byte[] { 0x1b, 0x62, 0x06, 0x02, 0x02 });
+					list.add(createCp1252(" "+codigoprint+"\u001e\r\n"));
+					
 			}
 				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
 				//list.add(new byte[] { 0x09, 0x1b, 0x69, 0x00, 0x00 });
 				//list.add(createCp1252("NO: 000018851     IVA IXNCLUIDO\r\n"));
+				if(!tipo.equals("barras")){
 				list.add(createCp1252("--------------------------------\r\n"));
+				}
 				
 
 				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });
@@ -1765,14 +1781,16 @@ public class StarIOAdapter extends CordovaPlugin {
 					}
 				}
 				
-				//list.add(createCp1252(mensajefinal+"\r\n"));
-				list.add(createCp1252(mensajefinal+"\r\n"));
-				list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
+				if(!tipo.equals("barras")){
+					//list.add(createCp1252(mensajefinal+"\r\n"));
+					list.add(createCp1252(mensajefinal+"\r\n"));
+					list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x00 });
 
-				// 1D barcode example
-				//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });
-				//list.add(new byte[] { 0x1b, 0x62, 0x06, 0x02, 0x02 });
-				//list.add(createCp1252(" 12ab34cd56\u001e\r\n"));
+					// 1D barcode example
+					//list.add(new byte[] { 0x1b, 0x1d, 0x61, 0x01 });
+					//list.add(new byte[] { 0x1b, 0x62, 0x06, 0x02, 0x02 });
+					//list.add(createCp1252(" 12ab34cd56\u001e\r\n"));
+				}
 
 				list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Cut
 				list.add(new byte[] { 0x07 }); // Kick cash drawer
@@ -1782,6 +1800,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				} catch (StarIOPortException e) {
 					callbackContext.error(e.getMessage());
 				}
+				
 				
 		}else{
 			ArrayList<byte[]> list = new ArrayList<byte[]>();

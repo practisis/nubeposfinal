@@ -49,7 +49,10 @@
     			</div>
                 <div class="col-sm-4">
     				<h4 id="trans_label_12">Código</h4>
+					<div class='input-group' style='width:100%;'>
         			<input style="width:100%;" class="form-control trans_productcode" type="text" autofocus=""  placeholder="Ingrese aquí su código" type='number' name='codigoproducto' id='codigoproducto' onkeypress="isalphanumeric(event);"  onclick='ocultarTeclado();'/>
+					<span class='input-group-btn' id='btnbarras' style='display:none;'><button onclick='ImprimirBarras();' class='btn btn-success' type='button' ><span class='glyphicon glyphicon-print'></span></button></span>
+					</div>
         			<!--<span class="input-group-btn"> <button class="btn btn-default" type="button"><span class='fa fa-barcode'></span></button> </span>-->
         		</div> 
             </div>
@@ -139,7 +142,6 @@
 <script>
 	var digitado=false;
 	$(document).ready(function(){
-
     var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(
 	function (tx){
@@ -352,6 +354,7 @@
 			tx.executeSql('\
 				SELECT p.* FROM PRODUCTOS p	WHERE p.timespan="'+editarProductoID+'"',[],function(tx,results){
 				console.log(results);
+				$('#btnbarras').css('display','');
 				for (var i=0; i < results.rows.length; i++){
 					console.log(results);
 					var row=results.rows.item(i);
@@ -885,6 +888,43 @@ function sacaidcat(){
   }else{
    $('#idcategoria').val(timecat);
   }
+}
+
+function ImprimirBarras(){
+	var cod=$("#codigoproducto").val();
+	var json='{"Barras": [{';
+	json += '"codigo":"'+cod+'"';
+	json+='}]}';
+	
+	if(cod!=''&&cod!=null){
+		var laprint=localStorage.getItem("print");
+		if(localStorage.getItem("printtrade")==2){
+			StarIOAdapter.rawprint(json,laprint, function() {
+				if(localStorage.getItem("idioma")==1)
+				showalert("Imprimiendo Código de Barras.");
+				else if(localStorage.getItem("idioma")==2)
+					showalert("Printing Codebar.");
+			},function(error) {
+				if(localStorage.getItem("idioma")==1)
+					showalert("Ocurrió un problema: " + error);
+				else if(localStorage.getItem("idioma")==2)
+					showalert("There is a problem: " + error);
+			});
+		}else if(localStorage.getItem("printtrade")==1){
+			StarIOAdapter.printepson(json,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+				if(localStorage.getItem("idioma")==1)
+				showalert("Imprimiendo Código de Barras.");
+				else if(localStorage.getItem("idioma")==2)
+					showalert("Printing Codebar.");
+			},function(error) {
+				if(localStorage.getItem("idioma")==1)
+					showalert("Ocurrió un problema: " + error);
+				else if(localStorage.getItem("idioma")==2)
+					showalert("There is a problem: " + error);
+
+			});
+		}
+	}
 }
 	
 </script>

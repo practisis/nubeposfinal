@@ -55,7 +55,7 @@ public class StarIOAdapter extends CordovaPlugin {
 	
     final Handler mhandler = new Handler();
 	boolean iniciadaepson=false;
-	String tipoactual="BT";
+	String tipoactual=DevType.BLUETOOTH;
 	
 	public enum RasterCommand {
 		Standard, Graphics
@@ -196,10 +196,10 @@ public class StarIOAdapter extends CordovaPlugin {
 							currentCallbackContext.error(e.getMessage());
 						}
 						
-						try {
+					try {
 							if(!iniciadaepson){
 								Finder.start(micontext,tipoprint,null);
-								tipoactual=mitipo;
+								tipoactual=tipoprint;
 								iniciadaepson=true;
 							}else{
 								if(!tipoactual.equals(tipoprint)){
@@ -233,8 +233,7 @@ public class StarIOAdapter extends CordovaPlugin {
 								}
 							};
 							t.start();
-					}
-					catch (EpsonIoException e) {
+					}catch (EpsonIoException e) {
 						//errStatus = e.getStatus();
 						System.out.println("status: "+e.getStatus());
 						if(e.getStatus()==IoStatus.ERR_PARAM)
@@ -327,17 +326,20 @@ public class StarIOAdapter extends CordovaPlugin {
 			});
             return true;
 		}
-		else if (action.equals("printepson")) {
+		else if (action.equals("printepson")){
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     try {
+						if(Arguments.length() < 4) {
+                            throw new Exception("You must specify a print type parameter");
+                        }
 						if(Arguments.length() < 3) {
                             throw new Exception("You must specify a print address parameter");
                         }
 						if(Arguments.length() < 2) {
                             throw new Exception("You must specify a print model parameter");
                         }
-						currentPluginInstance.runPrintSequence(currentCallbackContext,Arguments.getString(0),Arguments.getString(1),Arguments.getString(2));
+						currentPluginInstance.runPrintSequence(currentCallbackContext,Arguments.getString(0),Arguments.getString(1),Arguments.getString(2),Arguments.getString(3));
                     }catch(Exception e){
 							//System.out.println("Error lista status: "+e.getStatus());
 						currentCallbackContext.error(e.getMessage());
@@ -3272,10 +3274,10 @@ public class StarIOAdapter extends CordovaPlugin {
         }
     }
 	
-private void runPrintSequence(CallbackContext callbackContext,String message,String portName,String direction){
+private void runPrintSequence(CallbackContext callbackContext,String message,String portName,String direction,String type){
 		System.out.println("entra al run secuence");
 		PrinterFunctionsEpson printerFunctions= new PrinterFunctionsEpson();
-		boolean printsuccess=printerFunctions.SecuenciaPrint(callbackContext,portName,message,direction,this.cordova.getActivity().getApplicationContext());
+		boolean printsuccess=printerFunctions.SecuenciaPrint(callbackContext,portName,message,direction,type,this.cordova.getActivity().getApplicationContext());
 		iniciadaepson=false;
 		if(!printsuccess){
 			System.out.println("error al abrir");

@@ -42,16 +42,21 @@ public class PrinterFunctionsEpson{
 	
 	private String openDeviceName = "74:2B:62:D6:62:96";
     //private  int connectionType = Print.DEVTYPE_BLUETOOTH;
-    private  int connectionType = Print.DEVTYPE_USB;
+    private  int connectionType = Print.DEVTYPE_BLUETOOTH;
     private  int printerModel = Builder.LANG_EN;
     private  String printerName = "TM-T20II";
 	
 	
-	public boolean SecuenciaPrint(CallbackContext callbackContext,String portName,String message,String direction,Context context)
+	public boolean SecuenciaPrint(CallbackContext callbackContext,String portName,String message,String direction,String type,Context context)
 	{
-			System.out.println("datosimp:"+direction+"/"+portName);
+			System.out.println("datosimp:"+direction+"/"+portName+"/"+type);
 			this.openDeviceName=direction;
 			this.printerName=portName;
+			if(type.equals("BT"))
+				this.connectionType=Print.DEVTYPE_BLUETOOTH;
+			else if(type.equals("USB"))
+				this.connectionType=Print.DEVTYPE_USB;
+			
 			Result result = new Result();
 			Builder builder = null;
 			

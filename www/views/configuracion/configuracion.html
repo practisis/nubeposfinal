@@ -475,22 +475,32 @@
 <div style='margin-top:25px; font-size:16px;'>
 	 <!-- Nav tabs -->
 	  <ul class="nav nav-tabs" role="tablist">
-		<li role='presentation' class='active'><a href="#plan" aria-controls="plan" role="tab" data-toggle="tab">Plan</a></li>
-		<li role="presentation"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">General</a></li>
-		<li role="presentation"><a href="#ventastab" aria-controls="ventastab" role="tab" data-toggle="tab" class='trans_sales'>Ventas</a></li>
+		<li role="presentation" class='active' id='tabclickfacele'><a href="#faceletab" aria-controls="faceletab" role="tab" data-toggle="tab" class='trans_ebilling'>Facturación Electrónica</a></li>
+		<li role="presentation" class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+			   Config&nbsp;<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				  <li role="presentation"><a href="#general" aria-controls="general" role="tab" data-toggle='tab' style='font-size:15px; padding:10px 20px;'>General</a></li>
+				  <li role="presentation"><a href="#ventastab" aria-controls="ventastab" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;' class='trans_sales'>Ventas</a></li>
+				  <li role="presentation"><a href="#impuestostab" aria-controls="impuestostab" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;' class='trans_imp'>Impuestos</a></li>
+				  <li role="presentation"><a href="#plan" aria-controls="plan" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;' onclick='VerPlanes();'>Plan</a></li>
+			</ul>
+		</li>
+		<li role='presentation'><a href="#impresorastab" aria-controls="impresorastab" role="tab" data-toggle="tab" class='trans_printers'>Impresoras</a></li>
+		<!---<li role="presentation"><a href="#ventastab" aria-controls="ventastab" role="tab" data-toggle="tab" class='trans_sales'>Ventas</a></li>
 		<li role="presentation" id='tabclickimpuestos'><a href="#impuestostab" aria-controls="impuestostab" role="tab" data-toggle="tab" class='trans_imp'>Impuestos</a></li>
-		<li role="presentation" id='tabclickimpresoras'><a href="#impresorastab" aria-controls="impresorastab" role="tab" data-toggle="tab" class='trans_printers'>Impresoras</a></li>
+		<li role="presentation" id='tabclickimpresoras'><a href="#impresorastab" aria-controls="impresorastab" role="tab" data-toggle="tab" class='trans_printers'>Impresoras</a></li>--->
 		<!--<li role="presentation" id='tabclickempresa'><a href="#empresatab" aria-controls="empresatab" role="tab" data-toggle="tab" class='trans_company'>Empresa</a></li>-->
-		<li role="presentation" id='tabclickfacele'><a href="#faceletab" aria-controls="faceletab" role="tab" data-toggle="tab" class='trans_ebilling'>Facturación Electrónica</a></li>
-        <li role="presentation" id='tabclicklog'><a href="#logtab" aria-controls="logtab" role="tab" data-toggle="tab" class=''>Log</a></li>
+        <!---<li role="presentation" id='tabclicklog'><a href="#logtab" aria-controls="logtab" role="tab" data-toggle="tab" class=''>Log</a></li>-->
 	  </ul>
 	  <!-- Tab panes -->
 	  <div class="tab-content">
-		<div role="tabpanel" class="tab-pane active" id="plan">
+		<div role="tabpanel" class="tab-pane" id="plan">
 			<div style='background-color:white;'>
 			   <!-- <div class="alert alert-danger" role="alert" style="display: none;"></div>-->
-					<div class='row' id='cuentaactiva' style='display:none; margin:20px;'>
-					<div id='planes_es' style='display:none;'>
+					<div class='row' id='cuentaactiva' style='display:none; margin:20px; text-align:center;'>
+					<div id='planes_es' style='display:none; text-align:center;'>
                     <div id="volverplan_es" style="position: absolute;top: 25px;right: 50px;cursor:pointer;color:#1495C0;display: none;">
                         <i class="fa fa-chevron-circle-left fa-3x" title='Volver...' onclick="VerOpcionesIngreso();"></i>
                     </div>
@@ -498,8 +508,10 @@
 						<h1>Guía de precios</h1>
 						<p>AvaPOS es gratis por el tiempo que quieras.  Pásate a un plan pagado cuando lo necesites.</p>
 					</div>
+					<div class='row' style='text-align:center;'>
 					<div class='col-lg-4 col-md-4 col-xs-6'>
-					 <div class="jumbotron" id='jumbo0es'>
+						
+							<div class="jumbotron" id='jumbo0es'>
 							<h2>Gratis</h2>		
 							<p>Para pequeños negocios o evaluación ilimitada</p>
 							<h1>$0.00</h1>		
@@ -511,7 +523,7 @@
 							<li>Facturas y Productos Ilimitados</li>
 							</ul>
 							</div>
-					 </div>
+							</div>
 					</div>
 					<div class='col-lg-4 col-md-4 col-xs-6'>
 					 <div class="jumbotron jumbo-red" id='jumbo29es'>
@@ -528,7 +540,6 @@
 							<li>Manejo de Permisos y Accesos por Usuario</li>
 							</ul>
 							</div>
-
 					 </div>
 					</div>
 					<div class='col-lg-4 col-md-4 col-xs-6'>
@@ -546,6 +557,7 @@
 							</ul>
 							</div>
 					 </div>
+					</div>
 					</div>
 					</div>
 					<div id='planes_en' style='display:none;'>
@@ -591,6 +603,7 @@
 					</div>
 					<div class='col-lg-4 col-md-4 col-xs-6'>
 					 <div class="jumbotron" id='jumbo69en'>
+							<div class='content-fluid'>
 							<h2>Premium</h2> 
 							<p>Monthly Payments per Store, with premium benefits</p>
 							<h1>$69.00</h1>		
@@ -602,6 +615,7 @@
                             <li>Capacity to manage multiple stores from a single account</li>
                             <li>Customize order in menu buttons and tabs</li>
 							</ul>
+							</div>
 							</div>
 					 </div>
 					</div>
@@ -629,6 +643,7 @@
 			</div>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="general">
+		<h3>General</h3><br/>
 		<table class='table'>
 		<tr><td style='width:50%; text-align:right;'><img id='logofull' width='70px'/></td><td style='text-align:left; vertical-align:bottom;'><div id='trans_label_79' style='padding-bottom:10px;'>Puedes subir/cambiar tu logo en la nube, y este se sincronizará con tu dispositivo. </div><button type='button' class='btn btn-sm btn-success' id='cambiarlogo' href='' onclick='IrCloud();'>Subir logo</button></td></tr>
 		<tr><td style='text-align:right;' id="trans_label_62">País:</td><td><input id='tablet_pais' class='form-control' readonly /></td></tr>
@@ -702,6 +717,7 @@
 		</div>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="ventastab">
+			<h3 class='trans_sales'>Ventas</h3><br/>
 			<table class='table'>
 			    <tr>
                     <td  style='text-align:right; width:50%;' id="trans_label_26">Ver Diseño Menú</td>
@@ -752,6 +768,7 @@
 			</div>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="impuestostab">
+			<h3 class='trans_imp'>Impuestos</h3>
             <p style="text-align: right;margin-top:10px;"><button class='btn btn-success btn-md trans_impuesto' type='button' onclick='editarimpuesto(0);'>Nuevo Impuesto</button></p>
 			<table class='table table-striped' id='confimpuestos' style='margin-top:-10px; margin-bottom:20px;'>
 			<thead><tr><th class='trans_name'>Nombre</th><th class='trans_percent'>Porcentaje (%)</th><th class='trans_consider'>Considerar</th></tr></thead>
@@ -821,6 +838,7 @@
 
 		<!---</div>-->
 		<div role="tabpanel" class="tab-pane" id="impresorastab">
+			<h3 class='trans_printers'>Impresoras</h3>
 			<div class='row'>
 				<div class='col-lg-12'>
 					<div class='panel panel-default'>
@@ -988,7 +1006,7 @@
 				</div>
 			</div>
 		</div>
-		<div role='tabpanel' class='tab-pane' id='faceletab'>
+		<div role='tabpanel' class='tab-pane active' id='faceletab'>
 				<div class='panel' id='sihayEmp'>
 				<div class="row"  style='padding-top:30px;'>
 					<div class='col-xs-1'></div>
@@ -1172,50 +1190,48 @@
 </div>
 <script>
 $(document).ready(function(){
-			
+	if(localStorage.getItem("id_version_nube") == '0'||localStorage.getItem("id_version_nube") == null){
+		//envia('config');
+		if(localStorage.getItem('idbarra')!=null){
+			$('#pestanasconfig').fadeOut();
+			$('#version_escoje').fadeIn();
+			$('#cargandoTabs').modal('hide');
+			$('#barraalternamovil').css('display','none');
+		}
+		//document.getElementById('main').style.display='none';
+	}
 
-	        if(localStorage.getItem("id_version_nube") == '0'||localStorage.getItem("id_version_nube") == null){
-				//envia('config');
-				if(localStorage.getItem('idbarra')!=null){
-					$('#pestanasconfig').fadeOut();
-					$('#version_escoje').fadeIn();
-					$('#cargandoTabs').modal('hide');
-					$('#barraalternamovil').css('display','none');
-				}
-                //document.getElementById('main').style.display='none';
-            }
+	if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
+	  var paisuax = localStorage.getItem("pais");
+	  if(paisuax != ''){
+		$('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
+		ponerCodigoPais();
+	  }
+		//envia('config');
+		$('#pestanasconfig').fadeOut();
+		$('#pide_telefono').fadeIn();
+		$('#cargandoTabs').modal('hide');
+	   // document.getElementById('main').style.display='none';
+		$('#barraalternamovil').css('display','none');
+	}
 
-            if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
-              var paisuax = localStorage.getItem("pais");
-              if(paisuax != ''){
-                $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
-                ponerCodigoPais();
-              }
-				//envia('config');
-			    $('#pestanasconfig').fadeOut();
-			    $('#pide_telefono').fadeIn();
-				$('#cargandoTabs').modal('hide');
-               // document.getElementById('main').style.display='none';
-				$('#barraalternamovil').css('display','none');
-            }
+	if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
+	  //envia('config');
+	  $('#pestanasconfig').fadeOut();
+	  $('#pide_local').fadeIn('slow');
+	  $('#cargandoTabs').modal('hide');
+	  $('#barraalternamovil').css('display','none');
+	  //document.getElementById('main').style.display='none';
+	}
 
-            if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") != '' && localStorage.getItem("id_locales") == '0'){
-			  //envia('config');
-			  $('#pestanasconfig').fadeOut();
-              $('#pide_local').fadeIn('slow');
-			  $('#cargandoTabs').modal('hide');
-			  $('#barraalternamovil').css('display','none');
-              //document.getElementById('main').style.display='none';
-            }
+	ListarLocales();
 
-            ListarLocales();
-
-            if(localStorage.getItem("terminos") == 'false'){
-			    $('#terminos_condiciones').fadeIn('slow');
-				$('#barraalternamovil').css('display','none');
-				$('#cargandoTabs').modal('hide');
-                //document.getElementById('main').style.display='none';
-            }
+	if(localStorage.getItem("terminos") == 'false'){
+		$('#terminos_condiciones').fadeIn('slow');
+		$('#barraalternamovil').css('display','none');
+		$('#cargandoTabs').modal('hide');
+		//document.getElementById('main').style.display='none';
+	}
 
 	
 
@@ -1254,6 +1270,11 @@ $(document).ready(function(){
 		$('#linklogin69es').html('Activar');
 		$('#linklogin69en').html('Upgrade Now');
 		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').attr('class','jumbotron');
+		$('#jumbo0es').parent().css('display:none;');
+		$('#jumbo0en').parent().css('display:none;');
+		$('#jumbo29es').parent().css('display:none;');
+		$('#jumbo29en').parent().css('display:none;');
+		$('#jumbo69es,#jumbo69en').parent().attr('class','col-sm-6 col-lg-6 col-md-6');
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
 		$('#printlogo,#backupinf').bootstrapSwitch('readonly',false);
         $('#produccion').bootstrapSwitch('readonly',true);
@@ -1275,6 +1296,11 @@ $(document).ready(function(){
 		$('#linklogines').html('Activar');
 		$('#linkloginen').html('Active');
 		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').attr('class','jumbotron');
+		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').css('display','none');
+		$('#jumbo0es,#jumbo0en,#jumbo29es,#jumbo29en').each(function(){
+			$(this).parent().attr('class','col-lg-1 col-md-1 col-sm-1');
+		});
+		$('#jumbo69es,#jumbo69en').parent().attr('class','col-lg-8 col-md-8 col-sm-8');
 		$('#jumbo69es,#jumbo69en').attr('class','jumbotron jumbo-blue');
 		$('#printlogo,#backupinf').bootstrapSwitch('readonly',false);
         $('#produccion').bootstrapSwitch('readonly',false);
@@ -1295,13 +1321,7 @@ $(document).ready(function(){
 	
 	$('#dias').html(localStorage.getItem('dias'));
 	$('#mensajeperso').html(localStorage.getItem('msj'));
-	
-	if(localStorage.getItem("idioma")==1){
-		$('#planes_es').fadeIn();
-	}else{
-		$('#planes_en').fadeIn();
-	}
-	
+
 	/*Mensajes de alerta*/
 	if(msjcloud>0){
 		if(msjcloud==1){
@@ -1405,18 +1425,6 @@ $(document).ready(function(){
 		$('#contentStepSincro,#cuentaactiva,#mensajeperso,#pestanasconfig').fadeIn();
 	}
 	
-	var maxheight=0;
-	$('.jumbotron').each(function(){
-		var mh=parseFloat($(this).css('height'));
-		console.log(mh);
-		if(mh>maxheight){
-			//$('.jumbotron').css('height',mh);
-			maxheight=mh;
-			console.log(maxheight);
-		}
-	});
-
-	$('.jumbotron').css('height',maxheight);
 	///fin planes
 	
 	
@@ -2998,6 +3006,32 @@ function grabarimpuesto(){
     	,errorCB,successCB);
 
     }
+}
 
+function VerPlanes(){
+		if(localStorage.getItem("idioma")==1){
+			$('#planes_es').fadeIn('fast',function(){
+				DefinirJumbo();
+			});
+		}else{
+			$('#planes_en').fadeIn('fast',function(){
+				DefinirJumbo();
+			});
+		}
+}
+
+function DefinirJumbo(){
+	var maxheight=0;
+		$('.jumbotron').each(function(){
+			var mh=parseFloat($(this).outerHeight());
+			console.log(mh);
+			if(mh>maxheight){
+				//$('.jumbotron').css('height',mh);
+				maxheight=mh;
+				console.log(maxheight);
+			}
+		});
+
+		$('.jumbotron').css('height',maxheight);
 }
 </script>

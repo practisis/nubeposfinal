@@ -34,7 +34,7 @@ function SyncStart(){
 		//envia('puntodeventa');
 		//Init31();
 		if(localStorage.getItem('id_version_nube')!='0'&&localStorage.getItem('id_version_nube')!=null&&localStorage.getItem('telefono_inte')!=''&&localStorage.getItem('telefono_inte')!=null&&localStorage.getItem('id_locales')!='0'&&localStorage.getItem('id_locales')!=null&&localStorage.getItem('terminos')!='false'&&localStorage.getItem('terminos')!=null){
-			if($(window).width()>550)
+			if($(window).width()>900)
 				$('.navbar').slideDown();
 			else
 				$('#barraalternamovil').slideDown();
@@ -635,7 +635,7 @@ function registrarUser(){
 function LaunchBoarding(){
 	
 	//alert($(window).width());
-	if(parseInt($(window).width())<=550){
+	if(parseInt($(window).width())<=900){
 		$('#flechamenumovil').css('display','block');
 		$('#flechamenu').css('display','none');
 		$('#barraalternamovil').slideDown();

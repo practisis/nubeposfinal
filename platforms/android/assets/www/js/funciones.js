@@ -89,7 +89,7 @@ function ActivarCategoria(cual,categoria){
 						impuestosid+='2';
 					}*/
 				}
-				if($(window).width()>550){
+				if($(window).width()>900){
 						Init31();
 					}
 					else{
@@ -103,7 +103,7 @@ function ActivarCategoria(cual,categoria){
 	
 	
 	$('.producto').hide();
-	if($(window).width()>550){
+	if($(window).width()>900){
 			Init31();
 	}
 	else{
@@ -174,7 +174,7 @@ function ActivarCategoriasp(cual,categoria){
 
 
 	$('.producto').hide();
-	if($(window).width()>550){
+	if($(window).width()>900){
 			Init31();
 	}
 	else{
@@ -2446,7 +2446,7 @@ function Init31(){
 	
 	var navh=parseInt($('.navbar').css("height"));
 	$('#pay').css("height",(hd-navh));
-	if(w<550){
+	if(w<=900){
 		$('.btn-lg').each(function(){
 			var actual=$(this).attr('class');
 			var nueva=actual.replace("btn-lg","btn-sm");
@@ -2912,7 +2912,7 @@ function Ready(){
    $('body').css('min-height',$(window).height());
   
   $('#menuSubNew2').html("Total");
-  if($(window).width()<=550){
+  if($(window).width()<=900){
 	  $('#barraalternamovil').slideDown();
 	  $('#divmesas').css('min-height',$('body').height()-$('#barraalternamovil').height());
 	  $("#lapartedepagos").css("display","none");
@@ -2924,6 +2924,7 @@ function Ready(){
 	  $('#barraalternamovil').css('display','none');
   }
   
+  //alert("hola");
  
   
   $('#popupprecios').modal('hide');
@@ -3087,7 +3088,7 @@ function Ready(){
 	
 	//idioma
 	
-	if($(window).width()>550){
+	if($(window).width()>900){
 			Init31();
 		}
 		else{
@@ -3608,7 +3609,7 @@ function VerificarNumero(valor){
                 }
 
 			}else if(response=='Desactivado'){
-			    envia('cloud');
+			    envia('config');
 				setTimeout(function(){
 					$('.navbar,#barraalternamovil').slideUp();
 					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
@@ -3821,7 +3822,7 @@ function ActivarCategoriaMenu(cual,categoria){
 								var agregar='<div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div><div style="background-color:white; border:1px solid white; border-radius:0px;" class="producto btn btn-lg btn-primary categoria_producto_'+categoria+'"></div>';
 								$('#listaProductos').append(agregar);
 							}
-							if($(window).width()>550){
+							if($(window).width()>900){
 									Init31();
 								}
 								else{
@@ -3850,7 +3851,7 @@ function ActivarCategoriaMenu(cual,categoria){
 	$('#listacat li a').css("height",maxw);
 	
 	//$('.categoria_producto_'+ categoria).show();
-	if($(window).width()>550){
+	if($(window).width()>900){
 			Init31();
 		}
 		else{
@@ -3992,14 +3993,14 @@ function VerificarAgregados(btnprod,origen){
             			}
 
   			}else if(response=='Desactivado'){
-  			    envia('cloud');
+  			    envia('config');
   				setTimeout(function(){
   					$('.navbar,#barraalternamovil').slideUp();
   					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
   					$('#desactivo').fadeIn();
   				},100);
   			}else{
-  				envia('cloud');
+  				envia('config');
   				setTimeout(function(){
   					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
   					$('.navbar,#barraalternamovil').slideUp();
@@ -4748,7 +4749,7 @@ function VerConsumos(idmesa){
 		sessionStorage.setItem("mesa_name",$('#mesaname_'+idmesa).html());
 	    $('#tablaCompra').html('');
 		
-		if($(window).width()<550)
+		if($(window).width()<=900)
 			$('#menuSubNew1,#menuSubNew2').fadeIn();
 
     if(localStorage.getItem("con_localhost") == 'true'){

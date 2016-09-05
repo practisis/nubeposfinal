@@ -41,7 +41,8 @@ import com.epson.eposprint.EposException;
 public class PrinterFunctionsEpson{
 	
 	private String openDeviceName = "74:2B:62:D6:62:96";
-    private  int connectionType = Print.DEVTYPE_BLUETOOTH;
+    //private  int connectionType = Print.DEVTYPE_BLUETOOTH;
+    private  int connectionType = Print.DEVTYPE_USB;
     private  int printerModel = Builder.LANG_EN;
     private  String printerName = "TM-T20II";
 	

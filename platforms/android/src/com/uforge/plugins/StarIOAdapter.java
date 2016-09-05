@@ -55,6 +55,7 @@ public class StarIOAdapter extends CordovaPlugin {
 	
     final Handler mhandler = new Handler();
 	boolean iniciadaepson=false;
+	Integer intentos=0;
 	
 	public enum RasterCommand {
 		Standard, Graphics
@@ -181,7 +182,14 @@ public class StarIOAdapter extends CordovaPlugin {
                 public void run() {
 					try {
 							if(!iniciadaepson){
-								Finder.start(micontext,DevType.BLUETOOTH, null);
+								//Finder.start(micontext,DevType.BLUETOOTH, null);
+								/*if(intentos>0){*/
+									Finder.start(micontext,DevType.BLUETOOTH, null);
+									/*intentos++;
+								}else{
+									Finder.start(micontext,DevType.USB, null);
+									intentos=0;
+								}*/
 								iniciadaepson=true;
 							}
 							Thread t= new Thread(){
@@ -227,6 +235,17 @@ public class StarIOAdapter extends CordovaPlugin {
 										String address = deviceList[i].getDeviceName();
 										Integer type=deviceList[i].getDeviceType();
 										System.out.println("tipo:"+type);
+										switch(type){
+											case DevType.TCP:
+												System.out.println("tcp");
+												break;
+											case DevType.BLUETOOTH:
+												System.out.println("bluetooth");
+												break;
+											case DevType.USB:
+												System.out.println("usb");
+												break;
+										}
 										String model ="TM-m10";
 										if(name.indexOf("t88v".toUpperCase())>-1) model="TM-T88V";
 										if(name.indexOf("t70".toUpperCase())>-1) model="TM-T70";
@@ -245,10 +264,10 @@ public class StarIOAdapter extends CordovaPlugin {
 										if(name.indexOf("p20".toUpperCase())>-1) model="TM-P20";
 										if(name.indexOf("p80".toUpperCase())>-1) model="TM-P80";
 										if(name.indexOf("m10".toUpperCase())>-1) model="TM-m10";
-										System.out.println("Impresora:"+address+"/"+name+"/"+model);
+										System.out.println("Impresora:"+address+"/"+name+"/"+model+"/"+type);
 										if(cont>0)
 											epsonprinters=epsonprinters+"||";
-										epsonprinters=epsonprinters+address+"@"+name+"@"+model;
+										epsonprinters=epsonprinters+address+"@"+name+"@"+model+"@"+type;
 										cont++;
 									}
 									currentCallbackContext.success(epsonprinters);

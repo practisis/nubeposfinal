@@ -600,7 +600,7 @@ margin-top:10px;
   font-size: 11px;
   width: 300px;
 }
-@media (max-width:2000px) and (min-width:700px) {
+@media (max-width:2000px) and (min-width:1201px) {
   .ventanaprincipal{
     position: relative;
     background-color: #ffffff;
@@ -753,7 +753,7 @@ margin-top:10px;
 
 }
 
-@media (max-width: 1200px) and (min-width: 600px) {
+@media (max-width: 1200px) and (min-width: 900px) {
  
   /*.ventanaformapago{
     height: 310px;
@@ -863,7 +863,7 @@ margin-top:10px;
     }
 }
 
-@media (max-width: 550px) and (min-width: 200px) {
+@media (max-width: 901px) and (min-width: 200px) {
   
   .columna2{
     width: 20%;

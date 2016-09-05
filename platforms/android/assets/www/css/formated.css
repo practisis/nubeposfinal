@@ -1367,7 +1367,7 @@ body, html {
 	display:block;
 }
 
-@media (min-width: 900px) { 	
+@media (min-width:900px){ 	
 #barrarribanav { 
     display:block;
 }	

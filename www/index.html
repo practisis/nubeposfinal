@@ -263,7 +263,7 @@
                        $('#terminos_condiciones').fadeOut('slow');
                        //document.getElementById('main').style.display='block';
                        localStorage.setItem("terminos",newTerminos);
-					   if($(window).width()>550)
+					   if($(window).width()>900)
 							$('.navbar').slideDown();
 					   else
 							$('#barraalternamovil').slideDown();
@@ -294,10 +294,12 @@
                        //document.getElementById('main').style.display='block';
                        localStorage.setItem("id_locales",newLocal);
                        //$('.navbar').fadeIn();
-					   if($(window).width()>550)
+					   if($(window).width()>900){
 							$('.navbar').slideDown();
-					   else
+						}
+					   else{
 							$('#barraalternamovil').slideDown();
+						}
                        envia('puntodeventa');
         			  });
     			    },errorCB,successCB);
@@ -803,6 +805,7 @@
 			
 			
 	$( document ).ready(function(){
+			//alert($(window).width());
 			SyncStart();
 			digitado=false;
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -829,7 +832,7 @@
             }*/
 
 			$('#myDash').on('show.bs.modal',function(){
-				if(parseInt($(window).width())>550){
+				if(parseInt($(window).width())>900){
 					$('.navbar').slideDown();
 					$('#barraalternamovil').css('display','none');
 					$(this).find('.modal-dialog').css('top','150px');
@@ -843,7 +846,7 @@
 			$('#myDash').on('shown.bs.modal',function(){
 				var hmenu=parseFloat($('.navbar').css('height'));
 				$(this).find('.modal-backdrop').css('top',hmenu);
-				if(parseInt($(window).width())>550){
+				if(parseInt($(window).width())>900){
 				setTimeout(function(){$('#listademenus').effect('highlight',{'color':'#CCC', "opacity": ".5"},2000)},2500);
 				}
 				else{
@@ -995,27 +998,20 @@
 	}
 	
 	function ocultarTeclado(como){
-	  if(localStorage.getItem("con_profesionales")=='true' && como==1){
-	    var cual = $('#queprecioaux').val();
-        if(cual == 0){
-            $('#precioprof').val($('.cantidadn').val());
-        }else if(cual == 1){
-            $('#totalprof').val($('.cantidadn').val());
-        }
-        calculaProdProf();
-	  }else{
-		if(como==1){
-			var miinp=$('#inputtarget').val();
-			var inp=$('#'+miinp);
-			inp.val($('.cantidadn').val());
-			if(miinp=='precioproducto')
-				CalcularConImpuestos();
-			else if(miinp=='precioConImpuestos')
-				CalcularSinImpuestos();
-			else if(miinp=='paymentEfectivo'||miinp=='valortarjeta'||miinp=='valorcheque1'||miinp=='valorcxc')
-				$(inp).change();
-		}
-      }
+			if(como==1){
+				var miinp=$('#inputtarget').val();
+				var inp=$('#'+miinp);
+				inp.val($('.cantidadn').val());
+				if(miinp=='precioproducto')
+					CalcularConImpuestos();
+				else if(miinp=='precioConImpuestos')
+					CalcularSinImpuestos();
+				else if(miinp=='paymentEfectivo'||miinp=='valortarjeta'||miinp=='valorcheque1'||miinp=='valorcxc')
+					$(inp).change();
+				else if(miinp=='precioprof'||miinp=='totalprof'){
+					calculaProdProf()
+				}
+			}
 		$('#popupprecios').modal('hide');
 	}
 

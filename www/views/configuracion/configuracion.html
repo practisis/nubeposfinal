@@ -1130,19 +1130,13 @@
                         <div id="paso3" style="display: none;">
                           <div class="row">
   					        <div class='col-xs-3'></div>
-                              <div class='col-xs-6' style="font-size: 18px;font-weight: bold;"><span id='trans_label_120'>¿Cómo obtener la firma electrónica?</span></div>
+                              <div class='col-xs-6' style="font-size: 18px;font-weight: bold;"><span id='trans_label_121' style="cursor: pointer;">Ya puede enviar emails de facturas, pero no están firmadas.</span></div>
                               <div class='col-xs-3'></div>
                           </div>
                           <br>
                           <div class="row">
   					        <div class='col-xs-3'></div>
-                              <div class='col-xs-6'><a href="http://www.administracionpublica.gob.ec/como-obtener-la-firma-electronica/" target="_blank"><input id="aqui" name="aqui" type="button" value="Haz click aquí" class="btn btn-info" style="font-size: 10px;"></a></div>
-                              <div class='col-xs-3'></div>
-                          </div>
-                          <br>
-                          <div class="row">
-  					        <div class='col-xs-3'></div>
-                              <div class='col-xs-6'>o</div>
+                              <div class='col-xs-6' style="font-size: 16px;"><span id='trans_label_120' onclick="obtenerfirma();" style="cursor: pointer;">¿Cómo obtener la firma electrónica?</span></div>
                               <div class='col-xs-3'></div>
                           </div>
                           <br>
@@ -3178,5 +3172,9 @@ function continuarpasos(paso,que){
      $('#paso1').fadeIn('slow');
    }
  }
+}
+function obtenerfirma(){
+  var url = 'http://www.administracionpublica.gob.ec/como-obtener-la-firma-electronica/';
+  window.open(url);
 }
 </script>

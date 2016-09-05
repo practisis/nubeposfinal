@@ -1803,7 +1803,7 @@ $(document).ready(function(){
 			}else if(marca==1){
 				var $btn = $('#btnbuscarimp').button('loading');
 				//buscar epson
-				StarIOAdapter.searchEpson("",function(dataprinte){
+				StarIOAdapter.searchEpson("BT",function(dataprinte){
 					//alert(dataprint);
 					//alert(res);
 					var todasimp=dataprinte.split('||');

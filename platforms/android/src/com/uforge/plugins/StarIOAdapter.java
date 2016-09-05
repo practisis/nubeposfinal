@@ -55,7 +55,7 @@ public class StarIOAdapter extends CordovaPlugin {
 	
     final Handler mhandler = new Handler();
 	boolean iniciadaepson=false;
-	Integer intentos=0;
+	String tipoactual="BT";
 	
 	public enum RasterCommand {
 		Standard, Graphics
@@ -180,18 +180,48 @@ public class StarIOAdapter extends CordovaPlugin {
         }else if (action.equals("searchEpson")) {
 			cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
-					try {
-							if(!iniciadaepson){
-								//Finder.start(micontext,DevType.BLUETOOTH, null);
-								/*if(intentos>0){*/
-									Finder.start(micontext,DevType.BLUETOOTH, null);
-									/*intentos++;
-								}else{
-									Finder.start(micontext,DevType.USB, null);
-									intentos=0;
-								}*/
-								iniciadaepson=true;
+						String mitipo="";
+						Integer tipoprint=DevType.BLUETOOTH;
+						try{
+							if(Arguments.length() < 1) {
+								throw new Exception("You must specify a portName search parameter");
 							}
+							
+							mitipo=Arguments.getString(0);
+							if(mitipo.equals("USB"))
+								tipoprint=DevType.USB;
+							else if(mitipo.equals("BT"))
+								tipoprint=DevType.BLUETOOTH;
+						}catch(Exception e){
+							currentCallbackContext.error(e.getMessage());
+						}
+						
+						try {
+							if(!iniciadaepson){
+								Finder.start(micontext,tipoprint,null);
+								tipoactual=mitipo;
+								iniciadaepson=true;
+							}else{
+								if(!tipoactual.equals(tipoprint)){
+									// stop old finder
+									while (true) {
+										try {
+											Finder.stop();
+											iniciadaepson=false;
+											break;
+										}
+										catch (EpsonIoException e) {
+											if (e.getStatus() != IoStatus.ERR_PROCESSING) {
+												break;
+											}
+										}
+									}
+									Finder.start(micontext,tipoprint,null);
+									tipoactual=mitipo;
+									iniciadaepson=true;	
+								}
+							}
+							
 							Thread t= new Thread(){
 								public void run(){
 									try{

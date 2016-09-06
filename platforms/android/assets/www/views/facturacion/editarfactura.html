@@ -514,7 +514,7 @@ function ReimprimirFactura(){
 
 									});
 								}else{
-									StarIOAdapter.printepson(jsonfact+"reimpr",localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+									StarIOAdapter.printepson(jsonfact+"reimpr",localStorage.getItem("printmodel"),localStorage.getItem("printaddress"),localStorage.getItem("printtype"), function() {
 										if(localStorage.getItem("idioma")==1)
 										showalert("Imprimiendo Factura.");
 										else if(localStorage.getItem("idioma")==2)
@@ -574,7 +574,7 @@ function ReimprimirFactura(){
 											
 										});
 									}else{
-										StarIOAdapter.printepson(jsonfact.j+"reimpr",localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+										StarIOAdapter.printepson(jsonfact.j+"reimpr",localStorage.getItem("printmodel"),localStorage.getItem("printaddress"),localStorage.getItem("printtype"), function() {
 											if(localStorage.getItem("idioma")==1)
 											showalert("Imprimiendo Factura.");
 											else if(localStorage.getItem("idioma")==2)

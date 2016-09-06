@@ -55,7 +55,7 @@ public class StarIOAdapter extends CordovaPlugin {
 	
     final Handler mhandler = new Handler();
 	boolean iniciadaepson=false;
-	String tipoactual=DevType.BLUETOOTH;
+	Integer tipoactual=DevType.BLUETOOTH;
 	
 	public enum RasterCommand {
 		Standard, Graphics
@@ -202,7 +202,7 @@ public class StarIOAdapter extends CordovaPlugin {
 								tipoactual=tipoprint;
 								iniciadaepson=true;
 							}else{
-								if(!tipoactual.equals(tipoprint)){
+								if(!(tipoactual==tipoprint)){
 									// stop old finder
 									while (true) {
 										try {
@@ -217,7 +217,7 @@ public class StarIOAdapter extends CordovaPlugin {
 										}
 									}
 									Finder.start(micontext,tipoprint,null);
-									tipoactual=mitipo;
+									tipoactual=tipoprint;
 									iniciadaepson=true;	
 								}
 							}

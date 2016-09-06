@@ -620,7 +620,7 @@ function impresionMovil(mijson){
 								ImprimeComanderas(mijson);
 							});
 						}else if(localStorage.getItem("printtrade")==1){
-							StarIOAdapter.printepson(mijson,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+							StarIOAdapter.printepson(mijson,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), localStorage.getItem("printtype"),function() {
 								var now=new Date().getTime();
 								//tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió la Factura",""]);
 								if(localStorage.getItem("idioma")==1)
@@ -659,7 +659,7 @@ function ImprimeComanderas(mijson){
 							if(localStorage.getItem("printtrade")==2){
 								StarIOAdapter.rawprint(mijson,localStorage.getItem("printc"), function() {});
 							}else if(localStorage.getItem("printtrade")==1){
-								StarIOAdapter.printepson(mijson,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function() {});
+								StarIOAdapter.printepson(mijson,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), localStorage.getItem("comtype"),function() {});
 							}
 						}
 					}else{
@@ -1610,7 +1610,7 @@ function VerificarComandas(){
 					StarIOAdapter.rawprint(json,localStorage.getItem("printc"), function(){});
 				}else if(localStorage.getItem("printtrade")==1){
 					$('#cargandoTabs').modal("show");
-					StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function() {$('#cargandoTabs').modal("hide");});
+					StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"),localStorage.getItem("comtype"), function() {$('#cargandoTabs').modal("hide");});
 				}
 			}else{
 				/*if(localStorage.getItem("idioma")==1)

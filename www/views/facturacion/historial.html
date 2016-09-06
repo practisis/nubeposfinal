@@ -77,7 +77,7 @@
 										tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió el Cierre",""]);
 									});
 								}else{
-									StarIOAdapter.printepson(respuesta,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+									StarIOAdapter.printepson(respuesta,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"),localStorage.getItem("printtype"),function() {
 										if(localStorage.getItem("idioma")==1)
 											showalert("Imprimiendo Cierre de Caja");
 										else if(localStorage.getItem("idioma")==2)
@@ -277,7 +277,7 @@
 														tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Se imprimió el Cierre",""]);
 													});
 												}else{
-													StarIOAdapter.printepson(respuesta,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+													StarIOAdapter.printepson(respuesta,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"),localStorage.getItem("printtype"), function() {
 														if(localStorage.getItem("idioma")==1)
 															showalert("Imprimiendo Cierre de Caja");
 														else if(localStorage.getItem("idioma")==2)

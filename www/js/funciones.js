@@ -5302,7 +5302,7 @@ function SaveMesa(){
 						if(localStorage.getItem("printtrade")==2){
 							StarIOAdapter.rawprint(json,miprint.printercom, function(){});
 						}else{
-							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){});
+							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"),localStorage.getItem("comtype"), function(){});
 						}
 					}else{
 						if(localStorage.getItem("idioma")==1)
@@ -5454,7 +5454,7 @@ function  ImprimirPrecuenta(){
 									showalert("Printing Check.");
 						});
 					}else{
-						StarIOAdapter.printepson(json,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), function() {
+						StarIOAdapter.printepson(json,localStorage.getItem("printmodel"),localStorage.getItem("printaddress"),localStorage.getItem("printtype"), function() {
 								if(localStorage.getItem("idioma")==1)
 									showalert("Imprimiendo Precuenta.");
 								else if(localStorage.getItem("idioma")==2)
@@ -5631,7 +5631,7 @@ function SaveMesaLocal(){
 						if(localStorage.getItem("printtrade")==2){
 							StarIOAdapter.rawprint(json,miprint.printercom, function() {});
 						}else{
-							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), function(){});
+							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"),localStorage.getItem("comtype"), function(){});
 						}
 					}else{
 						if(localStorage.getItem("idioma")==1)

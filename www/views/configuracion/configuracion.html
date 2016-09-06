@@ -2990,8 +2990,14 @@ if(nombreEstable == '' || razonSo == '' || rucFac == '' || emailFac == '' || dir
     		 $('#msjOkFac').html('Information entered Success.');
     	}
 
-        $('#paso2').fadeOut('fast');
-        $('#paso3').fadeIn('slow');
+        if(firmaFac == ''){
+          $('#paso2').fadeOut('fast');
+          $('#paso3').fadeIn('slow');
+        }else{
+          $('#paso2').fadeOut('fast');
+          $('#paso3').fadeOut('fast');
+          continuarpasos(5,1);
+        }
 
 		//variable local de si tiene facturación electrónica
 		localStorage.setItem("factelectronica",activafacturacionelectronica);

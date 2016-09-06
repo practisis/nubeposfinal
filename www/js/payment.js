@@ -994,13 +994,20 @@ function noCliente(){
 				$("#newCliente ").html('\
 			<div style="position:relative; left:0%; width:100%; height:100%" id="borrable">\
 				<div id="cuadroClientes" class="cuadroClientes" style="height:100%;"> \
-					<h3 class="trans_cliente">Cliente</h3><div style="width:100%; text-align:right; padding-right:5px;  padding-right:5px; cursor:pointer;color:#1495C0; position:absolute; top:3px; right:12px; cursor:pointer;"><i onclick="noCliente();" class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
+					<h3 class="trans_cliente" style="font-size:40px;">Cliente</h3><div style="width:100%; text-align:right; padding-right:5px;  padding-right:5px; cursor:pointer;color:#1495C0; position:absolute; top:3px; right:12px; cursor:pointer;"><i onclick="noCliente();" class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
 					<table id="descripcionD" class="table table-striped">\
 						<tr> \
 							<td colspan=2>\
 								<br><br>\
-								<input type="hidden" tabIndex="1" id="cedulaP" value="9999999999" onkeypress="isalphanumeric(event);" class="form-control"/> \
+								<input type="hidden" tabIndex="1" id="cedulaP" value="9999999999" onkeypress="isalphanumeric(event);" class="form-control input-lg"/> \
 									<table tabIndex="99"  cellpadding="0"  cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
+										<tr>\
+												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon trans_mail"  style="width:30%">&nbsp;Email</span>\
+													\
+													<input tabIndex="4" id="emailP" class="form-control input-lg"/></div>\
+												</td>\
+										</tr>\
+										\
 										<tr>\
 											<td>\
 												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%" id="trans_label_11">&nbsp;Nombre*</span>\
@@ -1018,13 +1025,6 @@ function noCliente(){
 													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control input-lg"/></div> \
 												</td>\
 										</tr>\
-										<tr>\
-												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon trans_mail"  style="width:30%">&nbsp;Email</span>\
-													\
-													<input tabIndex="4" id="emailP" class="form-control input-lg"/></div>\
-												</td>\
-										</tr>\
-										\
 									</table>\
 									\
 									<br>\
@@ -1060,45 +1060,47 @@ function noCliente(){
 			$("#newCliente ").html('\
 			<div style="" id="borrable">\
 				<div id="cuadroClientes" class="cuadroClientes" style="height:100%;"> \
-					<h3 class="trans_cliente">Cliente</h3><div style="width:100%; text-align:right; padding-right:5px;  padding-right:5px; cursor:pointer;color:#1495C0; position:absolute; top:3px; right:12px; cursor:pointer;"><i onclick="noCliente();" class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
+					<h3 class="trans_cliente" style="font-size:40px;">Cliente</h3><div style="width:100%; text-align:right; padding-right:5px;  padding-right:5px; cursor:pointer;color:#1495C0; position:absolute; top:3px; right:12px; cursor:pointer;"><i onclick="noCliente();" class="fa fa-chevron-circle-left fa-3x" title="Volver..."></i></div>\
 					<table id="descripcionD" class="table table-striped">\
 						<tr> \
 							<td colspan=2>\
 								<br><br>\
-									<table tabIndex="99"  cellpadding="0" cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
+									\<form>\
+									<table tabIndex="99" cellpadding="0" cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
 										<tr>\
 											<td>\
-										<div class="input-group" style="width:100%; margin-bottom:10px;"><span class="input-group-addon trans_cedula" style="width:30%">\
+										<div class="input-groupt" style="width:100%; margin-bottom:10px;"><span class="input-group-addon trans_cedula labellarge" style="width:30%; display:none;">\
 													&nbsp;Cédula* \
-											</span><input tabIndex="1" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control input-lg"/> </div>\
+											</span><input tabIndex="1" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control input-lg extralarge" placeholder="CI/RUC"/> </div>\
+												</td>\
+										</tr>\
+										<tr>\
+												<td>\<div class="input-groupt" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon trans_mail"  style="width:30%; display:none;">&nbsp;Email</span>\
+													\
+													<input tabIndex="2" id="emailP" class="form-control input-lg extralarge" placeholder="e-mail"/></div>\
 												</td>\
 										</tr>\
 										<tr>\
 											<td>\
-												<div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%" id="trans_label_11">&nbsp;Nombre*</span>\
-													<input  tabIndex="2" id="nombreP" class="form-control input-lg" onkeypress="isalphanumeric(event);"  value="Consumidor Final"/></div>\
+												<div class="input-groupt" style="width:100%;margin-bottom:10px;"><span class="input-group-addon" style="width:30%; display:none;" id="trans_label_11">&nbsp;Nombre*</span>\
+													<input  tabIndex="3" id="nombreP" class="form-control input-lg extralarge" onkeypress="isalphanumeric(event);" value="Consumidor Final" placeholder="nombre"/></div>\
 											</td>\
 										</tr>\
 										\
 										<tr>\
 												<td>\
-											     <div class="input-group" style="width:100%;margin-bottom:10px;"><span class="input-group-addon trans_tel"  style="width:30%">&nbsp;Teléfono</span>\<input tabindex="3" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control input-lg" type="number"/></div>				</td>\
+											     <div class="input-groupt" style="width:100%;margin-bottom:10px;"><span class="input-group-addon trans_tel"  style="width:30%; display:none;">&nbsp;Teléfono</span>\<input tabindex="4" onkeypress="isalphanumeric(event);" id="telefonoP"class="form-control input-lg extralarge" type="number" placeholder="telefono"/></div></td>\
 										</tr>\
 										<tr>\
 												<td>\
-												 <div class="input-group" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon trans_dir"  style="width:30%">&nbsp;Dirección</span>\
-													<input tabIndex="3" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control input-lg"/></div> \
-												</td>\
-										</tr>\
-										<tr>\
-												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon trans_mail"  style="width:30%">&nbsp;Email</span>\
-													\
-													<input tabIndex="4" id="emailP" class="form-control input-lg"/></div>\
+												 <div class="input-groupt" style="width:100%;margin-bottom:10px;">									<span class="input-group-addon trans_dir"  style="width:30%; display:none;">&nbsp;Dirección</span>\
+													<input tabIndex="5" onkeypress="isalphanumeric(event);" id="direccionP" class="form-control input-lg extralarge" placeholder="direccion"/></div> \
 												</td>\
 										</tr>\
 										\
 									</table>\
 									\
+									\</form>\
 									<br>\
 							</td>\
 						</tr>\

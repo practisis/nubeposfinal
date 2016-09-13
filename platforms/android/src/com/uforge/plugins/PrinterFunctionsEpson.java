@@ -408,8 +408,9 @@ public class PrinterFunctionsEpson{
 
             // Set alignment to center 
             builder.addTextAlign(Builder.ALIGN_CENTER);
-            // Section 1 : Store information 
-            builder.addFeedLine(1);
+			 // Section 1 : Store information 
+            //builder.addFeedLine(1);
+			
 		///comienzan comandos
 			if(tipo.equals("pagar")){
 				

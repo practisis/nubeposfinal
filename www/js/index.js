@@ -27,7 +27,7 @@ campos["PRESUPUESTO"]=['id|integer primary key AUTOINCREMENT','timespan|text','v
 
 campos["IMPUESTOS"]=['id|integer primary key AUTOINCREMENT','nombre|text default ""','porcentaje|numeric default 0.00','activo|boolean default "true"','timespan|text default "" UNIQUE','sincronizar|boolean default "false"'];
 
-campos["MODIFICADORES"]=['id|integer primary key AUTOINCREMENT','no_modificador|integer default 0','id_formulado|text default ""','nombre|text default ""','valor|numeric default 0.00','activo|boolean default true','id_formulado_descuento|text default ""','timespan|text default "" UNIQUE'];
+campos["MODIFICADORES"]=['id|integer primary key AUTOINCREMENT','no_modificador|integer default 0','id_formulado|text default ""','nombre|text default ""','valor|numeric default 0.00','activo|boolean default true','id_formulado_descuento|text default ""','timespan|text default "" UNIQUE','sincronizar|boolean default "false"'];
 
 campos["TIPO_MESA"]=['id|integer primary key AUTOINCREMENT','imagen_activa|text default "mesapequenaanchaa.png"','imagen_inactiva|text default "mesapequenaanchai.png"','es_mesa|boolean default "true"','timespan|text default "" UNIQUE'];
 		
@@ -114,6 +114,8 @@ function envia(donde){
 					lugar="views/configuracion/log.html";
 					if(donde=='config')
 					lugar="views/configuracion/configuracion.html";
+					if(donde=='modif')
+					lugar="views/productos/modificadores.html";
 					if(!lugar) lugar="404.html";
 					$('#cargandoTabs').css('display','none');
 					$('#correoMal').fadeOut('slow');
@@ -360,7 +362,7 @@ var app = {
 		
 		VerificarCampos('IMPUESTOS');
 		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS MODIFICADORES (id integer primary key AUTOINCREMENT,no_modificador integer default 0,id_formulado text default "",nombre text default "",valor numeric default 0.00,activo boolean default true,id_formulado_descuento text default "",timespan text default "" UNIQUE)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MODIFICADORES (id integer primary key AUTOINCREMENT,no_modificador integer default 0,id_formulado text default "",nombre text default "",valor numeric default 0.00,activo boolean default true,id_formulado_descuento text default "",timespan text default "" UNIQUE,sincronizar boolean default "false")');
 		
 		VerificarCampos('MODIFICADORES');
 		

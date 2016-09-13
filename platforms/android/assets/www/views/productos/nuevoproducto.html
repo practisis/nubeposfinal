@@ -95,6 +95,7 @@
             <div class="col-sm-12">
 				<div class='col-lg-8 col-md-8 col-xs-8'></div>
 				<div class='col-lg-4 col-md-4 col-xs-4' style='padding-top:30px;text-align: right;'>
+				  <button class='btn btn-success btn-lg' onclick='envia("modif");'>Modificadores</button>
                   <button class='btn btn-success btn-lg trans_save' onclick='GuardaProducto();'>Guardar</button>
                   <input style="display:none;" class="form-control input-sm" autofocus="" placeholder="Color" name='colorproducto' id='colorproducto' type='text' value=''/>
                 </div>
@@ -262,9 +263,9 @@
 					$(this).css('border','2px solid '+fondo);
 					$(this).html('');
 				});
-				$(this).css('border','2px solid white');
+				$(this).css('border','1px solid white');
 				$('#colorproducto').val($(this).css('background-color'));
-				$(this).html('<h4 style="margin-top:21px;"><span class="fa fa-check-square-o"></span></h4>');
+				$(this).html('<h4><span class="fa fa-check-square-o" style="color:white;"></span></h4>');
 			});
 		});
 		
@@ -925,6 +926,5 @@ function ImprimirBarras(){
 			});
 		}
 	}
-}
-	
+}	
 </script>

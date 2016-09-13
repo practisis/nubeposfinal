@@ -1733,6 +1733,17 @@ function SubirDatosaNube(cual){
 		},errorCB,successCB);
 	}
 	if(cual==6){
+		db.transaction(function(tx){
+			console.log("subida de MODIFICADORES");
+			tx.executeSql('SELECT * FROM MODIFICADORES WHERE sincronizar="true"',[],function(tx,results){
+				if(results.rows.length>0){
+					var itemsasubir=results.rows;
+					PostaLaNube(itemsasubir,cual,"MODIFICADORES",0);
+				}else{SubirDatosaNube(7)}
+			});
+		},errorCB,successCB);
+	}
+	if(cual==7){
 		procesocount=0;
 		setTimeout(function(){SincronizadorNormal();},60000);
 	}
@@ -1760,6 +1771,8 @@ function PostaLaNube(arraydatos,cual,accion,t){
 		jsonc='{"id_mesa":"'+item.id_mesa+'","cliente":"'+item.cliente+'","id_cliente":"'+item.id_cliente+'","activo":"'+item.activo+'","id_factura":"'+item.id_factura+'","hora_activacion":"'+item.hora_activacion+'","hora_desactivacion":"'+item.hora_desactivacion+'","pax":"'+item.pax+'","timespan":"'+item.timespan+'"}';
 	}else if(accion=='IMPUESTOS'){
 		jsonc='{"id_impuesto":"'+item.timespan+'","nombre":"'+item.nombre+'","valor":"'+item.porcentaje+'","activo":"'+item.activo+'"}';
+	}else if(accion=='MODIFICADORES'){
+		jsonc='{"no_modificador":"'+item.no_modificador+'","id_formulado":"'+item.id_formulado+'","valor":"'+item.valor+'","activo":"'+item.activo+'","nombre":"'+item.nombre+'","timespan":"'+item.timespan+'"}';
 	}
 	
 	console.log(jsonc);

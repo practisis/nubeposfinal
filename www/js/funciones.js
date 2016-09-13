@@ -1946,7 +1946,9 @@ function borrarCompra(item){
 					
 				var impuestoDetalles = $('#impuesto-'+ value).val().split('|');
 				var currentTax = $('#impuestoFactura-'+ value).val();
-				taxTotal = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+productoAgregados) * parseFloat(impuestoDetalles[2]));
+				//alert("arriba:"+productoCantidad+"/"+productoPrecio+"/"+productoAgregados+"/"+impuestoDetalles[2]);
+				taxTotal = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)) * parseFloat(impuestoDetalles[2]));
+				
 				$('#impuestoFactura-'+ value).val(parseFloat(currentTax) - parseFloat(taxTotal));
 				});
 			}
@@ -1957,6 +1959,7 @@ function borrarCompra(item){
 			var currentTax = $('#impuestoFactura-'+ productoImpuestosIndexes).val();
 			taxTotal = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)) * parseFloat(impuestoDetalles[2]));
             //alert(productoPrecio+'**'+productoAgregados+'**'+impuestoDetalles[2])
+			alert("abajo"+currentTax+"/"+taxTotal);
 			$('#impuestoFactura-'+ productoImpuestosIndexes).val(parseFloat(currentTax) - parseFloat(taxTotal));
 			}
 		}else{

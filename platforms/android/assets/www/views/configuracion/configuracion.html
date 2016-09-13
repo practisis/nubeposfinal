@@ -1542,8 +1542,13 @@ $(document).ready(function(){
 		
 		//si ya existe impresora determinada
 		var extrade=localStorage.getItem("printtrade");
+		var extype=localStorage.getItem("printtype");
 		if(extrade!=null)
 			$('#marca').val(extrade);
+		
+		if(extype!=null)
+			$('#tipo').val(extype);
+			
 		BuscarImpresoras();
 	
 		if(localStorage.getItem("logo")!=''&&localStorage.getItem("logo")!=null&&localStorage.getItem("logo").logo!=''){

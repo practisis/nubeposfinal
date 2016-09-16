@@ -78,6 +78,7 @@ function SyncStart(){
 	}else if(categoriasya){
 		ExtraeDatosApi(2);
 	}else if(idbarra){
+		//alert('quemado');
 		DatosIniciales(1);
 	}else{
 		ExtraeDatosApi(0);
@@ -336,11 +337,7 @@ function ExtraeDatosApi(donde){
 				}
 				
   			  });
-            },errorCB,function(){
-				localStorage.setItem("permisosya",true);
-				$("#theProgress").css("width" , "98%");
-				ExtraeDatosApi(8);
-			});
+            },errorCB,successCB);
 		}
 		
 		/*INSERTA IMPUESTOS*/
@@ -366,7 +363,11 @@ function ExtraeDatosApi(donde){
 							}
 						});
 				}
-				},errorCB,successCB);
+				},errorCB,function(){
+					localStorage.setItem("permisosya",true);
+					$("#theProgress").css("width" , "98%");
+					ExtraeDatosApi(8);
+				});
 			}			
 			/*FIN IMPUESTOS*/
 	}else if(donde==8){
@@ -458,7 +459,6 @@ function ExtraeDatosApi(donde){
 					$("#theProgress").css("width","0%");
 					$("#txtSincro").html("");
 				},1000);
-
 				setTimeout(function(){SyncStart()},1500);
 			});
 		}
@@ -498,17 +498,23 @@ function ExtraeDatosApi(donde){
 }
 
 function SincronizadorNormal(){
+	
 	console.log("sincronizador normal");
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Ready to start the normal synchronizer"]);});
 	procesocount=1;
 	$('#fadeRow,#demoGratis,#finalizado').css("display","none");
 	$('#contentStepSincro,#cuentaactiva,#mensajeperso').fadeIn();
 	DatosRecurrentes(0);
 }
 
+
 function registrarUser(){
 	if(VerificarConexion()){
 		newEmpresa=$("#newEmpresa").val();
+		newEmpresa=newEmpresa.replace(/ /g,"_");
 		newPais=$("#newPais").val();
+		nombrePais=$('#newPais option:selected').text();
 		newEmail=$("#newEmail").val();
 		newPass=$("#newPass").val();
 		newConfirm=$("#newConfirm").val();
@@ -563,9 +569,14 @@ function registrarUser(){
 			var plan=0;
 			var id_idioma = 1;
 			var iddevice=$('#deviceid').html();
+			localStorage.setItem('datosquemados',empresa+'|'+pais+'|'+nombrePais+'|'+id_idioma);
 			//alert(iddevice+'/'+nombre+'/'+id_idioma+'/'+nombre);
 			//$("#btnNewEmp").html('<img src="images/loader.gif"  width="50%" />');
-			$.post("https://practisis.net/registro/registroNubePOS.php", {
+			//$.post("https://practisis.net/registro/registroNubePOS.php", {
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Ready to send the new register post"]);});
+			
+			$.post("https://practisis.net/registro/testnubepos.php", {
 				nombre : nombre,
 				celular : celular,
 				email :newEmail,
@@ -593,40 +604,30 @@ function registrarUser(){
 				}else{
 						$("#cargandoTabs").modal('hide');
 						var datosback=data.split("||");
-						console.log(data);
+						//console.log(data);
 						localStorage.setItem("userRegister", newEmail);
 						localStorage.setItem("userPasswod", newPass);
 						localStorage.setItem("empresa",datosback[0]);
 						localStorage.setItem("idbarra",datosback[1]);
-						//localStorage.setItem("categoriasya",true);
-						//localStorage.setItem("clientesya",true);
-						//localStorage.setItem("productosya",true);
-						//localStorage.setItem("presupuestoya",true);
-						//localStorage.setItem("menucategoriasya",true);
-						//localStorage.setItem("menuya",true);
-						//localStorage.setItem("permisosya",true);
-						//localStorage.setItem("mesasya",true);
-
-						/*setTimeout(function(){
-						  if(localStorage.getItem("id_version_nube") == '0'){*/
-						//document.getElementById('main').style.display='none';
-						 /* }
-						  if(localStorage.getItem("id_version_nube") != '0' && localStorage.getItem("telefono_inte") == ''){
-							var paisuax = localStorage.getItem("pais");
-							if(paisuax != ''){
-							  $('#paiswhat option:contains('+paisuax+')').attr('selected', 'selected');
-							  ponerCodigoPais();
-							}
-							$('#pide_telefono').fadeIn('slow');
-							document.getElementById('main').style.display='none';
-						  }
-						}, 3000);*/
-
 						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 						db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(nombre,celular,newEmail,iddevice,datosback[1],'','','',false,pais);});
 							
-					}
-				});
+				}
+				
+				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Get response at the new register post"]);});
+				
+			}).fail(function(xhr, status, error) {
+				
+				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail the peticion of the new register post",status]);});
+				
+				//console.log(xhr);
+				console.log(status);
+				//console.log(error);
+				showalertred("Error status: "+status);
+				$("#cargandoTabs").modal('hide');
+			});
 		}
 	}
 }
@@ -675,7 +676,8 @@ function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direcc
 					//LaunchBoarding();
 					//envia("dashboard");
 					//envia("puntodeventa");
-					SyncStart();
+					StartQuemado();
+					//SyncStart();
 					$('#demoGratis').fadeOut();
             	    //$('#version_escoje').fadeIn('slow');
 					guardaversion(pais);
@@ -734,140 +736,168 @@ function SetDataEmpresa(nombre,celular,email,deviceid,id_barra_arriba,ruc,direcc
 
 
 function UserLogin(){
-	var quien=$("#user2").val();
-	var pass=$("#pass2").val();
-	var iddevice=$('#deviceid').html();
-    auxuser = quien;
-    auxpass = pass;
-	$('#btnvalida2').html("<img src='images/loader.gif' width='20px'/>");
-    var apiURL='https://practisis.net/connectnubepos/api2.php';
-	$.post(apiURL,{action:"login", user : quien , pass : pass, deviceid : iddevice}).done(function(data){
-		//alert(quien+'/'+pass+'/'+iddevice);
-		//alert(data);
-		if(data=='error'){
-			if(localStorage.getItem("idioma")==1)
-				showalert('Los datos son incorrectos.');
-			else if(localStorage.getItem("idioma")==2)
-				showalert('Please, enter valid information.');
-			 $('#btnvalida2').html("Login");
-		}
-		else{	
-			var datosaux = data.split("||");
-
-            if(datosaux[2] == '0'){
-
-              localStorage.setItem("userRegister", quien);
-    		  localStorage.setItem("userPasswod", pass);
-    		  localStorage.setItem("empresa",datosaux[0]);
-
-              if(localStorage.getItem("idioma")==1){
-				showalertred('Su plan actual no permite tener más de un dispositivo activo.');
-              }else if(localStorage.getItem("idioma")==2){
-				showalertred('Your current plan does not allow more than one active device.');
-              }
-
-              $('#fadeRow').fadeOut();
-              $('#noplan').fadeIn();
-
-            }else{
-				
-				localStorage.setItem("userRegister", quien);
-    			localStorage.setItem("userPasswod", pass);
-    			localStorage.setItem("empresa",datosaux[0]);
-    			localStorage.setItem("idbarra",datosaux[2]);
-				
-				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-    			db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],'',true,'0')});
-				
-				SyncStart();
-
-				//alert(localStorage.getItem("id_version_nube"));
-				//$('.navbar').slideDown();
-				$('#btnvalida2').html("Login");
-				$('#cargandoTabs').modal('show');
-          }
-		  
-		}
+	if(VerificarConexion()){
+		var quien=$("#user2").val();
+		var pass=$("#pass2").val();
+		var iddevice=$('#deviceid').html();
+		auxuser = quien;
+		auxpass = pass;
+		$('#btnvalida2').html("<img src='images/loader.gif' width='20px'/>");
+		var apiURL='https://practisis.net/connectnubepos/api2.php';
 		
-	});
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Ready to send the login post"]);});
+		
+		$.post(apiURL,{action:"login", user : quien , pass : pass, deviceid : iddevice}).done(function(data){
+			//alert(quien+'/'+pass+'/'+iddevice);
+			//alert("responde");
+			if(data=='error'){
+				if(localStorage.getItem("idioma")==1)
+					showalert('Los datos son incorrectos.');
+				else if(localStorage.getItem("idioma")==2)
+					showalert('Please, enter valid information.');
+				 $('#btnvalida2').html("Login");
+			}
+			else{	
+				var datosaux = data.split("||");
+
+				if(datosaux[2] == '0'){
+
+				  localStorage.setItem("userRegister", quien);
+				  localStorage.setItem("userPasswod", pass);
+				  localStorage.setItem("empresa",datosaux[0]);
+
+				  if(localStorage.getItem("idioma")==1){
+					showalertred('Su plan actual no permite tener más de un dispositivo activo.');
+				  }else if(localStorage.getItem("idioma")==2){
+					showalertred('Your current plan does not allow more than one active device.');
+				  }
+
+				  $('#fadeRow').fadeOut();
+				  $('#noplan').fadeIn();
+
+				}else{
+					
+					localStorage.setItem("userRegister", quien);
+					localStorage.setItem("userPasswod", pass);
+					localStorage.setItem("empresa",datosaux[0]);
+					localStorage.setItem("idbarra",datosaux[2]);
+					
+					var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+					db.transaction(iniciaDB,errorCB,function(){SetDataEmpresa(datosaux[1],datosaux[3],quien,iddevice,datosaux[2],datosaux[4],datosaux[5],'',true,'0')});
+					
+					SyncStart();
+
+					//alert(localStorage.getItem("id_version_nube"));
+					//$('.navbar').slideDown();
+					$('#btnvalida2').html("Login");
+					$('#cargandoTabs').modal('show');
+			  }
+			  
+				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Get response at the login post"]);});
+			}
+			
+		}).fail(function(xhr, status, error) {
+			//console.log(xhr);
+			console.log(status);
+			//console.log(error);
+			showalertred("Error status: "+status);
+			$('#btnvalida2').html("Login");
+			
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail the peticion of the login post",status]);});
+		});
+	}
 }
 
 function DatosIniciales(cual){
-var apiURL='https://practisis.net/connectnubepos/api2.php';
-	$.post(apiURL,{
-		id_emp: localStorage.getItem("empresa"),
-		action: 'SincStart',
-		id_barra: localStorage.getItem("idbarra"),
-		deviceid:$("#deviceid").html()
-	}).done(function(response){
-		//sincronizacion inicial
-        if(response!='block' && response!='Desactivado'){
-			//$('.navbar').slideDown();
-    		var arraydatos=JSON.parse(response);
-    		console.log(">>>>Iniciar >>>"+response);
-    		JSONproductosNube=arraydatos.productos;
-    		JSONcategoriasNube=arraydatos.categorias;
-    		JSONclientesNube=arraydatos.clientes;
-    		JSONpresupuestoNube=arraydatos.presupuestos;
-    		JSONcategoriasMenuNube=arraydatos.menucategorias;
-    		JSONmenuNube=arraydatos.menu;
-    		JSONpermisosNube=arraydatos.permisos;
-    		JSONextraNube=arraydatos.extras;
-    		JSONimpuestosNube=arraydatos.impuestos;
-    		JSONmodificadoresNube=arraydatos.modificadores;
-			JSONpropinasNube=arraydatos.propinas;
-			JSONTipoMesasNube=arraydatos.tipomesas;
-			JSONMesasNube=arraydatos.mesas;
-            JSONLocales=arraydatos.locales;
-			//JSONTipoMesasNube='{"tipomesas":[{"id":"1","imagen_activa":"mesagrandeanchaa.png","imagen_inactiva":"mesagrandeanchai.png","es_mesa":"true"},	{"id":"2","imagen_activa":"mesagrandealtaa.png","imagen_inactiva":"mesagrandealtai.png","es_mesa":"true"}]}';
-			
-			//JSONMesasNube='{"mesas":[{"id":"1","left":"780","top":"120","tipo_mesa":"1","nombre":"Mesa 1","activo":"true"},{"id":"2","left":"100","top":"120","tipo_mesa":"2","nombre":"Mesa 2","activo":"true"}]}';
-			
-			
-			//JSONmodificadoresNube=arraydatos.propinas;
-    		//JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"1245"},{"id":"2","nombre":"Servicio","porcentaje":"10","activo":"true","timespan":"1246"}]}';
+	if(VerificarConexion()){
+		var apiURL='https://practisis.net/connectnubepos/api2.php';
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Ready to send the initial data post"]);});
+		
+		$.post(apiURL,{
+			id_emp: localStorage.getItem("empresa"),
+			action: 'SincStart',
+			id_barra: localStorage.getItem("idbarra"),
+			deviceid:$("#deviceid").html()
+		}).done(function(response){
+			//sincronizacion inicial
+			if(response!='block' && response!='Desactivado'){
+				//$('.navbar').slideDown();
+				
+				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Get response at the initial data post"]);});
+				
+				var arraydatos=JSON.parse(response);
+				console.log(">>>>Iniciar >>>"+response);
+				JSONproductosNube=arraydatos.productos;
+				JSONcategoriasNube=arraydatos.categorias;
+				JSONclientesNube=arraydatos.clientes;
+				JSONpresupuestoNube=arraydatos.presupuestos;
+				JSONcategoriasMenuNube=arraydatos.menucategorias;
+				JSONmenuNube=arraydatos.menu;
+				JSONpermisosNube=arraydatos.permisos;
+				JSONextraNube=arraydatos.extras;
+				JSONimpuestosNube=arraydatos.impuestos;
+				JSONmodificadoresNube=arraydatos.modificadores;
+				JSONpropinasNube=arraydatos.propinas;
+				JSONTipoMesasNube=arraydatos.tipomesas;
+				JSONMesasNube=arraydatos.mesas;
+				JSONLocales=arraydatos.locales;
+				//JSONTipoMesasNube='{"tipomesas":[{"id":"1","imagen_activa":"mesagrandeanchaa.png","imagen_inactiva":"mesagrandeanchai.png","es_mesa":"true"},	{"id":"2","imagen_activa":"mesagrandealtaa.png","imagen_inactiva":"mesagrandealtai.png","es_mesa":"true"}]}';
+				
+				//JSONMesasNube='{"mesas":[{"id":"1","left":"780","top":"120","tipo_mesa":"1","nombre":"Mesa 1","activo":"true"},{"id":"2","left":"100","top":"120","tipo_mesa":"2","nombre":"Mesa 2","activo":"true"}]}';
+				
+				
+				//JSONmodificadoresNube=arraydatos.propinas;
+				//JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"1245"},{"id":"2","nombre":"Servicio","porcentaje":"10","activo":"true","timespan":"1246"}]}';
 
-    		//JSONmodificadoresNube='{"modificadores":[{"id":"1","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal2","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"3","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal3","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"4","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal4","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"5","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal5","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"6","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal6","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"7","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal7","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"8","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal8","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"2","id_formulado":"708331454520391001","nombre":"Con Limon","valor":"0.10","activo":"true","id_form_desc":"0"}]}';
-    		//console.log(JSONextraNube);
-
-    		$("#JSONclientesNube").html(JSONclientesNube);
-    		$("#JSONCategoriasNube").html(JSONcategoriasNube);
-    		$("#JSONproductosNube").html(JSONproductosNube);
-    		$("#JSONpresupuestoNube").html(JSONpresupuestoNube);
-    		$('#JSONCatMenuNube').html(JSONcategoriasMenuNube);
-    		$('#JSONMenuNube').html(JSONmenuNube);
-    		$('#JSONPermisosNube').html(JSONpermisosNube);
-    		$('#JSONExtraNube').html(JSONextraNube);
-    		$('#JSONImpuestosNube').html(JSONimpuestosNube);
-    		$('#JSONModifNube').html(JSONmodificadoresNube);
-    		$('#JSONPropinasNube').html(JSONpropinasNube);
-    		$('#JSONTipoMesasNube').html(JSONTipoMesasNube);
-    		$('#JSONMesasNube').html(JSONMesasNube);
-            $('#JSONLocales').html(JSONLocales);
-
-    		ExtraeDatosApi(cual);
-        }else if(response=='Desactivado'){
-    	    //envia('cloud');
-    	    envia('config');
-            $('#myDash').modal('hide');
-    		setTimeout(function(){
-    			$('.navbar,#barraalternamovil').slideUp();
-    			$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig").css("display","none");
-    			$('#desactivo').fadeIn();
-    		},100);
-    	}else{
-    		//envia('cloud');
-    		envia('config');
-            $('#myDash').modal('hide');
-    		setTimeout(function(){
-    			$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
-    			$('.navbar,#barraalternamovil').slideUp();
-    			$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig").css("display","none");
-    			$('#bloqueo').fadeIn();
-    		},100);
-
-    	}
-	});
+				//JSONmodificadoresNube='{"modificadores":[{"id":"1","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal2","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"3","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal3","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"4","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal4","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"5","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal5","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"6","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal6","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"7","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal7","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"8","no_modif":"1","id_formulado":"708331454520391001","nombre":"Con Sal8","valor":"0.15","activo":"true","id_form_desc":"0"},{"id":"2","no_modif":"2","id_formulado":"708331454520391001","nombre":"Con Limon","valor":"0.10","activo":"true","id_form_desc":"0"}]}';
+				//console.log(JSONextraNube);
+				
+				$("#JSONclientesNube").html(JSONclientesNube);
+				$("#JSONCategoriasNube").html(JSONcategoriasNube);
+				$("#JSONproductosNube").html(JSONproductosNube);
+				$("#JSONpresupuestoNube").html(JSONpresupuestoNube);
+				$('#JSONCatMenuNube').html(JSONcategoriasMenuNube);
+				$('#JSONMenuNube').html(JSONmenuNube);
+				$('#JSONPermisosNube').html(JSONpermisosNube);
+				$('#JSONExtraNube').html(JSONextraNube);
+				$('#JSONImpuestosNube').html(JSONimpuestosNube);
+				$('#JSONModifNube').html(JSONmodificadoresNube);
+				$('#JSONPropinasNube').html(JSONpropinasNube);
+				$('#JSONTipoMesasNube').html(JSONTipoMesasNube);
+				$('#JSONMesasNube').html(JSONMesasNube);
+				$('#JSONLocales').html(JSONLocales);
+				ExtraeDatosApi(cual);
+			}else if(response=='Desactivado'){
+				//envia('cloud');
+				envia('config');
+				$('#myDash').modal('hide');
+				setTimeout(function(){
+					$('.navbar,#barraalternamovil').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig").css("display","none");
+					$('#desactivo').fadeIn();
+				},100);
+			}else{
+				//envia('cloud');
+				envia('config');
+				$('#myDash').modal('hide');
+				setTimeout(function(){
+					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+					$('.navbar,#barraalternamovil').slideUp();
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig").css("display","none");
+					$('#bloqueo').fadeIn();
+				},100);
+			}
+		}).fail(function(xhr, status, error) {
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail the peticion of the initial data post",status]);});
+			console.log(status);
+		});
+	}
 }
 
 function DatosRecurrentes(cual){
@@ -885,6 +915,9 @@ function DatosRecurrentes(cual){
 		id_barra : localStorage.getItem("idbarra"),
 		deviceid:$("#deviceid").html()
 		}).done(function(response){
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Get the response at the normal synchronizer post"]);});
+			
 			if(response!='block' && response!='Desactivado'){
 				console.log(response);
 				jsonSync=JSON.parse(response);
@@ -949,7 +982,10 @@ function DatosRecurrentes(cual){
 
 			}
 
-		}).fail(function(){
+		}).fail(function(xhr, status, error){
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail the peticion of the normal synchronizer post",status]);});
+			
 			updateOnlineStatus("OFFLINE");
 			setTimeout(function(){SincronizadorNormal()},180000);
 		});
@@ -984,6 +1020,7 @@ function DatosRecurrentes(cual){
                     }else{
                      var apiURL='https://practisis.net/connectnubepos/api2.php';
                     }
+					
 					$.post(apiURL,{
 							id_emp: localStorage.getItem("empresa"),
 							action: 'DeleteSinc',
@@ -995,7 +1032,9 @@ function DatosRecurrentes(cual){
 							localStorage.setItem("dataupdate","");
 							DatosRecurrentes(2);
 							updateOnlineStatus("ONLINE");
-					}).fail(function(){
+					}).fail(function(xhr,status,error){
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: categorias",status]);});
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){SincronizadorNormal()},180000);
 					});
@@ -1065,7 +1104,9 @@ function DatosRecurrentes(cual){
 						localStorage.setItem("dataupdate","");
 						DatosRecurrentes(3);
 						updateOnlineStatus('ONLINE');
-					}).fail(function(){
+					}).fail(function(xhr,status,error){
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: productos",status]);});
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){SincronizadorNormal()},180000);
 					});
@@ -1113,7 +1154,9 @@ function DatosRecurrentes(cual){
 						localStorage.setItem("dataupdate","");
 						DatosRecurrentes(4);
 						updateOnlineStatus('ONLINE');
-					}).fail(function(){
+					}).fail(function(xhr,status,error){
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: clientes",status]);});
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){SincronizadorNormal()},180000);
 					});
@@ -1162,7 +1205,9 @@ function DatosRecurrentes(cual){
 						DatosRecurrentes(5);
 						updateOnlineStatus('ONLINE');
 						
-					}).fail(function(){
+					}).fail(function(xhr,status,error){	
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: Presupuestos",status]);});
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){SincronizadorNormal()},180000);
 					});
@@ -1272,7 +1317,9 @@ function DatosRecurrentes(cual){
 						localStorage.setItem("dataupdate","");
 						DatosRecurrentes(6);
 						updateOnlineStatus('ONLINE');
-					}).fail(function(){
+					}).fail(function(xhr,status,error){
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of:empresa",status]);});
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){SincronizadorNormal()},180000);
 					});
@@ -1320,7 +1367,9 @@ function DatosRecurrentes(cual){
 						localStorage.setItem("dataupdate","");
 						DatosRecurrentes(7);
 						updateOnlineStatus('ONLINE');
-					}).fail(function(){
+					}).fail(function(xhr,status,response){
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: Categorías Menú",status]);});
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){SincronizadorNormal()},180000);
 					});
@@ -1378,7 +1427,9 @@ function DatosRecurrentes(cual){
 							$("#txtSincro").html("");
 						},1500);
 						updateOnlineStatus('ONLINE');
-					}).fail(function(){
+					}).fail(function(xhr,status,error){
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: Productos Menú",status]);});
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){SincronizadorNormal()},180000);
 					});
@@ -1434,7 +1485,9 @@ function DatosRecurrentes(cual){
 						console.log(response);
 						localStorage.setItem("dataupdate","");
 						updateOnlineStatus('ONLINE');
-				}).fail(function(){
+				}).fail(function(xhr,status,error){
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: Permisos Usuarios",status]);});
 						updateOnlineStatus("OFFLINE");
 				});
 			});
@@ -1502,7 +1555,9 @@ function DatosRecurrentes(cual){
 						localStorage.setItem("dataupdate","");
 						updateOnlineStatus('ONLINE');
 						DatosRecurrentes(9);
-					}).fail(function(){
+					}).fail(function(xhr,status,error){
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: Permisos ",status]);});
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){$("#theProgress").css("width" , "0%"); SincronizadorNormal()},180000);
 					});
@@ -1547,7 +1602,9 @@ function DatosRecurrentes(cual){
 						},1500);
 						updateOnlineStatus('ONLINE');
 						DatosRecurrentes(10);
-					}).fail(function(){
+					}).fail(function(xhr,status,error){
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: Tipo Mesas ",status]);});
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){SincronizadorNormal()},180000);
 					});
@@ -1593,7 +1650,9 @@ function DatosRecurrentes(cual){
 						},1500);
 						updateOnlineStatus('ONLINE');
                         DatosRecurrentes(11);
-					}).fail(function(){
+					}).fail(function(xhr,status,error){
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: Mesas ",status]);});
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){SincronizadorNormal()},180000);
 					});
@@ -1640,7 +1699,9 @@ function DatosRecurrentes(cual){
 							$("#theProgress").css("width" , "100%");
 						},1500);
 						updateOnlineStatus('ONLINE');
-					}).fail(function(){
+					}).fail(function(xhr,status,error){
+						var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+						db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: Locales ",status]);});
 						updateOnlineStatus("OFFLINE");
 						setTimeout(function(){SincronizadorNormal()},180000);
 					});
@@ -1650,6 +1711,16 @@ function DatosRecurrentes(cual){
 }
 
 function SubirDatosaNube(cual){
+	var cualcosa='Categorias';
+	if(cual==1) cualcosa='Productos';
+	if(cual==2) cualcosa='Facturas';
+	if(cual==3) cualcosa='Empresa';
+	if(cual==4) cualcosa='Mesas';
+	if(cual==5) cualcosa='Impuestos';
+	if(cual==6) cualcosa='Modificadores';
+	
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Ready to start the upload synchronizer",cualcosa]);},errorCB);
 	console.log("sincronizador de subida...");
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	if(cual==0){
@@ -1788,6 +1859,8 @@ function PostaLaNube(arraydatos,cual,accion,t){
 		json:jsonc,
 		deviceid:$("#deviceid").html()
 	}).done(function(response){
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Successfully upload of:"+accion]);});
 		console.log(response);
 		if(parseInt(response)>0){
 			db.transaction(function(tx){
@@ -1820,7 +1893,9 @@ function PostaLaNube(arraydatos,cual,accion,t){
 			}
 		}
 		updateOnlineStatus("ONLINE");
-	}).fail(function(){
+	}).fail(function(xhr,status,error){
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail upload synchronizer:",status]);});
 			updateOnlineStatus("OFFLINE");
 			setTimeout(function(){SincronizadorNormal()},180000);
 	});
@@ -1947,5 +2022,86 @@ function IrTerminos(){
 			});
 			},errorCB,successCB);
 }*/
+
+function StartQuemado(){
+	console.log(">>>>Iniciar quemado>>>");
+	JSONproductosNube='{"Productos":[]}';
+	JSONcategoriasNube='{"Categorias":[ {"categoria_id":"1","categoria_nombre":"PRODUCTOS" , "categoria_timespan" : "0"},{"categoria_id":"2","categoria_nombre":"CATEGORíA 1" , "categoria_timespan" : "1"},{"categoria_id":"3","categoria_nombre":"CATEGORíA 2" , "categoria_timespan" : "2"},{"categoria_id":"4","categoria_nombre":"CATEGORíA 3" , "categoria_timespan" : "3"}]}';
+	JSONclientesNube='{"Clientes":[{"id":"1","nombre":" Consumidor Final","cedula":"9999999999999","telefono":"","direccion":"","email":"","timespan" : "0"}]}';
+	JSONpresupuestoNube='{"presupuesto":[]}';
+	JSONcategoriasMenuNube='{"menucategorias":[{"orden":"999","nombre":"Categorías Principal","timespan":"1","id":"1","activo":"true"}]}';
+	JSONmenuNube='{"menu":[]}';
+	JSONpermisosNube='{"permisos":[]}';
+	
+	var quemados=localStorage.getItem("datosquemados");
+	var squem=quemados.split("|");
+	
+	JSONextraNube='{ "extras" : [ {"num_factura":"000000001","contrasenia":"false","dias":"1826","msj":"","disenomenu":"1","pais":"'+squem['2']+'","idioma":"'+squem[3]+'","documento":"false","orden":"false","propina":"false","tarjeta":"false","shop":"false","notas":"true","comanderas":"true","localhost":"false","ipservidor":"0.0.0.0","mesas":"false","logo":"","imprlogo":"false","id_version_nube":"2","pide_telefono":"true","telefono_inte":"undefined","mensajefinal":"****POWERED BY AVAPOS.COM****","plan":"22","terminos":"true","id_locales":"2","id_pais":"'+squem[1]+'","email_fact":"","key":"","numero_contribuyente":"0","obligado_contabilidad":"false","prueba_produccion":"true","tiene_factura_electronica":"false","msj_factura_electronica":"****POWERED BY AVAPOS.COM****","respaldar":"false"}]}';
+	if(squem[1]==1){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"14","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==18||squem[1]==36){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"12","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==35){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"22","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==4){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"21","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==11){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"19","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==27){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IGV","porcentaje":"18","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==29){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"ITBIS","porcentaje":"18","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==9){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IPI","porcentaje":"17","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==23||squem[1]==12){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"16","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==21){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"ISV","porcentaje":"15","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==24){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"15","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==13){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IV","porcentaje":"13","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==8||squem[1]==16){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"13","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==28){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"11.50","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==26){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"10","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==25){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"ITBMS","porcentaje":"7","activo":"true","timespan":"0"}]}';
+	}else if(squem[1]==2){
+		JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"TAX","porcentaje":"7","activo":"true","timespan":"0"}]}';
+	}
+   	
+	//JSONimpuestosNube='{"impuestos":[{"id":"1","nombre":"IVA","porcentaje":"14","activo":"true","timespan":"0"}]}';
+	JSONmodificadoresNube='{"modificadores":[]}';
+	JSONpropinasNube='{"propinas":[]}';
+	if(squem[1]==2){
+		JSONpropinasNube='{"propinas":[{"valor":"0","porcentaje":"false","activo":"true","id":"1"},{"valor":"5","porcentaje":"false","activo":"false","id":"2"},{"valor":"10","porcentaje":"false","activo":"true","id":"3"},{"valor":"8","porcentaje":"false","activo":"false","id":"4"},{"valor":"-1","porcentaje":"false","activo":"false","id":"5"}]}';
+	}
+	
+	JSONTipoMesasNube='{"tipomesas":[{"id":"1","imagen_activa":"mesagrandeanchaa.png","imagen_inactiva":"mesagrandeanchai.png","es_mesa":"true"},{"id":"2","imagen_activa":"mesagrandealtaa.png","imagen_inactiva":"mesagrandealtai.png","es_mesa":"true"},{"id":"3","imagen_activa":"mesapequenaanchaa.png","imagen_inactiva":"mesapequenaanchai.png","es_mesa":"true"},{"id":"4","imagen_activa":"mesapequenaaltaa.png","imagen_inactiva":"mesapequenaaltai.png","es_mesa":"true"},{"id":"5","imagen_activa":"mesaredondaa.png","imagen_inactiva":"mesaredondai.png","es_mesa":"true"},{"id":"6","imagen_activa":"planta.png","imagen_inactiva":"planta.png","es_mesa":"false"},{"id":"7","imagen_activa":"dobleplanta.png","imagen_inactiva":"dobleplanta","es_mesa":"false"},{"id":"8","imagen_activa":"tripleplanta.png","imagen_inactiva":"tripleplanta.png","es_mesa":"false"},{"id":"9","imagen_activa":"caja.png","imagen_inactiva":"caja.png","es_mesa":"false"},{"id":"10","imagen_activa":"salida.png","imagen_inactiva":"salida.png","es_mesa":"false"},{"id":"11","imagen_activa":"delivera.png","imagen_inactiva":"deliverd.png","es_mesa":"true"}]}';
+	JSONMesasNube='{"mesas":[{"id":"1","left":"89","top":"232","tipo_mesa":"2","nombre":"Mesa 1","activo":"true","tab":"1"},{"id":"2","left":"428","top":"235","tipo_mesa":"2","nombre":"Mesa 2","activo":"true","tab":"1"},{"id":"3","left":"361","top":"338","tipo_mesa":"3","nombre":"Mesa 3","activo":"true","tab":"1"},{"id":"4","left":"314","top":"254","tipo_mesa":"5","nombre":"Mesa 4","activo":"true","tab":"1"},{"id":"5","left":"204","top":"250","tipo_mesa":"5","nombre":"Mesa 5","activo":"true","tab":"1"},{"id":"6","left":"351","top":"420","tipo_mesa":"6","nombre":"Objeto 6","activo":"true","tab":"1"},{"id":"7","left":"220","top":"127","tipo_mesa":"8","nombre":"Objeto 7","activo":"true","tab":"1"},{"id":"8","left":"38","top":"362","tipo_mesa":"9","nombre":"Objeto 8","activo":"true","tab":"1"},{"id":"9","left":"226","top":"404","tipo_mesa":"10","nombre":"Objeto 9","activo":"true","tab":"1"},{"id":"10","left":"146","top":"421","tipo_mesa":"6","nombre":"Objeto 10","activo":"true","tab":"1"},{"id":"11","left":"144","top":"337","tipo_mesa":"3","nombre":"Mesa 11","activo":"true","tab":"1"}]}';
+	
+	
+	JSONLocales='{"locales":[{"local":"'+squem[0]+'","timespan":"2","activo":"true"}]}';
+		
+	$("#JSONclientesNube").html(JSONclientesNube);
+	$("#JSONCategoriasNube").html(JSONcategoriasNube);
+	$("#JSONproductosNube").html(JSONproductosNube);
+	$("#JSONpresupuestoNube").html(JSONpresupuestoNube);
+	$('#JSONCatMenuNube').html(JSONcategoriasMenuNube);
+	$('#JSONMenuNube').html(JSONmenuNube);
+	$('#JSONPermisosNube').html(JSONpermisosNube);
+	$('#JSONExtraNube').html(JSONextraNube);
+	$('#JSONImpuestosNube').html(JSONimpuestosNube);
+	$('#JSONModifNube').html(JSONmodificadoresNube);
+	$('#JSONPropinasNube').html(JSONpropinasNube);
+	$('#JSONTipoMesasNube').html(JSONTipoMesasNube);
+	$('#JSONMesasNube').html(JSONMesasNube);
+	$('#JSONLocales').html(JSONLocales);
+
+	ExtraeDatosApi(1);
+}
 
 //-----------------------------------Fin nuevo---------------

@@ -1010,6 +1010,9 @@
 					$(inp).change();
 				else if(miinp=='precioprof'||miinp=='totalprof'){
 					calculaProdProf()
+				}else if(miinp.indexOf('preciomod_')>=0){
+					//sconsole.log(miinp);
+					EditarLinea($('#'+miinp));
 				}
 			}
 		$('#popupprecios').modal('hide');

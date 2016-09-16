@@ -485,6 +485,7 @@
 				  <li role="presentation"><a href="#ventastab" aria-controls="ventastab" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;' class='trans_sales'>Ventas</a></li>
 				  <li role="presentation"><a href="#impuestostab" aria-controls="impuestostab" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;' class='trans_imp'>Impuestos</a></li>
 				  <li role="presentation"><a href="#plan" aria-controls="plan" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;' onclick='VerPlanes();'>Plan</a></li>
+				  <li role="presentation"><a href="#logtab" aria-controls="logtab" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;'>LOG</a></li>
 			</ul>
 		</li>
 		<li role='presentation'><a href="#impresorastab" aria-controls="impresorastab" role="tab" data-toggle="tab" class='trans_printers'>Impresoras</a></li>
@@ -1723,7 +1724,7 @@ $(document).ready(function(){
 			var d = today.getDate();
 			var diahoy=y+"-"+m+"-"+d+" 00:00:00";
 			var timehoy=new Date(diahoy).getTime();
-			/*tx.executeSql("DELETE FROM LOGACTIONS WHERE time <'"+timehoy+"'");*/
+			tx.executeSql("DELETE FROM LOGACTIONS WHERE time <'"+timehoy+"'");
 			tx.executeSql("SELECT * FROM LOGACTIONS WHERE time>=? ORDER BY time desc",[timehoy],function(tx,results){
 				if(results.rows.length>0){
 					var mihtml='';
@@ -2409,16 +2410,32 @@ function ActivarImprimirLogo(){
 }
 
 function FechaNormal(fecha){
-		var today = new Date(fecha);
-		var m = today.getMonth()+1; // 0-11
-		var y = today.getFullYear();
-		var d = today.getDate();
-		var h = today.getHours();
-		var min = today.getMinutes();
-		var s = today.getSeconds();
-		var ml = today.getMilliseconds();
-		return y+"-"+m+"-"+d+" "+h+":"+min+":"+s+":"+ml;
-	}
+	var today = new Date(fecha);
+	var m = today.getMonth()+1; // 0-11
+	if(m.toString().length<2)
+		m="0"+m.toString();
+
+	var y = today.getFullYear();
+
+	var d = today.getDate();
+	if(d.toString().length<2)
+		d="0"+d.toString();
+	
+	var h = today.getHours();
+	if(h.toString().length<2)
+		h="0"+h.toString();
+
+	var min = today.getMinutes();
+	if(min.toString().length<2)
+		min="0"+min.toString();
+
+	var s = today.getSeconds();
+	if(s.toString().length<2)
+		s="0"+s.toString();
+
+	var ml = today.getMilliseconds();
+	return y+"-"+m+"-"+d+" "+h+":"+min+":"+s+":"+ml;
+}
 function backupbdd(){
   backupContent();
   $('#myModalbdd').modal('show');

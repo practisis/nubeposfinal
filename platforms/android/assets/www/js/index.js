@@ -41,7 +41,7 @@ campos["LOCALES"]=['id|integer primary key AUTOINCREMENT','local|text default ""
 
 
 function VerificarConexion(){
-	if(navigator.connection.type == Connection.NONE){
+	/*if(navigator.connection.type == Connection.NONE){
 		if(localStorage.getItem('idioma')==1)
 			showalertred("No se puede realizar la petición, por favor revise su conexión a Internet.");
 		else
@@ -50,7 +50,8 @@ function VerificarConexion(){
 	}else{
 		console.log("conectados por: "+navigator.connection.type);
 		return true;
-	}
+	}*/
+	return true;
 }
 
 
@@ -138,9 +139,7 @@ function envia(donde){
 					}, 1000);*/
 					
 					//collapsa el menu cuando está metido
-					$("#bs-example-navbar-collapse-1").attr('class', 'navbar-collapse collapse');
-					
-					
+					$("#bs-example-navbar-collapse-1").attr('class', 'navbar-collapse collapse');	
 				}
 		
 
@@ -191,6 +190,12 @@ var app = {
 		//alert("device Ready>>" + device.uuid);
 		//$('#deviceid').html(device.uuid);
 		//setInterval(function(){updateOnlineStatus()},60000);
+		
+		$.ajaxSetup({
+		type: 'POST',
+		timeout:10000
+		});
+		
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(iniciaDB,errorCB,successCB);
 		window.addEventListener('native.keyboardshow', keyboardShowHandler);
@@ -207,6 +212,7 @@ var app = {
 		function isonline(){
 			$('#signalinternet').css('color','white');
 			$('#conexion').val('online');
+			SincronizadorNormal();
 		}
 		
 		function keyboardShowHandler(e){

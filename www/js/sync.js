@@ -625,7 +625,10 @@ function registrarUser(){
 				//console.log(xhr);
 				console.log(status);
 				//console.log(error);
-				showalertred("Error status: "+status);
+				if(localStorage.getItem('idioma')==1)
+					showalertred("Error: Problemas de conexión, por favor intente nuevamente.");
+				else
+					showalertred("Error: Connection Problems, please try again.");
 				$("#cargandoTabs").modal('hide');
 			});
 		}
@@ -802,7 +805,11 @@ function UserLogin(){
 			//console.log(xhr);
 			console.log(status);
 			//console.log(error);
-			showalertred("Error status: "+status);
+			if(localStorage.getItem('idioma')==1)
+				showalertred("Error: Problemas de conexión, por favor intente nuevamente.");
+			else
+				showalertred("Error: Connection Problems, please try again.");
+			
 			$('#btnvalida2').html("Login");
 			
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);

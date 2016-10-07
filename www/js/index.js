@@ -212,7 +212,8 @@ var app = {
 		function isonline(){
 			$('#signalinternet').css('color','white');
 			$('#conexion').val('online');
-			SincronizadorNormal();
+			if(localStorage.getItem("empresa")!=null&&localStorage.getItem("idbarra")!=null&&localStorage.getItem("empresa")!=''&&localStorage.getItem("idbarra")!='')
+				SincronizadorNormal();
 		}
 		
 		function keyboardShowHandler(e){

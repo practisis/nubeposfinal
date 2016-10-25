@@ -701,7 +701,8 @@ public class PrinterFunctionsEpson{
 						}
 						
 						//totalfact=totalfact.replace(".","");
-						Double mivuelto=suma-Double.parseDouble(totalfact.replace(",",""));
+						Double mivuelto=suma-Double.parseDouble(totalfact.replace(",","."));
+						//Double mivuelto=suma-Double.parseDouble(totalfact);
 						//Double mivuelto=suma-totalfactd;
 							
 						//elvuelto=DoubleFormat(vuelto);
@@ -1496,7 +1497,7 @@ public class PrinterFunctionsEpson{
 	
 	public static String DoubleFormat(double parDouble)
 	{
-		DecimalFormat formatter = new DecimalFormat("##,###0.00"); 
+		DecimalFormat formatter = new DecimalFormat("#####0.00"); 
 		String myNumero = formatter.format(parDouble);
 		return myNumero;
 	}

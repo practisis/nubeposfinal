@@ -2700,7 +2700,7 @@ function actualizar(){
 						var row = results.rows.item(i);
 						var nombre = row.nombre;
 						var razon = row.razon;
-						var ruc = row.ruc;
+						var ruc = row.ruc2;
 						var telefono = row.telefono;
 						var email = row.email;
 						var direccion = row.direccion;
@@ -2937,6 +2937,7 @@ function grabarfac(){
 var nombreEstable = $('#nombreEstable').val();
 var razonSo = $('#razonSo').val();
 var rucFac = $('#rucFac').val();
+var cuantosrucFac = $('#rucFac').val().length;
 var emailFac = $('#emailFac').val();
 var dirFac = $('#dirFac').val();
 var numcontribuyenteFac = $('#numcontribuyenteFac').val();
@@ -2959,6 +2960,9 @@ if(razonSo == '' ){
 if(rucFac == '' ){
 	$('#rucFac').effect('highlight');
 }
+if(cuantosrucFac != 13){
+	$('#rucFac').effect('highlight');
+}
 if( emailFac == '' ){
 	$('#emailFac').effect('highlight');
 }
@@ -2974,13 +2978,26 @@ if(numcontribuyenteFac == '' ){
   produccion = false;
 }*/
 //alert(produccion);
-if(nombreEstable == '' || razonSo == '' || rucFac == '' || emailFac == '' || dirFac == '' ){
+if(nombreEstable == '' || razonSo == '' || rucFac == '' || emailFac == '' || dirFac == ''){
 	$('#camposFac').fadeIn('slow');
 
     if(localStorage.getItem("idioma")==1){
 		$('#camposFac').html('Debe ingresar todos los campos requeridos.');
 	}else{
 		$('#camposFac').html('You must enter all required fields.');
+	}
+
+	$('#msjOkFac').css('display','none');
+	setTimeout(function() {
+		$('#camposFac').fadeOut('slow');
+	}, 3000);
+}else if(cuantosrucFac != 13){
+	$('#camposFac').fadeIn('slow');
+
+    if(localStorage.getItem("idioma")==1){
+		$('#camposFac').html('Su RUC debe tener 13 digitos por favor.');
+	}else{
+		$('#camposFac').html('His RUC must be 13 digits please.');
 	}
 
 	$('#msjOkFac').css('display','none');
@@ -3004,7 +3021,7 @@ if(nombreEstable == '' || razonSo == '' || rucFac == '' || emailFac == '' || dir
 }*/else{
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function (tx){
-		tx.executeSql('update CONFIG set nombre="'+nombreEstable+'",razon="'+razonSo+'",ruc="'+rucFac+'",email_fact="'+emailFac+'",direccion="'+dirFac+'",numero_contribuyente="'+numcontribuyenteFac+'",obligado_contabilidad="'+obligado+'",tiene_factura_electronica="'+activafacturacionelectronica+'",sincronizar="true",telefono='+telFac+',serie="'+serieFac+'",establecimiento="'+establecimientoFac+'",mensaje_factura="'+msjFac+'" where id=1');
+		tx.executeSql('update CONFIG set nombre="'+nombreEstable+'",razon="'+razonSo+'",ruc2="'+rucFac+'",email_fact="'+emailFac+'",direccion="'+dirFac+'",numero_contribuyente="'+numcontribuyenteFac+'",obligado_contabilidad="'+obligado+'",tiene_factura_electronica="'+activafacturacionelectronica+'",sincronizar="true",telefono='+telFac+',serie="'+serieFac+'",establecimiento="'+establecimientoFac+'",mensaje_factura="'+msjFac+'" where id=1');
 
         if(localStorage.getItem("idioma")==1){
     		 $('#msjOkFac').html('Información Ingresada con Éxito');

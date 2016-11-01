@@ -59,7 +59,7 @@ function SyncStart(){
 				$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+dataemp.nombre+'","direccion":"'+dataemp.direccion+"-"+dataemp.telefono+'"},');
 			});
 		});
-		setTimeout(function(){SincronizadorNormal();},60000);
+		setTimeout(function(){SincronizadorNormal();},120000);
 		//setInterval(function(){SincronizadorNormal();},3000);
 	}else if(mesasya){
 		ExtraeDatosApi(9);
@@ -604,7 +604,7 @@ function registrarUser(){
 				}else{
 						$("#cargandoTabs").modal('hide');
 						var datosback=data.split("||");
-						//console.log(data);
+						console.log(data);
 						localStorage.setItem("userRegister", newEmail);
 						localStorage.setItem("userPasswod", newPass);
 						localStorage.setItem("empresa",datosback[0]);

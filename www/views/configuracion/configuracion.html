@@ -761,6 +761,10 @@
 					<td  style='text-align:right;' id="trans_label_58">Con Mesas:</td>
 					<td align='left'><input data-size='small' type='checkbox' id='con_mesas' class='switch' /></td>
 				</tr>
+				<tr>
+					<td  style='text-align:right;' id="trans_label_58">Con Crédito Directo:</td>
+					<td align='left'><input data-size='small' type='checkbox' id='con_pagarconcredito' class='switch' /></td>
+				</tr>
 			</table>
 			<div class='row'>
 				<div class='col-lg-12' style='margin-bottom:35px;'>
@@ -1568,7 +1572,7 @@ $(document).ready(function(){
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT nombreterminal as c,id_idioma,id_version_nube,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais,mensajefinal,respaldar from CONFIG where id=1",[],function(tx1,results1){
+				tx1.executeSql("SELECT nombreterminal as c,id_idioma,id_version_nube,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais,mensajefinal,respaldar,pagarconcredito from CONFIG where id=1",[],function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c!=''){
 							$('#tablet_name').val(results1.rows.item(0).c);
@@ -1624,6 +1628,12 @@ $(document).ready(function(){
                                 $('#con_mesas').bootstrapSwitch('state', true);
                             }else{
                     			$('#con_mesas').bootstrapSwitch('state', false);
+                    		}
+							
+							if(results1.rows.item(0).pagarconcredito=='true'){
+                                $('#con_pagarconcredito').bootstrapSwitch('state', true);
+                            }else{
+                    			$('#con_pagarconcredito').bootstrapSwitch('state', false);
                     		}
 							//$('#con_mesas').bootstrapSwitch('readonly',true);
 							//$('#con_shop').bootstrapSwitch('readonly',true);
@@ -1685,6 +1695,7 @@ $(document).ready(function(){
         $('#con_notas').bootstrapSwitch();
         $('#con_comanderas').bootstrapSwitch();
         $('#con_mesas').bootstrapSwitch();
+        $('#con_pagarconcredito').bootstrapSwitch();
 		$('#backupinf').bootstrapSwitch();
 		$('#printlogo').bootstrapSwitch();
         $('#multitablet').bootstrapSwitch();
@@ -2197,15 +2208,17 @@ $(document).ready(function(){
                 var con_notas = $('#con_notas').bootstrapSwitch('state');
                 var con_comanderas = $('#con_comanderas').bootstrapSwitch('state');
                 var con_mesas = $('#con_mesas').bootstrapSwitch('state');
+                var con_pagarconcredito = $('#con_pagarconcredito').bootstrapSwitch('state');
                 localStorage.setItem('con_notas',con_notas);
                 localStorage.setItem('con_comandas',con_comanderas);
                 localStorage.setItem('con_mesas',con_mesas);
+                localStorage.setItem('pagarconcredito',con_pagarconcredito);
                 var con_backup = $('#backupinf').bootstrapSwitch('state');
 
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					
-				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=?,respaldar=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub,con_backup],
+				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=?,respaldar=?,pagarconcredito=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub,con_backup,con_pagarconcredito],
 				function(tx1,results1){
 					
 					var linklang="es";

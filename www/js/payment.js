@@ -1,6 +1,7 @@
 var pagonormal=true;
 function receiveJson(){
 	if($('#json').html() != ''){
+		//alert($('#json').html());
 		var fetchJsonStrng = $('#json').html();
 		var jsonObject = eval("(" + fetchJsonStrng + ")");
 		$('#payClientName').html(jsonObject.Pagar[0].cliente.nombre);
@@ -34,6 +35,7 @@ function changePaymentCategory(index,nombre){
 	if(nombre=="Tarjetas") $('#touchtarjetas').fadeIn();
 	if(nombre=="Cheques") $('#touchcheques').fadeIn();
 	if(nombre=="CxC") $('#touchcxc').fadeIn();
+	if(nombre=="ConsumoI") $('#touchConsumoI').fadeIn();
 	
 	//alert($('#touchcheques').html()+'/'+$('#touchcheques').css('display'));
 	
@@ -43,6 +45,7 @@ function changePaymentCategory(index,nombre){
 				 $(this).val('0.00');
 				 if(index==3)$('#valorcxc').val('0.00');
 				 if(index==4)$('#valorcheque1').val('0.00');
+				 if(index==5)$('#valorConsumoI').val('0.00');
 				//$('#simple_'+index).html('0.00');
 			}
 		});
@@ -112,6 +115,25 @@ function changePaymentCategory(index,nombre){
 				if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0){
 					$('#valorcxc,#paymentCxC').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
 					$('#paymentCxCa').html('$ '+parseFloat($('#changeFromPurchase').html()).toFixed(2));
+				}
+			}
+		}
+	}
+	
+	if(nombre=='ConsumoI'){
+		$('#caretConsumoI').attr('class','fa fa-caret-down');
+		$('#touchConsumoI').fadeIn();
+		if(pagonormal==true){
+			$('#valorcheque1,#paymentCheques').val("0.00");
+			$('#valorcxc,#paymentCxC').val("0.00");
+			$('#valorConsumoI,#paymentConsumoI').val(parseFloat($('#total').html().substring(1)).toFixed(2));
+			$('#paymentConsumoIa').html('$ '+parseFloat($('#total').html().substring(1)).toFixed(2));
+		}else{
+				//alert($('#valorConsumoI').val());
+				if(parseFloat($('#valorConsumoI').val())==0){
+				if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0){
+					$('#valorConsumoI,#paymentConsumoI').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
+					$('#paymentConsumoIa').html('$ '+parseFloat($('#changeFromPurchase').html()).toFixed(2));
 				}
 			}
 		}
@@ -327,7 +349,7 @@ function performPurchase(restaurant){
 			}
 			
 			if(value == 5){
-				retencion = $('#paymentRetencion').val();
+				paymentConsumoInterno = $('#paymentConsumoI').val();
 			}
 				
 			if(value == 6){
@@ -344,10 +366,10 @@ function performPurchase(restaurant){
 				giftJustification = $('#giftJustification').val();
 				}
 				
-			if(value == 12){
+			/*if(value == 12){
 				paymentConsumoInterno = $('#paymentConsumoInterno').val();
 				internalJustification = $('#internalJustification').val();
-				}
+				}*/
 			
 			});
 
@@ -819,7 +841,10 @@ function BuscarCliente(e){
 					if($('#insideShop').length > 0){
 						continueShopping(row.id);
 					}
-			}});	
+				}else{
+					$('#nombreP').val('');
+				}
+				});	
 		},errorCB,successCB);
         //*********************************fin normal*************************************
         }
@@ -969,7 +994,15 @@ function noCliente(){
 		$('#cedulaP').val('9999999999999');
 		BuscarCliente(13);
 	}else{
-      $('#busquedacliente').html($('#cedulaP').val());
+		if(localStorage.getItem('pagarconcredito')=='true'){
+			if($('#nombreP').val()==''){
+				$('#busquedacliente').html('9999999999999');
+				$('#cedulaP').val('9999999999999');
+				BuscarCliente(13);
+			}	
+		}else{
+			$('#busquedacliente').html($('#cedulaP').val());
+		}
 	}
     if($('#idCliente').val()==''){
 		$('#busquedacliente').html('9999999999999');
@@ -1163,14 +1196,21 @@ function noCliente(){
 		$('#clientefind').html('');
 		$('#idCliente').val('0');
 		var idcli=$(this).val();
-		if(idcli.length==10){
+		if(idcli.length<10){
+			if(localStorage.getItem('pagarconcredito')=='true'){
+				$('#busquedacliente').val(idcli);
+				$('#clientefind').html('');
+				BuscarCliente(13);
+			}
+		}
+		else if(idcli.length==10){
 		  //alert(idcli);
 			$('#busquedacliente').val(idcli);
 			$('#clientefind').html('');
 			$('#cedulaP').css('background-color', 'white');
 			$('#cedulaP').effect("highlight");
 			BuscarCliente(13);
-		}else if($(this).val().length==13){
+		}else if(idcli.length==13){
 			$('#busquedacliente').val(idcli);
 			$('#cedulaP').css('background-color', 'white');
 			$('#cedulaP').effect("highlight");
@@ -1247,141 +1287,145 @@ function noCliente(){
 
 function cedula() {
 	numero = document.getElementById("cedulaP").value;
-	
-	if(numero.indexOf("p")>=0||numero.indexOf("P")>=0)
-		return true;
-	else if(numero=='9999999999999')
-		return true;
-	else{
-		var elpais=localStorage.getItem("pais");
-		if(elpais=="Colombia"){
-			return VerificarColombiaNit(numero);
-		}else if(elpais=="Chile"){
-			return VerificarChileRut(numero);
-		}else if(elpais=="Argentina"){
-			return VerificarArgentinaCuit(numero);
-		}else if(elpais=="Peru"){
-			return VerificarPeruSunat(numero);
-		}else if(elpais=="Mexico"){
-			return VerificarMexicoRfc(numero);
-		}else{
-			var suma = 0;
-			var residuo = 0;
-			var pri = false;
-			var pub = false;
-			var nat = false;
-			var numeroProvincias = 24;
-			var modulo = 11;
-
-			/* Verifico que el campo no contenga letras */
-			var ok=1;
-			/* Aqui almacenamos los digitos de la cedula en variables. */
-			d1 = numero.substr(0,1);
-			d2 = numero.substr(1,1);
-			d3 = numero.substr(2,1);
-			d4 = numero.substr(3,1);
-			d5 = numero.substr(4,1);
-			d6 = numero.substr(5,1);
-			d7 = numero.substr(6,1);
-			d8 = numero.substr(7,1);
-			d9 = numero.substr(8,1);
-			d10 = numero.substr(9,1);
-
-			/* El tercer digito es: */
-			/* 9 para sociedades privadas y extranjeros */
-			/* 6 para sociedades publicas */
-			/* menor que 6 (0,1,2,3,4,5) para personas naturales */
-
-			if (d3==7 || d3==8){
-			console.log('El tercer d?gito ingresado es inv?lido');
-			return false;
-			}
-
-			/* Solo para personas naturales (modulo 10) */
-			if (d3 < 6){
-			nat = true;
-			p1 = d1 * 2; if (p1 >= 10) p1 -= 9;
-			p2 = d2 * 1; if (p2 >= 10) p2 -= 9;
-			p3 = d3 * 2; if (p3 >= 10) p3 -= 9;
-			p4 = d4 * 1; if (p4 >= 10) p4 -= 9;
-			p5 = d5 * 2; if (p5 >= 10) p5 -= 9;
-			p6 = d6 * 1; if (p6 >= 10) p6 -= 9;
-			p7 = d7 * 2; if (p7 >= 10) p7 -= 9;
-			p8 = d8 * 1; if (p8 >= 10) p8 -= 9;
-			p9 = d9 * 2; if (p9 >= 10) p9 -= 9;
-			modulo = 10;
-			}
-
-			/* Solo para sociedades publicas (modulo 11) */
-			/* Aqui el digito verficador esta en la posicion 9, en las otras 2 en la pos. 10 */
-			else if(d3 == 6){
-			pub = true;
-			p1 = d1 * 3;
-			p2 = d2 * 2;
-			p3 = d3 * 7;
-			p4 = d4 * 6;
-			p5 = d5 * 5;
-			p6 = d6 * 4;
-			p7 = d7 * 3;
-			p8 = d8 * 2;
-			p9 = 0;
-			}
-
-			/* Solo para entidades privadas (modulo 11) */
-			else if(d3 == 9) {
-			pri = true;
-			p1 = d1 * 4;
-			p2 = d2 * 3;
-			p3 = d3 * 2;
-			p4 = d4 * 7;
-			p5 = d5 * 6;
-			p6 = d6 * 5;
-			p7 = d7 * 4;
-			p8 = d8 * 3;
-			p9 = d9 * 2;
-			}
-
-			suma = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
-			residuo = suma % modulo;
-
-			/* Si residuo=0, dig.ver.=0, caso contrario 10 - residuo*/
-			digitoVerificador = residuo==0 ? 0: modulo - residuo;
-
-			/* ahora comparamos el elemento de la posicion 10 con el dig. ver.*/
-			if (pub==true){
-			if (digitoVerificador != d9){
-			console.log('El ruc de la empresa del sector público es incorrecto.');
-			return false;
-			}
-			/* El ruc de las empresas del sector publico terminan con 0001*/
-			if ( numero.substr(9,4) != '0001' ){
-			console.log('El ruc de la empresa del sector público debe terminar con 0001');
-			return false;
-			}
-			}
-			else if(pri == true){
-			if (digitoVerificador != d10){
-			console.log('El ruc de la empresa del sector privado es incorrecto.');
-			return false;
-			}
-			if ( numero.substr(10,3) != '001' ){
-			console.log('El ruc de la empresa del sector privado debe terminar con 001');
-			return false;
-			}
-			}
-
-			else if(nat == true){
-			if (digitoVerificador != d10){
-			console.log('El n?mero de cédula de la persona natural es incorrecto.');
-			return false;
-			}
-			if (numero.length >10 && numero.substr(10,3) != '001' ){
-			console.log('El ruc de la persona natural debe terminar con 001');
-			return false;
-			}
-			}
+	var concredito=localStorage.getItem("pagarconcredito");
+	if(concredito=='false'){
+		if(numero.indexOf("p")>=0||numero.indexOf("P")>=0)
 			return true;
+		else if(numero=='9999999999999')
+			return true;
+		else{
+			var elpais=localStorage.getItem("pais");
+			if(elpais=="Colombia"){
+				return VerificarColombiaNit(numero);
+			}else if(elpais=="Chile"){
+				return VerificarChileRut(numero);
+			}else if(elpais=="Argentina"){
+				return VerificarArgentinaCuit(numero);
+			}else if(elpais=="Peru"){
+				return VerificarPeruSunat(numero);
+			}else if(elpais=="Mexico"){
+				return VerificarMexicoRfc(numero);
+			}else{
+				var suma = 0;
+				var residuo = 0;
+				var pri = false;
+				var pub = false;
+				var nat = false;
+				var numeroProvincias = 24;
+				var modulo = 11;
+
+				/* Verifico que el campo no contenga letras */
+				var ok=1;
+				/* Aqui almacenamos los digitos de la cedula en variables. */
+				d1 = numero.substr(0,1);
+				d2 = numero.substr(1,1);
+				d3 = numero.substr(2,1);
+				d4 = numero.substr(3,1);
+				d5 = numero.substr(4,1);
+				d6 = numero.substr(5,1);
+				d7 = numero.substr(6,1);
+				d8 = numero.substr(7,1);
+				d9 = numero.substr(8,1);
+				d10 = numero.substr(9,1);
+
+				/* El tercer digito es: */
+				/* 9 para sociedades privadas y extranjeros */
+				/* 6 para sociedades publicas */
+				/* menor que 6 (0,1,2,3,4,5) para personas naturales */
+
+				if (d3==7 || d3==8){
+				console.log('El tercer d?gito ingresado es inv?lido');
+				return false;
+				}
+
+				/* Solo para personas naturales (modulo 10) */
+				if (d3 < 6){
+				nat = true;
+				p1 = d1 * 2; if (p1 >= 10) p1 -= 9;
+				p2 = d2 * 1; if (p2 >= 10) p2 -= 9;
+				p3 = d3 * 2; if (p3 >= 10) p3 -= 9;
+				p4 = d4 * 1; if (p4 >= 10) p4 -= 9;
+				p5 = d5 * 2; if (p5 >= 10) p5 -= 9;
+				p6 = d6 * 1; if (p6 >= 10) p6 -= 9;
+				p7 = d7 * 2; if (p7 >= 10) p7 -= 9;
+				p8 = d8 * 1; if (p8 >= 10) p8 -= 9;
+				p9 = d9 * 2; if (p9 >= 10) p9 -= 9;
+				modulo = 10;
+				}
+
+				/* Solo para sociedades publicas (modulo 11) */
+				/* Aqui el digito verficador esta en la posicion 9, en las otras 2 en la pos. 10 */
+				else if(d3 == 6){
+				pub = true;
+				p1 = d1 * 3;
+				p2 = d2 * 2;
+				p3 = d3 * 7;
+				p4 = d4 * 6;
+				p5 = d5 * 5;
+				p6 = d6 * 4;
+				p7 = d7 * 3;
+				p8 = d8 * 2;
+				p9 = 0;
+				}
+
+				/* Solo para entidades privadas (modulo 11) */
+				else if(d3 == 9) {
+				pri = true;
+				p1 = d1 * 4;
+				p2 = d2 * 3;
+				p3 = d3 * 2;
+				p4 = d4 * 7;
+				p5 = d5 * 6;
+				p6 = d6 * 5;
+				p7 = d7 * 4;
+				p8 = d8 * 3;
+				p9 = d9 * 2;
+				}
+
+				suma = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
+				residuo = suma % modulo;
+
+				/* Si residuo=0, dig.ver.=0, caso contrario 10 - residuo*/
+				digitoVerificador = residuo==0 ? 0: modulo - residuo;
+
+				/* ahora comparamos el elemento de la posicion 10 con el dig. ver.*/
+				if (pub==true){
+				if (digitoVerificador != d9){
+				console.log('El ruc de la empresa del sector público es incorrecto.');
+				return false;
+				}
+				/* El ruc de las empresas del sector publico terminan con 0001*/
+				if ( numero.substr(9,4) != '0001' ){
+				console.log('El ruc de la empresa del sector público debe terminar con 0001');
+				return false;
+				}
+				}
+				else if(pri == true){
+				if (digitoVerificador != d10){
+				console.log('El ruc de la empresa del sector privado es incorrecto.');
+				return false;
+				}
+				if ( numero.substr(10,3) != '001' ){
+				console.log('El ruc de la empresa del sector privado debe terminar con 001');
+				return false;
+				}
+				}
+
+				else if(nat == true){
+				if (digitoVerificador != d10){
+				console.log('El n?mero de cédula de la persona natural es incorrecto.');
+				return false;
+				}
+				if (numero.length >10 && numero.substr(10,3) != '001' ){
+				console.log('El ruc de la persona natural debe terminar con 001');
+				return false;
+				}
+				}
+				return true;
+			}
 		}
+	}else{
+		return true;
 	}
 }
 
@@ -1643,7 +1687,7 @@ function PagoSimple(){
 	//$('.columna2').fadeIn();
 	$('#pagoavan').fadeIn();
 	$('#lisimple,.touchpago,#payButton').css('display','none');
-	$('#licheques,#licxc,.basurero,.badge,.cuadrototal').css('display','none');
+	$('#licheques,#licxc,#liConsumoI,.basurero,.badge,.cuadrototal').css('display','none');
 	$('.paymentMethods').val('0.00');
 	$('#valortarjeta,#valorcheque1,#valorcxc').val('0.00');
 	$('.card').attr("data-value","0");

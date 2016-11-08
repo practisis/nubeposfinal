@@ -1752,6 +1752,7 @@ function pagar(){
 		var cadtarjetas='';
 		var cadcheques='';
 		var cadcxc='';
+		var cadconsumoInterno='';
 		
 		if($('#paymentEfectivo').val()!=''&&parseFloat($('#paymentEfectivo').val())>0)
 		{	
@@ -1814,6 +1815,13 @@ function pagar(){
 			if(nformas>0)
 				json+=',';
 			json+='{"forma":"cxc","valor":"'+$('#valorcxc').val()+'","tipotarjeta":"","lote":"","numerocheque":"","banco":"'+$('#justcxc').val()+'"}';
+			nformas++;
+		}
+		
+		if($('#valorConsumoI').val()!=''&&parseFloat($('#valorConsumoI').val())>0){
+			if(nformas>0)
+				json+=',';
+			json+='{"forma":"consumointerno","valor":"'+$('#valorConsumoI').val()+'","tipotarjeta":"","lote":"","numerocheque":"","banco":""}';
 		} 	
 		json+=']}]}';
 		
@@ -2141,16 +2149,31 @@ function DetalleAbajo(){
 function AntesDePagar(){
 	//$('#paymentModule').modal('show');
 	if(parseFloat($('#total').html().substring(1))>0){
-		pagonormal=true;
-		PagoSimple();
+		var concredito=localStorage.getItem('pagarconcredito');
+		if(concredito=='false'){
+			pagonormal=true;
+			PagoSimple();
+			$('.basurero,.badge').css('display','none');
+		}else{
+			pagonormal=false;
+			PagoAvanzado();
+		}
+		
 		document.body.scrollTop = document.documentElement.scrollTop = 0;
 		if(localStorage.getItem("con_nombre_orden")=='true'){
           $('#nombre_orden').css('display','block');
 		}else{
           $('#nombre_orden').css('display','none');
 		}
-		$('#paymentModule,#touchefectivo').fadeIn();
-		$('#row1,.basurero,.badge').css('display','none');
+		
+		if(concredito=='false'){
+			$('#paymentModule,#touchefectivo').fadeIn();
+		}
+		else{
+			$('#paymentModule').fadeIn();
+			changePaymentCategory('5','ConsumoI');
+		}
+		$('#row1').css('display','none');
 		//$('#paymentEfectivo').val(parseFloat($('#justo').attr('data-value'))*-1);
 		//$('#paymentCategory-1').click();
 		
@@ -2375,7 +2398,10 @@ function BuscarCliente(e){
 					if($('#insideShop').length > 0){
 						continueShopping(row.id);
 					}
-			}});	
+				}else{
+					$('#nombreP').val('');
+				}
+			});	
 		},errorCB,successCB);
 	}
 }
@@ -3510,6 +3536,15 @@ function valorcxcchange(){
 	changePaymentCategory('4','CxC');
 }
 
+function valorConsumoIchange(){
+	var valorconsumoi=parseFloat($('#valorConsumoI').val());
+	if(valorconsumoi>0){
+		$('#paymentConsumoI').val(valorconsumoi.toFixed(2));
+	}else
+		$('#paymentConsumoI').val(0);
+	changePaymentCategory('5','ConsumoI');
+}
+
 function toogleCalc(){
 	$('#pad,#grid').toggle();
 	$('#menuproductos,#numpad').toggle('fast');
@@ -3531,6 +3566,9 @@ function ResetPagos(cual){
 		//valorchequechange();
 	}else if(cual==4){
 		$('#valorcxc,#paymentCxC').val('0.00');
+		//valorcxcchange();
+	}else if(cual==5){
+		$('#valorConsumoI,#paymentConsumoI').val('0.00');
 		//valorcxcchange();
 	}
 	
@@ -3867,11 +3905,12 @@ function PagoAvanzado(){
 	pagonormal=false;
 	//$('.simple').css('display','none');
 	//$('.columna2').fadeIn();
-	$('#licheques,#licxc,#lisimple').css('display','block');
+	$('#licheques,#licxc,#lisimple,#liConsumoI').css('display','block');
 	$('#pagoavan').css('display','none');
 	$('.basurero,.badge,.cuadrototal,#payButton,.touchpago').fadeIn();
+	//$('.basurero,.badge,.cuadrototal,#payButton,.touchpago').css('display','');
 	$('.paymentMethods').val('0.00');
-	$('#valortarjeta,#valorcheque1,#valorcxc').val('0.00');
+	$('#valortarjeta,#valorcheque1,#valorcxc,#valorConsumoI').val('0.00');
 	$('.card').attr("data-value","0");
 	$('.cardv').html("");
 	$('.categoryChosen').click();

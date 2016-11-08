@@ -11,7 +11,7 @@ campos["FACTURAS_FORMULADOS"]=['id|integer primary key AUTOINCREMENT','timespan_
 
 campos["MENU_CATEGORIAS"]=['id|integer primary key AUTOINCREMENT','orden|integer default 1','nombre|text default ""','timespan|text UNIQUE','activo|boolean default "true"'];
 
-campos["MENU"]=['id|integer primary key AUTOINCREMENT', 'fila|integer default 0', 'columna|integer default 0','idcatmenu|text','idproducto|text','timespan|text UNIQUE','activo|boolean default true'];
+campos["MENU"]=['id|integer primary key AUTOINCREMENT', 'fila|integer default 0', 'columna|integer default 0','idcatmenu|text','idproducto|text','timespan|text UNIQUE','activo|boolean default true', 'cant_max|integer default 1'];
 
 campos["PERMISOS"]=['id|integer primary key AUTOINCREMENT',' clave|text default "" UNIQUE','historial|boolean default false','configuracion|boolean default false','anular|boolean default false', 'impcierre|boolean default false','productos|boolean default false','activo|boolean default false','vertotales|boolean default false','irnube|boolean default false'];
 
@@ -132,7 +132,7 @@ function envia(donde){
 						$('#cargandoTabs').css('display','none');
 						$('#correoMal').fadeOut('slow');
 						$('#main').load(lugar,function(){
-						$("#simple-menu").click();						
+						$("#simple-menu").click();
 						//DOMOnTap();
 						//loaded();
 						});
@@ -356,8 +356,8 @@ var app = {
 		
 		/*var mitimecat=getTimeSpan();
 		tx.executeSql('INSERT INTO MENU_CATEGORIAS (orden,nombre,timespan) values (?,?,?)',[1,'Productos',mitimecat]);*/
-		
-		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU (id integer primary key AUTOINCREMENT, fila integer default 0, columna integer default 0,idcatmenu text,idproducto text, timespan text UNIQUE, activo boolean default true)');
+
+		tx.executeSql('CREATE TABLE IF NOT EXISTS MENU (id integer primary key AUTOINCREMENT, fila integer default 0, columna integer default 0,idcatmenu text,idproducto text, timespan text UNIQUE, activo boolean default true, cant_max integer default 1)');
 		
 		VerificarCampos('MENU');
 		

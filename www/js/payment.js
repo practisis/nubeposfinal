@@ -667,7 +667,9 @@ function impresionMovil(mijson){
 		
 	localStorage.setItem("nameorder","");
 	$('#popupsavefactura').modal('show');
-	
+	$('#popupsavefactura').on('hidden.bs.modal', function () {
+		Ready();
+	});
 }
 
 function ImprimeComanderas(mijson){

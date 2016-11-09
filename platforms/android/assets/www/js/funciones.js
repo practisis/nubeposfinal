@@ -290,8 +290,11 @@ function agregarCompra(item,origen){
 			var dataagregados=vectoragregados[k].split('|');
 			var precioagr=parseFloat(dataagregados[1])*parseFloat(dataagregados[3]);
 			var micant="1 ";
-			if(parseFloat(dataagregados[3])<1)
+			if(parseFloat(dataagregados[3])<1){
 				micant="1/2 ";
+            }else{
+                micant=dataagregados[3]+" ";
+            }
 			tablaagregados+="<tr><td style='text-align:right;'>"+micant+"</td><td>"+dataagregados[0]+"</td><td style='text-align:right;'>$"+precioagr.toFixed(2)+"</td></tr>";
 			sumaagregados+=precioagr;
 		}
@@ -3774,7 +3777,7 @@ function formarCategoriasMenu(){
 }
 
 function ActivarCategoriaMenu(cual,categoria){
-	//console.log(categoria);
+	//alert(categoria);
 	$('#category').val(categoria);
 	$('#controller').val(1);
 	$('.directionProducts').css('display','none');
@@ -3827,7 +3830,7 @@ function ActivarCategoriaMenu(cual,categoria){
 					maxfilas=res1.rows.item(0).max;
 					for(var r=1;r<=maxfilas;r++){
 						
-                        tx.executeSql('SELECT p.*, m.idcatmenu as idc,m.timespan as mtimespan,m.columna as col,m.fila as fila FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" and fila='+r+' ORDER BY m.columna asc',[],function(tx,res){
+                        tx.executeSql('SELECT p.*, m.idcatmenu as idc,m.timespan as mtimespan,m.columna as col,m.fila as fila,m.cant_max FROM PRODUCTOS p, MENU m WHERE m.idproducto=p.timespan and m.idcatmenu="'+categoria+'" and activo="true" and fila='+r+' ORDER BY m.columna asc',[],function(tx,res){
 							console.log(res);
 							if(res.rows.length>0){
 								//alert('prods');
@@ -3848,7 +3851,7 @@ function ActivarCategoriaMenu(cual,categoria){
 										lineHeight='line-height:18px;';
 									
                                     if(localStorage.getItem("con_localhost") == 'true'){
-                                      vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.mtimespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
+                                      vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.mtimespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" data-cant_max="'+ row.cant_max +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
                                     }else{
                                       vectorpos[row.col-1]='<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.idc +'">'+ row.formulado +'</div>';
                                     }
@@ -3972,6 +3975,9 @@ function VerificarAgregados(btnprod,origen){
                     var y = JSON.parse(response);
             		var mods= new Array();
             		if (y.length>0){
+            		  var cant_max = $(btnprod).attr("data-cant_max");
+                      var cant_max_aux = parseInt($(btnprod).attr("data-cant_max"));
+
             			if(localStorage.getItem("idioma")==1)
             				$('#titlemodificador').html("Modificadores de "+$(btnprod).attr("data-formulado"));
             			else
@@ -3992,20 +3998,30 @@ function VerificarAgregados(btnprod,origen){
             				if(c>1)
             					display='display:none';
 
-            				/*var inhtml="<div class='grupobotones' id='mod_"+s.replace(/"/g,'')+"' data-orden="+c+" style='margin:5px;"+display+"'>";
-            				for(var t in mods[s]){
-            					inhtml+=mods[s][t];
-            				}
-            				if(localStorage.getItem("idioma")==1)
-            				{
-            					inhtml+="</div>";
-            					miboton="<button style='margin:3px;' id='btn_mod_"+s.replace(/"/g,'')+"' class='btn btn-default btn-lg' type='button' onclick='ActivarHalf("+s.replace(/"/g,'')+");'>Mitad</button><button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button>";
-            				}
-            				else{
-            					inhtml+="</div>";
-            					miboton="<button style='margin:3px;' id='btn_mod_"+s.replace(/"/g,'')+"' class='btn btn-default btn-lg' type='button' onclick='ActivarHalf("+s.replace(/"/g,'')+");'>Half</button><button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>None</button>";
-            				}*/
+                            if(cant_max_aux > 1){
+                              var vercant = 'block';
+                            }else{
+                              var vercant = 'none';
+                            }
+
                             var inhtml="<div class='grupobotones' id='mod_"+s.replace(/"/g,'')+"' data-orden="+c+" style='margin:5px;"+display+"'>";
+
+                            inhtml+="<div id='version_cantidad' style='display:"+vercant+";'>";
+                            inhtml+="<div><div class='row'><div class='col-xs-1'></div><div class='col-xs-4'>Cantidad Faltante: <span id='auxcantreal'>"+cant_max+"</span></div><div class='col-xs-2'></div><div class='col-xs-4'>Cantidad: <span id='auxcant'></span></div><div class='col-xs-1'></div></div></div>";
+
+                            inhtml+="<div'><button type='button' style='margin:3px;' class='btn btn-default btn-sm' onclick='ActivarCant(1);'>1</button>";
+                            inhtml+="<button type='button' style='margin:3px;' class='btn btn-default btn-sm' onclick='ActivarCant(2);'>2</button>";
+                            inhtml+="<button type='button' style='margin:3px;' class='btn btn-default btn-sm' onclick='ActivarCant(3);'>3</button>";
+                            inhtml+="<button type='button' style='margin:3px;' class='btn btn-default btn-sm' onclick='ActivarCant(4);'>4</button>";
+                            inhtml+="<button type='button' style='margin:3px;' class='btn btn-default btn-sm' onclick='ActivarCant(5);'>5</button>";
+                            inhtml+="<button type='button' style='margin:3px;' class='btn btn-default btn-sm' onclick='ActivarCant(6);'>6</button>";
+                            inhtml+="<button type='button' style='margin:3px;' class='btn btn-default btn-sm' onclick='ActivarCant(7);'>7</button>";
+                            inhtml+="<button type='button' style='margin:3px;' class='btn btn-default btn-sm' onclick='ActivarCant(8);'>8</button>";
+                            inhtml+="<button type='button' style='margin:3px;' class='btn btn-default btn-sm' onclick='ActivarCant(9);'>9</button>";
+                            inhtml+="<button type='button' style='margin:3px;' class='btn btn-default btn-sm' onclick='ActivarCant(0);'>0</button>";
+                            inhtml+="<button type='button' style='margin:3px;' class='btn btn-danger btn-sm' onclick='BorrarCant();'>X</button></div>";
+
+                            inhtml+="</div>";
 
         					if(localStorage.getItem("idioma")==1)
         						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Mitad</button>";
@@ -4013,9 +4029,9 @@ function VerificarAgregados(btnprod,origen){
         						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Half</button>";
 
         					if(localStorage.getItem("idioma")==1)
-        						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
+        						inhtml+="<button id='ninguno' style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
         					else if(localStorage.getItem("idioma")==2)
-        						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>NONE</button></div>";
+        						inhtml+="<button id='ninguno' style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>NONE</button></div>";
         					inhtml+="<hr></hr>";
 
         					for(var t in mods[s]){
@@ -4159,7 +4175,7 @@ function VerificarAgregadosnew(btnprod,origen){
 					if(localStorage.getItem("idioma")==1)
 						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Mitad</button>";
 					else if(localStorage.getItem("idioma")==1)
-						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Half</button>";						
+						inhtml+="<div><button id='mid_"+s.replace(/"/g,'')+"' type='button' style='margin:3px;' class='btn btn-default btn-lg' onclick='ActivarMitades("+s.replace(/"/g,'')+");'>Half</button>";
 					
 					if(localStorage.getItem("idioma")==1)
 						inhtml+="<button style='margin:3px;' class='btn btn-default btn-lg' type='button' onclick='SiguienteModificador("+s.replace(/"/g,'')+",0,"+origen+");'>Ninguno</button></div>";
@@ -4201,7 +4217,29 @@ function SiguienteModificador(divid,idmod,origen){
 		cantidad=0.5;
 		contadormitades++;
 	}
-	
+
+    var cantreal = parseInt($('#auxcantreal').html());
+    var canttiene = 0;
+    if($('#auxcant').html() == ''){
+      var cant = cantreal;
+    }else{
+      var cant = parseInt($('#auxcant').html());
+    }
+
+    if(cant > cantreal){
+      cant = cantreal;
+    }
+
+    canttiene = cantreal-cant;
+    //alert(cantreal+'**'+cant+'**'+canttiene);
+
+    if(cantreal > 0){
+      cantidad = cant;
+      $('#auxcantreal').html(canttiene);
+    }
+
+    //alert(cantidad);
+
 	$('.grupobotones').css('display','none');
 	var ya=false;
 	
@@ -4215,8 +4253,13 @@ function SiguienteModificador(divid,idmod,origen){
 			
 		}
 	});
+
+    if(canttiene > 0){
+      $('.grupobotones').css('display','block');
+      ya=true;
+    }
 	
-	if(idmod>0){
+	if(idmod > 0){
 		var elbotonm=$('#btnmodif_'+idmod);
 		var valormas=elbotonm.attr("data-valor");
 		var valortime=elbotonm.attr("data-time");
@@ -5514,6 +5557,18 @@ function ActivarMitades(id){
 	contadormitades=0;
 	mitades=true;
 	$('#mid_'+id).attr("class","btn btn-success btn-lg");
+}
+
+function ActivarCant(id){
+  $('#mid_1').fadeOut();
+  $('#ninguno').fadeOut();
+  var cant = $('#auxcant').html();
+  var nuevacant = cant+id;
+	$('#auxcant').html(nuevacant);
+}
+
+function BorrarCant(){
+  $('#auxcant').html('');
 }
 
 function SaveMesaLocal(){

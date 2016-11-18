@@ -668,7 +668,18 @@ function impresionMovil(mijson){
 	localStorage.setItem("nameorder","");
 	$('#popupsavefactura').modal('show');
 	$('#popupsavefactura').on('hidden.bs.modal', function () {
-		Ready();
+		$('#menuSubNew2').html("Total");
+		  if($(window).width()<=900){
+			  $('#barraalternamovil').slideDown();
+			  $('#divmesas').css('min-height',$('body').height()-$('#barraalternamovil').height());
+			  $("#lapartedepagos").css("display","none");
+			  $('.navbar').css('display','none');
+		  }else{
+			  $('.navbar').slideDown();
+			  $("#lapartedepagos").css("display","block");
+			  $('#divmesas').css('min-height',$('body').height()-$('.navbar').height());
+			  $('#barraalternamovil').css('display','none');
+		  }
 	});
 }
 

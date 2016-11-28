@@ -1553,7 +1553,7 @@ function pagar(){
 						max=res.rows.item(0).max;
 					else{
 						if(localStorage.getItem("ultimafact")!=null&&localStorage.getItem("ultimafact")!="")
-							max=parseInt(localStorage.getItem("ultimafact"))+1;
+							max=parseInt(localStorage.getItem("ultimafact"));
 					}
 
 					coun=max.toString().length;
@@ -1673,7 +1673,8 @@ function pagar(){
 			json +=	'"direccion": "'+$('#direccionP').val()+'",';
 			json +=	'"logo": "'+logo+'",';
 			json +=	'"mensajefinal": "'+mensajepie+'",';
-			json +=	'"linkelectronica": "'+linkelectronica+'"';
+			json +=	'"linkelectronica": "'+linkelectronica+'",';
+			json +=	'"cupo": "'+$('#cupoP').val()+'"';
 			json +=	'},';
 			json += '"producto": [';
 		$('.productDetails').each(function(){
@@ -1810,17 +1811,19 @@ function pagar(){
 			}
 
 		//alert(cadtarjetas);
-
+		var count=0;
+		if($('#valorcxc').val()!=''&&parseFloat($('#valorcxc').val())>0){
+			if(nformas>0&&count==0)
+				cadcxc+=',';
+			cadcxc+='{"forma":"cxc","valor":"'+$('#valorcxc').val()+'","tipotarjeta":"","lote":"","numerocheque":"","banco":"'+$('#justcxc').val()+'"}';
+			nformas++;
+		}
+		
 		if(cadefectivo!='') json+=cadefectivo;
 		if(cadtarjetas!='') json+=cadtarjetas;
 		if(cadcheques!='') json+=cadcheques;
-		if($('#valorcxc').val()!=''&&parseFloat($('#valorcxc').val())>0){
-			if(nformas>0)
-				json+=',';
-			json+='{"forma":"cxc","valor":"'+$('#valorcxc').val()+'","tipotarjeta":"","lote":"","numerocheque":"","banco":"'+$('#justcxc').val()+'"}';
-			nformas++;
-		}
-
+		if(cadcxc!='') json+=cadcxc;
+		
 		if($('#valorConsumoI').val()!=''&&parseFloat($('#valorConsumoI').val())>0){
 			if(nformas>0)
 				json+=',';
@@ -2153,11 +2156,16 @@ function AntesDePagar(){
 	//$('#paymentModule').modal('show');
 	if(parseFloat($('#total').html().substring(1))>0){
 		var concredito=localStorage.getItem('pagarconcredito');
-		if(concredito=='false'){
+		if(concredito==null)
+			concredito='false';
+		//alert(concredito);
+		if(!(concredito.toString()=='true')){
+			//alert(concredito);
 			pagonormal=true;
 			PagoSimple();
 			$('.basurero,.badge').css('display','none');
 		}else{
+			//alert('directo');
 			pagonormal=false;
 			PagoAvanzado();
 		}
@@ -2169,7 +2177,7 @@ function AntesDePagar(){
           $('#nombre_orden').css('display','none');
 		}
 
-		if(concredito=='false'){
+		if(!(concredito=='true')){
 			$('#paymentModule,#touchefectivo').fadeIn();
 		}
 		else{
@@ -2260,7 +2268,7 @@ function ColocarFormasPago(){
 		    setTimeout(function(){ocultarTeclado();},60000);
 	});*/
 
-	$('#paymentEfectivo,#valortarjeta,#valorcheque1,#valorcxc').on('click',function(){
+	$('#paymentEfectivo,#valortarjeta,#valorcheque1,#valorcxc,#valorConsumoI').on('click',function(){
 		digitado=false;
 		if($(this).val()!='')
 			$('.cantidadn').val($(this).val());
@@ -2293,7 +2301,12 @@ function ColocarFormasPago(){
 			else if(localStorage.getItem("idioma")==2)
 				$('#titlenumeric').html("CxC Payment");
 		}
-
+		else if($(this).attr('id')=='valorConsumoI'){
+			if(localStorage.getItem("idioma")==1)
+				$('#titlenumeric').html("Pago Consumo Interno");
+			else if(localStorage.getItem("idioma")==2)
+				$('#titlenumeric').html("Internal Purchase Payment");
+		}
 		$('#popupprecios').modal('show');
 	});
 }
@@ -3703,7 +3716,7 @@ function VerificarNumero(valor){
 								ceros+='0';
 								ceroscount++;
 							}
-              	console.log(ceros);
+							console.log(ceros);
 							$('#invoiceNr').val(ceros+nfact);
 							$('#invoiceNr').effect('highlight',{},'normal');
 						});
@@ -3717,7 +3730,9 @@ function VerificarNumero(valor){
 					});
 				}else{
 //console.log('admitido');
+					
 					var invoicenr=$('#invoiceNr').val();
+					localStorage.setItem('ultimafact',invoicenr);
 					if(parseInt(localStorage.getItem('ultimafact'))>valor){
 						invoicenr=parseInt(parseInt(localStorage.getItem('ultimafact')))+1;
 					}
@@ -3737,6 +3752,7 @@ function VerificarNumero(valor){
 							console.log(ceros);
 							invoicenr=ceros.toString()+invoicenr.toString();
 							$('#invoiceNr').val(invoicenr);
+							localStorage.setItem('ultimafact',invoicenr);
 							$('#invoiceNrComplete').val(miestablecimiento+'-'+miserie+'-'+invoicenr);
 						});
 					});
@@ -5748,4 +5764,91 @@ function SaveMesaLocal(){
 	setTimeout(function(){envia("puntodeventa")},2500);
   }
 
+}
+
+function ParaConsumoInterno(){
+	var pagaconcredito=localStorage.getItem("pagarconcredito");
+	if(pagaconcredito==null)
+		pagaconcredito='false';
+	
+	if(pagaconcredito.toString()=='true'){
+		var cedula=$('#cedulaP').val();
+		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+		db.transaction(function (tx){
+			tx.executeSql('SELECT cupo FROM CLIENTES where cedula=?',[cedula],
+			function(tx,res){
+				console.log(res);
+				if(res.rows.length>0){
+					//alert("hola");
+					var item=res.rows.item(0);
+					var cupo=parseFloat(item.cupo);
+					var mitotal=$('#total').html();
+					mitotal=mitotal.substring(1);
+					var total=parseFloat(mitotal);
+					$('#cupoactual').html(cupo.toFixed(2));
+					//alert(total+"/"+cupo);
+					if(total>cupo){
+						//alert("No tiene cupo.");
+						$('#cedulaP').val('9999999999999');
+						$('#nombreP').val('');
+						noCliente();
+						cancelPayment();
+						$('#popupinsuficiente').modal("show");
+						setTimeout(function(){
+							$('#popupinsuficiente').modal("hide");
+							$('#cupoactual').html("0.00");
+							envia("puntodeventa");
+						},4000);
+					}else{
+						//alert("Si tiene cupo");
+						jsonNuevoCliente();
+					}
+				}
+			})
+		},errorCB,successCB);
+		
+		
+		/*if(tiene==true){
+			jsonNuevoCliente();
+		}else{
+			$('#cedulaP').val('9999999999999');
+			$('#nombreP').val('');
+			noCliente();
+			cancelPayment();
+			$('#popupinsuficiente').modal("show");
+			setTimeout(function(){
+				$('#popupinsuficiente').modal("hide");
+				$('#cupoactual').html("0.00");
+			},4000);
+		}*/
+	}else{
+		jsonNuevoCliente();
+	}
+}
+
+function RevisarCupo(RUC){
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function (tx){
+		tx.executeSql('SELECT cupo FROM CLIENTES where cedula=?',[RUC],
+		function(tx,res){
+			console.log(res);
+			if(res.rows.length>0){
+				//alert("hola");
+				var item=res.rows.item(0);
+				var cupo=parseFloat(item.cupo);
+				var mitotal=$('#total').html();
+				mitotal=mitotal.substring(1);
+				var total=parseFloat(mitotal);
+				alert(total+"/"+cupo);
+				if(total>cupo){
+					//alert("No tiene cupo.");
+					$('#cupoactual').html(cupo.toFixed(2));
+					return false;
+				}else{
+					//alert("Si tiene cupo");
+					return true;
+				}
+			}
+		})
+	},errorCB,successCB);
 }

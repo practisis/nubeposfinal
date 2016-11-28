@@ -174,7 +174,10 @@ function ExtraeDatosApi(donde){
 			tx.executeSql("delete from sqlite_sequence where name='CLIENTES'",[],function(tx,results){});
 			for(var n=0;n<jsonclientes.length;n++){
 				var item=jsonclientes[n];
-				tx.executeSql('INSERT OR IGNORE INTO CLIENTES(nombre,cedula,email,direccion,telefono,sincronizar,existe,timespan) VALUES("'+item.nombre+'" , "'+item.cedula+'" , "'+item.email+'" , "'+item.direccion+'" ,  "'+item.telefono+'" ,  "false" , "0" , "0" )',[],function(tx,results){
+				var cupo=0;
+				if(item.cupo!=null)
+					cupo=item.cupo;
+				tx.executeSql('INSERT OR IGNORE INTO CLIENTES(nombre,cedula,email,direccion,telefono,sincronizar,existe,timespan,cupo) VALUES("'+item.nombre+'" , "'+item.cedula+'" , "'+item.email+'" , "'+item.direccion+'" ,  "'+item.telefono+'" ,  "false" , "0" , "0",'+cupo+')',[],function(tx,results){
 				console.log("insertado cliente:"+results.insertId);
 				});
 			}
@@ -442,8 +445,8 @@ function ExtraeDatosApi(donde){
 			var jsonlocalesd=jsonlocales.locales;
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
-					tx.executeSql('delete from MESAS',[],function(tx,results){});
-					tx.executeSql("delete from sqlite_sequence where name='MESAS'",[],function(tx,results){});
+					tx.executeSql('delete from LOCALES',[],function(tx,results){});
+					tx.executeSql("delete from sqlite_sequence where name='LOCALES'",[],function(tx,results){});
 					for(var n=0;n<jsonlocalesd.length;n++){
 						var item=jsonlocalesd[n];
 
@@ -1134,14 +1137,34 @@ function DatosRecurrentes(cual){
 				for(var n=0;n<jsonclientes.length;n++){
 					var item=jsonclientes[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.idreal+',');
+					var cupo=0;
+					if(item.cupo!=null)
+						cupo=item.cupo;
 					
-					tx.executeSql('INSERT OR IGNORE INTO CLIENTES(nombre,cedula,email,direccion,telefono,sincronizar,existe,timespan) VALUES("'+item.nombre+'" , "'+item.cedula+'" , "'+item.email+'" , "'+item.direccion+'" ,  "'+item.telefono+'" ,  "false" , "0" , "0" )',[],function(tx,results){
-						console.log("insertado cliente:"+results.insertId);
+					tx.executeSql("SELECT COUNT(*) as cuantos FROM FACTURAS WHERE sincronizar='true' and RUC=?",[item.cedula],function(tx,resultf){
+						if(resultf.rows.length>0){
+							var itemf=resultf.rows.item(0);
+							if(parseInt(itemf.cuantos)>0){
+								tx.executeSql('INSERT OR IGNORE INTO CLIENTES(nombre,cedula,email,direccion,telefono,sincronizar,existe,timespan) VALUES("'+item.nombre+'" , "'+item.cedula+'" , "'+item.email+'" , "'+item.direccion+'" ,  "'+item.telefono+'" ,  "false" , "0" , "0")',[],function(tx,results){
+								console.log("insertado cliente:"+results.insertId);
+								});
+							
+								tx.executeSql('UPDATE CLIENTES SET nombre=  "'+item.nombre+'"  , cedula = "'+item.cedula+'" , email="'+item.email+'"  , direccion = "'+item.direccion+'" , sincronizar="false" WHERE cedula="'+item.cedula+'"',[],function(tx,results){
+								console.log("actualizado cliente");
+								});
+							}else{
+								tx.executeSql('INSERT OR IGNORE INTO CLIENTES(nombre,cedula,email,direccion,telefono,sincronizar,existe,timespan,cupo) VALUES("'+item.nombre+'" , "'+item.cedula+'" , "'+item.email+'" , "'+item.direccion+'" ,  "'+item.telefono+'" ,  "false" , "0" , "0",'+cupo+')',[],function(tx,results){
+								console.log("insertado cliente:"+results.insertId);
+								});
+							
+								tx.executeSql('UPDATE CLIENTES SET nombre=  "'+item.nombre+'"  , cedula = "'+item.cedula+'" , email="'+item.email+'"  , direccion = "'+item.direccion+'" , sincronizar="false",cupo='+cupo+'  WHERE cedula="'+item.cedula+'"',[],function(tx,results){
+								console.log("actualizado cliente");
+								});
+							}
+						}
 					});
 					
-					tx.executeSql('UPDATE CLIENTES SET nombre=  "'+item.nombre+'"  , cedula = "'+item.cedula+'" , email="'+item.email+'"  , direccion = "'+item.direccion+'" , sincronizar="false"  WHERE cedula="'+item.cedula+'"',[],function(tx,results){
-						console.log("actualizado cliente");
-					});
+					
 				}
 				},errorCB,function(){
 					$("#theProgress").css("width" , "45%");
@@ -1841,7 +1864,7 @@ function PostaLaNube(arraydatos,cual,accion,t){
 			boolactivo='false';
 		jsonc='{  "id" : "'+item.id_local+'" , "formulado" : "'+item.formulado+'" , "timespan" : "'+item.timespan+'" , "codigo" : "'+item.codigo+'" , "precio" : "'+item.precio+'" , "cargaiva" : "'+item.cargaiva+'" , "categoriaid" : "'+item.categoriaid+'" , "productofinal" : "'+item.productofinal+'" , "materiaprima" : "'+item.materiaprima+'" , "servicio" : "'+item.servicio+'" , "activo" : "'+boolactivo+'","color":"'+item.color+'","tieneimpuestos":"'+item.tieneimpuestos+'"}';
 	}else if(accion=='Clientes'){
-		jsonc='{  "id" : "'+item.id+'" , "cedula" : "'+item.cedula+'" , "nombre" : "'+item.nombre+'"  , "email" : "'+item.email+'" , "direccion" : "'+item.direccion+'" , "telefono" : "'+item.telefono+'" }';
+		jsonc='{  "id" : "'+item.id+'" , "cedula" : "'+item.cedula+'" , "nombre" : "'+item.nombre+'"  , "email" : "'+item.email+'" , "direccion" : "'+item.direccion+'" , "telefono" : "'+item.telefono+'","cupo":"'+item.cupo+'" }';
 	}else if(accion=='Facturas'){
 		jsonc=item.fetchJson;
         //alert(jsonc);

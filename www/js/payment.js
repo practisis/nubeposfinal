@@ -41,7 +41,7 @@ function changePaymentCategory(index,nombre){
 	
 	if(pagonormal==true){
 		$('.paymentMethods').each(function(){
-				if($(this).attr('idpaymentmethod')!=index){
+			if($(this).attr('idpaymentmethod')!=index){
 				 $(this).val('0.00');
 				 if(index==3)$('#valorcxc').val('0.00');
 				 if(index==4)$('#valorcheque1').val('0.00');
@@ -501,6 +501,16 @@ function performPurchase(restaurant){
 
 							sessionStorage.setItem("mesa_activa","");
 						}
+						
+						var concredito=localStorage.getItem("pagarconcredito");
+						if(concredito==null){
+							concredito='false';
+						}
+						
+						if(concredito.toString()=='true'){
+							//alert(mitotal+"/"+idcli);
+							tx.executeSql("UPDATE CLIENTES SET cupo=cupo-"+parseFloat(mitotal)+",sincronizar=? WHERE cedula=?",['true',RUC]);
+						}
 
 						for(var j in misprod){
 							var item = misprod[j];
@@ -850,6 +860,7 @@ function BuscarCliente(e){
 					$('#direccionP').val(row.direccion);
 					$('#emailP').val(row.email);
 					$('#payClientName').html(row.nombre);
+					$('#cupoP').val(row.cupo);
 					$('.tipoClienteP').val(1);
 					if($('#insideShop').length > 0){
 						continueShopping(row.id);
@@ -1007,11 +1018,16 @@ function noCliente(){
 		$('#cedulaP').val('9999999999999');
 		BuscarCliente(13);
 	}else{
-		if(localStorage.getItem('pagarconcredito')=='true'){
+		var concredito=localStorage.getItem('pagarconcredito');
+		if(concredito==null)
+			concredito='false';
+		
+		if(concredito.toString()=='true'){
 			if($('#nombreP').val()==''){
 				$('#busquedacliente').html('9999999999999');
 				$('#cedulaP').val('9999999999999');
-				BuscarCliente(13);
+				$('#clientefind').html('Consumidor Final');
+				//BuscarCliente(13);
 			}	
 		}else{
 			$('#busquedacliente').html($('#cedulaP').val());
@@ -1045,7 +1061,7 @@ function noCliente(){
 						<tr> \
 							<td colspan=2>\
 								<br><br>\
-								<input type="hidden" tabIndex="1" id="cedulaP" value="9999999999" onkeypress="isalphanumeric(event);" class="form-control input-lg"/> \
+								<input type="hidden" tabIndex="1" id="cedulaP" value="9999999999" onkeypress="isalphanumeric(event);" class="form-control input-lg"/><input type="hidden" style="display:none;" id="cupoP" value="0"/>  \
 									<table tabIndex="99"  cellpadding="0"  cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
 										<tr>\
 												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon trans_mail"  style="width:30%">&nbsp;Email</span>\
@@ -1086,7 +1102,7 @@ function noCliente(){
 												<button onclick="noCliente();" tabindex="8" class="btn btn-lg btn-default trans_cancel">Cancelar</button> \
 											</td>\
 											<td style="vertical-align: top;">\
-												<button tabindex="7" class="btn btn-lg btn-success trans_save" onclick="jsonNuevoCliente()">Guardar</button> \
+												<button tabindex="7" class="btn btn-lg btn-success trans_save" onclick="ParaConsumoInterno();">Guardar</button> \
 											</td>\
 										</tr>\
 									</table>\
@@ -1117,7 +1133,7 @@ function noCliente(){
 											<td>\
 										<div class="input-groupt" style="width:100%; margin-bottom:10px;"><span class="input-group-addon trans_cedula labellarge" style="width:30%; display:none;">\
 													&nbsp;Cédula* \
-											</span><input tabIndex="1" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control input-lg extralarge" placeholder="CI/RUC"/> </div>\
+											</span><input tabIndex="1" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control input-lg extralarge" placeholder="CI/RUC"/><input id="cupoP" value="0" style="display:none;"/> </div>\
 												</td>\
 										</tr>\
 										<tr>\
@@ -1160,7 +1176,7 @@ function noCliente(){
 												<button onclick="noCliente();" tabindex="8" class="btn-lg btn btn-default  trans_cancel">Cancelar</button> \
 											</td>\
 											<td style="vertical-align: top;">\
-												<button tabindex="7" class="btn btn-success btn-lg trans_save" onclick="jsonNuevoCliente()">Guardar</button> \
+												<button tabindex="7" class="btn btn-success btn-lg trans_save" onclick="ParaConsumoInterno();">Guardar</button> \
 											</td>\
 										</tr>\
 									</table>\
@@ -1210,7 +1226,11 @@ function noCliente(){
 		$('#idCliente').val('0');
 		var idcli=$(this).val();
 		if(idcli.length<10){
-			if(localStorage.getItem('pagarconcredito')=='true'){
+			var concredito=localStorage.getItem('pagarconcredito');
+			if(concredito==null)
+				concredito='false';
+			
+			if(concredito.toString()=='true'){
 				$('#busquedacliente').val(idcli);
 				$('#clientefind').html('');
 				BuscarCliente(13);
@@ -1300,8 +1320,11 @@ function noCliente(){
 
 function cedula() {
 	numero = document.getElementById("cedulaP").value;
-	var concredito=localStorage.getItem("pagarconcredito");
-	if(concredito=='false'){
+	var concredito=localStorage.getItem("pagarconcredito").toString;
+	if(concredito==null)
+		concredito='false';
+	
+	if(!(concredito.toString()=='true')){
 		if(numero.indexOf("p")>=0||numero.indexOf("P")>=0)
 			return true;
 		else if(numero=='9999999999999')

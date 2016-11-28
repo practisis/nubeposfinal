@@ -448,9 +448,11 @@ function AnularFactura(){
     }else{
     var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx3){
-				tx3.executeSql('select fetchJson as j from facturas where id=?',[id],function(tx3,results){
+				tx3.executeSql('select fetchJson as j,total,RUC from facturas where id=?',[id],function(tx3,results){
 					var mijson=results.rows.item(0).j;
 					mijson=mijson.replace('"anulada" : "false"','"anulada" : "true"');
+					var mitot=results.rows.item(0).total;
+					var miruc=results.rows.item(0).RUC;
 					//console.log(mijson);
 					tx3.executeSql('UPDATE FACTURAS SET anulada=?,sincronizar="true",fetchJson=? where id=?',[1,mijson,id],function(tx3,results3){
 						console.log(results3);
@@ -462,7 +464,19 @@ function AnularFactura(){
 						$('#factanulada').fadeIn('slow');
 						$('#btnanularf,#reimprimir').fadeOut('slow');
 						//location.reload(true);
+						
+						//si es credito directo regresa el cupo
+						var concredito=localStorage.getItem("pagarconcredito");
+						if(concredito==null)
+							concredito='false';
+							
+						if(concredito.toString()=='true'){
+							tx3.executeSql('UPDATE CLIENTES SET cupo=cupo+'+parseFloat(mitot)+' where cedula=?',[miruc]);
+						}
+						
 					});
+					
+					
 				});
 			},errorCB,successCB);
     }

@@ -1591,8 +1591,8 @@ function pagar(){
 	}
 
 
-	//if($('#timespanFactura').val()=='')
-	$('#timespanFactura').val(getTimeSpan());
+	if($('#timespanFactura').val()==''||$('#timespanFactura').val()==0||$('#timespanFactura').val()==null)
+		$('#timespanFactura').val(getTimeSpan());
     var timefactura = $('#timespanFactura').val();
 	total=parseFloat(total);
 
@@ -1654,14 +1654,20 @@ function pagar(){
 	var linkelectronica='';
 	if(localStorage.getItem("factelectronica")=='true'){
 		var mipass=GenerarClaveElectronica($('#cedulaP').val());
-		linkelectronica='http://www.practifactura.com/clientes, user: '+$('#cedulaP').val()+', password: '+mipass;
+		linkelectronica='http://www.practifactura.com/clientes # user '+$('#cedulaP').val()+' # password '+mipass;
 		//alert(linkelectronica);
 	}
 
-
+	var preimpresas=0;
+	if(localStorage.getItem('preimpresas')!=null){
+		if(localStorage.getItem('preimpresas')=='true'){
+			preimpresas=1;
+		}
+	}
     //alert(subtotalSinIva+'**'+subtotalIva+'**'+descuento+'**'+impuestos);
 	//var total = parseFloat(subtotalSinIva) + parseFloat(subtotalIva) + parseFloat(impuestos) - parseFloat(descuento);
-
+	//linkelectronica='';
+	
 	var json = '{"Pagar": [{';
 		json += ' "cliente": {';
 			json +=	'"id_cliente": "'+$('#idCliente').val()+'",';
@@ -1723,10 +1729,11 @@ function pagar(){
 
 
 	//alert(device+'/'+device.model + '/' +'Device Cordova: '  + device.cordova  + '/' +'Device Platform: ' + device.platform + '/' +'Device UUID: '     + device.uuid     + '/' +'Device Version: '  + device.version);
-
+	//alert(preimpresas);
 	json = json.substring(0,json.length -1);
 	json += '],'
 	json += '"factura" : {';
+		json += '"factimpresas" : "'+preimpresas+'",';
 		json += '"subtotal_sin_iva" : "'+ subtotalSinIva +'",';
 		json += '"timespanfactura" : "'+ timefactura +'",';
 		json += '"idbarrascajas" : "'+midevice+'",';
@@ -3415,7 +3422,15 @@ function vertarjetas(){
 			$('#lastarjetas').append(div);
 			x++;
 		}
+		
 	}
+	//opcion para bwise
+		/*var celdatar=$('#caretTarjetas').parent().parent();
+		var div=$('#caretTarjetas').parent();
+		//alert("entrabwise");
+		//console.log($(celdatar));
+		div.css("width","80%");
+		celdatar.append("<button class='btn btn-success' type='button'>PAGAR CON BWISE</button>");*/
 }
 
 function elegirTarjeta(id){
@@ -3500,6 +3515,7 @@ function elegirTarjeta(id){
       $('#payButton').fadeOut("fast");
       pagotarjeta();
     }else{
+		
       //$('#valortarjeta').prop("readonly",false);
       //$('#payButton').fadeIn("fast");
       $('#order_id').val('');
@@ -5851,4 +5867,31 @@ function RevisarCupo(RUC){
 			}
 		})
 	},errorCB,successCB);
+}
+
+function UsarBwise(){
+	//alert("entra al bwise");
+	var subconiva=parseFloat($('#subtotalIva').val()).toFixed(2);
+	var subsiniva=parseFloat($('#subtotalSinIva').val());
+	var propinaval=parseFloat($('#propinaFactura').val()).toFixed(2);
+	$('.esImpuesto').each(function(){
+		if(!($.trim($(this).attr('data-nombre').toLowerCase())=='iva')){
+			subsiniva+=parseFloat($(this).val());
+		}
+	});
+	
+	var referencia=new Date().getTime();
+	$('#timespanFactura').val(referencia);
+	var cadenavalores=subconiva+"|"+subsiniva.toFixed(2)+"|0.00|"+propinaval+"|"+referencia.toString();
+	//alert(cadenavalores);
+	StarIOAdapter.bwise(cadenavalores,function(resp){
+		//alert(resp);
+		var dataresp=resp.split("|");
+		var total=$('#total').html().substring(1);
+		if(parseFloat(dataresp[0])==parseFloat(total)){
+			PagoSimple();
+			elegirTarjeta(7);
+		}
+	},
+	function(error){alert(error);});
 }

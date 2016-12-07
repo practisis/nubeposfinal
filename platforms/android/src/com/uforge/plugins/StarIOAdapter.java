@@ -47,6 +47,9 @@ import com.epson.eposprint.Print;
 import com.epson.eposprint.Builder;
 import com.epson.eposprint.EposException;
 
+import org.apache.cordova.*;
+import com.practisis.practipos.MainActivity;
+
 /**
  * @author Luca Del Bianco
  * This class handles the basic printing functions needed to print using the Star SDK
@@ -56,12 +59,22 @@ public class StarIOAdapter extends CordovaPlugin {
     final Handler mhandler = new Handler();
 	boolean iniciadaepson=false;
 	Integer tipoactual=DevType.BLUETOOTH;
+	private MainActivity activity = null;
 	
 	public enum RasterCommand {
 		Standard, Graphics
 	};
 	
 	private static int printableArea = 576;
+	
+	@Override
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) 
+    {
+        super.initialize(cordova, webView);
+
+        // Set the Activity.
+        this.activity = (MainActivity) cordova.getActivity();
+    }
 	
     /* (non-Javadoc)
      * @see org.apache.cordova.CordovaPlugin#execute(java.lang.String, org.json.JSONArray, org.apache.cordova.CallbackContext)
@@ -347,7 +360,24 @@ public class StarIOAdapter extends CordovaPlugin {
                 }
             });
             return true;
-        }
+        }else if(action.equals("bwise")){
+			cordova.getActivity().runOnUiThread(new Runnable(){
+				public void run(){
+					try{
+						//activity.customFunctionCalled("0.25");
+						if(Arguments.length() < 1) {
+                            throw new Exception("You must specify a jsoninvoice");
+                        }
+						String cadenain=Arguments.getString(0);
+						String[] arrayin = cadenain.split("\\|");
+						activity.customFunctionCalled(arrayin[0],arrayin[1],arrayin[2],arrayin[3],arrayin[4],currentCallbackContext);
+					}catch(Exception e){
+						currentCallbackContext.error(e.getMessage());
+					}
+				}
+			});
+			return true;
+		}
         return false;
     }
 

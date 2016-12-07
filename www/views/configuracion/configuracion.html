@@ -859,7 +859,7 @@
 						<div style='border:1px solid #CCC; padding:20px 10px 20px 10px; background-color:#F7F8F8;'>
 							<div class='row'>
 							 <!--<h3 id="trans_label_19" style='text-align:left;'>Configuración de Impresoras</h3>-->
-							<div class='col-lg-6 col-md-6 col-sm-6 col-xs-6' style='text-align:right;'>
+							<div class='col-lg-6 -col-md-6 col-sm-6 col-xs-6' style='text-align:right;'>
 								<select name='marca' id='marca' class='form-control input-lg' style='margin-right:5px];'>
 								<option value='1'>Epson</option>
 								<option value='2'>Star</option>
@@ -914,6 +914,9 @@
 							<div class='col-lg-12' style='margin-top:20px;'>
 								<p style='text-align:left; padding-left:10px'><b id='trans_label_21'>Preferencias</b></p>
 								<div>
+									 <div  class='col-lg-6 col-md-6 col-sm-6 col-xs-6' style='padding-top:20px; padding-bottom:20px;'>
+										<input type='checkbox' name='preimpresas' id='preimpresas'/><label id='labpreimpresas' name='labpreimpresas' for='preimpresas'>&nbsp;Facturas Preimpresas</label>
+									 </div>
 									<table class='table table-border'>
 										<tr>
 										<td><span id='trans_label_22'>Tamaño Encabezado</span> (cm):</td>
@@ -1266,7 +1269,7 @@ $(document).ready(function(){
 	//alert("Ana");
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
-				tx.executeSql("SELECT printer,printercom FROM CONFIG where id=1",[],function(tx,results){
+				tx.executeSql("SELECT printer,printercom,encabezado,largo,preimpresas FROM CONFIG where id=1",[],function(tx,results){
 				console.log(results);
 				if(results.rows.length>0){
 					//alert(results.rows.item(0).printer);
@@ -1278,13 +1281,20 @@ $(document).ready(function(){
 					if(idprinter.printercom!=null&&idprinter.printercom!=''){
 						$('#predetcomandacion').html(idprinter.printercom);
 					}
+					
+					$('#encabezado').val(idprinter.encabezado);
+					$('#largo').val(idprinter.largo);
+					//$('#preimpresas').attr('checked',idprinter.preimpresas);
+					var factpreimp=false;
+					if(idprinter.preimpresas=='true'){
+						factpreimp=true;
+					}
+					$('#preimpresas').attr('checked',factpreimp);
 				}
 			});
 		},errorCB,successCB);
-
-
-
-
+	
+	
 	if(localStorage.getItem("id_version_nube") == '0'||localStorage.getItem("id_version_nube") == null){
 		//envia('config');
 		if(localStorage.getItem('idbarra')!=null){
@@ -1832,11 +1842,17 @@ $(document).ready(function(){
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(
 		function (tx){
-			tx.executeSql('SELECT encabezado,largo FROM CONFIG WHERE id=1;',[],
+			tx.executeSql('SELECT encabezado,largo,preimpresas FROM CONFIG WHERE id=1;',[],
 			function(tx,res){
 				if(res.rows.length>0){
 					$('#encabezado').val(res.rows.item(0).encabezado);
 					$('#largo').val(res.rows.item(0).largo);
+					var factpreimp=false;
+					if(idprinter.preimpresas=='true'){
+						factpreimp=true;
+					}
+					$('#preimpresas').attr('checked',factpreimp);
+					//$('#preimpresas').prop('checked',false);
 				}
 			});				
 		},errorCB,successCB);
@@ -2210,10 +2226,16 @@ $(document).ready(function(){
 			if(parseInt($('#largo').val())>0)
 				largo=$('#largo').val();
 				
-			tx.executeSql('UPDATE CONFIG set encabezado=?,largo=? WHERE id=1;',[encab,largo],
+			var preimpresas='false';
+			if($('#preimpresas').is(':checked')==true){
+				preimpresas='true';
+			}
+				
+			tx.executeSql('UPDATE CONFIG set encabezado=?,largo=?,preimpresas=? WHERE id=1;',[encab,largo,preimpresas],
 			function(tx,res){
 				localStorage.setItem("encabezado",encab);
 				localStorage.setItem("largo",largo);
+				localStorage.setItem("preimpresas",preimpresas);
 				if(localStorage.getItem("idioma")==1)
 						showalert("Datos Actualizados con éxito.");
 					else if(localStorage.getItem("idioma")==2)

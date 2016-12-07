@@ -151,9 +151,10 @@ public class PrinterFunctionsEpson{
 		String mensajefinal="Generado con avapos.com";
 		Integer lang=1;
 		String codigoprint="";
+		Integer preimpresas=0;
 		JSONArray cierreImpuestos= new JSONArray();
-		Integer lineastotales=30; //18cm-2lineas
-		Integer lineasencabezado=0; //3cm-2lineas
+		long lineastotales=36; //18cm-36lineas
+		long lineasencabezado=6; //3cm-7lineas
 		long fechanumber=0;
 		JSONArray expformas=new JSONArray();
 		String textoreimpr="";
@@ -206,9 +207,16 @@ public class PrinterFunctionsEpson{
 			nombreEmpresa=objempresa.getString("nombre");
 			direccionEmpresa=objempresa.getString("direccion");
 			fechanumber=(long)objfactura.getDouble("fecha");
-			lineastotales=(2*objfactura.getInt("largo"))-6;
-			lineasencabezado=(2*objfactura.getInt("encabezado"))-6;
+			lineastotales=Math.round(2.25*(objfactura.getInt("largo")-2));
+			lineasencabezado=Math.round(2*objfactura.getInt("encabezado"));
 			
+			/*Iterator<?> keys = objfactura.keys();
+
+			while( keys.hasNext() ) {
+				String key = (String)keys.next();
+				System.out.println(key);
+			}*/
+
 			if(objfactura.has("impuestosdata")){
 				if(!(objfactura.getString("impuestosdata").equals(JSONObject.NULL)))
 					cadimpuestos=objfactura.getString("impuestosdata");
@@ -240,6 +248,16 @@ public class PrinterFunctionsEpson{
 				if(!(objfactura.getString("pax").equals(JSONObject.NULL)))
 				pax=objfactura.getString("pax");
 			}
+			
+			//System.out.println("viene 1: "+objfactura.getInt("largo"));
+			if(objfactura.has("factimpresas")){
+				System.out.println("viene: "+objfactura.getInt("factimpresas"));
+				if(objfactura.getInt("factimpresas")>=0){
+					preimpresas=objfactura.getInt("factimpresas");
+				}
+			}
+			
+			//preimpresas=1;
 			
 			tipo="pagar";
 			}else if(nombres.toString().contains("Cierre")){
@@ -325,8 +343,8 @@ public class PrinterFunctionsEpson{
 				descuento=DoubleFormat(objfactura.getDouble("descuento"));
 				totalfact=DoubleFormat(objfactura.getDouble("total"));
 				fechanumber=(long)objfactura.getDouble("fecha");
-				lineastotales=(2*objfactura.getInt("largo"))-6;
-				lineasencabezado=(2*objfactura.getInt("encabezado"))-6;
+				lineastotales=Math.round(2.25*(objfactura.getInt("largo")-2));
+				lineasencabezado=Math.round(2*objfactura.getInt("encabezado"));
 				if(objfactura.has("impuestosdata")){
 					if(!(objfactura.getString("impuestosdata").equals(JSONObject.NULL)))
 						cadimpuestos=objfactura.getString("impuestosdata");
@@ -414,43 +432,68 @@ public class PrinterFunctionsEpson{
 		///comienzan comandos
 			if(tipo.equals("pagar")){
 				
-				if(!logo.equals("")){
-					Bitmap logoData =BitmapFactory.decodeFile("/data/data/com.practisis.practipos/files//"+logo);
-					// Add top logo to command buffer 
-					builder.addImage(logoData, 0, 0,
-                             logoData.getWidth(),
-                             logoData.getHeight(),
-                             Builder.COLOR_1,
-                             Builder.MODE_MONO,
-                             Builder.HALFTONE_DITHER,
-                             Builder.PARAM_DEFAULT,
-                             getCompress(this.connectionType));
+				Integer lineasescritas=0;
+				
+				if(preimpresas.equals(0)){
+					if(!logo.equals("")){
+						Bitmap logoData =BitmapFactory.decodeFile("/data/data/com.practisis.practipos/files//"+logo);
+						// Add top logo to command buffer 
+						builder.addImage(logoData, 0, 0,
+								 logoData.getWidth(),
+								 logoData.getHeight(),
+								 Builder.COLOR_1,
+								 Builder.MODE_MONO,
+								 Builder.HALFTONE_DITHER,
+								 Builder.PARAM_DEFAULT,
+								 getCompress(this.connectionType));
+						
+						builder.addFeedLine(1);
+					}
 					
+					builder.addTextDouble(Builder.TRUE, Builder.TRUE);
+					builder.addText(nombreEmpresa+"\n");
+					builder.addTextDouble(Builder.FALSE, Builder.FALSE);
 					builder.addFeedLine(1);
+					textData.append(direccionEmpresa+"-"+telefonoEmpresa+"\n");
 				}
 				
-				builder.addTextDouble(Builder.TRUE, Builder.TRUE);
-				builder.addText(nombreEmpresa+"\n");
-				builder.addTextDouble(Builder.FALSE, Builder.FALSE);
-				builder.addFeedLine(1);
-				textData.append(direccionEmpresa+"-"+telefonoEmpresa+"\n");
-				if(lang.equals(1))
+				System.out.println("preimpresas: "+preimpresas+"/"+lineastotales+"/"+lineasencabezado+"/"+lineasescritas);
+				if(preimpresas.equals(1)){
+					while(lineasescritas<lineasencabezado){
+						textData.append("\n");
+						lineasescritas=lineasescritas+1;
+					}
+				}
+				
+				if(nombreCliente.equals(""))
+					nombreCliente="Consumidor Final";
+				
+				if(lang.equals(1)){
+					
 					textData.append(nombreCliente+"-"+cedulaCliente+"\n");
-				else if(lang.equals(2))
+					lineasescritas=lineasescritas+1;
+				}
+				else if(lang.equals(2)){
 					textData.append(nombreCliente.replace("Consumidor Final","Final Customer")+"-"+cedulaCliente+"\n");
+					lineasescritas=lineasescritas+1;
+				}
 					
 				textData.append(direccionCliente+"/"+telefonoCliente+"\n");
+				lineasescritas=lineasescritas+1;
 				
 				if(!textoreimpr.equals("")){
 					if(lang.equals(1))
 						textData.append(textoreimpr+"\n");
 					else if(lang.equals(2))
 						textData.append(textoreimpr.replace("Reimpresion Factura","Invoice Reprint")+"\n");
+					lineasescritas=lineasescritas+1;
 				}
 					
 				textData.append("--------------------------------\n");
+				lineasescritas=lineasescritas+1;
 				builder.addText(textData.toString());
 				textData.delete(0, textData.length());
+				
 				
 				Date fechafact=new Date(fechanumber);
 				//String fechaf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fechafact);
@@ -468,6 +511,10 @@ public class PrinterFunctionsEpson{
 				}else if(lang.equals(2)){
 					textData.append("  # DESCRIPTION          AMMOUNT\n");
 				}
+				
+				lineasescritas=lineasescritas+3;
+				
+				
 				if(expprod.length()>0){
 					for(int i=0;i<expprod.length();i++){
 						try{
@@ -525,11 +572,13 @@ public class PrinterFunctionsEpson{
 						}catch(JSONException ex){
 							ex.printStackTrace();
 						}
+						lineasescritas=lineasescritas+1;
 					}
 					
 				}
 				
 				textData.append("--------------------------------\n");
+				lineasescritas=lineasescritas+1;
 				
 						if(subconiva.length()<6){
 							int tam=6-subconiva.length();
@@ -596,6 +645,7 @@ public class PrinterFunctionsEpson{
 						
 				if(Double.parseDouble(subtotal.replace(",","."))>0){
 					textData.append("                 SUBTOTAL:"+String.valueOf(subtotal)+"\n");
+					lineasescritas=lineasescritas+1;
 				}
 				
 				
@@ -626,14 +676,16 @@ public class PrinterFunctionsEpson{
 								textData.append(String.valueOf(nombreimp)+String.valueOf(valorimp)+"\n");
 							}
 						}
-						
+						lineasescritas=lineasescritas+1;
 					}
 				}else{
 					if(Double.parseDouble(iva.replace(",","."))>0){
 						textData.append("                      IVA:"+String.valueOf(iva)+"\n");
+						lineasescritas=lineasescritas+1;
 					}
 					if(Double.parseDouble(servicio.replace(",","."))>0){
 						textData.append("                 SERVICIO:"+String.valueOf(servicio)+"\n");
+						lineasescritas=lineasescritas+1;
 					}
 				}
 				/*fin impuestos*/
@@ -643,7 +695,7 @@ public class PrinterFunctionsEpson{
 					}else if(lang.equals(2)){
 						textData.append("                 DISCOUNT:"+String.valueOf(descuento)+"\n");
 					}
-					
+					lineasescritas=lineasescritas+1;
 				}
 				
 				if(!(propina.equals("")||Double.parseDouble(propina)==0)){
@@ -652,6 +704,7 @@ public class PrinterFunctionsEpson{
 					}else{
 						textData.append("                      TIP:"+String.valueOf(propina)+"\n");
 					}
+					lineasescritas=lineasescritas+1;
 				}
 				
 				builder.addText(textData.toString());
@@ -659,6 +712,7 @@ public class PrinterFunctionsEpson{
 				
 				builder.addTextDouble(Builder.TRUE, Builder.TRUE);
 				builder.addText("TOTAL:"+String.valueOf(totalfact)+"\n");
+				lineasescritas=lineasescritas+1;
 				builder.addTextDouble(Builder.FALSE, Builder.FALSE);
 				builder.addFeedLine(1);
 				
@@ -670,6 +724,7 @@ public class PrinterFunctionsEpson{
 					}else if(lang.equals(2)){
 						textData.append("Paid:                           \n");
 					}
+					lineasescritas=lineasescritas+1;
 					
 					String forma="";
 					String elvuelto="0.00";
@@ -697,6 +752,7 @@ public class PrinterFunctionsEpson{
 							}
 							
 							textData.append(forma+"\n");
+							lineasescritas=lineasescritas+1;
 							suma=suma+valor;
 						}
 						
@@ -726,9 +782,12 @@ public class PrinterFunctionsEpson{
 						textData.append("Change:"+String.valueOf(elvuelto)+"\n");
 					}
 					
+					
 					builder.addText(textData.toString());
 					textData.delete(0, textData.length());
+					lineasescritas=lineasescritas+1;
 					builder.addFeedLine(1);
+					lineasescritas=lineasescritas+1;
 					
 					if(!factelectronica.equals("")){
 						if(lang.equals(1)){
@@ -736,14 +795,27 @@ public class PrinterFunctionsEpson{
 						}else{
 							textData.append("Check your electronic bill in:\n");
 						}
-						String [] vectordata=factelectronica.split(",");
+						factelectronica=factelectronica.replace(",","#");
+						String [] vectordata=factelectronica.split("#");
 						textData.append(vectordata[0]+"\n");
-						textData.append(vectordata[1]+" -"+vectordata[2]+"\n");
+						if(vectordata.length>1){
+							textData.append(vectordata[1]+" -"+vectordata[2]+"\n");
+						}
+						lineasescritas=lineasescritas+2;
 					}
 						
 				}
 				builder.addText(textData.toString());
 				textData.delete(0, textData.length());
+				
+				if(preimpresas==1){
+					if(lineasescritas<lineastotales){
+						while(lineasescritas<lineastotales){
+							builder.addFeedLine(1);
+							lineasescritas=lineasescritas+1;
+						}
+					}
+				}
 				
 			}else if(tipo.equals("cierre")){
 				

@@ -1033,6 +1033,7 @@ function noCliente(){
 			$('#busquedacliente').html($('#cedulaP').val());
 		}
 	}
+	
     if($('#idCliente').val()==''){
 		$('#busquedacliente').html('9999999999999');
 		$('#cedulaP').val('9999999999999');
@@ -1061,7 +1062,7 @@ function noCliente(){
 						<tr> \
 							<td colspan=2>\
 								<br><br>\
-								<input type="hidden" tabIndex="1" id="cedulaP" value="9999999999" onkeypress="isalphanumeric(event);" class="form-control input-lg"/><input type="hidden" style="display:none;" id="cupoP" value="0"/>  \
+								<input type="hidden" tabIndex="1" id="cedulaP" value="9999999999999" onkeypress="isalphanumeric(event);" class="form-control input-lg"/><input type="hidden" style="display:none;" id="cupoP" value="0"/>  \
 									<table tabIndex="99"  cellpadding="0"  cellspacing="0" width="70%" style="position: relative;margin: 0px auto;">\
 										<tr>\
 												<td>\<div class="input-group" style="width:100%;margin-bottom:10px;">														<span class="input-group-addon trans_mail"  style="width:30%">&nbsp;Email</span>\

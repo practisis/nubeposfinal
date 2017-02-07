@@ -305,7 +305,12 @@ function ExtraeDatosApi(donde){
             localStorage.setItem("terminos",ext[0].terminos);
             localStorage.setItem("id_locales",ext[0].id_locales);
             localStorage.setItem("id_pais",ext[0].id_pais);
-            localStorage.setItem("pagarconcredito",ext[0].pagarconcredito);
+            localStorage.setItem("pagarconcredito",ext[0].pagarconcredito);      
+			if(ext[0].aceptanc!=null){
+				localStorage.setItem("feaceptanc",ext[0].aceptanc);
+			}else{
+				localStorage.setItem("feaceptanc",'false');
+			}
 
             if(ext[0].id_version_nube == 4){
               localStorage.setItem("con_profesionales","true");
@@ -889,7 +894,7 @@ function DatosIniciales(cual){
 				$('#myDash').modal('hide');
 				setTimeout(function(){
 					$('.navbar,#barraalternamovil').slideUp();
-					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig").css("display","none");
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig,#version_escoje").css("display","none");
 					$('#desactivo').fadeIn();
 				},100);
 			}else{
@@ -978,7 +983,7 @@ function DatosRecurrentes(cual){
 			    envia('config');
 				setTimeout(function(){
 					$('.navbar,#barraalternamovil').slideUp();
-					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig").css("display","none");
+					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva,#pestanasconfig,#version_escoje").css("display","none");
 					$('#desactivo').fadeIn();
 				},100);
 			}else{
@@ -1285,10 +1290,14 @@ function DatosRecurrentes(cual){
                       localStorage.setItem("paquete",item.plan);
                       localStorage.setItem("terminos",item.terminos);
                       localStorage.setItem("pagarconcredito",item.pagarconcredito);
-                      //alert(item.id_locales);
                       localStorage.setItem("id_locales",item.id_locales);
                       localStorage.setItem("id_pais",item.id_pais);
                       localStorage.setItem("factelectronica",item.tiene_factura_electronica);
+					  if(item.aceptanc!=null){
+						localStorage.setItem("feaceptanc",item.aceptanc);
+					  }else{
+						localStorage.setItem("feaceptanc",'false');
+					  }
                       //localStorage.setItem("paquete","36");
                       //localStorage.setItem("paquete","37");
 

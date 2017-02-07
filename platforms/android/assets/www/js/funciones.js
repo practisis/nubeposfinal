@@ -243,6 +243,12 @@ function showProducts(categoria,direction){
 
 
 function agregarCompra(item,origen){
+	
+	var anteriordesc=parseFloat($('#descuentoFactura').val());
+	if(anteriordesc>0){
+		borrarDescuento();
+	}
+	
 
 	var i = 1;
 	$('#descuentoFactura').val(0);
@@ -514,6 +520,11 @@ function agregarCompra(item,origen){
 }
 
 function agregarCompranew(item,origen){
+	
+	var anteriordesc=parseFloat($('#descuentoFactura').val());
+	if(anteriordesc>0){
+		borrarDescuento();
+	}
 
 	var i = 1;
 	$('#descuentoFactura').val(0);
@@ -752,6 +763,13 @@ function agregarCompranew(item,origen){
 }
 
 function agregarCompra2(item,origen){
+	
+	var anteriordesc=parseFloat($('#descuentoFactura').val());
+	if(anteriordesc>0){
+		borrarDescuento();
+	}
+	
+	
 	var i = 1;
 	$('#descuentoFactura').val(0);
 	$('#resultBuscador').fadeOut('slow');
@@ -1845,7 +1863,12 @@ function pagar(){
 }
 
 function addDiscount(){
+	var anterior=parseFloat($('#descuentoFactura').val());
 	var discount = parseFloat($('#addDiscount').html());
+	if(anterior!=discount&&anterior>0){
+		borrarDescuento();
+	}
+	
 	var totalmiFactura = parseFloat($('#totalmiFactura').val());
 	var propina=$('#invoiceprop').html();
 	if($('.productDetails').length > 0){
@@ -1887,10 +1910,10 @@ function addDiscount(){
 			//alert(discount);
 
 			$('#popupDiscount').modal("hide");
-			var sumTotal = 0;
+			/*var sumTotal = 0;
 			$('.totales').each(function(){
 				sumTotal += parseFloat($.trim($(this).val()));
-			});
+			});*/
 			console.log((parseFloat(totales) - parseFloat(discount)).toFixed(2));
 			$('#justo').html((parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2));
 			$('#justo').attr('data-value',-1*(parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2));
@@ -1904,6 +1927,8 @@ function addDiscount(){
 
 			$('#msjDescuentoError').html('');
 			$('#btn_descuento').effect('highlight',{},'normal');
+			Aplicardescuentosubtotal();
+			
 		}else{
 			$('#msjDescuentoError').html('El descuento no puede ser mayor a '+ totalmiFactura.toFixed(2));
 			$('#addDiscount').html('0');
@@ -1911,12 +1936,174 @@ function addDiscount(){
 	}
 }
 
-function showPopup(){
-	$('#popupDiscount').modal("show");
-	if($('#descuentoFactura').val()!=''&&parseFloat($('#descuentoFactura').val())>0)
-		$('.cantidadd').html(parseFloat($('#descuentoFactura').val()).toFixed(2));
+function borrarDescuento(){
+	var idiva=1;
+	$('.esImpuesto').each(function(){
+		if($(this).attr('data-nombre').toLowerCase()=='iva'){
+			var idimp=$(this).attr('id');
+			var dataid=idimp.split('-');
+			idiva=dataid[1];
+		}			
+	});
+	
+	//alert(idiva);
+	
+	var subconiva=0;
+	var subsiniva=0;
+	$('.product_del').each(function(){
+		var celda=$(this).parent();
+		var impuestosid=$(celda).attr('data-borrarimpuestoindexes');
+		var arrayimpuestos=impuestosid.split('@');
+		var cantidad=parseFloat($(celda).attr('data-borrarcantidad'));
+		var precio=parseFloat($(celda).attr('data-borrarprecio'));
+		var agregados=parseFloat($(celda).attr('data-agregados'));
+		//console.log(arrayimpuestos);
+		if(arrayimpuestos.indexOf(idiva)>=0){
+			subconiva+=(precio+agregados)*cantidad;
+		}else{
+			subsiniva+=(precio+agregados)*cantidad;
+		}
+	});
+	
+	//alert(subconiva);
+	
+	$('#subtotalSinIva').val(subsiniva);
+	$('#subtotalIva').val(subconiva);
+	
+	var sumaimpuestos=0;
+	$('.esImpuesto').each(function(){
+		if(!($(this).attr('data-nombre').toLowerCase()=='iva')){
+			var porcen=parseFloat($(this).attr('data-valor'));
+			var newsiniva=parseFloat($('#subtotalSinIva').val());
+			$(this).val(newsiniva*porcen);
+			sumaimpuestos+=newsiniva;
+		}else{
+			var porcen=parseFloat($(this).attr('data-valor'));
+			var newiva=parseFloat($('#subtotalIva').val());
+			$(this).val(newiva*porcen);
+			sumaimpuestos+=newiva;
+		}
+	});
+	
+	var propina=$('#propinaFactura').val();
+	var discount=0;
+	var totales=subsiniva+subconiva+sumaimpuestos;
+	$('#totalmiFactura').val(totales - parseFloat(discount) + parseFloat(propina));
+	$('#descuentoFactura').val('0');
+	$('#total').html('$'+ (parseFloat(totales)).toFixed(2));
+	if($('#total').html().length>8)
+		$('#divtotal').css('font-size','26px');
 	else
+		$('#divtotal').css('font-size','30px');
+
+	$('#payButton').html('PAGAR');
+	$('#invoiceTotal').html( (parseFloat(totales)).toFixed(2));
+	
+			
+			
+	$('#justo').html((parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2));
+	$('#justo').attr('data-value',-1*(parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2));
+	$('#redondeado').html(Math.ceil((parseFloat(totales) - parseFloat(discount) + parseFloat(propina))).toFixed(2));
+	$('#changeFromPurchase').html(Math.abs((parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2)));
+	$('#redondeado').attr('data-value',-1*Math.ceil((parseFloat(totales) - parseFloat(discount)+parseFloat(propina))).toFixed(2));
+	$('#msjDescuentoError').html('');
+	
+	//alert($('#subtotalIva').val()+"/"+$('#impuestoFactura-2').val()+"/"+totales);
+}
+
+
+
+function Aplicardescuentosubtotal(){
+	var descuentoexiste=$('#descuentoFactura').val();
+	//alert(descuentoexiste);
+	if(parseFloat(descuentoexiste)>0){
+		var subsiniva=parseFloat($('#subtotalSinIva').val());
+		var subiva=parseFloat($('#subtotalIva').val());
+		var resto=0;
+		if(subiva>0){
+			$('.esImpuesto').each(function(){
+				if($(this).attr('data-nombre').toLowerCase()=='iva'){
+					var porcen=parseFloat($(this).attr('data-valor'));
+					var resto=descuentoexiste/(1+porcen);
+					if(resto<=subiva){
+						$('#subtotalIva').val(subiva-resto);
+						var newiva=parseFloat($('#subtotalIva').val())*porcen;
+						$(this).val(newiva);
+					}else{
+						$('#subtotalIva').val('0');
+						$(this).val('0');
+						//$('#subtotalSinIva').val(subsiniva-(resto-subiva));
+						var sumaimp=0;
+						$('.esImpuesto').each(function(){
+							var porcen=parseFloat($(this).attr('data-valor'));
+							sumaimp+=porcen;
+						});
+						var quedasiniva=(resto-subiva)/(1+sumaimp);
+						$('#subtotalSinIva').val(subsiniva-quedasiniva);
+						
+						$('.esImpuesto').each(function(){
+							if(!($(this).attr('data-nombre').toLowerCase()=='iva')){
+								var porcen=parseFloat($(this).attr('data-valor'));
+								var newsiniva=parseFloat($('#subtotalSinIva').val());
+								$(this).val(newsiniva*porcen);
+							}
+						});
+						
+					}
+				}
+			});
+		}else{
+			var sumaimp=0;
+			$('.esImpuesto').each(function(){
+				var porcen=parseFloat($(this).attr('data-valor'));
+				sumaimp+=porcen;
+			});
+			var resto=descuentoexiste/(1+sumaimp);
+			$('#subtotalSinIva').val(subsiniva-resto);
+			
+			$('.esImpuesto').each(function(){
+				if(!($(this).attr('data-nombre').toLowerCase()=='iva')){
+					var porcen=parseFloat($(this).attr('data-valor'));
+					var newsiniva=parseFloat($('#subtotalSinIva').val());
+					$(this).val(newsiniva*porcen);
+				}
+			});
+		}
+		
+		
+		
+		/*if(descuentoexiste<=subiva){
+			subiva=subiva-descuentoexiste;
+		}else{
+			subiva=0;
+			subsiniva=subsiniva-(descuentoexiste-subiva);
+		}
+		
+		$('#subtotalSinIva').val(subsiniva);
+		$('#subtotalIva').val(subiva);
+		
+		$('.esImpuesto').each(function(){
+			if($(this).attr('data-nombre').toLowerCase()=='iva'){
+				var porcen=parseFloat($(this).attr('data-valor'));
+				var newvalor=porcen*subiva;
+				$(this).val(newvalor);
+			}else{
+				var porcen=parseFloat($(this).attr('data-valor'));
+				var newvalor=porcen*subsiniva;
+				$(this).val(newvalor);
+			}
+		});*/
+	}
+}
+
+function showPopup(){
+	if($('#descuentoFactura').val()!=''&&parseFloat($('#descuentoFactura').val())>0){
+		$('.cantidadd').html(parseFloat($('#descuentoFactura').val()).toFixed(2));
+	}
+	else{
 		$('.cantidadd').html('0');
+	}
+	$('#popupDiscount').modal("show");
 }
 
 function closePopup(){
@@ -1944,14 +2131,21 @@ function borrarCompra(item){
 	var sumTotal = 0;
 	var subtotalSinIvaCompra = 0;
 	var subtotalIvaCompra = 0;
-	var productoCantidad = $(item).data('borrarcantidad');
-	var productoImpuestos = $(item).data('borrarimpuesto');
-	var productoImpuestosIndexes = $(item).data('borrarimpuestoindexes');
-	var productoPrecio = $(item).data('borrarprecio');
-	var productoAgregados = $(item).attr('data-agregados');
+	var productoCantidad = 0;
+	var productoImpuestos = '';
+	var productoImpuestosIndexes = '';
+	var productoPrecio = '0';
+	var productoAgregados = '0';
 	var idiva=$('#idiva').html();
-
-	$(item).closest('tr').remove();
+	if(item!=null){
+		var productoCantidad = $(item).data('borrarcantidad');
+		var productoImpuestos = $(item).data('borrarimpuesto');
+		var productoImpuestosIndexes = $(item).data('borrarimpuestoindexes');
+		var productoPrecio = $(item).data('borrarprecio');
+		var productoAgregados = $(item).attr('data-agregados');
+		$(item).closest('tr').remove();
+	}
+	
 
 	//impuestos start
 	if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
@@ -2037,7 +2231,7 @@ function borrarCompra(item){
 	$('#payButton').html('PAGAR');
 	$('#invoiceTotal').html(sumTotal.toFixed(2));
 	$('.product_del').on('click',function(){
-			PlaySound(4);
+		PlaySound(4);
 	});
 }
 

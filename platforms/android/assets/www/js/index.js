@@ -778,10 +778,15 @@ var app = {
                     intabla+="<tr><td style='text-align:left;'>"+variosprods[n].nombre_producto+agregados+"</td><td style='text-align:center;'>"+parseFloat(variosprods[n].cant_prod)+"</td><td style='text-align:right;display:none;'>"+(parseFloat(variosprods[n].precio_prod)+valoragregados).toFixed(2)+"</td><td style='text-align:right;display:none;'>"+parseFloat(variosprods[n].precio_total).toFixed(2)+"</td></tr>";
 					itemsfact+=parseInt(parseInt(variosprods[n].cant_prod));
                 }
+				
+				var subtotaldesc=0;
+				subtotaldesc=parseFloat(factura.subtotal_sin_iva)+parseFloat(factura.subtotal_iva);
+				
 
 				var subs="";
 				subs+="<table class='table table-hovered'>";
-				subs+="<tr><td style='text-align:right;'>SUBTOTAL</td><td style='text-align:right;'> $"+subtotal.toFixed(2)+"</td></tr>";
+				subs+="<tr><td style='text-align:right;'>SUBTOTAL NETO</td><td style='text-align:right;'> $"+subtotal.toFixed(2)+"</td></tr>";
+				subs+="<tr><td style='text-align:right;'>SUBTOTAL - DESC </td><td style='text-align:right;'> $"+subtotaldesc.toFixed(2)+"</td></tr>";
 				
 				/*descuento*/
 				if(descAplicado>0){
@@ -1029,7 +1034,19 @@ var app = {
 				
 				
 				
-				subs+="<tr><td style='text-align:right;'>SUBTOTAL</td><td style='text-align:right;'> $"+subtotal.toFixed(2)+"</td></tr>";
+				subs+="<tr><td style='text-align:right;'>SUBTOTAL NETO</td><td style='text-align:right;'> $"+subtotal.toFixed(2)+"</td></tr>";
+				
+				
+				if(descAplicado>0){
+					subs+="<tr><td style='text-align:right;'>DESCUENTO</td><td style='text-align:right;'> $"+parseFloat(descAplicado).toFixed(2)+"</td></tr>";
+				}
+				
+				var subtotaldesc=0;
+				subtotaldesc=parseFloat(datosfact.Pagar[0].factura.subtotal_sin_iva)+parseFloat(datosfact.Pagar[0].factura.subtotal_iva);
+			
+			
+				subs+="<tr><td style='text-align:right;'>SUBTOTAL - DESC </td><td style='text-align:right;'> $"+subtotaldesc.toFixed(2)+"</td></tr>";
+				
 				if(row.dataimpuestos!=""){
 					var detagregados=row.dataimpuestos;
 					var vdetagregados=detagregados.split('@');
@@ -1039,9 +1056,7 @@ var app = {
 					}
 				}
 				
-				if(descAplicado>0){
-					subs+="<tr><td style='text-align:right;'>DESCUENTO</td><td style='text-align:right;'> $"+parseFloat(descAplicado).toFixed(2)+"</td></tr>";
-				}
+				
 				
 				if(datosfact.Pagar[0].factura.propina!=null){
 					if(parseFloat(datosfact.Pagar[0].factura.propina)>0){

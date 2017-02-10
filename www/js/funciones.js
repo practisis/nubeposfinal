@@ -242,12 +242,6 @@ function showProducts(categoria,direction){
 }
 
 function agregarCompra(item,origen){
-	
-	var anteriordesc=parseFloat($('#descuentoFactura').val());
-	if(anteriordesc>0){
-		borrarDescuento();
-	}
-	
 
 	var i = 1;
 	$('#descuentoFactura').val(0);
@@ -827,11 +821,6 @@ function agregarCompraLocal(item,idmenudiseno){
 }
 
 function agregarCompranew(item,origen){
-	
-	var anteriordesc=parseFloat($('#descuentoFactura').val());
-	if(anteriordesc>0){
-		borrarDescuento();
-	}
 
 	var i = 1;
 	$('#descuentoFactura').val(0);
@@ -1070,13 +1059,6 @@ function agregarCompranew(item,origen){
 }
 
 function agregarCompra2(item,origen){
-	
-	var anteriordesc=parseFloat($('#descuentoFactura').val());
-	if(anteriordesc>0){
-		borrarDescuento();
-	}
-	
-	
 	var i = 1;
 	$('#descuentoFactura').val(0);
 	$('#resultBuscador').fadeOut('slow');
@@ -1265,7 +1247,7 @@ function agregarCompra2(item,origen){
 	//init2();
 }
 function modificarCantidad(i,id_local){
-	//console.log(id_local);
+	//alert(i);
 	$('#popupCantidad').modal("show");
 	$('#modificaCantidadActual').html('1');
 	$('#recibeIdentificadorTr').val(i);
@@ -1277,6 +1259,8 @@ function cambiarCantidad(){
 	var identificadorTr = $('#recibeIdentificadorTr').val();
 	var cantidadActual = $('#modificaCantidadActual').html();
 	var productoIDAcambiar = $('#productoIDAcambiar').val();
+    var idmenucategory = $('#category').val();
+    //alert(idmenucategory);
 
     if(productoIDAcambiar == -14){
       var tddetalles0 = $('#cant_'+identificadorTr+' td')[0];
@@ -1468,7 +1452,7 @@ function cambiarCantidad(){
     }else{
 	//var sumaagregados=0;
 	var tdagregados=$('#cant_'+identificadorTr+' td')[0];
-	//console.log(tdagregados);
+	//alert(tdagregados);
 	var sumaagregados=0;
 	//alert($(tdagregados).attr("data-agregados"));
 	if($(tdagregados).attr("data-agregados")!=null&&$(tdagregados).attr("data-agregados")!=""&&$(tdagregados).attr("data-agregados")!="undefined")
@@ -1482,6 +1466,7 @@ function cambiarCantidad(){
 
 	var tdhtml=$('#cant_'+identificadorTr+' td')[2];
 	var htmlprod=$(tdhtml).html();
+    //alert(htmlprod)
 
 	$('#cant_'+identificadorTr).remove();
 
@@ -1496,7 +1481,8 @@ function cambiarCantidad(){
 				$('.cantidad').html('0.00');
 
                 if(localStorage.getItem("diseno")==1){
-                  var queryaux = 'SELECT p.*,m.timespan as timemenu FROM PRODUCTOS p,MENU m WHERE p.timespan=m.idproducto and m.activo="true" and p.id_local='+productoIDAcambiar+';';
+                  //var queryaux = 'SELECT p.*,m.timespan as timemenu FROM PRODUCTOS p,MENU m WHERE p.timespan=m.idproducto and m.activo="true" and p.id_local='+productoIDAcambiar+';';
+                  var queryaux = 'SELECT p.*,m.timespan as timemenu FROM PRODUCTOS p,MENU m WHERE p.timespan=m.idproducto and m.activo="true" and m.idcatmenu='+idmenucategory+' and p.id_local='+productoIDAcambiar+';';
                 }else{
                   var queryaux = 'SELECT * FROM PRODUCTOS WHERE id_local='+productoIDAcambiar+';';
                 }
@@ -1524,15 +1510,49 @@ function cambiarCantidad(){
 							}
 						}
 
-						var productoPrecio = row.precio;
-						var total = (((parseFloat(productoPrecio)+sumaagregados) * parseFloat(productoCantidad))*parseFloat(productomas));
-						console.log(productoPrecio);
                         if(localStorage.getItem("diseno")==1){
                           var productoID = row.timemenu;
                         }else{
 						  var productoID = row.timespan;
                         }
-						//console.log(formulado);
+
+       if(localStorage.getItem("con_localhost") == 'true'){
+
+       var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
+       $.post(apiURL,{
+  		id_emp : localStorage.getItem("empresa"),
+  		action : 'PrecioDelFormulado',
+  		id_barra : localStorage.getItem("idbarra"),
+  		deviceid:$("#deviceid").html(),
+        timespanmenu : productoID
+  		}).done(function(response){
+  			if(response!='block' && response!='Desactivado'){
+  				//console.log(response);
+                  //var res = response.split("||");
+                  var y = JSON.parse(response);
+            		var mods= new Array();
+            		if(y.length>0){
+                        for(var m=0;m<y.length;m++){
+            				var miobj=y[m];
+            				var preciodelformulado=miobj.precio_del_formulado;
+            			}
+            		}else{
+                           var preciodelformulado=0;
+            		}
+
+                    //alert(preciodelformulado+'**'+productoID);
+
+                    if(preciodelformulado == 2){
+                	  var productoPrecio = 0;
+                    }else{
+                      var productoPrecio = row.precio;
+                    }
+
+                        //alert(row.precio+'**'+sumaagregados+'**'+productoCantidad+'**'+productomas)
+						var total = (((parseFloat(productoPrecio)+sumaagregados) * parseFloat(productoCantidad))*parseFloat(productomas));
+						console.log(productoPrecio);
+
+						//alert(identificadorTr);
 
 						var sumTotal = 0;
 						//YAESTA
@@ -1694,6 +1714,197 @@ function cambiarCantidad(){
 							}, 1000).clearQueue();
 						$('#tablaCompra tr:last-child').effect('highlight',{},'normal')
 						celdaenfocada=-1;
+
+            }else if(response=='Desactivado'){
+  			    envia('config');
+  				setTimeout(function(){
+  					$('.navbar,#barraalternamovil').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#desactivo').fadeIn();
+  				},100);
+  			}else{
+  				envia('config');
+  				setTimeout(function(){
+  					$('#linklogin,#linkloginb').attr("href","https://www.practisis.net/index3.php?rvpas="+localStorage.getItem("userPasswod")+"&rvus="+localStorage.getItem("userRegister"));
+  					$('.navbar,#barraalternamovil').slideUp();
+  					$("#demoGratis,#fadeRow,#finalizado,#contentStepSincro,#cuentaactiva").css("display","none");
+  					$('#bloqueo').fadeIn();
+  				},100);
+
+  			}
+
+  		}).fail(function(){
+  			updateOnlineStatus("OFFLINE");
+  			setTimeout(function(){SincronizadorNormal()},180000);
+  		});
+
+        }else{
+                        var productoPrecio = row.precio;
+                        //alert(row.precio+'**'+sumaagregados+'**'+productoCantidad+'**'+productomas)
+						var total = (((parseFloat(productoPrecio)+sumaagregados) * parseFloat(productoCantidad))*parseFloat(productomas));
+						console.log(productoPrecio);
+
+						var sumTotal = 0;
+						//YAESTA
+						$('#tablaCompra').append('<tr id="cant_'+identificadorTr+'"><td class="lineadetalle" data-borrarcantidad="'+ productoCantidad +'" data-borrarimpuesto="'+ productoImpuestos +'" data-borrarimpuestoindexes="'+ productoImpuestosIndexes +'" data-agregados="'+sumaagregados+'" data-borrarprecio="'+ productoPrecio +'" onclick="borrarCompra(this); return false;" style="width: 5%;"><button type="button" class="btn btn-danger btn-xs product_del"><span class="glyphicon glyphicon-remove" ></span></button><input type="hidden" class="totales" value="'+ total +'"/></td><td onclick="modificarCantidad('+identificadorTr+' , '+productoIDAcambiar+')" style="border-right:1px solid #909192; text-align: center; width:20%;" class="lineadetalle" "><input type="hidden" class="productDetails" value="'+ productoID +'|'+ productoNombre +'|'+ productoCantidad +'|'+ productoPrecio +'|'+ productoPrecio +'|'+ productoImpuestos +'|'+ total +'|'+productoImpuestosIndexes+'|'+sumaagregados+'" data-detagregados="'+detalleagregados+'" data-notes="'+detallenotas+'" data-id_real="'+productoIDAcambiar+'" /><input type="hidden" class="cantidadproductoscomandados" value="'+productoCantidad+'"/>'+ productoCantidad +'</td><td style="border-right:1px solid #909192; padding:5px;text-align: left; width:50%; text-transform:capitalize;" class="lineadetalle">'+htmlprod+'</td><td style="padding-right:20px; text-align: right;" class="lineadetalle">'+ parseFloat(total).toFixed(4) +'</td></tr>');
+
+						$('#cant_'+identificadorTr+' .lineanota').attr('data-id',identificadorTr);
+
+						$('.totales').each(function(){
+							sumTotal += parseFloat($.trim($(this).val()));
+						});
+						console.log('tu factura es de : ' + sumTotal);
+						var sumcantidadComandada = 0;
+						$('.cantidadproductoscomandados').each(function(){
+							sumcantidadComandada += parseFloat($.trim($(this).val()));
+						});
+						console.log('los items facturados son'+sumcantidadComandada);
+						$('#itemsVendidos').html(sumcantidadComandada);
+						$('#menuSubNew2').html("Total - Ver "+sumcantidadComandada+" pedidos");
+
+						/*$('#itemsVendidos').css('display','block');
+						$('#itemsVendidos').css('background-color','red');*/
+
+						$('#justo').html('$ '+sumTotal.toFixed(2));
+						$('#payButton').html('PAGAR');
+						$('#invoiceTotal').html(sumTotal.toFixed(2));
+						$('#changeFromPurchase').html(Math.abs(sumTotal).toFixed(2));
+						$('#totalmiFactura').val(sumTotal);
+						$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+						$('#total').html('$'+sumTotal.toFixed(2));
+
+						if($('#total').html().toString().length==9)
+							$('#divtotal').css('font-size','26px');
+						else if($('#total').html().toString().length>9)
+							$('#divtotal').css('font-size','26px');
+						else
+							$('#divtotal').css('font-size','30px');
+
+						if($('#total').html().toString().length>7){
+							$('.den').css('width',4.5*parseFloat($('.producto').css('height')));
+						}else{
+							$('.den').css('width',3*parseFloat($('.producto').css('height')));
+						}
+
+						if(localStorage.getItem("idioma")==1)
+							//$('#btn_gpedidos').html('GUARDAR $'+ parseFloat(sumTotal).toFixed(2));
+							$('#btn_gpedidos').html('GUARDAR');
+						else if(localStorage.getItem("idioma")==2)
+							//$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
+							$('#btn_gpedidos').html('SAVE');
+
+						$('#justo').html('$ '+sumTotal.toFixed(2));
+						$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
+						$('#redondeado').html('$ '+Math.ceil(sumTotal).toFixed(2));
+						$('#redondeado').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
+						var alta=0;
+						for( var t in misdenominaciones){
+							if(misdenominaciones[t]>sumTotal)
+							{
+								alta=misdenominaciones[t];
+								break;
+							}
+						}
+						$('#altaden').html('$ '+alta.toFixed(2));
+						$('#altaden').attr('data-value',-1*alta.toFixed(2));
+						if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
+							$('#altaden').parent().css('display','inline');
+						else
+							$('#altaden').parent().css('display','none');
+
+						var prox10=0;
+						var iter=1;
+						var p10=iter*10;
+						while(p10<sumTotal){
+							iter++;
+							p10=iter*10;
+						}
+						$('#prox10').html('$ '+p10.toFixed(2));
+						$('#prox10').attr('data-value',-1*p10.toFixed(2));
+						//console.log(p10+'/'+alta);
+						if(p10>0&&p10!=alta)
+							$('#prox10').parent().css('display','inline');
+						else
+							$('#prox10').parent().css('display','none');
+
+						var prox20=0;
+						var iter=1;
+						var p20=iter*20;
+						while(p20<sumTotal){
+							iter++;
+							p20=iter*20;
+						}
+						$('#prox20').html('$ '+p20.toFixed(2));
+						$('#prox20').attr('data-value',-1*p20.toFixed(2));
+						if(p20>0&&p20!=p10)
+							$('#prox20').parent().css('display','inline');
+						else
+							$('#prox20').parent().css('display','none');
+
+						var subsinivanew=0;
+						var subconivanew=0;
+						var ivanew=0;
+						var servnew=0;
+						var impgenerales=new Array();
+						$('.productDetails').each(function(){
+							var datosimp=$(this).val().split('|');
+							var newsumaagregados=parseFloat(datosimp[8]);
+							var vectorimp=datosimp[7].split('@');
+
+							//alert(datosimp[7]);
+							for(var x=0;x<vectorimp.length;x++){
+								var taxnow=vectorimp[x];
+								if(taxnow!=''&&taxnow!='undefined'&&taxnow!=null){
+									if('"'+taxnow+'"' in impgenerales){
+									var antes=impgenerales['"'+taxnow+'"'];
+									var datosp=$('#impuesto-'+taxnow).val().split('|');
+									var porcent=parseFloat(datosp[2]);
+									impgenerales['"'+taxnow+'"']=antes+((parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcent);
+									}else{
+										//alert(taxnow);
+										var datosp=$('#impuesto-'+taxnow).val().split('|');
+										var porcent=parseFloat(datosp[2]);
+										impgenerales['"'+taxnow+'"']=((parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcent);
+									}
+								}
+							}
+
+
+							if(datosimp[7].indexOf($('#idiva').html())>=0&&$('#idiva').html()!=''){
+								subconivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
+								var datosp=$('#impuesto-'+$('#idiva').html()).val().split('|');
+								var porcentiva=parseFloat(datosp[2]);
+								ivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcentiva;
+							}
+							else{
+								subsinivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
+							}
+
+							//para servicio
+							//if(datosimp[7].indexOf('2')>=0){
+								servnew+=(parseFloat(datosimp[3])+newsumaagregados)*0.10*parseFloat(datosimp[2]);
+							//}
+						});
+
+						console.log(impgenerales);
+						for(var j in impgenerales){
+							$('#impuestoFactura-'+(j.replace(/"/g,''))).val(impgenerales[j]);
+						}
+
+
+						$('#subtotalSinIva').val(subsinivanew);
+						$('#subtotalIva').val(subconivanew);
+
+
+						$('.cantidad').html('0');
+						$('#tableresults').html('');
+						$('#inputbusc').val('');
+						$('#contentdetalle').animate({
+							scrollTop: $('#contentdetalle')[0].scrollHeight
+							}, 1000).clearQueue();
+						$('#tablaCompra tr:last-child').effect('highlight',{},'normal')
+						celdaenfocada=-1;
+        }
 
 					}
 				},errorCB,successCB);
@@ -2170,12 +2381,7 @@ function pagar(){
 }
 
 function addDiscount(){
-	var anterior=parseFloat($('#descuentoFactura').val());
 	var discount = parseFloat($('#addDiscount').html());
-	if(anterior!=discount&&anterior>0){
-		borrarDescuento();
-	}
-	
 	var totalmiFactura = parseFloat($('#totalmiFactura').val());
 	var propina=$('#invoiceprop').html();
 	if($('.productDetails').length > 0){
@@ -2217,10 +2423,10 @@ function addDiscount(){
 			//alert(discount);
 
 			$('#popupDiscount').modal("hide");
-			/*var sumTotal = 0;
+			var sumTotal = 0;
 			$('.totales').each(function(){
 				sumTotal += parseFloat($.trim($(this).val()));
-			});*/
+			});
 			console.log((parseFloat(totales) - parseFloat(discount)).toFixed(2));
 			$('#justo').html((parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2));
 			$('#justo').attr('data-value',-1*(parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2));
@@ -2234,8 +2440,6 @@ function addDiscount(){
 
 			$('#msjDescuentoError').html('');
 			$('#btn_descuento').effect('highlight',{},'normal');
-			Aplicardescuentosubtotal();
-			
 		}else{
 			$('#msjDescuentoError').html('El descuento no puede ser mayor a '+ totalmiFactura.toFixed(2));
 			$('#addDiscount').html('0');
@@ -2243,174 +2447,12 @@ function addDiscount(){
 	}
 }
 
-function borrarDescuento(){
-	var idiva=1;
-	$('.esImpuesto').each(function(){
-		if($(this).attr('data-nombre').toLowerCase()=='iva'){
-			var idimp=$(this).attr('id');
-			var dataid=idimp.split('-');
-			idiva=dataid[1];
-		}			
-	});
-	
-	//alert(idiva);
-	
-	var subconiva=0;
-	var subsiniva=0;
-	$('.product_del').each(function(){
-		var celda=$(this).parent();
-		var impuestosid=$(celda).attr('data-borrarimpuestoindexes');
-		var arrayimpuestos=impuestosid.split('@');
-		var cantidad=parseFloat($(celda).attr('data-borrarcantidad'));
-		var precio=parseFloat($(celda).attr('data-borrarprecio'));
-		var agregados=parseFloat($(celda).attr('data-agregados'));
-		//console.log(arrayimpuestos);
-		if(arrayimpuestos.indexOf(idiva)>=0){
-			subconiva+=(precio+agregados)*cantidad;
-		}else{
-			subsiniva+=(precio+agregados)*cantidad;
-		}
-	});
-	
-	//alert(subconiva);
-	
-	$('#subtotalSinIva').val(subsiniva);
-	$('#subtotalIva').val(subconiva);
-	
-	var sumaimpuestos=0;
-	$('.esImpuesto').each(function(){
-		if(!($(this).attr('data-nombre').toLowerCase()=='iva')){
-			var porcen=parseFloat($(this).attr('data-valor'));
-			var newsiniva=parseFloat($('#subtotalSinIva').val());
-			$(this).val(newsiniva*porcen);
-			sumaimpuestos+=newsiniva;
-		}else{
-			var porcen=parseFloat($(this).attr('data-valor'));
-			var newiva=parseFloat($('#subtotalIva').val());
-			$(this).val(newiva*porcen);
-			sumaimpuestos+=newiva;
-		}
-	});
-	
-	var propina=$('#propinaFactura').val();
-	var discount=0;
-	var totales=subsiniva+subconiva+sumaimpuestos;
-	$('#totalmiFactura').val(totales - parseFloat(discount) + parseFloat(propina));
-	$('#descuentoFactura').val('0');
-	$('#total').html('$'+ (parseFloat(totales)).toFixed(2));
-	if($('#total').html().length>8)
-		$('#divtotal').css('font-size','26px');
-	else
-		$('#divtotal').css('font-size','30px');
-
-	$('#payButton').html('PAGAR');
-	$('#invoiceTotal').html( (parseFloat(totales)).toFixed(2));
-	
-			
-			
-	$('#justo').html((parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2));
-	$('#justo').attr('data-value',-1*(parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2));
-	$('#redondeado').html(Math.ceil((parseFloat(totales) - parseFloat(discount) + parseFloat(propina))).toFixed(2));
-	$('#changeFromPurchase').html(Math.abs((parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2)));
-	$('#redondeado').attr('data-value',-1*Math.ceil((parseFloat(totales) - parseFloat(discount)+parseFloat(propina))).toFixed(2));
-	$('#msjDescuentoError').html('');
-	
-	//alert($('#subtotalIva').val()+"/"+$('#impuestoFactura-2').val()+"/"+totales);
-}
-
-
-
-function Aplicardescuentosubtotal(){
-	var descuentoexiste=$('#descuentoFactura').val();
-	//alert(descuentoexiste);
-	if(parseFloat(descuentoexiste)>0){
-		var subsiniva=parseFloat($('#subtotalSinIva').val());
-		var subiva=parseFloat($('#subtotalIva').val());
-		var resto=0;
-		if(subiva>0){
-			$('.esImpuesto').each(function(){
-				if($(this).attr('data-nombre').toLowerCase()=='iva'){
-					var porcen=parseFloat($(this).attr('data-valor'));
-					var resto=descuentoexiste/(1+porcen);
-					if(resto<=subiva){
-						$('#subtotalIva').val(subiva-resto);
-						var newiva=parseFloat($('#subtotalIva').val())*porcen;
-						$(this).val(newiva);
-					}else{
-						$('#subtotalIva').val('0');
-						$(this).val('0');
-						//$('#subtotalSinIva').val(subsiniva-(resto-subiva));
-						var sumaimp=0;
-						$('.esImpuesto').each(function(){
-							var porcen=parseFloat($(this).attr('data-valor'));
-							sumaimp+=porcen;
-						});
-						var quedasiniva=(resto-subiva)/(1+sumaimp);
-						$('#subtotalSinIva').val(subsiniva-quedasiniva);
-						
-						$('.esImpuesto').each(function(){
-							if(!($(this).attr('data-nombre').toLowerCase()=='iva')){
-								var porcen=parseFloat($(this).attr('data-valor'));
-								var newsiniva=parseFloat($('#subtotalSinIva').val());
-								$(this).val(newsiniva*porcen);
-							}
-						});
-						
-					}
-				}
-			});
-		}else{
-			var sumaimp=0;
-			$('.esImpuesto').each(function(){
-				var porcen=parseFloat($(this).attr('data-valor'));
-				sumaimp+=porcen;
-			});
-			var resto=descuentoexiste/(1+sumaimp);
-			$('#subtotalSinIva').val(subsiniva-resto);
-			
-			$('.esImpuesto').each(function(){
-				if(!($(this).attr('data-nombre').toLowerCase()=='iva')){
-					var porcen=parseFloat($(this).attr('data-valor'));
-					var newsiniva=parseFloat($('#subtotalSinIva').val());
-					$(this).val(newsiniva*porcen);
-				}
-			});
-		}
-		
-		
-		
-		/*if(descuentoexiste<=subiva){
-			subiva=subiva-descuentoexiste;
-		}else{
-			subiva=0;
-			subsiniva=subsiniva-(descuentoexiste-subiva);
-		}
-		
-		$('#subtotalSinIva').val(subsiniva);
-		$('#subtotalIva').val(subiva);
-		
-		$('.esImpuesto').each(function(){
-			if($(this).attr('data-nombre').toLowerCase()=='iva'){
-				var porcen=parseFloat($(this).attr('data-valor'));
-				var newvalor=porcen*subiva;
-				$(this).val(newvalor);
-			}else{
-				var porcen=parseFloat($(this).attr('data-valor'));
-				var newvalor=porcen*subsiniva;
-				$(this).val(newvalor);
-			}
-		});*/
-	}
-}
-
 function showPopup(){
-	if($('#descuentoFactura').val()!=''&&parseFloat($('#descuentoFactura').val())>0){
-		$('.cantidadd').html(parseFloat($('#descuentoFactura').val()).toFixed(2));
-	}
-	else{
-		$('.cantidadd').html('0');
-	}
 	$('#popupDiscount').modal("show");
+	if($('#descuentoFactura').val()!=''&&parseFloat($('#descuentoFactura').val())>0)
+		$('.cantidadd').html(parseFloat($('#descuentoFactura').val()).toFixed(2));
+	else
+		$('.cantidadd').html('0');
 }
 
 function closePopup(){
@@ -2438,21 +2480,14 @@ function borrarCompra(item){
 	var sumTotal = 0;
 	var subtotalSinIvaCompra = 0;
 	var subtotalIvaCompra = 0;
-	var productoCantidad = 0;
-	var productoImpuestos = '';
-	var productoImpuestosIndexes = '';
-	var productoPrecio = '0';
-	var productoAgregados = '0';
+	var productoCantidad = $(item).data('borrarcantidad');
+	var productoImpuestos = $(item).data('borrarimpuesto');
+	var productoImpuestosIndexes = $(item).data('borrarimpuestoindexes');
+	var productoPrecio = $(item).data('borrarprecio');
+	var productoAgregados = $(item).attr('data-agregados');
 	var idiva=$('#idiva').html();
-	if(item!=null){
-		var productoCantidad = $(item).data('borrarcantidad');
-		var productoImpuestos = $(item).data('borrarimpuesto');
-		var productoImpuestosIndexes = $(item).data('borrarimpuestoindexes');
-		var productoPrecio = $(item).data('borrarprecio');
-		var productoAgregados = $(item).attr('data-agregados');
-		$(item).closest('tr').remove();
-	}
-	
+
+	$(item).closest('tr').remove();
 
 	//impuestos start
 	if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
@@ -2538,7 +2573,7 @@ function borrarCompra(item){
 	$('#payButton').html('PAGAR');
 	$('#invoiceTotal').html(sumTotal.toFixed(2));
 	$('.product_del').on('click',function(){
-		PlaySound(4);
+			PlaySound(4);
 	});
 }
 
@@ -4212,26 +4247,13 @@ function VerificarNumero(valor){
 	var serie='001';
 	var establecimiento='001';
 	db.transaction(function (tx){
-			//tx.executeSql('SELECT id from FACTURAS where CAST(aux as integer) = CAST(? as integer)',[valor],
-			var numfact='';
-			var ceros='';
-			var invoicenr=$('#invoiceNr').val();
-			var coun=invoicenr.toString().length;
-			var ceroscount=0;
-			while(ceroscount<(9-coun)){
-				ceros+='0';
-				ceroscount++;
-			}
-			var completo=$('#seriesfact').html()+ceros+invoicenr;
-			tx.executeSql('SELECT id from FACTURAS where nofact like ?',[completo],
+			tx.executeSql('SELECT id from FACTURAS where CAST(aux as integer) = CAST(? as integer)',[valor],
 			function(tx,res){
-				//alert(completo);
-				console.log(res);
 				if(res.rows.length>0){
 					console.log(res);
 					showalert("Ya existe una factura con ese número.");
 					db.transaction(function (tx2){
-						tx2.executeSql('SELECT MAX(CAST(aux as integer))+1 as max FROM FACTURAS where substr(nofact,0,9) like ?',[$('#seriesfact').html()],
+						tx2.executeSql('SELECT MAX(CAST(aux as integer))+1 as max FROM FACTURAS',[],
 						function(tx2,res2){
 							var ceros='';
 							var coun=0;
@@ -4262,10 +4284,9 @@ function VerificarNumero(valor){
 //console.log('admitido');
 					
 					var invoicenr=$('#invoiceNr').val();
-					//localStorage.setItem('ultimafact',invoicenr);
-					//alert(parseInt(localStorage.getItem('ultimafact'))+"/"+valor);
+					localStorage.setItem('ultimafact',invoicenr);
 					if(parseInt(localStorage.getItem('ultimafact'))>valor){
-						invoicenr=parseInt(parseInt(localStorage.getItem('ultimafact')));
+						invoicenr=parseInt(parseInt(localStorage.getItem('ultimafact')))+1;
 					}
 					$('#invoiceNr').effect('highlight',{},'normal');
 					db.transaction(function (tx2){
@@ -4283,7 +4304,7 @@ function VerificarNumero(valor){
 							console.log(ceros);
 							invoicenr=ceros.toString()+invoicenr.toString();
 							$('#invoiceNr').val(invoicenr);
-							//localStorage.setItem('ultimafact',invoicenr);
+							localStorage.setItem('ultimafact',invoicenr);
 							$('#invoiceNrComplete').val(miestablecimiento+'-'+miserie+'-'+invoicenr);
 						});
 					});

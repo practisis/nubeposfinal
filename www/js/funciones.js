@@ -4212,13 +4212,26 @@ function VerificarNumero(valor){
 	var serie='001';
 	var establecimiento='001';
 	db.transaction(function (tx){
-			tx.executeSql('SELECT id from FACTURAS where CAST(aux as integer) = CAST(? as integer)',[valor],
+			//tx.executeSql('SELECT id from FACTURAS where CAST(aux as integer) = CAST(? as integer)',[valor],
+			var numfact='';
+			var ceros='';
+			var invoicenr=$('#invoiceNr').val();
+			var coun=invoicenr.toString().length;
+			var ceroscount=0;
+			while(ceroscount<(9-coun)){
+				ceros+='0';
+				ceroscount++;
+			}
+			var completo=$('#seriesfact').html()+ceros+invoicenr;
+			tx.executeSql('SELECT id from FACTURAS where nofact like ?',[completo],
 			function(tx,res){
+				//alert(completo);
+				console.log(res);
 				if(res.rows.length>0){
 					console.log(res);
 					showalert("Ya existe una factura con ese número.");
 					db.transaction(function (tx2){
-						tx2.executeSql('SELECT MAX(CAST(aux as integer))+1 as max FROM FACTURAS',[],
+						tx2.executeSql('SELECT MAX(CAST(aux as integer))+1 as max FROM FACTURAS where substr(nofact,0,9) like ?',[$('#seriesfact').html()],
 						function(tx2,res2){
 							var ceros='';
 							var coun=0;
@@ -4249,9 +4262,10 @@ function VerificarNumero(valor){
 //console.log('admitido');
 					
 					var invoicenr=$('#invoiceNr').val();
-					localStorage.setItem('ultimafact',invoicenr);
+					//localStorage.setItem('ultimafact',invoicenr);
+					//alert(parseInt(localStorage.getItem('ultimafact'))+"/"+valor);
 					if(parseInt(localStorage.getItem('ultimafact'))>valor){
-						invoicenr=parseInt(parseInt(localStorage.getItem('ultimafact')))+1;
+						invoicenr=parseInt(parseInt(localStorage.getItem('ultimafact')));
 					}
 					$('#invoiceNr').effect('highlight',{},'normal');
 					db.transaction(function (tx2){
@@ -4269,7 +4283,7 @@ function VerificarNumero(valor){
 							console.log(ceros);
 							invoicenr=ceros.toString()+invoicenr.toString();
 							$('#invoiceNr').val(invoicenr);
-							localStorage.setItem('ultimafact',invoicenr);
+							//localStorage.setItem('ultimafact',invoicenr);
 							$('#invoiceNrComplete').val(miestablecimiento+'-'+miserie+'-'+invoicenr);
 						});
 					});

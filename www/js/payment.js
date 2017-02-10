@@ -486,6 +486,15 @@ function performPurchase(restaurant){
 				
 				tx.executeSql("INSERT INTO FACTURAS(clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,vauleCxC,paymentConsumoInterno,tablita,aux,acc,echo,fecha,timespan,sincronizar,total,subconiva,subsiniva,iva,servicio,descuento,nofact,dataimpuestos,propina,order_id)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[clientName,RUC,address,tele,fetchJson,paymentsUsed,cash,cards,cheques,valueCxC,paymentConsumoInterno,table,aux,acc,echo,hoy,mitimespan,'true',mitotal,subconiva,subsiniva,eliva,servicio,descuento,factc,dataimpuestos,propina,order_id],function(){
 					console.log("Nueva Factura Ingresada");
+					var numingresada=parseInt(aux)+1;
+					var ceros='';
+					var coun=numingresada.toString().length;
+					var ceroscount=0;
+					while(ceroscount<(9-coun)){
+						ceros+='0';
+						ceroscount++;
+					}
+					localStorage.setItem("ultimafact",ceros+numingresada);
 					var mijsonprod=JSON.parse(fetchJson);
 					var misprod = mijsonprod.Pagar[0].producto;
 						

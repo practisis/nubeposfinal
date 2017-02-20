@@ -6181,9 +6181,9 @@ function SaveMesaLocal(){
 			if(inputdata.attr('data-id_real')!=null&&inputdata.attr('data-id_real')!=""&&inputdata.attr('data-id_real')!="undefined")
 				idreal=inputdata.attr('data-id_real');
 			var fecha= new Date().getTime();
-            query += "INSERT INTO mesas_consumos (id_mesa,hora,details,agregados,notas,id_real) values ('"+mesaactiva+"','"+fecha+"','"+details+"','"+agreg+"','"+notes+"','"+idreal+"')||@";
 
             if( $(this).find('.product_del').is(':visible') ){
+                query += "INSERT INTO mesas_consumos (id_mesa,hora,details,agregados,notas,id_real) values ('"+mesaactiva+"','"+fecha+"','"+details+"','"+agreg+"','"+notes+"','"+idreal+"')||@";
                 datos += details+'|@|'+agreg+'|@|'+notes+'|@|'+idreal+'|@|'+fecha+'|/@';
             }else{
                 //alert('Elemento oculto');

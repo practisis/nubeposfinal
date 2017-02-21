@@ -1067,8 +1067,8 @@ function DatosRecurrentes(cual){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			localStorage.setItem('dataupdate','');
 			db.transaction(function(tx){
-			var jsonmodif=JSON.parse($('#JSONModifNube').html());
-			for(var n=0;n<jsonmodif.length;n++){
+				var jsonmodif=JSON.parse($('#JSONModifNube').html());
+				for(var n=0;n<jsonmodif.length;n++){
 					var item=jsonmodif[n];
 					localStorage.setItem('dataupdate',localStorage.getItem("dataupdate")+item.id+',');
 						
@@ -1076,11 +1076,30 @@ function DatosRecurrentes(cual){
 						console.log("insertado modificador:"+resultsm.insertId);
 					});
 						
-					tx.executeSql('UPDATE MODIFICADORES SET no_modificador=?,id_formulado=?,nombre=?,valor=?,id_formulado_descuento=?,activo=?,timespan=? WHERE nombre like ?',[item.no_modif,item.id_formulado,item.nombre,item.valor,item.id_form_desc,item.activo,item.nombre,item.timespan],function(tx,resultsm){
+					tx.executeSql('UPDATE MODIFICADORES SET no_modificador=?,id_formulado=?,nombre=?,valor=?,id_formulado_descuento=?,activo=? WHERE timespan = ?',[item.no_modif,item.id_formulado,item.nombre,item.valor,item.id_form_desc,item.activo,item.timespan],function(tx,resultsm){
 						console.log("actualizado modificador:"+item.nombre);
 					});
 				}
-			},errorCB,successCB);
+			},errorCB,function(){
+				$.post(apiURL,{
+					id_emp: localStorage.getItem("empresa"),
+					action: 'DeleteSinc',
+					id_barra: localStorage.getItem("idbarra"),
+					tabla: "('modificadores')",
+					idreal:localStorage.getItem("dataupdate"),
+					deviceid:$("#deviceid").html()
+				}).done(function(response){
+					console.log(response);
+					localStorage.setItem("dataupdate","");
+					//DatosRecurrentes(4);
+					updateOnlineStatus('ONLINE');
+				}).fail(function(xhr,status,error){
+					var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+					db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion,datos) values (?,?,?)',[new Date().getTime(),"Fail deletesinc of: modificadores",status]);});
+					updateOnlineStatus("OFFLINE");
+					setTimeout(function(){SincronizadorNormal()},180000);
+				});
+			});
 		}
 		/**/
 		if($('#JSONproductosNube').html().length>0){

@@ -715,7 +715,12 @@ function getSearch(){
                 totalfinal += parseFloat(totalf);
             }
 			
-			inhtml+='<tr><td style="width:20%; text-align:left;">'+fechaformat+'</td><td style="width:15%; text-align:left;">'+row.clientName+'</td><td style="width:16%;  text-align:left;">'+row.RUC+'</td><td style="width:20%;  text-align:left;">'+row.nofact+'</td><td style="width:5%;">'+anulada+'</td><td style="text-align:right; width:10%;">'+totalf+'</td><td ><button class="btn btn-default" style="margin-right:12px;" onclick="'+mifunc+'"><span class="glyphicon glyphicon-pencil"></span></button><button style="'+displayanular+'" class="btn btn-default" onclick="'+mifunc2+'"><span class="glyphicon glyphicon-trash"></span></button></td></tr>';
+			var sincronizada="&nbsp;&nbsp;<label class='glyphicon glyphicon-time' style='color:#808081;'></label>&nbsp;";
+			//alert(row.sincronizar);
+			if(row.sincronizar=='false')
+				sincronizada="&nbsp;&nbsp;<label class='glyphicon glyphicon-ok' style='color:#5cb85c;' ></label>&nbsp;";
+			
+			inhtml+='<tr><td style="width:20%; text-align:left;">'+fechaformat+sincronizada+'</td><td style="width:15%; text-align:left;">'+row.clientName+'</td><td style="width:16%;  text-align:left;">'+row.RUC+'</td><td style="width:20%;  text-align:left;">'+row.nofact+'</td><td style="width:5%;">'+anulada+'</td><td style="text-align:right; width:10%;">'+totalf+'</td><td ><button class="btn btn-default" style="margin-right:12px;" onclick="'+mifunc+'"><span class="glyphicon glyphicon-pencil"></span></button><button style="'+displayanular+'" class="btn btn-default" onclick="'+mifunc2+'"><span class="glyphicon glyphicon-trash"></span></button></td></tr>';
 		}
 		LlenarTablaFacturas(inhtml);
 		//$('#totalencabezado').html(totalfinal.toFixed(2));

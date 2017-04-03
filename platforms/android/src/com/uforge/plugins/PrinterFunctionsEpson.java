@@ -392,6 +392,8 @@ public class PrinterFunctionsEpson{
 				JSONObject expjson=jsonArray.getJSONObject(0);
 				codigoprint=expjson.getString("codigo");
 				tipo="barras";
+			}else if(nombres.toString().contains("opendrawer")){
+				tipo="opendrawer";
 			}
 			
 			if(lang==1){
@@ -423,6 +425,10 @@ public class PrinterFunctionsEpson{
         try {
             // Create builder 
             builder = new Builder(this.printerName, printerModel);
+			
+			if(tipo.equals("opendrawer")){
+				builder.addPulse(Builder.PARAM_DEFAULT, Builder.PULSE_100);
+			}else{
 
             // Set alignment to center 
             builder.addTextAlign(Builder.ALIGN_CENTER);
@@ -1466,7 +1472,11 @@ public class PrinterFunctionsEpson{
 					builder.addFeedLine(2);
 				}
 				// Add command to cut receipt to command buffer 
-				builder.addCut(Builder.CUT_FEED);				
+				builder.addCut(Builder.CUT_FEED);
+				if(tipo.equals("pagar")){
+					builder.addPulse(Builder.PARAM_DEFAULT, Builder.PULSE_100);	
+				}
+			}
 		}
         catch (EposException e) {
             result.setEposException(e);

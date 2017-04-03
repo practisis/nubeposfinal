@@ -3306,16 +3306,18 @@ public class StarIOAdapter extends CordovaPlugin {
     }
 	
 private void runPrintSequence(CallbackContext callbackContext,String message,String portName,String direction,String type){
-		System.out.println("entra al run secuence");
-		PrinterFunctionsEpson printerFunctions= new PrinterFunctionsEpson();
-		boolean printsuccess=printerFunctions.SecuenciaPrint(callbackContext,portName,message,direction,type,this.cordova.getActivity().getApplicationContext());
-		iniciadaepson=false;
-		if(!printsuccess){
-			System.out.println("error al abrir");
-			callbackContext.error("No se realizó la impresión.");
-		}else{
-			callbackContext.success();
-		}
+	System.out.println("entra al run secuence");
+	PrinterFunctionsEpson printerFunctions= new PrinterFunctionsEpson();
+	boolean printsuccess=printerFunctions.SecuenciaPrint(callbackContext,portName,message,direction,type,this.cordova.getActivity().getApplicationContext());
+	iniciadaepson=false;
+	if(!printsuccess){
+		System.out.println("error al abrir");
+		callbackContext.error("No se realizó la impresión.");
+	}else{
+		callbackContext.success();
 	}
+}
+
+
 }
 

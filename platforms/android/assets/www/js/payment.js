@@ -1721,9 +1721,14 @@ function VerificarComandas(){
 }
 
 function AbrirDrawer(){
-	if(localStorage.getItem("print")!=null&&localStorage.getItem("print")!=""){
-		//alert(localStorage.getItem("print"));
-		StarIOAdapter.opendrawer(localStorage.getItem("print"), function(){showalert("Abriendo caja");});
+	if(localStorage.getItem("printtrade")==2){
+		if(localStorage.getItem("print")!=null&&localStorage.getItem("print")!=""){
+			//alert(localStorage.getItem("print"));
+			StarIOAdapter.opendrawer(localStorage.getItem("print"), function(){showalert("Abriendo caja");});
+		}
+	}else if(localStorage.getItem("printtrade")==1){
+		StarIOAdapter.printepson('{"opendrawer":[]}',localStorage.getItem("printmodel"),localStorage.getItem("printaddress"), localStorage.getItem("printtype"),function() {
+		},function(){});
 	}
 }
 

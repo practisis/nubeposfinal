@@ -1482,7 +1482,7 @@ function cambiarCantidad(){
 
                 if(localStorage.getItem("diseno")==1){
                   //var queryaux = 'SELECT p.*,m.timespan as timemenu FROM PRODUCTOS p,MENU m WHERE p.timespan=m.idproducto and m.activo="true" and p.id_local='+productoIDAcambiar+';';
-                  var queryaux = 'SELECT p.*,m.timespan as timemenu FROM PRODUCTOS p,MENU m WHERE p.timespan=m.idproducto and m.activo="true" and m.idcatmenu='+idmenucategory+' and p.id_local='+productoIDAcambiar+';';
+                  var queryaux = 'SELECT p.*,m.timespan as timemenu FROM PRODUCTOS p,MENU m WHERE p.timespan=m.idproducto and m.activo="true" and m.idcatmenu='+idmenucategory+' and p.id_local='+productoIDAcambiar+' limit 1;';
                 }else{
                   var queryaux = 'SELECT * FROM PRODUCTOS WHERE id_local='+productoIDAcambiar+';';
                 }
@@ -1511,7 +1511,8 @@ function cambiarCantidad(){
 						}
 
                         if(localStorage.getItem("diseno")==1){
-                          var productoID = row.timemenu;
+                          //var productoID = row.timemenu;
+                          var productoID = row.timespan;
                         }else{
 						  var productoID = row.timespan;
                         }

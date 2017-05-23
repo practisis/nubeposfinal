@@ -478,6 +478,8 @@ public class StarIOAdapter extends CordovaPlugin {
 			message=message.replace("reimpr","");
 			textoreimpr="Reimpresion Factura "+hoy;
 		}
+		
+		System.out.println("llega al reimpr");
 		try{
 			JSONObject jsonobject = new JSONObject(message);
 			JSONArray nombres=jsonobject.names();
@@ -491,6 +493,8 @@ public class StarIOAdapter extends CordovaPlugin {
 			expprod=expjson.getJSONArray("producto");
 			//expprod=objproducto.getJSONArray("0");
 			
+			System.out.println("llega a los json");
+			
 			cedulaCliente=objcliente.getString("cedula");
 			nombreCliente=objcliente.getString("nombre");
 			telefonoCliente=objcliente.getString("telefono");
@@ -500,15 +504,21 @@ public class StarIOAdapter extends CordovaPlugin {
 					logo=objcliente.getString("logo");
 			}
 			
+			System.out.println("llega al cliente");
+			
 			if(objcliente.has("mensajefinal")){
 				if(!(objcliente.getString("mensajefinal").equals(JSONObject.NULL)||objcliente.getString("mensajefinal").equals("")))
 					mensajefinal=objcliente.getString("mensajefinal");
 			}
 			
+			System.out.println("llega a mensaje");
+			
 			if(objcliente.has("linkelectronica")){
 				if(!(objcliente.getString("linkelectronica").equals(JSONObject.NULL)||objcliente.getString("linkelectronica").equals("")))
 					factelectronica=objcliente.getString("linkelectronica");
 			}
+			
+			System.out.println("llega a link");
 			 
 			subconiva=DoubleFormat(objfactura.getDouble("subtotal_iva"));
 			//iva=DoubleFormat(objfactura.getDouble("subtotal_iva")*0.12);
@@ -526,10 +536,16 @@ public class StarIOAdapter extends CordovaPlugin {
 			lineastotales=(2*objfactura.getInt("largo"))-6;
 			lineasencabezado=(2*objfactura.getInt("encabezado"))-6;
 			
+			System.out.println("llega a los totales");
+			
 			if(objfactura.has("impuestosdata")){
 				if(!(objfactura.getString("impuestosdata").equals(JSONObject.NULL)))
 					cadimpuestos=objfactura.getString("impuestosdata");
 			}
+			
+			System.out.println("llega a impuestos");
+			
+			
 			if(objfactura.has("ordername")){
 				if(!(objfactura.getString("ordername").equals(JSONObject.NULL))){
 					if(!(objfactura.getString("ordername").equals("")||objfactura.getString("ordername").equals("null")))
@@ -538,25 +554,36 @@ public class StarIOAdapter extends CordovaPlugin {
 				
 			}
 			
+			System.out.println("llega a ordername");
+			
 			if(objfactura.has("mesa")){
 				if(!(objfactura.getString("mesa").equals(JSONObject.NULL)))
 				mesa=objfactura.getString("mesa");
 			}
+			
+			System.out.println("llega a los mesa");
 			
 			if(objfactura.has("lang")){
 				if(!(objfactura.getString("lang").equals(JSONObject.NULL)))
 				lang=objfactura.getInt("lang");
 			}
 			
+			System.out.println("llega a los lang");
+			
 			if(objfactura.has("propina")){
 				if(!(objfactura.getString("propina").equals(JSONObject.NULL)))
 				propina=objfactura.getString("propina");
 			}
 			
+			System.out.println("llega a propina");
+			
 			if(objfactura.has("pax")){
 				if(!(objfactura.getString("pax").equals(JSONObject.NULL)))
 				pax=objfactura.getString("pax");
 			}
+			
+			System.out.println("llega a los pax");
+			
 			
 			tipo="pagar";
 			}else if(nombres.toString().contains("Cierre")){
@@ -752,6 +779,8 @@ public class StarIOAdapter extends CordovaPlugin {
 					}
 				}
 				
+				System.out.println("llega al logo");
+				
 				list.add(createCp1252(nombreEmpresa+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
 				list.add(createCp1252(direccionEmpresa+"-"+telefonoEmpresa+"\r\n"));
@@ -771,6 +800,8 @@ public class StarIOAdapter extends CordovaPlugin {
 					else if(lang.equals(2))
 						list.add(createCp1252(textoreimpr.replace("Reimpresion Factura","Invoice Reprint")+"\r\n"));
 				}
+				
+				System.out.println("llega al reimp");
 					
 				list.add(createCp1252("--------------------------------\r\n"));
 
@@ -801,6 +832,8 @@ public class StarIOAdapter extends CordovaPlugin {
 				}else if(lang.equals(2)){
 					list.add(createCp1252("  # DESCRIPTION          AMMOUNT\r\n"));
 				}
+				
+				
 				if(expprod.length()>0){
 					for(int i=0;i<expprod.length();i++){
 						try{
@@ -934,7 +967,10 @@ public class StarIOAdapter extends CordovaPlugin {
 						
 				if(Double.parseDouble(subtotal.replace(",","."))>0){
 					list.add(createCp1252("                 SUBTOTAL:"+String.valueOf(subtotal)+"\r\n"));
+					
 				}
+				
+				System.out.println("llega al prods");
 				/*if(Double.parseDouble(subconiva.replace(",","."))>0){
 					list.add(createCp1252("                SUBCONIVA:"+String.valueOf(subconiva)+"\r\n"));
 				}
@@ -983,6 +1019,8 @@ public class StarIOAdapter extends CordovaPlugin {
 					}
 				}
 				/*fin impuestos*/
+				
+				System.out.println("llega a impurstos");
 
 				/*if(Double.parseDouble(iva.replace(",","."))>0){
 					list.add(createCp1252("                      IVA:"+String.valueOf(iva)+"\r\n"));
@@ -1007,10 +1045,14 @@ public class StarIOAdapter extends CordovaPlugin {
 					}
 				}
 				
+				System.out.println("llega a descuentos propina");
+				
 				// Character expansion
 				list.add(new byte[] { 0x06, 0x09, 0x1b, 0x69, 0x01, 0x01 });
 				list.add(createCp1252("TOTAL:"+String.valueOf(totalfact)+"\r\n"));
 				list.add(new byte[] { 0x1b, 0x69, 0x00, 0x00 }); // Cancel Character Expansion
+				
+				System.out.println("llega al total"+String.valueOf(totalfact));
 				
 				//formas de pago
 				if(expago.length()>0){
@@ -1051,6 +1093,8 @@ public class StarIOAdapter extends CordovaPlugin {
 							suma=suma+valor;
 						}
 						
+						System.out.println("llega a pagos");
+						
 						//totalfact=totalfact.replace(".","");
 						Double mivuelto=suma-Double.parseDouble(totalfact.replace(",","."));
 						//Double mivuelto=suma-Double.parseDouble(totalfact);
@@ -1058,6 +1102,8 @@ public class StarIOAdapter extends CordovaPlugin {
 							
 						//elvuelto=DoubleFormat(vuelto);
 						elvuelto=DoubleFormat(mivuelto);
+						
+						System.out.println("llega al vuelto");
 						
 						}catch(JSONException ex){
 							ex.printStackTrace();
@@ -1071,11 +1117,17 @@ public class StarIOAdapter extends CordovaPlugin {
 						}
 					}
 					
+					System.out.println("llega al vuelto dos"+String.valueOf(elvuelto));
+					
 					if(lang.equals(1)){
 						list.add(createCp1252("Vuelto:"+String.valueOf(elvuelto)+"\r\n"));
 					}else{
 						list.add(createCp1252("Change:"+String.valueOf(elvuelto)+"\r\n"));
 					}
+					
+					
+					System.out.println("llega a facte"+factelectronica);
+					
 					
 					if(!factelectronica.equals("")){
 						if(lang.equals(1)){
@@ -1083,11 +1135,13 @@ public class StarIOAdapter extends CordovaPlugin {
 						}else{
 							list.add(createCp1252("Check your electronic bill in:\n"));
 						}
-						String [] vectordata=factelectronica.split(",");
+						String [] vectordata=factelectronica.split("#");
 						list.add(createCp1252(vectordata[0]+"\n"));
 						list.add(createCp1252(vectordata[1]+" -"+vectordata[2]+"\n"));
 					}
 				}
+				
+				System.out.println("llega a totales");
 				
 			}else if(tipo.equals("cierre")){
 				
@@ -1876,6 +1930,9 @@ public class StarIOAdapter extends CordovaPlugin {
 
 				list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Cut
 				list.add(new byte[] { 0x07 }); // Kick cash drawer
+				
+				System.out.println("llega al cut");
+				
 				try {
 					PrinterFunctions.SendCommand(context, portName, portSettings, list);
 					callbackContext.success();
@@ -3317,7 +3374,5 @@ private void runPrintSequence(CallbackContext callbackContext,String message,Str
 		callbackContext.success();
 	}
 }
-
-
 }
 

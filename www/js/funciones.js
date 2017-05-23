@@ -5965,7 +5965,7 @@ function SaveMesa(){
 				var miprint=res.rows.item(0);
 				if(localStorage.getItem("con_mesas")=="true"){
 					if(miprint.printercom!=null){
-						if(localStorage.getItem("printtrade")==2){
+						if(localStorage.getItem("printtradec")==2){
 							StarIOAdapter.rawprint(json,miprint.printercom, function(){});
 						}else{
 							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"),localStorage.getItem("comtype"), function(){});
@@ -6306,9 +6306,9 @@ function SaveMesaLocal(){
 				var miprint=res.rows.item(0);
 				if(localStorage.getItem("con_mesas")=="true"){
 					if(miprint.printercom!=null){
-						if(localStorage.getItem("printtrade")==2){
+						if(localStorage.getItem("printtradec")==2){
 							StarIOAdapter.rawprint(json,miprint.printercom, function() {});
-						}else{
+						}else if(localStorage.getItem("printtradec")==1){
 							StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"),localStorage.getItem("comtype"), function(){});
 						}
 					}else{

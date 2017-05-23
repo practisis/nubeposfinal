@@ -710,9 +710,9 @@ function ImprimeComanderas(mijson){
 						mijson=mijson.replace("Pagar","Comandar");
 						var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
 						if ( app ) {
-							if(localStorage.getItem("printtrade")==2){
+							if(localStorage.getItem("printtradec")==2){
 								StarIOAdapter.rawprint(mijson,localStorage.getItem("printc"), function() {});
-							}else if(localStorage.getItem("printtrade")==1){
+							}else if(localStorage.getItem("printtradec")==1){
 								StarIOAdapter.printepson(mijson,localStorage.getItem("commodel"),localStorage.getItem("comaddress"), localStorage.getItem("comtype"),function() {});
 							}
 						}
@@ -1698,9 +1698,9 @@ function VerificarComandas(){
 		if(cuan>0){
 			//comanderas
 			if(localStorage.getItem("printc")!=null&&localStorage.getItem("printc")!=""){
-				if(localStorage.getItem("printtrade")==2){
+				if(localStorage.getItem("printtradec")==2){
 					StarIOAdapter.rawprint(json,localStorage.getItem("printc"), function(){});
-				}else if(localStorage.getItem("printtrade")==1){
+				}else if(localStorage.getItem("printtradec")==1){
 					$('#cargandoTabs').modal("show");
 					StarIOAdapter.printepson(json,localStorage.getItem("commodel"),localStorage.getItem("comaddress"),localStorage.getItem("comtype"), function() {$('#cargandoTabs').modal("hide");});
 				}

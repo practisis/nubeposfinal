@@ -848,14 +848,6 @@
 				<div class='col-lg-12'>
 					<div class='panel panel-default'>
 						<div class='panel-body'>
-							<div class='row'>
-								<div class='col-lg-12 col-md-12'>
-									<div class="alert alert-info" role="alert" style='text-align:left;'>
-										<strong>Impresora Facturación Actual:</strong>&nbsp;<span id='predetfacturacion'>No Print</span>,&nbsp;
-										<strong>Impresora Comandación Actual:</strong>&nbsp;<span id='predetcomandacion'>No Print</span>
-									</div>
-								</div>
-							</div>
 						<div style='border:1px solid #CCC; padding:20px 10px 20px 10px; background-color:#F7F8F8;'>
 							<div class='row'>
 							 <!--<h3 id="trans_label_19" style='text-align:left;'>Configuración de Impresoras</h3>-->
@@ -877,7 +869,7 @@
 							 </div>
 							 <div class='row'>
 							<div class='col-lg-12' style='padding:20px;'>
-							<h4 id='trans_label_54' style='text-align:left;'>Impresoras para Facturar</h4>
+							<div style='text-align:left; font-size:14px;'><span id='trans_label_54' style='text-align:left; font-size:18px;'>Impresoras para Facturar</span><strong>&nbsp; Actual:&nbsp;</strong><span id='predetfacturacion' class='badge'>No Print</span></div>
 							<table class='table table-striped table-bordered' id='listaimpresoras'>
 								<thead>
 								<tr><th class='trans_name'>Nombre</th><th class='trans_elegir'>Elegir</th></tr>
@@ -888,8 +880,13 @@
 							</div>
 							</div>
 							<div class='row'>
+							<div class='col-lg-12' style='text-align:right;'>
+								<button id='btnsetearc' class='btn btn-success trans_choose' onclick='SetearImpresora();'>ELEGIR</button>
+							</div>
+							</div>
+							<div class='row'>
 							<div class='col-lg-12' style='padding:20px; display:none;' id='divcomandas'>
-							<h4 id='trans_label_55'  style='text-align:left;'>Impresoras para Comandar</h4>
+							<div style='text-align:left; font-size:14px;'><span id='trans_label_55' style='text-align:left; font-size:18px;'>Impresoras para Comandar</span><strong>&nbsp; Actual:&nbsp;</strong><span id='predetcomandacion' class='badge'>No Print</span></div>
 							<table class='table table-striped table-bordered' id='listaimpresorascomandas'>
 								<thead>
 								<tr><th class='trans_name'>Nombre</th><th class='trans_elegir'>Elegir</th></tr>
@@ -906,7 +903,11 @@
 							</div>--->
 							<div class='row'>
 							<div class='col-lg-12' style='text-align:right;'>
-								<button id='btnsetear' class='btn btn-success trans_choose' style='margin-right:5px;' onclick='SetearImpresora();'>Elegir</button>
+								<button id='btnsetear' class='btn btn-success trans_choose' style='margin-right:5px;' onclick='SetearImpresoraC();'>Elegir</button>
+							</div>
+							</div>
+							<div class='row'>
+							<div class='col-lg-12' style='text-align:right; margin-top:10px;'>
 								<button id='btnprobar' class='btn btn-success trans_printest' style='display:none;' onclick='ImprimirTest();'>Imprimir Prueba</button>
 							</div>
 							</div>
@@ -1857,9 +1858,9 @@ $(document).ready(function(){
 			});				
 		},errorCB,successCB);
 		
-		var linea1="<tr><td style='vertical-align:middle;' onclick='$("+'"#print_0"'+").click();' >No print</td><td><input style='width:35px; height:35px;' class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
+		var linea1="<tr><td style='vertical-align:middle;' onclick='$("+'"#print_0"'+").click();' >No print</td><td><input style='width:35px; height:35px;' class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' /></td></tr>";
 			
-		var linea1c="<tr><td style='vertical-align:middle;' onclick='$("+'"#printc_0"'+").click();'>No print</td><td><input style='width:35px; height:35px;' class='printerradioc' data-value='0' type='radio' name='printerc' value='0' id='printc_0' checked /></td></tr>";
+		var linea1c="<tr><td style='vertical-align:middle;' onclick='$("+'"#printc_0"'+").click();'>No print</td><td><input style='width:35px; height:35px;' class='printerradioc' data-value='0' type='radio' name='printerc' value='0' id='printc_0' /></td></tr>";
 			
 		$('#listaimpresoras tbody').append(linea1);
 		$('#listaimpresorascomandas tbody').append(linea1c);
@@ -1876,7 +1877,7 @@ $(document).ready(function(){
 		if ( appn ) {
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
-				tx.executeSql("SELECT printer,printercom,marcaprint,modelprint,addressprint,typeprint FROM CONFIG where id=1",[],function(tx,results){
+				tx.executeSql("SELECT printer,printercom,marcaprint,modelprint,addressprint,typeprint,marcaprintc,modelprintc,addressprintc,typeprintc FROM CONFIG where id=1",[],function(tx,results){
 					console.log(results);
 					var idprinter='';
 					if(results.rows.length>0){
@@ -1886,41 +1887,45 @@ $(document).ready(function(){
 							localStorage.setItem("printc",idprinter.printercom);
 							localStorage.setItem("printtrade",idprinter.marcaprint);
 							localStorage.setItem("printtype",idprinter.typeprint);
+							localStorage.setItem("printtradec",idprinter.marcaprintc);
+							localStorage.setItem("comtype",idprinter.typeprintc);
 							
-							var midir=null;
+							var datadir=null;
+							var datadirc=null;
 							var mimodel=null;
+							var mimodelc=null;
 							var mitype=null;
+							var mitypec=null;
 							
 							if(idprinter.addressprint!=null){
-								var datadir=idprinter.addressprint;
-								midir=datadir.split("||");
+								datadir=idprinter.addressprint;
+								localStorage.setItem("printaddress",datadir);
 							}
 							
-							if(midir!=null){
-								localStorage.setItem("printaddress",midir[0]);
-								localStorage.setItem("comaddress",midir[1]);
+							if(idprinter.addressprintc!=null){
+								datadirc=idprinter.addressprintc;
+								localStorage.setItem("comaddress",datadirc);
 							}
 								
 							if(idprinter.modelprint!=null){
-								var datamod=idprinter.modelprint;
-								mimodel=datamod.split("||");
+								mimodel=idprinter.modelprint;
+								localStorage.setItem("printmodel",mimodel);
 							}
 							
-							if(mimodel!=null){
-								localStorage.setItem("printmodel",mimodel[0]);
-								localStorage.setItem("commodel",mimodel[1]);
+							if(idprinter.modelprintc!=null){
+								mimodelc=idprinter.modelprintc;
+								localStorage.setItem("commodel",mimodelc);
 							}
 							
 							if(idprinter.typeprint!=null){
-								var datatyp=idprinter.typeprint;
-								mitype=datatyp.split("||");
+								mitype=idprinter.typeprint;
+								localStorage.setItem("printtype",mitype);
 							}
 							
-							if(mitype!=null){
-								localStorage.setItem("printtype",mitype[0]);
-								localStorage.setItem("comtype",mitype[1]);
+							if(idprinter.typeprintc!=null){
+								mitypec=idprinter.typeprintc;
+								localStorage.setItem("comtype",mitypec);
 							}
-							
 						}
 						
 						if(idprinter.printercom!=null){
@@ -2013,9 +2018,9 @@ $(document).ready(function(){
 		if($('.printerradio').length==0){
 			$('#btnbuscarimp').button('reset');
 			//$('#btnprobar').css("display","none");
-			var linea="<tr><td>No print</td><td><input class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0' checked /></td></tr>";
+			var linea="<tr><td>No print</td><td><input class='printerradio' data-value='0' type='radio' name='printer' value='0' id='print_0'/></td></tr>";
 			
-			var lineac="<tr><td>No print</td><td><input class='printerradioc' data-value='0' type='radio' name='printerc' value='0' id='print_0' checked /></td></tr>";
+			var lineac="<tr><td>No print</td><td><input class='printerradioc' data-value='0' type='radio' name='printerc' value='0' id='print_0'/></td></tr>";
 			
 			$('#listaimpresoras tbody').append(linea);
 			$('#listaimpresorascomandas tbody').append(lineac);
@@ -2025,7 +2030,6 @@ $(document).ready(function(){
 	
 	function SetearImpresora(){
 		var laprinter='';
-		var laprinterc='';
 		var directionprint='';
 		var modelprint='';
 		var typeprint='';
@@ -2036,17 +2040,8 @@ $(document).ready(function(){
 		localStorage.setItem("printtrade",$('#marca').val());
 		localStorage.setItem("printtype",$('#tipo').val());
 		laprinter=$('.printerradio:checked').val();
-		laprinterc=$('.printerradioc:checked').val();
 		
-		//alert($('input:radio[name=printer]:checked').val());
-		/*$('.printerradio').each(function(){
-			if($(this).is(":checked")){
-				laprinter=$(this).attr("data-value");
-				break;
-			}
-		});*/
-		//alert(laprinter);
-		if(laprinter!=null||laprinterc!=null){
+		if(laprinter!=null){
 			if($('.printerradio:checked').attr('data-id')!=null)
 				directionprint=$('.printerradio:checked').attr('data-id');
 			if($('.printerradio:checked').attr('data-model')!=null)
@@ -2054,44 +2049,34 @@ $(document).ready(function(){
 			if($('.printerradio:checked').attr('data-type')!=null)
 				typeprint=$('.printerradio:checked').attr('data-type');
 				
-			if($('.printerradioc:checked').attr('data-id')!=null)
-				directionprintc=$('.printerradioc:checked').attr('data-id');
-			if($('.printerradioc:checked').attr('data-model')!=null)
-				modelprintc=$('.printerradioc:checked').attr('data-model');
-			if($('.printerradioc:checked').attr('data-type')!=null)
-				typeprintc=$('.printerradioc:checked').attr('data-type');
 				
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			var cuantos=0;
 			if(laprinter==0)
 				laprinter='';
 				
-			if(laprinterc==0)
-				laprinterc='';
 				
 			db.transaction(function(tx1){
 				tx1.executeSql("SELECT count(*) as c from CONFIG",[],
 				function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c>0){
-							tx1.executeSql("UPDATE CONFIG SET printer=?,printercom=?,marcaprint=?,modelprint=?,addressprint=?,typeprint=?  where id=1",[laprinter,laprinterc,$('#marca').val(),modelprint+"||"+modelprintc,directionprint+"||"+directionprintc,typeprint+"||"+typeprintc],function(tx1,results2){
+							tx1.executeSql("UPDATE CONFIG SET printer=?,marcaprint=?,modelprint=?,addressprint=?,typeprint=?  where id=1",[laprinter,$('#marca').val(),modelprint,directionprint,typeprint],function(tx1,results2){
 									if(localStorage.getItem("idioma")==1){
-										showalert("Se ha vinculado las impresoras: "+laprinter+","+laprinterc);
+										showalert("Se ha vinculado las impresora: "+laprinter);
 									}
 									else if(localStorage.getItem("idioma")==2){
-										showalert("Linked printers: "+laprinter+","+laprinterc);	
+										showalert("Linked printer: "+laprinter);	
 									}		
 									$('#predetfacturacion').html(laprinter);
-									$('#predetcomandacion').html(laprinterc);
 							});
 						}else{
-							tx1.executeSql("INSERT INTO CONFIG (printer,printercom,marcaprint,modelprint,addressprint,typeprint) VALUES (?,?,?,?,?,?)",[laprinter,laprinterc,$('#marca').val(),modelprint+"||"+modelprintc,directionprint+"||"+directionprintc,typeprint+"||"+typeprintc],function(tx1,results3){
+							tx1.executeSql("INSERT INTO CONFIG (printer,marcaprint,modelprint,addressprint,typeprint) VALUES (?,?,?,?,?,?)",[laprinter,$('#marca').val(),modelprint,directionprint,typeprint],function(tx1,results3){
 								if(localStorage.getItem("idioma")==1)
-									showalert("Se ha vinculado las impresoras: "+laprinter+","+laprinterc);
+									showalert("Se ha vinculado las impresoras: "+laprinter);
 								else if(localStorage.getItem("idioma")==2)
-									showalert("Linked printers: "+laprinter+","+laprinterc);
+									showalert("Linked printers: "+laprinter);
 								$('#predetfacturacion').html(laprinter);
-								$('#predetcomandacion').html(laprinterc);
 							});
 							
 						}
@@ -2102,7 +2087,62 @@ $(document).ready(function(){
 							localStorage.setItem("printmodel",modelprint);
 						if(typeprint!=null)
 							localStorage.setItem("printtype",typeprint);
+					}
+				});}
+			,errorCB,successCB);
+		}
+	}
+	
+	function SetearImpresoraC(){
+		var laprinterc='';
+		var directionprintc='';
+		var modelprintc='';
+		var typeprintc='';
+		
+		localStorage.setItem("printtradec",$('#marca').val());
+		localStorage.setItem("comtype",$('#tipo').val());
+		laprinterc=$('.printerradioc:checked').val();
+		
+		if(laprinterc!=null){
+				
+			if($('.printerradioc:checked').attr('data-id')!=null)
+				directionprintc=$('.printerradioc:checked').attr('data-id');
+			if($('.printerradioc:checked').attr('data-model')!=null)
+				modelprintc=$('.printerradioc:checked').attr('data-model');
+			if($('.printerradioc:checked').attr('data-type')!=null)
+				typeprintc=$('.printerradioc:checked').attr('data-type');
+				
+			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+			var cuantos=0;
+
+			if(laprinterc==0)
+				laprinterc='';
+				
+			db.transaction(function(tx1){
+				tx1.executeSql("SELECT count(*) as c from CONFIG",[],
+				function(tx1,results1){
+					if(results1.rows.length>0){
+						if(results1.rows.item(0).c>0){
+							tx1.executeSql("UPDATE CONFIG SET printercom=?,marcaprintc=?,modelprintc=?,addressprintc=?,typeprintc=?  where id=1",[laprinterc,$('#marca').val(),modelprintc,directionprintc,typeprintc],function(tx1,results2){
+									if(localStorage.getItem("idioma")==1){
+										showalert("Se ha vinculado la impresora: "+laprinterc);
+									}
+									else if(localStorage.getItem("idioma")==2){
+										showalert("Linked printer: "+laprinterc);	
+									}		
+									$('#predetcomandacion').html(laprinterc);
+							});
+						}else{
+							tx1.executeSql("INSERT INTO CONFIG (printercom,marcaprintc,modelprintc,addressprintc,typeprintc) VALUES (?,?,?,?,?,?)",[laprinterc,$('#marca').val(),modelprintc,directionprintc,typeprintc],function(tx1,results3){
+								if(localStorage.getItem("idioma")==1)
+									showalert("Se ha vinculado la impresora: "+laprinterc);
+								else if(localStorage.getItem("idioma")==2)
+									showalert("Linked printer: "+laprinterc);
+								$('#predetcomandacion').html(laprinterc);
+							});
 							
+						}
+						
 						if(directionprintc!=null)
 							localStorage.setItem("comaddress",directionprintc);
 						if(modelprintc!=null)
@@ -2112,23 +2152,6 @@ $(document).ready(function(){
 					}
 				});}
 			,errorCB,successCB);
-				
-			
-			/*if(cuantos==1){
-				db.transaction(function(tx){
-					tx.executeSql("UPDATE CONFIG SET printer=? where id=1",[laprinter],function(tx,results){
-						//console.log(results);
-						//alert(laprinter);
-						showalert("Se ha vinculado la impresora: "+laprinter);
-					});},errorCB,successCB);
-			}else{
-				db.transaction(function(tx3){
-					tx3.executeSql("INSERT INTO CONFIG (printer) VALUES (?)",[laprinter],function(tx3,results3){
-						//console.log(results3);
-						//alert(laprinter);
-						showalert("Se ha vinculado la impresora: "+laprinter);
-				});},errorCB,successCB);
-			}*/
 		}
 	}
 	
@@ -2143,7 +2166,7 @@ $(document).ready(function(){
 		//alert("test");
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);		
 		db.transaction(function(tx){
-			tx.executeSql("SELECT printer,printercom,marcaprint,modelprint,addressprint,typeprint FROM CONFIG where id=1",[],function(tx,results){
+			tx.executeSql("SELECT printer,printercom,marcaprint,modelprint,addressprint,typeprint,marcaprintc,modelprintc,addressprintc,typeprintc FROM CONFIG where id=1",[],function(tx,results){
 			//console.log(results);
 			if(results.rows.length>0){
 				//alert(results.rows.item(0).printer);
@@ -2162,13 +2185,9 @@ $(document).ready(function(){
 						});
 					}else if(idprinter.marcaprint==1){
 						var modeldata=idprinter.modelprint;
-						var mimodel=modeldata.split('||');
 						var addressdata=idprinter.addressprint;
 						var typedata=idprinter.typeprint;
-						//alert(typedata);
-						var miaddress=addressdata.split('||');
-						var mitype=typedata.split('||');
-						StarIOAdapter.printepson($('#jsonprint').html(),mimodel[0],miaddress[0],mitype[0],function() {
+						StarIOAdapter.printepson($('#jsonprint').html(),modeldata,addressdata,typedata,function() {
 							if(localStorage.getItem("idioma")==1)
 								showalert("Imprimiendo Test Factura");
 							else if(localStorage.getItem("idioma")==2)
@@ -2183,21 +2202,18 @@ $(document).ready(function(){
 				}
 				
 				if(idprinter.printercom!=null){
-					if(idprinter.marcaprint==2){
+					if(idprinter.marcaprintc==2){
 						StarIOAdapter.rawprint($('#jsonprint').html(),idprinter.printercom, function() {
 							if(localStorage.getItem("idioma")==1)
 								showalert("Imprimiendo Test Comanda");
 							else if(localStorage.getItem("idioma")==2)
 								showalert("Printing Command Test");
 						});
-					}else if(idprinter.marcaprint==1){
-						var modeldata=idprinter.modelprint;
-						var mimodel=modeldata.split('||');
-						var addressdata=idprinter.addressprint;
-						var typedata=idprinter.typeprint;
-						var miaddress=addressdata.split('||');
-						var mitype=typedata.split('||');
-						StarIOAdapter.printepson($('#jsonprint').html(),mimodel[1],miaddress[1],mitype[1],function() {
+					}else if(idprinter.marcaprintc==1){
+						var modeldata=idprinter.modelprintc;
+						var addressdata=idprinter.addressprintc;
+						var typedata=idprinter.typeprintc;
+						StarIOAdapter.printepson($('#jsonprint').html(),modeldata,addressdata,typedata,function() {
 							if(localStorage.getItem("idioma")==1)
 								showalert("Imprimiendo Test Comanda");
 							else if(localStorage.getItem("idioma")==2)

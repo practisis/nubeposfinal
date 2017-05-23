@@ -267,6 +267,7 @@
 												var now=new Date().getTime();
 												tx.executeSql("INSERT INTO logactions (time,descripcion,datos) values (?,?,?)",[now,"Envia imprimir Cierre",respuesta]);//alert(localStorage.getItem("printtrade")+"/"+localStorage.getItem("printmodel")+"/"+localStorage.getItem("printaddress"));
 												if(localStorage.getItem("printtrade")==2){
+													console.log(idprinter.printer);
 													StarIOAdapter.rawprint(respuesta,idprinter.printer, function() {
 														if(localStorage.getItem("idioma")==1)
 															showalert("Imprimiendo Cierre de Caja");

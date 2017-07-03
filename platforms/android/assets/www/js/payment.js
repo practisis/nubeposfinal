@@ -686,6 +686,7 @@ function impresionMovil(mijson){
 		
 	localStorage.setItem("nameorder","");
 	$('#popupsavefactura').modal('show');
+	localStorage.setItem("noservicio",'false');
 	$('#popupsavefactura').on('hidden.bs.modal', function () {
 		$('#menuSubNew2').html("Total");
 		  if($(window).width()<=900){

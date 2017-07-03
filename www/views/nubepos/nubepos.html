@@ -189,8 +189,10 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-12" style='margin-top:15px;'>
-				<span id='nombre_mesa' onclick='envia("puntodeventa");'></span>
+			<div class="col-xs-12" style='margin-top:10x;'>
+				<span style='text-align:center;background-color:#CCC;'>
+					<span id='nombre_mesa' onclick='envia("puntodeventa");' style='font-size:12px; text-transform:uppercase;'></span><span id='divservicioquitar' onclick='alertaservicio();'>&nbsp;<input onclick='ToggleServicio();' type='checkbox' id='sinservicio' name='sinservicio'/>&nbsp;<label for='sinservicio' style='font-size:12px; padding:3px 4px 3px 4px;'>SIN SERVICIO</label></span>
+				</span>
 			</div>
 		</div>
 		<table cellspacing="0px" cellpadding="0px" width='98%' style='margin-top:10px;' align='center'>
@@ -1249,6 +1251,25 @@
 </div><!-- /.modal -->
 <!---fin popup cupo--->
 
+<!---pop up cupo insuficiente--->
+<div id='popupquitarimpuestos' class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+		<div class='modal-header'>
+			<h3>Personalizar impuestos</h3>
+		</div>
+      <div class="modal-body">
+		<div style='padding:20px;'>
+			Lista de impuestos activos:
+			<div>
+			</div>
+		</div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!---fin popup cupo--->
+
 <div id='jsonproductos' style='display:none;'></div>
 <audio id="beep1" src="views/nubepos/sonidos/blip7.mp3" preload="auto"></audio>
 <div style='display:none;' id='jsonclientes'></div>
@@ -1770,8 +1791,11 @@ $('#precioprof,#totalprof').on("click",function(){
   }
 }*/
 $(document).ready(function(){
-
+	if(localStorage.getItem('impuestos_personalizados')=='true'){
+		$('#divservicioquitar').css('display','');
+	}else{
+		$('#divservicioquitar').css('display','none');
+	}
     ListarCategorias();
-
 });
 </script>

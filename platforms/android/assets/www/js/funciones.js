@@ -252,6 +252,7 @@ function agregarCompra(item,origen){
 
 	var i = 1;
 	$('#descuentoFactura').val(0);
+	$('#descuentoFacturatrue').val(0);
 	$('#resultBuscador').fadeOut('slow');
 	//variables facturacion
 	var subtotalSinIva = $('#subtotalSinIva').val();
@@ -539,6 +540,7 @@ function agregarCompraLocal(item,idmenudiseno){
 
 	var i = 1;
 	$('#descuentoFactura').val(0);
+	$('#descuentoFacturatrue').val(0);
 	$('#resultBuscador').fadeOut('slow');
 	//variables facturacion
 	var subtotalSinIva = $('#subtotalSinIva').val();
@@ -853,6 +855,7 @@ function agregarCompranew(item,origen){
 
 	var i = 1;
 	$('#descuentoFactura').val(0);
+	$('#descuentoFacturatrue').val(0);
 	$('#resultBuscador').fadeOut('slow');
 	//variables facturacion
 	var subtotalSinIva = $('#subtotalSinIva').val();
@@ -1096,6 +1099,7 @@ function agregarCompranew(item,origen){
 function agregarCompra2(item,origen){
 	var i = 1;
 	$('#descuentoFactura').val(0);
+	$('#descuentoFacturatrue').val(0);
 	$('#resultBuscador').fadeOut('slow');
 	//variables facturacion
 	var subtotalSinIva = $('#subtotalSinIva').val();
@@ -2363,7 +2367,7 @@ function pagar(){
 		json += '"impuestos" : "'+ idimpuestos +'",';
 		json += '"iva" : "'+ ivavalor +'",';
 		json += '"servicio" : "'+ servalor +'",';
-		json += '"descuento" : "'+ descuento +'",';
+		json += '"descuento" : "'+ $('#descuentoFacturatrue').val() +'",';
 		json += '"total" : "'+ (total-descuento+propina) +'",';
 		json += '"numerofact" : "'+ nofactura +'",';
 		json += '"encabezado" : "'+ localStorage.getItem("encabezado") +'",';
@@ -2503,6 +2507,7 @@ function addDiscount(){
 			$('#payButton').html('PAGAR');
 			$('#invoiceTotal').html( (parseFloat(totales) - parseFloat(discount)+parseFloat(propina)).toFixed(2));
 			$('#descuentoFactura').val(discount);
+			$('#descuentoFacturatrue').val(discount);
 
 			//alert(discount);
 
@@ -2511,6 +2516,7 @@ function addDiscount(){
 			$('.totales').each(function(){
 				sumTotal += parseFloat($.trim($(this).val()));
 			});
+			
 			console.log((parseFloat(totales) - parseFloat(discount)).toFixed(2));
 			$('#justo').html((parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2));
 			$('#justo').attr('data-value',-1*(parseFloat(totales) - parseFloat(discount) + parseFloat(propina)).toFixed(2));
@@ -2524,6 +2530,7 @@ function addDiscount(){
 
 			$('#msjDescuentoError').html('');
 			$('#btn_descuento').effect('highlight',{},'normal');
+			SubtotalesDescuento();
 		}else{
 			$('#msjDescuentoError').html('El descuento no puede ser mayor a '+ totalmiFactura.toFixed(2));
 			$('#addDiscount').html('0');
@@ -5420,7 +5427,8 @@ function ActivarMesa(){
     					$('#subtotalIva').val('0');
     					$('#subtotalSinIva').val('0');
     					$('#totalmiFactura').val('0');
-    					$('#descuentoFactura ').val('0');
+    					$('#descuentoFactura').val('0');
+    					$('#descuentoFacturatrue').val('0');
     					$('.esImpuesto').val('0');
     					sessionStorage.setItem("mesa_activa",id);
     					sessionStorage.setItem("mesa_name",resp[2]);
@@ -5484,7 +5492,8 @@ function ActivarMesa(){
 					$('#subtotalIva').val('0');
 					$('#subtotalSinIva').val('0');
 					$('#totalmiFactura').val('0');
-					$('#descuentoFactura ').val('0');
+					$('#descuentoFactura').val('0');
+					$('#descuentoFacturatrue').val('0');
 					$('.esImpuesto').val('0');
 					sessionStorage.setItem("mesa_activa",id);
 					sessionStorage.setItem("mesa_name",item.nombre);
@@ -5511,7 +5520,8 @@ function VerConsumos(idmesa){
 		$('#subtotalIva').val('0');
 		$('#subtotalSinIva').val('0');
 		$('#totalmiFactura').val('0');
-		$('#descuentoFactura ').val('0');
+		$('#descuentoFactura').val('0');
+		$('#descuentoFacturatrue').val('0');
 		$('.esImpuesto').val('0');
 		sessionStorage.setItem("mesa_activa",idmesa);
 		sessionStorage.setItem("mesa_name",$('#mesaname_'+idmesa).html());
@@ -6209,7 +6219,7 @@ function  ImprimirPrecuenta(){
 			json += '"impuestos" : "'+ idimpuestos +'",';
 			json += '"iva" : "'+ ivavalor +'",';
 			json += '"servicio" : "'+ servalor +'",';
-			json += '"descuento" : "'+ descuento +'",';
+			json += '"descuento" : "'+ $('#descuentoFacturatrue').val()+'",';
 			json += '"total" : "'+ (total-descuento+propina) +'",';
 			json += '"encabezado" : "'+ localStorage.getItem("encabezado") +'",';
 			json += '"largo" : "'+ localStorage.getItem("largo") +'",';
@@ -6576,4 +6586,30 @@ function UsarBwise(){
 		}
 	},
 	function(error){alert(error);});
+}
+
+function SubtotalesDescuento(){
+	var descuentoconimp=parseFloat($('#descuentoFactura').val());
+	var subconiva=parseFloat($('#subtotalIva').val());
+	var subsiniva=parseFloat($('#subtotalSinIva').val());
+	var total=parseFloat($('#totalmiFactura').val());
+	var restanewconiva=subconiva/total*descuentoconimp;
+	var restanewsiniva=subsiniva/total*descuentoconimp;
+	//var restadescuento=descuentoconimp/total*descuentoconimp;
+	var restadescuento=1;
+	$('#subtotalIva').val(subconiva-restanewconiva);
+	$('#subtotalSinIva').val(subsiniva-restanewsiniva);
+	//$('#descuentoFacturatrue').val(descuentoconimp-restadescuento);
+	console.log('subconiva:'+(subconiva-restanewconiva));
+	console.log('subsiniva:'+(subsiniva-restanewsiniva));
+	//console.log('descuento:'+(descuentoconimp-restadescuento));
+	$('.esImpuesto').each(function(){
+		var valorimp=parseFloat($(this).val());
+		var resta_imp=valorimp/total*descuentoconimp;
+		$(this).val(valorimp-resta_imp);
+		console.log('imp:'+(valorimp-resta_imp));
+		restadescuento+=parseFloat($(this).attr('data-valor'));
+	});
+	var newdesc=descuentoconimp/restadescuento;
+	$('#descuentoFacturatrue').val(newdesc.toFixed(3));
 }

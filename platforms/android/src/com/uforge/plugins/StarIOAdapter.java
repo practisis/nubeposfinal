@@ -238,7 +238,7 @@ public class StarIOAdapter extends CordovaPlugin {
 							Thread t= new Thread(){
 								public void run(){
 									try{
-										Thread.sleep(2000);
+										Thread.sleep(3000);
 									}catch(InterruptedException e){
 										e.printStackTrace();
 									}
@@ -249,16 +249,19 @@ public class StarIOAdapter extends CordovaPlugin {
 					}catch (EpsonIoException e) {
 						//errStatus = e.getStatus();
 						System.out.println("status: "+e.getStatus());
+						String errorstatus="";
 						if(e.getStatus()==IoStatus.ERR_PARAM)
-							System.out.println("error: Parametro invalido");
+							errorstatus="error: Parametro invalido";
 						if(e.getStatus()==IoStatus.ERR_ILLEGAL)
-							System.out.println("error: El API se ha llamado cuando una busqueda ya estaba en progreso");
+							errorstatus="error: El API se ha llamado cuando una busqueda ya estaba en progreso";
 						if(e.getStatus()==IoStatus.ERR_PROCESSING)
-							System.out.println("error: No se puede ejecutar el proceso");
+							errorstatus="error: No se puede ejecutar el proceso";
 						if(e.getStatus()==IoStatus.ERR_MEMORY)
-							System.out.println("error: No se puede guardar en la memoria");
+							errorstatus="error: No se puede guardar en la memoria";
 						if(e.getStatus()==IoStatus.ERR_FAILURE)
-							System.out.println("error: Ocurrió un error inesperado");
+							errorstatus="error: Ocurrió un error inesperado";
+						System.out.println(errorstatus);
+						currentCallbackContext.error(errorstatus);
 						//future = scheduler.scheduleWithFixedDelay(this, 0, DISCOVERY_INTERVAL, TimeUnit.MILLISECONDS);
 						return;
 					}
@@ -319,7 +322,19 @@ public class StarIOAdapter extends CordovaPlugin {
 							}
 						}catch(EpsonIoException e){
 							System.out.println("Error lista status: "+e.getStatus());
-							currentCallbackContext.error(e.getStatus());
+							String errorstatus="";
+							if(e.getStatus()==IoStatus.ERR_PARAM)
+								errorstatus="error: Parametro invalido";
+							if(e.getStatus()==IoStatus.ERR_ILLEGAL)
+								errorstatus="error: El API se ha llamado cuando una busqueda ya estaba en progreso";
+							if(e.getStatus()==IoStatus.ERR_PROCESSING)
+								errorstatus="error: No se puede ejecutar el proceso";
+							if(e.getStatus()==IoStatus.ERR_MEMORY)
+								errorstatus="error: No se puede guardar en la memoria";
+							if(e.getStatus()==IoStatus.ERR_FAILURE)
+								errorstatus="error: Ocurrió un error inesperado";
+							System.out.println(errorstatus);
+							currentCallbackContext.error(errorstatus);
 						}
 						
 						// stop old finder
@@ -3360,6 +3375,7 @@ public class StarIOAdapter extends CordovaPlugin {
                 }
             }
         }
+		Runtime.getRuntime().gc();  
     }
 	
 private void runPrintSequence(CallbackContext callbackContext,String message,String portName,String direction,String type){

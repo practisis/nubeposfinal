@@ -400,7 +400,8 @@ function performPurchase(restaurant){
 			var servicio=0;
 			if($('#impuestoFactura-2').length&&$('#impuestoFactura-2').val()!='') servicio=$('#impuestoFactura-2').val();
 			
-			var descuento=$('#descuentoFactura').val();
+			//var descuento=$('#descuentoFactura').val();
+			var descuento=$('#descuentoFacturatrue').val();
 			
 			/*cadenaimpuestos*/
 			var c=0;

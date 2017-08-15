@@ -194,19 +194,43 @@ public class PrinterFunctionsEpson{
 					factelectronica=objcliente.getString("linkelectronica");
 			}
 			
-			subconiva=DoubleFormat(objfactura.getDouble("subtotal_iva"));
+			if(!objfactura.isNull("subtotal_iva")){
+				subconiva=DoubleFormat(objfactura.getDouble("subtotal_iva"));
+			}
 			//iva=DoubleFormat(objfactura.getDouble("subtotal_iva")*0.12);
-			iva=DoubleFormat(objfactura.getDouble("iva"));
-			servicio=DoubleFormat(objfactura.getDouble("servicio"));
-			subsiniva=DoubleFormat(Double.parseDouble(objfactura.getString("subtotal_sin_iva").replace(",",".")));
-			subtotal=DoubleFormat(Double.parseDouble(objfactura.getString("subtotal_sin_iva").replace(",","."))+Double.parseDouble(objfactura.getString("subtotal_iva").replace(",",".")));
-			descuento=DoubleFormat(Double.parseDouble(objfactura.getString("descuento").replace(",",".")));
-			totalfact=DoubleFormat(Double.parseDouble(objfactura.getString("total").replace(",",".")));
-			totalfactd=objfactura.getDouble("total");
+			if(!objfactura.isNull("iva")){
+				iva=DoubleFormat(objfactura.getDouble("iva"));
+			}
+			
+			if(!objfactura.isNull("servicio")){
+				servicio=DoubleFormat(objfactura.getDouble("servicio"));
+			}
+			
+			if(!objfactura.isNull("subtotal_sin_iva")){
+				subsiniva=DoubleFormat(Double.parseDouble(objfactura.getString("subtotal_sin_iva").replace(",",".")));
+			}
+			
+			if(!(objfactura.isNull("subtotal_sin_iva")||objfactura.isNull("subtotal_sin_iva"))){
+				subtotal=DoubleFormat(Double.parseDouble(objfactura.getString("subtotal_sin_iva").replace(",","."))+Double.parseDouble(objfactura.getString("subtotal_iva").replace(",",".")));
+			}
+			
+			if(!objfactura.isNull("descuento")){
+				descuento=DoubleFormat(Double.parseDouble(objfactura.getString("descuento").replace(",",".")));
+			}
+			
+			if(!objfactura.isNull("total")){
+				totalfact=DoubleFormat(Double.parseDouble(objfactura.getString("total").replace(",",".")));
+				totalfactd=objfactura.getDouble("total");
+			}
+			
 			nofact=objfactura.getString("numerofact");
 			nombreEmpresa=objempresa.getString("nombre");
 			direccionEmpresa=objempresa.getString("direccion");
-			fechanumber=(long)objfactura.getDouble("fecha");
+			
+			if(!objfactura.isNull("fecha")){
+				fechanumber=(long)objfactura.getDouble("fecha");
+			}
+			
 			lineastotales=Math.round(2.25*(objfactura.getInt("largo")-2));
 			lineasencabezado=Math.round(2*objfactura.getInt("encabezado"));
 			

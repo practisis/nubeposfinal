@@ -1861,7 +1861,7 @@ $(document).ready(function(){
 					$('#encabezado').val(res.rows.item(0).encabezado);
 					$('#largo').val(res.rows.item(0).largo);
 					var factpreimp=false;
-					if(idprinter.preimpresas=='true'){
+					if(res.rows.item(0).preimpresas=='true'){
 						factpreimp=true;
 					}
 					$('#preimpresas').attr('checked',factpreimp);
@@ -1996,7 +1996,7 @@ $(document).ready(function(){
 				//buscar epson
 				var mitipo=$('#tipo').val();
 				StarIOAdapter.searchEpson(mitipo,function(dataprinte){
-					//alert(dataprint);
+					//alert(dataprinte);
 					//alert(res);
 					var todasimp=dataprinte.split('||');
 					if(todasimp.length>0) $('#btnsetear,#btnprobar,#btnsetearc').css("display","");

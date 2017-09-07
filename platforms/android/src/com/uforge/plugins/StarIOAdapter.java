@@ -191,7 +191,8 @@ public class StarIOAdapter extends CordovaPlugin {
             });
             return true;
         }else if (action.equals("searchEpson")) {
-			cordova.getThreadPool().execute(new Runnable() {
+			//cordova.getThreadPool().execute(new Runnable() {
+			cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
 						String mitipo="";
 						Integer tipoprint=DevType.BLUETOOTH;

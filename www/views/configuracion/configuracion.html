@@ -710,6 +710,10 @@
             <td  style='text-align:right;'>LocalHost</td>
             <td align='left'><input id='con_localhost' class='form-control' readonly /></td>
 		</tr>
+        <tr>
+            <td  style='text-align:right;'>Ip Servidor</td>
+            <td align='left'><input id='ipservidor' name='ipservidor' class='form-control'/></td>
+		</tr>
 		</table>
 		<div class='row'>
 			<div class='col-lg-12' style='margin-bottom:35px;'>
@@ -1617,11 +1621,11 @@ $(document).ready(function(){
 		$('#cambiarlogo').attr("href","https://www.practisis.net/indexredirect.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister"))+"&mod=logo");
 		
 		$('#irdisenomesas').attr("href","https://www.practisis.net/indexredirect.php?rvpas="+btoa(localStorage.getItem("userPasswod"))+"&rvus="+btoa(localStorage.getItem("userRegister"))+"&mod=mesas");
-			
+
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT nombreterminal as c,id_idioma,id_version_nube,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais,mensajefinal,respaldar,pagarconcredito,impuestos_personalizados from CONFIG where id=1",[],function(tx1,results1){
+				tx1.executeSql("SELECT nombreterminal as c,id_idioma,id_version_nube,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais,mensajefinal,respaldar,pagarconcredito,impuestos_personalizados,ip_servidor from CONFIG where id=1",[],function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c!=''){
 							$('#tablet_name').val(results1.rows.item(0).c);
@@ -1696,6 +1700,8 @@ $(document).ready(function(){
 							
                             //alert(results1.rows.item(0).con_localhost);
                             $('#con_localhost').val(results1.rows.item(0).con_localhost);
+
+                            $('#ipservidor').val(results1.rows.item(0).ip_servidor);
 
                             if(results1.rows.item(0).respaldar=='true'){
                                 $('#backupinf').bootstrapSwitch('state', true);
@@ -2305,11 +2311,13 @@ $(document).ready(function(){
                 localStorage.setItem('pagarconcredito',con_pagarconcredito);
                 localStorage.setItem('impuestos_personalizados',con_imppersonalizados);
                 var con_backup = $('#backupinf').bootstrapSwitch('state');
+                var ip_servidor = $('#ipservidor').val();
+                localStorage.setItem("ip_servidor",ip_servidor);
 
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					
-				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=?,respaldar=?,pagarconcredito=?,impuestos_personalizados=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub,con_backup,con_pagarconcredito,con_imppersonalizados],
+				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=?,respaldar=?,pagarconcredito=?,impuestos_personalizados=?,ip_servidor=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub,con_backup,con_pagarconcredito,con_imppersonalizados,ip_servidor],
 				function(tx1,results1){
 					
 					var linklang="es";

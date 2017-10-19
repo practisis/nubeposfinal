@@ -39,27 +39,27 @@ function ActivarCategoria(cual,categoria){
 		}
 		
 		tx.executeSql(sqlimp,["true"],function(tx,results3){
-							console.log(results3);
-							var impuestos='';
-							var impuestosid='';
-							if(results3.rows.length>0){
-								console.log("encuentra impuestos");
-								var cuan=0;
-								for(var r=0;r<results3.rows.length;r++){
-									var imp=results3.rows.item(r);
-									if(cuan>0){
-										impuestos+="@";
-										impuestosid+="@";
-									}
-									impuestos+=parseFloat(imp.porcentaje)/100;
-									impuestosid+=imp.timespan;
-									$('#taxes').append('<input id="impuesto-'+imp.timespan+'" type="text" value="'+imp.id+"|"+imp.nombre+"|"+parseFloat((imp.porcentaje)/100)+'">');
+			console.log(results3);
+			var impuestos='';
+			var impuestosid='';
+			if(results3.rows.length>0){
+				console.log("encuentra impuestos");
+				var cuan=0;
+				for(var r=0;r<results3.rows.length;r++){
+					var imp=results3.rows.item(r);
+					if(cuan>0){
+						impuestos+="@";
+						impuestosid+="@";
+					}
+					impuestos+=parseFloat(imp.porcentaje)/100;
+					impuestosid+=imp.timespan;
+					$('#taxes').append('<input id="impuesto-'+imp.timespan+'" type="text" value="'+imp.id+"|"+imp.nombre+"|"+parseFloat((imp.porcentaje)/100)+'">');
 
-									cuan++;
-								}
-								console.log(impuestos+'/'+impuestosid);
-								$('#impuestosactivos').html(impuestos);
-								$('#impuestosactivosid').html(impuestosid);
+					cuan++;
+				}
+				console.log(impuestos+'/'+impuestosid);
+				$('#impuestosactivos').html(impuestos);
+				$('#impuestosactivosid').html(impuestosid);
 
 				}
 		});
@@ -257,6 +257,7 @@ function agregarCompra(item,origen){
 	//variables facturacion
 	var subtotalSinIva = $('#subtotalSinIva').val();
 	var subtotalIva = $('#subtotalIva').val();
+	var imp_aero=parseFloat(localStorage.getItem('impuesto_aeropuerto'));
 
 	//variables compra
 	var total = 0;
@@ -280,6 +281,7 @@ function agregarCompra(item,origen){
 	var productoImpuestos = $(item).attr('data-impuestos');
 	var productoImpuestosIndexes = $(item).attr('data-impuestosindexes');
 	var productoPrecio = $(item).data('precio');
+	
 	var productoAgregados = $(item).attr('data-modificadores');
 	//alert(productoAgregados);
 	var subtotalSinIvaCompra = 0;
@@ -2165,7 +2167,12 @@ function pagar(){
         		});
             }else{
             //*******************************inicia normal********************************
-			tx.executeSql('SELECT MAX(aux)+1 as max FROM FACTURAS',[],
+			var maxfact="SELECT MAX(aux)+1 as max FROM FACTURAS WHERE paymentConsumoInterno=0";
+			if(localStorage.getItem('pagarconcredito')=='true'){
+				maxfact="SELECT MAX(aux)+1 as max FROM FACTURAS WHERE paymentConsumoInterno>0";
+			}
+
+			tx.executeSql(maxfact,[],
 			function(tx,res){
 				console.log(res);
 				var ceros='';
@@ -2176,8 +2183,14 @@ function pagar(){
 					if(res.rows.item(0).max!=null)
 						max=res.rows.item(0).max;
 					else{
-						if(localStorage.getItem("ultimafact")!=null&&localStorage.getItem("ultimafact")!="")
-							max=parseInt(localStorage.getItem("ultimafact"));
+						if(localStorage.getItem('pagarconcredito')=='true'){
+							if(localStorage.getItem("ultimafactci")!=null&&localStorage.getItem("ultimafactci")!="")
+								max=parseInt(localStorage.getItem("ultimafactci"));
+						}else{
+							if(localStorage.getItem("ultimafact")!=null&&localStorage.getItem("ultimafact")!="")
+								max=parseInt(localStorage.getItem("ultimafact"));
+						}
+						
 					}
 
 					coun=max.toString().length;
@@ -2769,9 +2782,11 @@ function AclararSugerencia(celda,focus){
 	}
 }
 
-function PlaySound(id) {
-  var thissound=document.getElementById("beep1");
-  thissound.play();
+function PlaySound(id){
+	if(localStorage.getItem('sonido')=='true'){
+		var thissound=document.getElementById("beep1");
+		thissound.play();
+	}
 }
 
 function DetalleArriba(){
@@ -4391,8 +4406,7 @@ function VerificarNumero(valor){
 						});
 					});
 				}else{
-//console.log('admitido');
-					
+					//console.log('admitido');
 					var invoicenr=$('#invoiceNr').val();
 					localStorage.setItem('ultimafact',invoicenr);
 					if(parseInt(localStorage.getItem('ultimafact'))>valor){
@@ -4636,6 +4650,8 @@ function VerificarAgregados(btnprod,origen){
 	if(mitimespan.indexOf('busc_')>=0)
 		mitimespan=mitimespan.substring(5);
   //alert(mitimespan+'**'+origen);
+  
+    var miprecioformu=$('#'+mitimespan).attr('data-precio');
 
   if(localStorage.getItem("con_localhost") == 'true'){
        var apiURL='http://'+localStorage.getItem("ip_servidor")+'/connectnubepos/api2.php';
@@ -4809,6 +4825,13 @@ function VerificarAgregados(btnprod,origen){
 				$('#popupModificadores').modal("show");
 
 			}else{
+				
+				var imp_aero=localStorage.getItem('impuesto_aeropuerto');
+				if(imp_aero>0){
+					var precioporcen=(parseFloat(miprecioformu))*(imp_aero/100);
+					$('#'+mitimespan).attr('data-modificadores',"Imp.Aero.|"+precioporcen+"|-1|1");
+				}
+				
 				agregarCompra($(btnprod),origen);
 			}
 		});
@@ -4882,8 +4905,10 @@ function VerificarAgregadosnew(btnprod,origen){
 
 
 function SiguienteModificador(divid,idmod,origen){
-  var idmenudiseno = $('#id_formulado_modificadores').val();
-  //alert(divid+'**'+idmod+'**'+idmenudiseno)
+	var idmenudiseno = $('#id_formulado_modificadores').val();
+	var miprecioformu=$('#'+idmenudiseno).attr('data-precio');
+	var valorotroagreg=0;
+	//alert(divid+'**'+idmod+'**'+idmenudiseno)
 	var div=$('#mod_'+divid);
 	var orden=div.attr("data-orden");
 	var cantidad=1;
@@ -4949,11 +4974,15 @@ function SiguienteModificador(divid,idmod,origen){
 		if(origen==2)
 			dataagreg=$('#busc_'+$('#id_formulado_modificadores').val()).attr("data-modificadores");
 		var agregadoschain="";
+		console.log("tiene"+dataagreg);
 		if(dataagreg!=null&&dataagreg!=''&&dataagreg!='undefined')
 			agregadoschain=dataagreg+"@"+nombrem+"|"+valormas+"|"+valortime+"|"+cantidad;
 		else
 			agregadoschain=nombrem+"|"+valormas+"|"+valortime+"|"+cantidad;
 
+		
+		valorotroagreg+=parseFloat(valormas)*cantidad;
+		
 		//alert(agregadoschain);
 
 		if(origen==2)
@@ -4967,6 +4996,21 @@ function SiguienteModificador(divid,idmod,origen){
 		mitades=false;
 		contadormitades=0;
 
+		//impuesto aeropuerto
+		var imp_aero=localStorage.getItem('impuesto_aeropuerto');
+		if(imp_aero>0){
+			var precioporcen=(parseFloat(miprecioformu)+valorotroagreg)*(imp_aero/100);
+			var micadenachain=$('#'+$('#id_formulado_modificadores').val()).attr("data-modificadores");
+			console.log(micadenachain);
+			if(micadenachain==null||micadenachain==''||micadenachain=='undefined')
+				micadenachain='';
+			else
+				micadenachain+='@';
+			
+			$('#'+$('#id_formulado_modificadores').val()).attr("data-modificadores",micadenachain+"Imp.Aero.|"+precioporcen+"|-1|1");
+		}
+		
+		
 		$( "#inputbuscnew" ).focus();
 		if(origen==2){
 		  if(localStorage.getItem("con_localhost") == 'true'){
@@ -6612,4 +6656,48 @@ function SubtotalesDescuento(){
 	});
 	var newdesc=descuentoconimp/restadescuento;
 	$('#descuentoFacturatrue').val(newdesc.toFixed(3));
+}
+
+function consultarUltima(fp){
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	db.transaction(function (tx){
+		var maxfact="SELECT MAX(aux)+1 as max FROM FACTURAS WHERE paymentConsumoInterno=0";
+		if(fp=='ConsumoI'){
+			maxfact="SELECT MAX(aux)+1 as max FROM FACTURAS WHERE paymentConsumoInterno>0";
+		}
+
+		tx.executeSql(maxfact,[],function(tx,res){
+			console.log(res);
+			var ceros='';
+			var coun=0;
+			var nfact='1';
+			if(res.rows.length>0){
+				var max=1;
+				if(res.rows.item(0).max!=null)
+					max=res.rows.item(0).max;
+				else{
+					if(fp=='ConsumoI'){
+						if(localStorage.getItem("ultimafactci")!=null&&localStorage.getItem("ultimafactci")!="")
+							max=parseInt(localStorage.getItem("ultimafactci"));
+					}else{
+						if(localStorage.getItem("ultimafact")!=null&&localStorage.getItem("ultimafact")!="")
+							max=parseInt(localStorage.getItem("ultimafact"));
+					}
+				}
+				coun=max.toString().length;
+				nfact=max.toString();
+			}
+
+			var ceroscount=0;
+			while(ceroscount<(9-coun)){
+				ceros+='0';
+				ceroscount++;
+			}
+			
+			if(fp=='ConsumoI'){
+				$('#invoiceNr').val(ceros+nfact);
+				$('#invoiceNrComplete').val(establecimiento+'-'+serie+'-'+ceros+nfact);
+			}
+		});
+	},errorCB,successCB);
 }

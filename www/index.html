@@ -806,6 +806,9 @@
 			
 	$( document ).ready(function(){
 			//alert($(window).width());
+			if(localStorage.getItem('sonido')==null){
+				localStorage.setItem('sonido',true);
+			}
 			SyncStart();
 			digitado=false;
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);

@@ -714,6 +714,10 @@
             <td  style='text-align:right;'>Ip Servidor</td>
             <td align='left'><input id='ipservidor' name='ipservidor' class='form-control'/></td>
 		</tr>
+		<tr>
+            <td  style='text-align:right;'>Sonido</td>
+            <td align='left'><input data-size='small' type='checkbox' id='sonido' class='switch'/></td>
+		</tr>
 		</table>
 		<div class='row'>
 			<div class='col-lg-12' style='margin-bottom:35px;'>
@@ -772,6 +776,10 @@
 				<tr>
 					<td  style='text-align:right;' id="trans_label_122">Impuestos Personalizados:</td>
 					<td align='left'><input data-size='small' type='checkbox' id='con_imppersonalizados' class='switch' /></td>
+				</tr>
+				<tr>
+					<td  style='text-align:right;' id="trans_label_122">Impuesto Aeroportuario (%)</td>
+					<td align='left'><input style='text-align:right; max-width:100px;' class='input form-control input-lg' type='number' step='0.01' id='imp_aero' value='0.00' /></td>
 				</tr>
 			</table>
 			<div class='row'>
@@ -1625,7 +1633,7 @@ $(document).ready(function(){
 		$('#tablet_emp').val(localStorage.getItem("empresa"));
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx1){
-				tx1.executeSql("SELECT nombreterminal as c,id_idioma,id_version_nube,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais,mensajefinal,respaldar,pagarconcredito,impuestos_personalizados,ip_servidor from CONFIG where id=1",[],function(tx1,results1){
+				tx1.executeSql("SELECT nombreterminal as c,id_idioma,id_version_nube,sin_documento,con_nombre_orden,con_propina,con_tarjeta,con_shop,con_notasorden,con_comanderas,con_localhost,con_mesas,pais,mensajefinal,respaldar,pagarconcredito,impuestos_personalizados,ip_servidor,impuesto_aeropuerto from CONFIG where id=1",[],function(tx1,results1){
 					if(results1.rows.length>0){
 						if(results1.rows.item(0).c!=''){
 							$('#tablet_name').val(results1.rows.item(0).c);
@@ -1695,6 +1703,10 @@ $(document).ready(function(){
                     			$('#con_imppersonalizados').bootstrapSwitch('state', false);
                     		}
 							
+							if(results1.rows.item(0).impuesto_aeropuerto!=null){
+                                $('#imp_aero').val(results1.rows.item(0).impuesto_aeropuerto);
+                            }
+							
 							//$('#con_mesas').bootstrapSwitch('readonly',true);
 							//$('#con_shop').bootstrapSwitch('readonly',true);
 							
@@ -1760,11 +1772,18 @@ $(document).ready(function(){
         $('#con_pagarconcredito').bootstrapSwitch();
         $('#con_imppersonalizados').bootstrapSwitch();
 		$('#backupinf').bootstrapSwitch();
+		$('#sonido').bootstrapSwitch();
 		$('#printlogo').bootstrapSwitch();
         $('#multitablet').bootstrapSwitch();
         $('#obligado').bootstrapSwitch();
         $('#produccion').bootstrapSwitch();
         $('#activafacturacionelectronica').bootstrapSwitch();
+		
+		if(localStorage.getItem('sonido')=='true'){
+			$('#sonido').bootstrapSwitch('state', true, true);
+		}else{
+			$('#sonido').bootstrapSwitch('state', false, true);
+		}
 
 		if(localStorage.getItem("diseno")==1){
 			$('#tablet_menu').bootstrapSwitch('state', true, true);
@@ -1777,6 +1796,15 @@ $(document).ready(function(){
 			localStorage.setItem("diseno",1);
 		  }else{
 			localStorage.setItem("diseno",0);
+		  }
+		});
+		
+		
+		$('#sonido').on('switchChange.bootstrapSwitch', function(event, state) {
+		  if(state){
+			localStorage.setItem("sonido",true);
+		  }else{
+			localStorage.setItem("sonido",false);
 		  }
 		});
 		
@@ -2305,11 +2333,13 @@ $(document).ready(function(){
                 var con_mesas = $('#con_mesas').bootstrapSwitch('state');
                 var con_pagarconcredito = $('#con_pagarconcredito').bootstrapSwitch('state');
                 var con_imppersonalizados = $('#con_imppersonalizados').bootstrapSwitch('state');
+                var imp_aero = $('#imp_aero').val();
                 localStorage.setItem('con_notas',con_notas);
                 localStorage.setItem('con_comandas',con_comanderas);
                 localStorage.setItem('con_mesas',con_mesas);
                 localStorage.setItem('pagarconcredito',con_pagarconcredito);
                 localStorage.setItem('impuestos_personalizados',con_imppersonalizados);
+                localStorage.setItem('impuesto_aeropuerto',imp_aero);
                 var con_backup = $('#backupinf').bootstrapSwitch('state');
                 var ip_servidor = $('#ipservidor').val();
                 localStorage.setItem("ip_servidor",ip_servidor);
@@ -2317,7 +2347,7 @@ $(document).ready(function(){
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					
-				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=?,respaldar=?,pagarconcredito=?,impuestos_personalizados=?,ip_servidor=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub,con_backup,con_pagarconcredito,con_imppersonalizados,ip_servidor],
+				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=?,respaldar=?,pagarconcredito=?,impuestos_personalizados=?,ip_servidor=?,impuesto_aeropuerto=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub,con_backup,con_pagarconcredito,con_imppersonalizados,ip_servidor,imp_aero],
 				function(tx1,results1){
 					
 					var linklang="es";

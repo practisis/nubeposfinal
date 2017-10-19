@@ -190,6 +190,10 @@
 								if(idForma==4){
 									cash=parseFloat(rowa.vauleCxC);
 								}
+								
+								if(idForma==5){
+									cash=parseFloat(rowa.paymentConsumoInterno);
+								}
 							}
 							strDetalle+=idForma+'@'+nombreForma+'@'+cash+"|";
 						}
@@ -850,6 +854,19 @@ function AnularFactura(){
 				tx3.executeSql('select fetchJson as j from facturas where id=?',[id],function(tx3,results){
 					var mijson=results.rows.item(0).j;
 					mijson=mijson.replace('"anulada" : "false"','"anulada" : "true"');
+					var eljson=JSON.parse(mijson);
+					var concredito=localStorage.getItem("pagarconcredito");
+						if(concredito==null)
+							concredito='false';
+							
+					if(concredito.toString()=='true'){
+						var idcliente=eljson.Pagar[0].cliente.id_cliente;
+						var mitotal=parseFloat(eljson.Pagar[0].factura.total);
+						if(idcliente>0){
+							tx3.executeSql('UPDATE CLIENTES SET cupo=cupo+? where id=?',[mitotal,idcliente],function(tx3,results4){
+							});
+						}
+					}
 					//console.log(mijson);
 					tx3.executeSql('UPDATE FACTURAS SET anulada=?,sincronizar="true",fetchJson=? where id=?',[1,mijson,id],function(tx3,results3){
 						console.log(results3);

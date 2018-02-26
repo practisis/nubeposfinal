@@ -3,7 +3,7 @@ var campos=new Array();
 campos["PRODUCTOS"]=['id_local|integer primary key AUTOINCREMENT','id|integer','formulado|text','codigo|text','precio|real','categoriaid|text','cargaiva|integer','productofinal|integer','materiaprima|integer','timespan|text UNIQUE','ppq|real default 0','color|text','servicio|integer default 0','estado|integer default 1','sincronizar|boolean default "true"','tieneimpuestos|boolean default "true"'];
 
 
-campos["CONFIG"]=['id|integer primary key AUTOINCREMENT','nombre|text, razon|text','ruc|integer','telefono|integer','email|text','direccion|text','printer|text','serie|text default "001"','establecimiento|text default "001"','sincronizar|boolean default "false"','encabezado|integer default 3','largo|integer default 18','nombreterminal|text default "Tablet 1"','pais|text default ""','id_idioma|integer default 1','sin_documento|boolean default "false"','con_nombre_orden|boolean default "false"','con_propina|boolean default "false"','con_tarjeta|boolean default "false"','con_shop|boolean default "false"','con_notasorden|boolean default "true"',' con_comanderas|boolean default "true"','printercom|text default ""',' con_localhost|boolean default "true"','ip_servidor|text default ""','con_mesas|boolean default "true"','logo|text default ""','id_version_nube|integer default 0','pide_telefono|boolean default "false"','telefono_inte|text default ""','mensajefinal|text default ""','paquete|integer default 1','terminos_condiciones|boolean default "true"','id_locales|integer default 0','key|text default ""','numero_contribuyente|integer default 0','obligado_contabilidad|boolean default "false"','prueba_produccion|boolean default "true"','tiene_factura_electronica|boolean default "false"','email_fact|text default ""','mensaje_factura|text default ""','respaldar|boolean default "false"','marcaprint|text default ""','modelprint|text default ""','addressprint|text default ""','typeprint|text default ""','ruc2|text default ""','pagarconcredito|boolean default "false"','preimpresas|boolean default "false"','marcaprintc|text default ""','modelprintc|text default ""','addressprintc|text default ""','typeprintc|text default ""','impuestos_personalizados|boolean default "false"','impuesto_aeropuerto|real default 0'];
+campos["CONFIG"]=['id|integer primary key AUTOINCREMENT','nombre|text, razon|text','ruc|integer','telefono|integer','email|text','direccion|text','printer|text','serie|text default "001"','establecimiento|text default "001"','sincronizar|boolean default "false"','encabezado|integer default 3','largo|integer default 18','nombreterminal|text default "Tablet 1"','pais|text default ""','id_idioma|integer default 1','sin_documento|boolean default "false"','con_nombre_orden|boolean default "false"','con_propina|boolean default "false"','con_tarjeta|boolean default "false"','con_shop|boolean default "false"','con_notasorden|boolean default "true"',' con_comanderas|boolean default "true"','printercom|text default ""',' con_localhost|boolean default "true"','ip_servidor|text default ""','con_mesas|boolean default "true"','logo|text default ""','id_version_nube|integer default 0','pide_telefono|boolean default "false"','telefono_inte|text default ""','mensajefinal|text default ""','paquete|integer default 1','terminos_condiciones|boolean default "true"','id_locales|integer default 0','key|text default ""','numero_contribuyente|integer default 0','obligado_contabilidad|boolean default "false"','prueba_produccion|boolean default "true"','tiene_factura_electronica|boolean default "false"','email_fact|text default ""','mensaje_factura|text default ""','respaldar|boolean default "false"','marcaprint|text default ""','modelprint|text default ""','addressprint|text default ""','typeprint|text default ""','ruc2|text default ""','pagarconcredito|boolean default "false"','preimpresas|boolean default "false"','marcaprintc|text default ""','modelprintc|text default ""','addressprintc|text default ""','typeprintc|text default ""','impuestos_personalizados|boolean default "false"','impuesto_aeropuerto|real default 0','multiple_iva|boolean default "false"'];
 
 campos["LOGACTIONS"]=['id|integer primary key AUTOINCREMENT','time|numeric','descripcion|text','datos|text'];
 
@@ -38,6 +38,10 @@ campos["MESAS_DATOS"]=['id|integer primary key AUTOINCREMENT','id_mesa|text defa
 campos["MESAS_CONSUMOS"]=['id|integer primary key AUTOINCREMENT','id_mesa|text default ""','details|text default ""','agregados|text default ""','notas|text default ""','hora|integer default 0','id_real|integer default 0'];
 
 campos["LOCALES"]=['id|integer primary key AUTOINCREMENT','local|text default ""','activo|boolean default "true"','timespan|text default "" UNIQUE'];
+
+campos["PRODUCTOS_IMPUESTOS"]=['id|integer primary key AUTOINCREMENT','id_producto|integer default 0','id_impuesto|integer default 0','activo|boolean default "FALSE"','timespan|text default "" UNIQUE','sincronizar|boolean default "FALSE"'];
+
+campos["IMPUESTOS_REALES"]=['id|integer primary key AUTOINCREMENT','nombre|text default ""','valor|real default 0','activo|boolean default "FALSE"','timespan|text default "" UNIQUE'];
 
 
 function VerificarConexion(){
@@ -188,7 +192,15 @@ var app = {
     function onDeviceReady(){
 		
 		//alert("device Ready>>" + device.uuid);
-		//$('#deviceid').html(device.uuid);
+		if(device){
+			alert('device ready'+device+'//'+$('#deviceid').html());
+				var uuid = device.uuid;
+				id_barra=uuid;
+				var model=device.model;
+				$('#deviceid').html(uuid);
+				$('#devicemodel').html(model);
+		}
+			
 		//setInterval(function(){updateOnlineStatus()},60000);
 		
 		$.ajaxSetup({
@@ -344,7 +356,7 @@ var app = {
 
 		VerificarCampos('PRODUCTOS');
 
-		tx.executeSql('CREATE TABLE IF NOT EXISTS CONFIG (id integer primary key AUTOINCREMENT, nombre text, razon text , ruc integer, telefono integer , email text , direccion text, printer text,serie text default "001",establecimiento text default "001",sincronizar boolean default "false",encabezado integer default 3,largo integer default 18, nombreterminal text default "Tablet 1",pais text default "",id_idioma integer default 1,sin_documento boolean default "false",con_nombre_orden boolean default "false",con_propina boolean default "false",con_tarjeta boolean default "false",con_shop boolean default "false",con_notasorden boolean default "true", con_comanderas boolean default "true", printercom text default "", con_localhost boolean default "true",ip_servidor text default "",con_mesas boolean default "false",logo text default "",id_version_nube integer default 0,pide_telefono boolean default "false",telefono_inte text default "",mensajefinal text default "",paquete integer default 1,terminos_condiciones boolean default "true",id_locales integer default 0,key text default "",numero_contribuyente integer default 0,obligado_contabilidad boolean default "false",prueba_produccion boolean default "true",tiene_factura_electronica boolean default "false",email_fact text default "",mensaje_factura text default "",respaldar boolean default "false",marcaprint text default "",modelprint text default "",addressprint text default "",typeprint text default "", ruc2 text default "", pagarconcredito boolean default "false",preimpresas boolean default "false",marcaprintc text default "",modelprintc text default "",addressprintc text default "",typeprintc text default "",impuestos_personalizados boolean default "false",impuesto_aeropuerto real default 0)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS CONFIG (id integer primary key AUTOINCREMENT, nombre text, razon text , ruc integer, telefono integer , email text , direccion text, printer text,serie text default "001",establecimiento text default "001",sincronizar boolean default "false",encabezado integer default 3,largo integer default 18, nombreterminal text default "Tablet 1",pais text default "",id_idioma integer default 1,sin_documento boolean default "false",con_nombre_orden boolean default "false",con_propina boolean default "false",con_tarjeta boolean default "false",con_shop boolean default "false",con_notasorden boolean default "true", con_comanderas boolean default "true", printercom text default "", con_localhost boolean default "true",ip_servidor text default "",con_mesas boolean default "false",logo text default "",id_version_nube integer default 0,pide_telefono boolean default "false",telefono_inte text default "",mensajefinal text default "",paquete integer default 1,terminos_condiciones boolean default "true",id_locales integer default 0,key text default "",numero_contribuyente integer default 0,obligado_contabilidad boolean default "false",prueba_produccion boolean default "true",tiene_factura_electronica boolean default "false",email_fact text default "",mensaje_factura text default "",respaldar boolean default "false",marcaprint text default "",modelprint text default "",addressprint text default "",typeprint text default "", ruc2 text default "", pagarconcredito boolean default "false",preimpresas boolean default "false",marcaprintc text default "",modelprintc text default "",addressprintc text default "",typeprintc text default "",impuestos_personalizados boolean default "false",impuesto_aeropuerto real default 0,multiple_iva boolean default "false")');
 
 		VerificarCampos('CONFIG');
 		
@@ -471,10 +483,20 @@ var app = {
         tx.executeSql('CREATE TABLE IF NOT EXISTS LOCALES (id integer primary key AUTOINCREMENT, local text default "",activo boolean default "true",timespan text default "" UNIQUE);');
 
 		VerificarCampos('LOCALES');
+		
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS PRODUCTOS_IMPUESTOS (id integer primary key AUTOINCREMENT,id_producto integer default 0,id_impuesto integer default 0,activo boolean default "TRUE",timespan text default "" UNIQUE,sincronizar boolean default "FALSE");');
 
+		VerificarCampos('PRODUCTOS_IMPUESTOS');
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS IMPUESTOS_REALES (id integer primary key AUTOINCREMENT,nombre text default "",valor real default 0,activo boolean default "FALSE",timespan text default "" UNIQUE);');
+
+		VerificarCampos('IMPUESTOS_REALES');
+		
 	}
 
 	function VerificarCampos(tabla){
+		//alert("entra a "+tabla);
 		
 		//console.log(tabla+"aNA");
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -666,6 +688,7 @@ var app = {
 		if(row.servicio==1)
         $('#conservicio').prop('checked',true);
     });
+	
 	/*tx.executeSql("SELECT * FROM IMPUESTOS WHERE ACTIVO=?",["true"],function(tx,res1){
 		if(res1.rows.length>0){
 			var cadenaaplica='';

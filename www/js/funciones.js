@@ -33,10 +33,18 @@ function ActivarCategoria(cual,categoria){
 		$('#taxes').html('');
 		var sqlimp="SELECT * FROM IMPUESTOS WHERE activo=? group by nombre order by id";
 		var sinserv=localStorage.getItem('impuestos_personalizados');
-		console.log(sinserv+"/"+localStorage.getItem('noservicio'));
-		if(sinserv=='true'&&localStorage.getItem('noservicio')=='true'){
-			sqlimp="SELECT * FROM IMPUESTOS WHERE activo=? and nombre not like 'servicio' group by nombre order by id";
+		if(localStorage.getItem('multiple_iva')=='true'){
+			sqlimp="SELECT id,nombre,valor as porcentaje,timespan FROM IMPUESTOS_REALES WHERE activo=? order by id";
+			if(sinserv=='true'&&localStorage.getItem('noservicio')=='true'){
+				sqlimp="SELECT id,nombre,valor as porcentaje,timespan FROM IMPUESTOS_REALES WHERE activo=? and nombre not like 'servicio' order by id";
+			}
+		}else{
+			console.log(sinserv+"/"+localStorage.getItem('noservicio'));
+			if(sinserv=='true'&&localStorage.getItem('noservicio')=='true'){
+				sqlimp="SELECT * FROM IMPUESTOS WHERE activo=? and nombre not like 'servicio' group by nombre order by id";
+			}
 		}
+		
 		
 		tx.executeSql(sqlimp,["true"],function(tx,results3){
 			console.log(results3);
@@ -51,17 +59,24 @@ function ActivarCategoria(cual,categoria){
 						impuestos+="@";
 						impuestosid+="@";
 					}
-					impuestos+=parseFloat(imp.porcentaje)/100;
+					if(localStorage.getItem('multiple_iva')=='true'){
+						impuestos+=parseFloat(imp.porcentaje);
+					}else{
+						impuestos+=parseFloat(imp.porcentaje)/100;
+					}
+						
 					impuestosid+=imp.timespan;
-					$('#taxes').append('<input id="impuesto-'+imp.timespan+'" type="text" value="'+imp.id+"|"+imp.nombre+"|"+parseFloat((imp.porcentaje)/100)+'">');
-
+					var porcen=parseFloat(imp.porcentaje)/100;
+					if(localStorage.getItem('multiple_iva')=='true')
+						porcen=parseFloat(imp.porcentaje);
+					
+					$('#taxes').append('<input id="impuesto-'+imp.timespan+'" type="text" value="'+imp.id+"|"+imp.nombre+"|"+porcen+'">');
 					cuan++;
 				}
 				console.log(impuestos+'/'+impuestosid);
 				$('#impuestosactivos').html(impuestos);
 				$('#impuestosactivosid').html(impuestosid);
-
-				}
+			}
 		});
 
 		tx.executeSql('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc',[],function(tx,res){
@@ -72,16 +87,27 @@ function ActivarCategoria(cual,categoria){
 					var impuestos='';
 					var impuestosid='';
 					var row=res.rows.item(m);
+					console.log("ana entra"+row.timespan);
 					if(isNaN(row.precio)){row.precio = 0;}
-					if(row.tieneimpuestos=="true"){
-						impuestos=$('#impuestosactivos').html();
-						impuestosid=$('#impuestosactivosid').html();
-					}
+					if(localStorage.getItem('multiple_iva')=='true'){
+						var fin=1;
+						if(m<(res.rows.length-1))
+							fin=0;
+						
+						ColocarProducto(row,fin);
+					}else{
+						if(row.tieneimpuestos=="true"){
+							impuestos=$('#impuestosactivos').html();
+							impuestosid=$('#impuestosactivosid').html();
+						}
+						
 						var lineHeight='';
 						if(row.formulado.length>12)
 							lineHeight='line-height:18px;';
 
 						$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.categoriaid +'">'+ row.formulado +'</div>');
+					}
+						
 
 					/*if(row.cargaiva==1){
 						impuestos+='0.12';
@@ -96,6 +122,7 @@ function ActivarCategoria(cual,categoria){
 						impuestosid+='2';
 					}*/
 				}
+				
 				if($(window).width()>900){
 						Init31();
 					}
@@ -328,8 +355,10 @@ function agregarCompra(item,origen){
 	if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
 		if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
 			$.each(productoImpuestosIndexes.split('@'), function(index,value){
+				console.log("Ana"+value);
 				if(value!=idimpservicio){
-					if(productoImpuestosIndexes.indexOf(parseInt($('#idiva').html())) !== -1){
+					var mival=$('#impuesto-'+value).val();
+					if(mival.toLowerCase().indexOf('iva')>=-1){
 						subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
 						}
 					else{
@@ -356,7 +385,9 @@ function agregarCompra(item,origen){
 				});
 			}
 		else{
-			productoImpuestosIndexes == parseInt($('#idiva').html()) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+			console.log("Ana"+productoImpuestosIndexes);
+			var mival=$('#impuesto-'+productoImpuestosIndexes).val();
+			mival.toLowerCase().indexOf('iva')>=0 ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
               //alert($('#impuestoFactura-'+productoImpuestosIndexes)+'**'+productoImpuestosIndexes);
 			if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
 				var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
@@ -633,7 +664,8 @@ function agregarCompraLocal(item,idmenudiseno){
                 	if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
                 		if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
                 			$.each(productoImpuestosIndexes.split('@'), function(index,value){
-                				if(productoImpuestosIndexes.indexOf(parseInt($('#idiva').html())) !== -1){
+								var mival=$('#impuesto-'+value).val();
+                				if(mival.toLowerCase().indexOf('iva') !== -1){
                 					subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
                 					}
                 				else{
@@ -659,7 +691,9 @@ function agregarCompraLocal(item,idmenudiseno){
                 				});
                 			}
                 		else{
-                			productoImpuestosIndexes == parseInt($('#idiva').html()) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+							
+							var mival=$('#impuesto-'+value).val();
+                			mival.toLowerCase().indexOf('iva')>=0 ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
                               //alert($('#impuestoFactura-'+productoImpuestosIndexes)+'**'+productoImpuestosIndexes);
                 			if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
                 				var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
@@ -916,7 +950,9 @@ function agregarCompranew(item,origen){
 	if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
 		if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
 			$.each(productoImpuestosIndexes.split('@'), function(index,value){
-				if(productoImpuestosIndexes.indexOf(parseInt($('#idiva').html())) !== -1){
+				console.log("Ana"+value);
+				var mival=$('#impuesto-'+value).val();
+				if(mival.toLowerCase().indexOf('iva')!== -1){
 					subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
 					}
 				else{
@@ -942,7 +978,8 @@ function agregarCompranew(item,origen){
 				});
 			}
 		else{
-			productoImpuestosIndexes == parseInt($('#idiva').html()) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+			var mival=$('#impuesto-'+productoImpuestosIndexes).val();
+			mival.toLowerCase().indexOf('iva')>=0? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
 
 			if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
 				var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
@@ -1458,6 +1495,7 @@ function cambiarCantidad(){
       var servnew=0;
       var impgenerales=new Array();
       $('.productDetails').each(function(){
+		console.log('entra al each');
       	var datosimp=$(this).val().split('|');
       	var newsumaagregados=parseFloat(datosimp[8]);
       	var vectorimp=datosimp[7].split('@');
@@ -1483,17 +1521,26 @@ function cambiarCantidad(){
 				}
       		}
       	}
-
-
-      	if(datosimp[7].indexOf($('#idiva').html())>=0&&$('#idiva').html()!=''){
-      		subconivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
-      		var datosp=$('#impuesto-'+$('#idiva').html()).val().split('|');
-      		var porcentiva=parseFloat(datosp[2]);
-      		ivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcentiva;
-      	}
-      	else{
-      		subsinivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
-      	}
+		
+		console.log("ana"+datosimp);
+		if(datosimp[7]!=''){
+			var imps=datosimp[7].split('@');
+			for(var m in imps){
+				var mival=$('#impuesto-'+imps[m]).val();
+				if(mival.toLowerCase().indexOf('iva')>=0){
+					subconivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
+					var datosp=$('#impuesto-'+imps[m]).val().split('|');
+					var porcentiva=parseFloat(datosp[2]);
+					ivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcentiva;
+				}
+				else{
+					subsinivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
+				}
+			}
+		}else{
+			subsinivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
+		}
+		
 
       	//para servicio
       	//if(datosimp[7].indexOf('2')>=0){
@@ -1538,6 +1585,13 @@ function cambiarCantidad(){
 	var tdhtml=$('#cant_'+identificadorTr+' td')[2];
 	var htmlprod=$(tdhtml).html();
     //alert(htmlprod)
+	
+	var antesimp='';
+	var antesimpid='';
+	if(localStorage.getItem('multiple_iva')=='true'){
+		antesimp=$(tdagregados).attr("data-borrarimpuesto");
+		antesimpid=$(tdagregados).attr("data-borrarimpuestoindexes");
+	}
 
 	$('#cant_'+identificadorTr).remove();
 
@@ -1571,19 +1625,30 @@ function cambiarCantidad(){
 						var productoImpuestosIndexes ='';
 						var productoImpuestos='';
 						var productomas=1;
-						if(row.tieneimpuestos=="true"){
-							productoImpuestos=$('#impuestosactivos').html();
-							productoImpuestosIndexes=$('#impuestosactivosid').html();
-							var porcentajes=productoImpuestos.split('@');
-							var ides=productoImpuestosIndexes.split('@');
-							var conti=0;
-							for(var l in porcentajes){
-								//aqui cambio porcentajes para no tomar en cuenta el servicio
-								if(idimpservicio!=ides[conti]){
-									if(porcentajes[l]!=null&&porcentajes[l]!=""&&porcentajes[l]!='undefined')
-									productomas+=parseFloat(porcentajes[l]);
+						if(localStorage.getItem('multiple_iva')!='true'){
+							if(row.tieneimpuestos=="true"){
+								productoImpuestos=$('#impuestosactivos').html();
+								productoImpuestosIndexes=$('#impuestosactivosid').html();
+								var porcentajes=productoImpuestos.split('@');
+								var ides=productoImpuestosIndexes.split('@');
+								var conti=0;
+								for(var l in porcentajes){
+									//aqui cambio porcentajes para no tomar en cuenta el servicio
+									if(idimpservicio!=ides[conti]){
+										if(porcentajes[l]!=null&&porcentajes[l]!=""&&porcentajes[l]!='undefined')
+										productomas+=parseFloat(porcentajes[l]);
+									}
+									conti++;
 								}
-								conti++;
+							}
+						}else{
+							productoImpuestos=antesimp;
+							productoImpuestosIndexes=antesimpid;
+							if(productoImpuestos!=''){
+								var pi=productoImpuestos.split('@');
+								for(var t in pi){
+									productomas+=parseFloat(pi[t]);
+								}
 							}
 						}
 
@@ -1762,15 +1827,22 @@ function cambiarCantidad(){
 									}
 								}
 							}
-
-
-							if(datosimp[7].indexOf($('#idiva').html())>=0&&$('#idiva').html()!=''){
-								subconivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
-								var datosp=$('#impuesto-'+$('#idiva').html()).val().split('|');
-								var porcentiva=parseFloat(datosp[2]);
-								ivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcentiva;
-							}
-							else{
+							
+							if(datosimp[7]!=''){
+								var imps=datosimp[7].split('@');
+								for(var m in imps){
+									var mival=$('#impuesto-'+imps[m]).val();
+									if(mival.toLowerCase().indexOf('iva')>=0){
+										subconivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
+										var datosp=$('#impuesto-'+imps[m]).val().split('|');
+										var porcentiva=parseFloat(datosp[2]);
+										ivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcentiva;
+									}
+									else{
+										subsinivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
+									}
+								}
+							}else{
 								subsinivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
 							}
 
@@ -1823,6 +1895,7 @@ function cambiarCantidad(){
   		});
 
         }else{
+					console.log(productomas);
                         var productoPrecio = row.precio;
                         //alert(row.precio+'**'+sumaagregados+'**'+productoCantidad+'**'+productomas)
 						var total = (((parseFloat(productoPrecio)+sumaagregados) * parseFloat(productoCantidad))*parseFloat(productomas));
@@ -1959,14 +2032,21 @@ function cambiarCantidad(){
 								}
 							}
 
-
-							if(datosimp[7].indexOf($('#idiva').html())>=0&&$('#idiva').html()!=''){
-								subconivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
-								var datosp=$('#impuesto-'+$('#idiva').html()).val().split('|');
-								var porcentiva=parseFloat(datosp[2]);
-								ivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcentiva;
-							}
-							else{
+							if(datosimp[7]!=''){
+								var imps=datosimp[7].split('@');
+								for(var m in imps){
+									var mival=$('#impuesto-'+imps[m]).val();
+									if(mival.toLowerCase().indexOf('iva')>=0){
+										subconivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
+										var datosp=$('#impuesto-'+imps[m]).val().split('|');
+										var porcentiva=parseFloat(datosp[2]);
+										ivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2])*porcentiva;
+									}
+									else{
+										subsinivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
+									}
+								}
+							}else{
 								subsinivanew+=(parseFloat(datosimp[3])+newsumaagregados)*parseFloat(datosimp[2]);
 							}
 
@@ -2276,15 +2356,24 @@ function pagar(){
 		idimpuestos += getId+'@';
 		if(getId==parseInt($('#idiva').html()))
 			ivavalor=$(this).val();
-
-        if(dataimpuestos.indexOf(getName) == -1){
+		var ponle=0;
+		if(localStorage.getItem('multiple_iva')=='true'){
+			ponle=1;
+		}else{
+			if(dataimpuestos.indexOf(getName) == -1){
+				ponle=1;
+			}
+		}
+        
+		if(ponle==1){
           if(c>0){
 			dataimpuestos+="@";
 		  }
           //alert('si');
           dataimpuestos+=getId+"|"+getName+"|"+getValue+"|"+$(this).val();
           c++;
-        }
+		}
+        
 	});
 
 	idimpuestos = idimpuestos.substring(0,idimpuestos.length -1);
@@ -2339,6 +2428,7 @@ function pagar(){
 			json += '"precio_orig" : "'+ splitDetails[3] +'",';
 			json += '"precio_prod" : "'+ splitDetails[4] +'",';
 			json += '"impuesto_prod" : "'+ splitDetails[7] +'",';
+			json += '"impuesto_prod_porcen" : "'+ splitDetails[5] +'",';
 			json += '"precio_total" : "'+ splitDetails[6] +'",';
 			json += '"precio_descuento_justificacion" : "",';
 			json += '"agregados" : "'+splitDetails[8]+'",';
@@ -2597,8 +2687,8 @@ function borrarCompra(item){
 	if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
 		if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
 			$.each(productoImpuestosIndexes.split('@'), function(index,value){
-
-				if(productoImpuestosIndexes.indexOf(idiva) !== -1){
+				var mival=$('#impuesto-'+value).val();
+				if(mival.toLowerCase().indexOf('iva') !== -1){
 					subtotalIvaCompra = (parseFloat(productoCantidad) *(parseFloat(productoPrecio)+parseFloat(productoAgregados)));
 					}
 				else{
@@ -2614,7 +2704,8 @@ function borrarCompra(item){
 				});
 			}
 		else{
-			productoImpuestosIndexes == parseInt(idiva) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados))) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)));
+			var mival=$('#impuesto-'+value).val();
+			productoImpuestosIndexes.toLowerCase().indexOf('iva')>=0 ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados))) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)));
 
 			var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
 			var currentTax = $('#impuestoFactura-'+ productoImpuestosIndexes).val();
@@ -3716,7 +3807,11 @@ function Ready(){
 
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function(tx){
-		tx.executeSql('SELECT * FROM IMPUESTOS',[],function(tx,results){
+		var sqli='SELECT * FROM IMPUESTOS';
+		if(localStorage.getItem('multiple_iva')=='true')
+			sqli='SELECT id,nombre,valor as porcentaje,activo,timespan FROM IMPUESTOS_REALES';
+		
+		tx.executeSql(sqli,[],function(tx,results){
 			for(var r=0;r<results.rows.length;r++){
 				var itemi=results.rows.item(r);
 				if($.trim(itemi.nombre.toLowerCase())=='iva')
@@ -3726,9 +3821,13 @@ function Ready(){
 				
 				if($('#impuesto-'+itemi.timespan).length==0){
 				    //alert('<input id="impuesto-'+itemi.timespan+'" type="text" value="'+itemi.timespan+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100)+'">');
-					$('#taxes').append('<input id="impuesto-'+itemi.timespan+'" type="text" value="'+itemi.timespan+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100)+'">');
+					var porc=parseFloat((itemi.porcentaje)/100);
+					if(localStorage.getItem('multiple_iva')=='true')
+						porc=parseFloat(itemi.porcentaje);
+						
+					$('#taxes').append('<input id="impuesto-'+itemi.timespan+'" type="text" value="'+itemi.timespan+"|"+itemi.nombre+"|"+porc+'">');
 				}else{
-					$("impuesto-"+itemi.timespan).val(itemi.timespan+"|"+itemi.nombre+"|"+parseFloat((itemi.porcentaje)/100))
+					$("impuesto-"+itemi.timespan).val(itemi.timespan+"|"+itemi.nombre+"|"+porc)
 				}
 			}
 		});
@@ -4829,7 +4928,7 @@ function VerificarAgregados(btnprod,origen){
 				var imp_aero=localStorage.getItem('impuesto_aeropuerto');
 				if(imp_aero>0){
 					var precioporcen=(parseFloat(miprecioformu))*(imp_aero/100);
-					$('#'+mitimespan).attr('data-modificadores',"Imp.Aero.|"+precioporcen+"|-1|1");
+					$('#'+mitimespan).attr('data-modificadores',"FEES SERVICIOS POR CATERING|"+precioporcen+"|-1|1");
 				}
 				
 				agregarCompra($(btnprod),origen);
@@ -5007,7 +5106,7 @@ function SiguienteModificador(divid,idmod,origen){
 			else
 				micadenachain+='@';
 			
-			$('#'+$('#id_formulado_modificadores').val()).attr("data-modificadores",micadenachain+"Imp.Aero.|"+precioporcen+"|-1|1");
+			$('#'+$('#id_formulado_modificadores').val()).attr("data-modificadores",micadenachain+"FEES SERVICIOS POR CATERING|"+precioporcen+"|-1|1");
 		}
 		
 		
@@ -5618,12 +5717,12 @@ function VerConsumos(idmesa){
 
     					if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
     						$.each(productoImpuestosIndexes.split('@'), function(index,value){
-    							if(productoImpuestosIndexes.indexOf(parseInt($('#idiva').html())) !== -1){
+								var mival=$('#impuesto-'+value).val();
+    							if(mival.toLowerCase().indexOf('iva')!== -1){
     								subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
-    								}
-    							else{
+    							}else{
     								subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
-    								}
+    							}
 
     							if($('#impuestoFactura-'+ value).length == 0){
 
@@ -5644,7 +5743,8 @@ function VerConsumos(idmesa){
     							});
     						}
     					else{
-    						productoImpuestosIndexes == parseInt($('#idiva').html()) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+							var mival=$('#impuesto-'+productoImpuestosIndexes).val();
+    						mival.toLowerCase().indexOf('iva')>=0 ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
     						if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
     							var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
     							taxTotal+= ((parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) * parseFloat(impuestoDetalles[2]));
@@ -5847,7 +5947,8 @@ function VerConsumos(idmesa){
 				if($.trim(productoImpuestosIndexes) != '' && $.trim(productoImpuestosIndexes) != 0){
 					if($.trim(productoImpuestosIndexes).indexOf('@') !== -1){
 						$.each(productoImpuestosIndexes.split('@'), function(index,value){
-							if(productoImpuestosIndexes.indexOf(parseInt($('#idiva').html())) !== -1){
+							var mival=$('#impuesto-'+value).val();
+							if(mival.toLowerCase().indexOf('iva')!== -1){
 								subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
 								}
 							else{
@@ -5873,7 +5974,8 @@ function VerConsumos(idmesa){
 							});
 						}
 					else{
-						productoImpuestosIndexes == parseInt($('#idiva').html()) ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
+						var mival=$('#impuesto-'+productoImpuestosIndexes).val();
+						mival.toLowerCase().indexOf('iva') >=0? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados)) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+sumaagregados));
 
 						if($('#impuestoFactura-'+productoImpuestosIndexes).length == 0){
 							var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
@@ -6098,6 +6200,7 @@ function SaveMesa(){
 				json += '"precio_orig" : "'+ splitDetails[3] +'",';
 				json += '"precio_prod" : "'+ splitDetails[4] +'",';
 				json += '"impuesto_prod" : "'+ splitDetails[7] +'",';
+				json += '"impuesto_prod_porcen" : "'+ splitDetails[5] +'",';
 				json += '"precio_total" : "'+ splitDetails[6] +'",';
 				json += '"precio_descuento_justificacion" : "",';
 				json += '"agregados" : "'+splitDetails[8]+'",';
@@ -6201,6 +6304,7 @@ function  ImprimirPrecuenta(){
 				json += '"precio_orig" : "'+ splitDetails[3] +'",';
 				json += '"precio_prod" : "'+ splitDetails[4] +'",';
 				json += '"impuesto_prod" : "'+ splitDetails[7] +'",';
+				json += '"impuesto_prod_porcen" : "'+ splitDetails[5] +'",';
 				json += '"precio_total" : "'+ splitDetails[6] +'",';
 				json += '"precio_descuento_justificacion" : "",';
 				json += '"agregados" : "'+splitDetails[8]+'",';
@@ -6439,6 +6543,7 @@ function SaveMesaLocal(){
 				json += '"precio_orig" : "'+ splitDetails[3] +'",';
 				json += '"precio_prod" : "'+ splitDetails[4] +'",';
 				json += '"impuesto_prod" : "'+ splitDetails[7] +'",';
+				json += '"impuesto_prod_porcen" : "'+ splitDetails[5] +'",';
 				json += '"precio_total" : "'+ splitDetails[6] +'",';
 				json += '"precio_descuento_justificacion" : "",';
 				json += '"agregados" : "'+splitDetails[8]+'",';
@@ -6696,8 +6801,50 @@ function consultarUltima(fp){
 			
 			if(fp=='ConsumoI'){
 				$('#invoiceNr').val(ceros+nfact);
-				$('#invoiceNrComplete').val(establecimiento+'-'+serie+'-'+ceros+nfact);
+				$('#invoiceNrComplete').val($('#seriesfact').html()+ceros+nfact);
 			}
+		});
+	},errorCB,successCB);
+}
+
+function ColocarProducto(row,fin){
+	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+	var impuestos='';
+	var impuestosid='';
+	db.transaction(function(tx4){
+		tx4.executeSql('SELECT id_impuesto,valor,i.timespan FROM impuestos_reales i,productos_impuestos p where p.id_producto=? and i.activo=? and p.id_impuesto=i.id',[row.timespan,'true'],function(tx4,res4){
+			console.log(res4);
+			console.log(row.timespan);
+			if(res4.rows.length>0){
+				var cuan=0;
+				for(var r=0;r<res4.rows.length;r++){
+					var imp=res4.rows.item(r);
+					if(cuan>0){
+						impuestos+="@";
+						impuestosid+="@";
+					}
+					impuestos+=parseFloat(imp.valor);
+					impuestosid+=imp.timespan;
+					cuan++;
+				}
+			}
+				
+				var lineHeight='';
+				if(row.formulado.length>12)
+					lineHeight='line-height:18px;';
+
+				$('#listaProductos').append('<div style="background-color:'+row.color+'; border:1px solid '+row.color+'; '+lineHeight+' text-transform:capitalize; " id="'+ row.timespan+'" data-precio="'+ row.precio +'" data-impuestos="'+impuestos +'" data-impuestosindexes="'+impuestosid +'" data-id_local = "'+row.id_local+'" data-formulado="'+ row.formulado +'" onclick="VerificarAgregados(this); return false;" ontap="VerificarAgregados(this); return false;" class="producto btn btn-lg btn-primary categoria_producto_'+row.categoriaid +'">'+ row.formulado +'</div>');
+				
+				if(fin==1){
+					if($(window).width()>900){
+						Init31();
+					}
+					else{
+						Init3();
+					}
+					$('#listaProductos').css("display","");
+				}
+				
 		});
 	},errorCB,successCB);
 }

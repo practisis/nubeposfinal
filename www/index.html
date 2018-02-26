@@ -413,6 +413,8 @@
 		<div id="JSONModifNube" style="color:red;display:none;"></div>
 		<div id="JSONPropinasNube" style="color:red;display:none;"></div>
         <div id="JSONLocales" style="color:red;display:none;"></div>
+        <div id="JSONFormuladosImpuestos" style="color:red;display:none;"></div>
+        <div id="JSONImpuestosReales" style="color:red;display:none;"></div>
 		<div id="impuestosactivos" style="color:red;display:none;"></div>
 		<div id="impuestosactivosid" style="color:red;display:none;"></div>
 		<div id="taxes" style="display: none;"></div>
@@ -796,16 +798,26 @@
 			}
 			
 			document.addEventListener("deviceready", function(){
+				onDeviceReady();
+				/*console.log('device ready');
 				var uuid = device.uuid;
 				id_barra=uuid;
 				var model=device.model;
 				$('#deviceid').html(uuid);
-				$('#devicemodel').html(model);
+				$('#devicemodel').html(model);*/
 			});
 			
 			
 	$( document ).ready(function(){
 			//alert($(window).width());
+			alert('document ready'+$('#deviceid').html()+'//'+device);
+			if(device){
+				var uuid = device.uuid;
+				id_barra=uuid;
+				var model=device.model;
+				$('#deviceid').html(uuid);
+				$('#devicemodel').html(model);
+			}
 			if(localStorage.getItem('sonido')==null){
 				localStorage.setItem('sonido',true);
 			}

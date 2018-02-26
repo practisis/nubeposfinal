@@ -783,15 +783,16 @@ public class StarIOAdapter extends CordovaPlugin {
 					Bitmap bm =BitmapFactory.decodeFile("/data/data/com.practisis.practipos/files//"+logo);
 					
 					StarBitmap starbitmap = new StarBitmap(bm, false, maxWidth);
-
-					if (rasterType == RasterCommand.Standard) {
-						list.add(rasterDoc.BeginDocumentCommandData());
-						list.add(starbitmap.getImageRasterDataForPrinting_Standard(compressionEnable));
-						list.add(rasterDoc.EndDocumentCommandData());
-						
-					} else {
-						list.add(starbitmap.getImageRasterDataForPrinting_graphic(compressionEnable));
-						//list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Feed to cutter position
+					if(starbitmap!=null){
+						if (rasterType == RasterCommand.Standard) {
+							list.add(rasterDoc.BeginDocumentCommandData());
+							list.add(starbitmap.getImageRasterDataForPrinting_Standard(compressionEnable));
+							list.add(rasterDoc.EndDocumentCommandData());
+							
+						} else {
+							list.add(starbitmap.getImageRasterDataForPrinting_graphic(compressionEnable));
+							//list.add(new byte[] { 0x1b, 0x64, 0x02 }); // Feed to cutter position
+						}
 					}
 				}
 				

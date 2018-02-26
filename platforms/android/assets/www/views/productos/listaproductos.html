@@ -448,7 +448,7 @@ function getSearch(){
 			//alert(timespanCat + ">>" + formulado + "==" +cat );
 		}
 	});
-	tx.executeSql(' SELECT p.*, c.categoria as cat  , c.timespan as timespancat FROM PRODUCTOS AS p LEFT JOIN CATEGORIAS AS c ON p.categoriaid = c.timespan where p.estado = 1 and p.timespan != "-14" order by p.formulado ASC',[],function(tx,resulta){
+	tx.executeSql('SELECT p.*, c.categoria as cat,c.timespan as timespancat,sum(r.valor) as misimp FROM PRODUCTOS AS p LEFT JOIN CATEGORIAS AS c ON p.categoriaid = c.timespan LEFT JOIN PRODUCTOS_IMPUESTOS i ON (p.timespan=i.id_producto and i.activo="true") LEFT JOIN IMPUESTOS_REALES r ON i.id_impuesto=r.id where p.estado = 1 and p.timespan !=-14 group by p.timespan order by p.formulado ASC',[],function(tx,resulta){
 		//console.log(resulta);
 		var inhtml='<table class="table table-striped"><tbody>';
 		if(resulta.rows.length==0){
@@ -492,13 +492,22 @@ function getSearch(){
 				} 
 					
 				var agregarimp=1;
-				if(cargaiva=="true"){
-					var cadimp=$('#impuestosactivos').html();
-					if(cadimp!=''){
-						var misporcentimp=cadimp.split('@');
-						for(var t=0;t<misporcentimp.length;t++){
-							var por=parseFloat(misporcentimp[t]);
-							agregarimp+=por;
+				if(localStorage.getItem('multiple_iva')=='true'){
+					if(row.misimp!=null){
+						checkiva2='<span class="glyphicon glyphicon-ok"> </span>'; 
+						agregarimp+=parseFloat(row.misimp);
+					}else{
+						checkiva2='<span class="glyphicon glyphicon-remove"> </span>';
+					}
+				}else{
+					if(cargaiva=="true"){
+						var cadimp=$('#impuestosactivos').html();
+						if(cadimp!=''){
+							var misporcentimp=cadimp.split('@');
+							for(var t=0;t<misporcentimp.length;t++){
+								var por=parseFloat(misporcentimp[t]);
+								agregarimp+=por;
+							}
 						}
 					}
 				}

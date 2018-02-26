@@ -70,9 +70,13 @@
     				<h4>Servicio</h4>
     				<input type="checkbox"  id='conservicio' name="my-checkbox" class='impventa' data-id="2" data-value="0.1" data-size="mini">
     				</div>
-    				<div class="col-lg-4 col-md-4 col-sm-4">
+    				<div class="col-lg-4 col-md-4 col-sm-4" id='divimp1'>
     				<h4 class='trans_imp'>Aplica Impuestos <label id='aplican' style='font-size:10px; display:inline;'></label></h4>
     				<input type="checkbox"  id='coniva' name="my-checkbox" class='impventa' style="width: 100%;" data-id="1" data-value="0.12" data-size="large" checked />
+    				</div>
+					<div class="col-lg-4 col-md-4 col-sm-4" id='divimp2'>
+    				<h4 class='trans_imp'>Aplica Impuestos <label id='aplican' style='font-size:10px; display:inline;'></label></h4>
+					<div id='contentimpuestos' style='padding:10px;'></div>
     				</div>
 					<div class='col-lg-8 col-md-8 col-sm-8'>
 					<div>
@@ -143,35 +147,54 @@
 <script>
 	var digitado=false;
 	$(document).ready(function(){
+	var multiple_iva=localStorage.getItem('multiple_iva');
     var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(
 	function (tx){
 		//console.log('SELECT * FROM PRODUCTOS WHERE categoriaid='+categoria+' and productofinal=1 and estado=1 ORDER BY formulado asc');
-		tx.executeSql("SELECT * FROM IMPUESTOS WHERE activo=? group by nombre order by id",["true"],function(tx,results3){
-							console.log(results3);
-							var impuestos='';
-							var impuestosid='';
-							if(results3.rows.length>0){
-								console.log("encuentra impuestos");
-								var cuan=0;
-								for(var r=0;r<results3.rows.length;r++){
-									var imp=results3.rows.item(r);
-
-										if(cuan>0){
-											impuestos+="@";
-											impuestosid+="@";
-										}
-
-									impuestos+=parseFloat(imp.porcentaje)/100;
-									impuestosid+=imp.timespan;
-									cuan++;
-								}
-								console.log(impuestos+'/'+impuestosid);
-								$('#impuestosactivos').html(impuestos);
-								$('#impuestosactivosid').html(impuestosid);
-								}
+		var sqlimp="SELECT * FROM IMPUESTOS WHERE activo=? group by nombre order by id";
+		if(multiple_iva=='true'){
+			sqlimp="SELECT id,nombre,valor*100 as porcentaje,timespan,activo FROM IMPUESTOS_REALES WHERE activo=?";
+		}
+		tx.executeSql(sqlimp,["true"],function(tx,results3){
+			console.log(results3);
+			var impuestos='';
+			var impuestosid='';
+			var htmli='';
+			if(results3.rows.length>0){
+				htmli+="<table width='100%'><tr>";
+				console.log("encuentra impuestos");
+				var cuan=0;
+				for(var r=0;r<results3.rows.length;r++){
+					var imp=results3.rows.item(r);
+					if(cuan>0){
+						impuestos+="@";
+						impuestosid+="@";
+					}
+					
+					htmli+="<td><label for='imp_"+imp.timespan+"'>"+imp.nombre+" ("+imp.porcentaje+"%)</label>&nbsp;<input type='checkbox' porcen='"+imp.porcentaje+"' class='checkimp' id='imp_"+imp.timespan+"' val-id='"+imp.timespan+"' onclick='CalcularConImpuestos();'/></td>";
+					
+					impuestos+=parseFloat(imp.porcentaje)/100;
+					impuestosid+=imp.timespan;
+					cuan++;
+				}
+				htmli+="</tr></table>";
+				$('#contentimpuestos').html(htmli);
+				console.log(impuestos+'/'+impuestosid);
+				$('#impuestosactivos').html(impuestos);
+				$('#impuestosactivosid').html(impuestosid);
+			}
 		});
-	});
+		},errorCB,successCB);
+		
+		if(multiple_iva=='true'){
+			$('#divimp1').css('display','none');
+			$('#divimp2').css('display','');
+		}else{
+			$('#divimp2').css('display','none');
+			$('#divimp1').css('display','');
+		}
+		
 
 		$('#precioproducto,#precioConImpuestos').on("click",function(){
 			digitado=false;
@@ -277,15 +300,25 @@
 				sumaimpuesto+=0.10;
 
 			if($('#coniva').is(":checked"))
-				sumaimpuesto+=0.12;*/	
-			if($('#coniva').is(':checked')){
-				var cadimp=$('#impuestosactivos').html();
-				var aplican="";
-				if(cadimp!=''){
-					var misporcentimp=cadimp.split('@');
-					for(var t=0;t<misporcentimp.length;t++){
-						var por=parseFloat(misporcentimp[t]);
-						sumaimpuesto+=por;
+				sumaimpuesto+=0.12;*/
+			if(localStorage.getItem('multiple_iva')=='true'){
+				console.log('entra iva');
+				$('.checkimp').each(function(){
+					if($(this).is(':checked')){
+						var porc=parseFloat($(this).attr('porcen'));
+						sumaimpuesto+=porc;
+					}
+				});
+			}else{
+				if($('#coniva').is(':checked')){
+					var cadimp=$('#impuestosactivos').html();
+					var aplican="";
+					if(cadimp!=''){
+						var misporcentimp=cadimp.split('@');
+						for(var t=0;t<misporcentimp.length;t++){
+							var por=parseFloat(misporcentimp[t]);
+							sumaimpuesto+=por;
+						}
 					}
 				}
 			}
@@ -329,15 +362,26 @@
 			}
 		});*/
 		var agregarimp=1;
-		if($('#coniva').is(':checked')){
-			var cadimp=$('#impuestosactivos').html();
-			if(cadimp!=''){
-				var misporcentimp=cadimp.split('@');
-				for(var t=0;t<misporcentimp.length;t++){
-					var por=parseFloat(misporcentimp[t]);
-					agregarimp+=por;
+		console.log(localStorage.getItem('multiple_iva'));
+		if(localStorage.getItem('multiple_iva')=='true'){
+			console.log('entra iva');
+			$('.checkimp').each(function(){
+				if($(this).is(':checked')){
+					var porc=parseFloat($(this).attr('porcen'));
+					sumaimpuesto+=porc;
 				}
-			}
+			});
+		}else{
+				if($('#coniva').is(':checked')){
+					var cadimp=$('#impuestosactivos').html();
+					if(cadimp!=''){
+						var misporcentimp=cadimp.split('@');
+						for(var t=0;t<misporcentimp.length;t++){
+							var por=parseFloat(misporcentimp[t]);
+							agregarimp+=por;
+						}
+					}
+				}
 		}
 			
 		precioprod=precioprod*agregarimp;
@@ -368,13 +412,38 @@
 					var precioproducto = parseFloat(row.precio).toFixed(4);
 						
 					var sumaimpuestos=1;
-					if(estadoIva == "true"){
-						var cadimp=$('#impuestosactivos').html();
-						if(cadimp!=''){
-							var misporcentimp=cadimp.split('@');
-							for(var t=0;t<misporcentimp.length;t++){
-								var por=parseFloat(misporcentimp[t]);
-								sumaimpuestos+=por;
+					console.log(localStorage.getItem('multiple_iva'));
+					if(localStorage.getItem('multiple_iva')=='true'){
+						if(editarProductoID>0){
+							$('.checkimp').prop('checked',false);
+							db.transaction(function (tx){
+								var sqlimp="SELECT PI.id_impuesto,I.VALOR AS porcentaje FROM PRODUCTOS_IMPUESTOS PI,IMPUESTOS_REALES I WHERE PI.activo=? AND PI.id_impuesto=I.timespan AND id_producto=? order by PI.id";
+								tx.executeSql(sqlimp,["true",editarProductoID],function(tx,results3){
+									if(results3.rows.length>0){
+										for(var i=0;i<results3.rows.length;i++){
+											var item=results3.rows.item(i);
+											console.log(item.porcentaje);
+											$('#imp_'+item.id_impuesto).prop('checked',true);
+											sumaimpuestos+=parseFloat(item.porcentaje);
+										}
+									}
+									precioConImpuestos=parseFloat(precioproducto)*sumaimpuestos;
+									$('#precioConImpuestos').val(precioConImpuestos.toFixed(2));
+								});
+							},errorCB,successCB);
+						}
+					}else{
+						if(estadoIva == "true"){
+							var cadimp=$('#impuestosactivos').html();
+							if(cadimp!=''){
+								var misporcentimp=cadimp.split('@');
+								for(var t=0;t<misporcentimp.length;t++){
+									var por=parseFloat(misporcentimp[t]);
+									sumaimpuestos+=por;
+								}
+								
+								precioConImpuestos=parseFloat(precioproducto)*sumaimpuestos;
+								$('#precioConImpuestos').val(precioConImpuestos.toFixed(2));
 							}
 						}
 					}
@@ -382,10 +451,6 @@
 					if(estadoServicio==1)
 						sumaimpuestos+=0.10;*/
 					
-					precioConImpuestos=parseFloat(precioproducto)*sumaimpuestos;
-					
-					
-					$('#precioConImpuestos').val(precioConImpuestos.toFixed(2));
 					$("#nombreproducto").val(row.formulado);
 					$("#titulonuevopr").html(row.formulado);
 					str=row.codigo;
@@ -438,7 +503,7 @@
 		}
 		
 		function saberNombreCategoria(id){
-		
+			var theCategoryMatch='';
 			json=$("#jsoncomplete").text();
 			obj=$.parseJSON(json);
 			for(k=0; k<= obj.length-1; k++){
@@ -468,8 +533,7 @@
 			if(editarProductoID) {
 					leerProducto();
 					$('#ingresost').fadeIn('slow');
-				}
-			
+			}
 			console.log(datac);
 		});
 		},errorCB,successCB);
@@ -573,7 +637,7 @@
 				}
 			
 			//alert(codigop);
-
+			console.log(nombrep+"/"+codigop+"/"+preciop+"/"+idcategoria);
             if(nombrep!=''&&codigop!=''&&preciop!=''&&idcategoria != 0){
 
 				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -613,10 +677,20 @@
 								idcategoria=$('#idcategoria').val();
 								db.transaction(function(tx){
 								timeSpan=getTimeSpan();
-								tx.executeSql('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,estado,tieneimpuestos) SELECT "'+nombrep+'","'+codigop+'","'+preciop+'",'+idcategoria+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+' , 1 ,"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");',[],function(tx,results){
+								tx.executeSql('INSERT INTO PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,estado,tieneimpuestos) SELECT "'+nombrep+'","'+codigop+'","'+preciop+'",'+idcategoria+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+' , 1 ,"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");',[],function(tx,results){						
 								//console.log('INSERT INTO 		PRODUCTOS(formulado,codigo,precio,categoriaid,productofinal,materiaprima,timespan,ppq,color,servicio,tieneimpuestos) SELECT '+nombrep+'","'+codigop+'","'+preciop+'",'+currentTimeSpanCat+','+prfinal+','+matprima+',"'+timeSpanFormulado+'",'+costo+','+micolor+','+serv+',"'+iva+'" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS WHERE formulado like "'+nombrep+'" or codigo like "'+codigop+'");');
 										$('#popupsaveproducts').modal('show');
 								});
+								
+								//inserta impuestos
+								$('.checkimp').each(function(){
+									if($(this).is(':checked')){
+										var idi=$(this).attr('val-id');
+										var mitime=getTimeSpan();
+										tx.executeSql('INSERT INTO PRODUCTOS_IMPUESTOS(id_producto,id_impuesto,activo,timespan,sincronizar) SELECT "'+timeSpanFormulado+'","'+idi+'","true","'+mitime+'","true" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS_IMPUESTOS WHERE id_producto="'+timeSpanFormulado+'" and id_impuesto="'+idi+'");',[],function(tx,results){console.log("Insertado producto_impuesto"+idi);});
+									}
+								});
+								
 								},errorCB,successCB);
 							//}
 							//setTimeout(function() {
@@ -678,6 +752,7 @@
 			prfinal=1;
 		if($.trim(codigop)=='')  codigop=idproducto;
 		
+		console.log(nombrep+"/"+codigop+"/"+preciop+"/"+categoria);
 		if(nombrep!=''&&codigop!=''&&preciop!=''&&categoria!=''){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			/*if(idcategoria==0||idcategoria==null){
@@ -708,6 +783,18 @@
 					else if(localStorage.getItem("idioma")==2)
 						showalert("Successfully Updated");*/
 						$('#popupsaveproducts').modal('show');
+					});
+					
+					tx.executeSql('UPDATE PRODUCTOS_IMPUESTOS SET activo="false",sincronizar="true" WHERE id_producto="'+idproducto + '"',[],function(tx,results){});
+					
+					$('.checkimp').each(function(){
+						if($(this).is(':checked')==true){
+							var mit=$(this).attr('val-id');
+							tx.executeSql('UPDATE PRODUCTOS_IMPUESTOS SET activo="true",sincronizar="true" WHERE id_producto=? and id_impuesto=?',[idproducto,mit],function(tx,results){});
+							
+							var mitime=getTimeSpan();
+							tx.executeSql('INSERT INTO PRODUCTOS_IMPUESTOS(id_producto,id_impuesto,activo,timespan,sincronizar) SELECT "'+idproducto+'","'+mit+'","true","'+mitime+'","true" WHERE NOT EXISTS(SELECT 1 FROM PRODUCTOS_IMPUESTOS WHERE id_producto="'+idproducto+'" and id_impuesto="'+mit+'");',[],function(tx,results){console.log("Insertado producto_impuesto"+mit);});
+						}
 					});
 					},errorCB,successCB);
 			//}
@@ -769,17 +856,27 @@
 				
 			if($('#coniva').is(":checked"))
 				sumaimpuesto+=0.12;*/
-			
-			if($('#coniva').is(':checked')){
-				var cadimp=$('#impuestosactivos').html();
-				if(cadimp!=''){
-					var misporcentimp=cadimp.split('@');
-					for(var t=0;t<misporcentimp.length;t++){
-						var por=parseFloat(misporcentimp[t]);
-						sumaimpuesto+=por;
+			if(localStorage.getItem('multiple_iva')=='true'){
+				$('.checkimp').each(function(){
+					if($(this).is(':checked')==true){
+						console.log($(this));
+						var itemv=$(this).attr('porcen');
+						sumaimpuesto+=parseFloat(itemv)/100;
+					}
+				});
+				console.log(sumaimpuesto);
+			}else{
+				if($('#coniva').is(':checked')){
+					var cadimp=$('#impuestosactivos').html();
+					if(cadimp!=''){
+						var misporcentimp=cadimp.split('@');
+						for(var t=0;t<misporcentimp.length;t++){
+							var por=parseFloat(misporcentimp[t]);
+							sumaimpuesto+=por;
+						}
 					}
 				}
-			}				
+			}			
 			var precioConImpuestos=(precioHis/sumaimpuesto).toFixed(4);
 			$('#precioproducto').val(precioConImpuestos.toString().replace(",","."));
 	}
@@ -794,20 +891,32 @@
 
 			if($('#coniva').is(":checked"))
 				sumaimpuesto+=0.12;*/
-			if($('#coniva').is(':checked')){
-				var cadimp=$('#impuestosactivos').html();
-				var aplican="";
-				if(cadimp!=''){
-					var misporcentimp=cadimp.split('@');
-					for(var t=0;t<misporcentimp.length;t++){
-						var por=parseFloat(misporcentimp[t]);
-						sumaimpuesto+=por;
+			if(localStorage.getItem('multiple_iva')=='true'){
+				$('.checkimp').each(function(){
+					if($(this).is(':checked')==true){
+						console.log($(this));
+						var itemv=$(this).attr('porcen');
+						sumaimpuesto+=parseFloat(itemv)/100;
+					}
+				});
+				console.log(sumaimpuesto);
+				precioConImpuestos=parseFloat(precioHis)*sumaimpuesto;
+				$('#precioConImpuestos').val(precioConImpuestos.toFixed(2));
+			}else{
+				if($('#coniva').is(':checked')){
+					var cadimp=$('#impuestosactivos').html();
+					var aplican="";
+					if(cadimp!=''){
+						var misporcentimp=cadimp.split('@');
+						for(var t=0;t<misporcentimp.length;t++){
+							var por=parseFloat(misporcentimp[t]);
+							sumaimpuesto+=por;
+						}
 					}
 				}
+				var precioConImpuestos=(precioHis*sumaimpuesto).toFixed(2);
+				$('#precioConImpuestos').val(precioConImpuestos);
 			}
-
-			var precioConImpuestos=(precioHis*sumaimpuesto).toFixed(2);
-			$('#precioConImpuestos').val(precioConImpuestos);
 	}
 
 function ListarCategorias(){

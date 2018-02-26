@@ -468,16 +468,18 @@ public class PrinterFunctionsEpson{
 					if(!logo.equals("")){
 						Bitmap logoData =BitmapFactory.decodeFile("/data/data/com.practisis.practipos/files//"+logo);
 						// Add top logo to command buffer 
-						builder.addImage(logoData, 0, 0,
-								 logoData.getWidth(),
-								 logoData.getHeight(),
-								 Builder.COLOR_1,
-								 Builder.MODE_MONO,
-								 Builder.HALFTONE_DITHER,
-								 Builder.PARAM_DEFAULT,
-								 getCompress(this.connectionType));
-						
-						builder.addFeedLine(1);
+						if(logoData!=null){
+							builder.addImage(logoData, 0, 0,
+									 logoData.getWidth(),
+									 logoData.getHeight(),
+									 Builder.COLOR_1,
+									 Builder.MODE_MONO,
+									 Builder.HALFTONE_DITHER,
+									 Builder.PARAM_DEFAULT,
+									 getCompress(this.connectionType));
+							
+							builder.addFeedLine(1);
+						}
 					}
 					
 					builder.addTextDouble(Builder.TRUE, Builder.TRUE);

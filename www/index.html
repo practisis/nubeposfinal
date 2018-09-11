@@ -798,26 +798,24 @@
 			}
 			
 			document.addEventListener("deviceready", function(){
-				onDeviceReady();
-				/*console.log('device ready');
 				var uuid = device.uuid;
 				id_barra=uuid;
 				var model=device.model;
 				$('#deviceid').html(uuid);
-				$('#devicemodel').html(model);*/
+				$('#devicemodel').html(model);
 			});
 			
 			
 	$( document ).ready(function(){
 			//alert($(window).width());
-			alert('document ready'+$('#deviceid').html()+'//'+device);
+			/*alert('document ready'+$('#deviceid').html()+'//'+device+'//'+device.uuid);
 			if(device){
 				var uuid = device.uuid;
 				id_barra=uuid;
 				var model=device.model;
 				$('#deviceid').html(uuid);
 				$('#devicemodel').html(model);
-			}
+			}*/
 			if(localStorage.getItem('sonido')==null){
 				localStorage.setItem('sonido',true);
 			}

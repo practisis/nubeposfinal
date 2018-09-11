@@ -159,17 +159,16 @@ var app = {
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
-		document.addEventListener("pause", function(){ alert("pausa");}, false);
-		document.addEventListener("backbutton", function(){alert("back");}, false);
+		//document.addEventListener("pause", function(){ alert("pausa");}, false);
+		//document.addEventListener("backbutton", function(){alert("back");}, false);
     },
     // deviceready Event Handler
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-		
        // app.receivedEvent('deviceready');
-	  // onDeviceReady();
+		//onDeviceReady();
 	},
 	// Update DOM on a Received Event
 	/*receivedEvent: function(id) {
@@ -190,16 +189,22 @@ var app = {
 
     onDeviceReady();
     function onDeviceReady(){
-		
-		//alert("device Ready>>" + device.uuid);
-		if(device){
-			alert('device ready'+device+'//'+$('#deviceid').html());
+		var appm = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+		if ( appm ) {
+			if(device){
+				alert("device Ready>>" + device.uuid+'//'+$('#deviceid').html());
+				$('#deviceid').html(device.uuid);
+			}
+		}
+		//$('#deviceid').html(device.uuid);
+		/*if(device){
+				alert('device ready'+device+"//"+device.uuid+'//'+$('#deviceid').html());
 				var uuid = device.uuid;
 				id_barra=uuid;
 				var model=device.model;
 				$('#deviceid').html(uuid);
 				$('#devicemodel').html(model);
-		}
+		}*/
 			
 		//setInterval(function(){updateOnlineStatus()},60000);
 		
@@ -332,6 +337,8 @@ var app = {
 			}
 			return cordova.exec(success_callback, error_callback, "StarIOAdapter", "bwise", [message]);
 		};
+		
+		Empecemos();
 		
         /*var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
         db.transaction(iniciaDB, errorCB, successCB);

@@ -31,7 +31,8 @@ function SyncStart(){
 	if(impuestosrealesya){
 		//$('#fadeRow,#demoGratis').css("display","none");
 		$('#demoGratis').css("display","none");
-		if(device){
+		var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+		if ( app ) {
 			var uuid = device.uuid;
 			$('#deviceid').html(uuid);
 		}

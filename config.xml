@@ -25,7 +25,7 @@
     <preference name="android-installLocation" value="auto" />
 	<preference name="android-windowSoftInputMode" value="stateVisible"/>
 	<preference name="AndroidPersistentFileLocation" value="Compatibility"/>
-    <gap:plugin name="org.apache.cordova.battery-status" />
+	<preference name="android-build-tool" value="gradle" />
     <gap:plugin name="org.apache.cordova.camera" />
     <gap:plugin name="org.apache.cordova.media-capture" />
     <gap:plugin name="org.apache.cordova.console" />

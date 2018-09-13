@@ -26,7 +26,6 @@
 	<preference name="android-windowSoftInputMode" value="stateVisible"/>
 	<preference name="AndroidPersistentFileLocation" value="Compatibility"/>
 	<preference name="android-build-tool" value="gradle" />
-    <gap:plugin name="org.apache.cordova.console" />
     <gap:plugin name="org.apache.cordova.device" />
     <gap:plugin name="org.apache.cordova.device-motion" />
     <gap:plugin name="org.apache.cordova.device-orientation" />

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mPOS-Integration-1.0.0-beta">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/mPOS-Integration-1.0.0-beta.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

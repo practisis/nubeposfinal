@@ -115,8 +115,10 @@ public class PrinterFunctionsEpson{
 		String direccionCliente="";
 		String telefonoCliente="";
 		String nombreEmpresa="";
+		String razonEmpresa="";
 		String direccionEmpresa="";
 		String telefonoEmpresa="";
+		String rucEmpresa="";
 		JSONArray expprod=new JSONArray();
 		JSONArray expago=new JSONArray();
 		String subconiva="0.00";
@@ -152,6 +154,8 @@ public class PrinterFunctionsEpson{
 		Integer lang=1;
 		String codigoprint="";
 		Integer preimpresas=0;
+		Integer fullp=0;
+		String clave="";
 		JSONArray cierreImpuestos= new JSONArray();
 		long lineastotales=36; //18cm-36lineas
 		long lineasencabezado=6; //3cm-7lineas
@@ -173,6 +177,19 @@ public class PrinterFunctionsEpson{
 			JSONObject objempresa=expjson.getJSONObject("empresa");
 			expago=expjson.getJSONArray("pagos");
 			expprod=expjson.getJSONArray("producto");
+			if(expjson.has("full")){
+				if(!expjson.getString("full").equals(JSONObject.NULL)){
+					if(expjson.getString("full").equals("true")){
+						fullp=1;
+					}
+				}
+			}
+			
+			if(expjson.has("clave")){
+				if(!expjson.getString("clave").equals(JSONObject.NULL)){
+						clave=expjson.getString("clave");
+				}
+			}
 			//expprod=objproducto.getJSONArray("0");
 			
 			cedulaCliente=objcliente.getString("cedula");
@@ -229,6 +246,15 @@ public class PrinterFunctionsEpson{
 			
 			if(!objfactura.isNull("fecha")){
 				fechanumber=(long)objfactura.getDouble("fecha");
+			}
+			
+			if(!objempresa.isNull("razon")){
+				razonEmpresa=objempresa.getString("razon");
+			}
+			
+			
+			if(!objempresa.isNull("ruc")){
+				rucEmpresa=objempresa.getString("ruc");
 			}
 			
 			lineastotales=Math.round(2.25*(objfactura.getInt("largo")-2));
@@ -466,9 +492,8 @@ public class PrinterFunctionsEpson{
 				
 				if(preimpresas.equals(0)){
 					if(!logo.equals("")){
-						Bitmap logoData =BitmapFactory.decodeFile("/data/data/com.practisis.practipos/files//"+logo);
-						// Add top logo to command buffer 
-						if(logoData!=null){
+						Bitmap logoData =BitmapFactory.decodeFile("/data/data/com.practisis.practipos/files//"+logo);// Add top logo to command buffer
+						if(!logoData.equals(JSONObject.NULL)){
 							builder.addImage(logoData, 0, 0,
 									 logoData.getWidth(),
 									 logoData.getHeight(),
@@ -484,8 +509,16 @@ public class PrinterFunctionsEpson{
 					
 					builder.addTextDouble(Builder.TRUE, Builder.TRUE);
 					builder.addText(nombreEmpresa+"\n");
-					builder.addTextDouble(Builder.FALSE, Builder.FALSE);
 					builder.addFeedLine(1);
+					if(fullp==1){
+						builder.addTextDouble(Builder.TRUE, Builder.TRUE);
+						builder.addText(razonEmpresa+"\n");
+						builder.addTextDouble(Builder.FALSE, Builder.FALSE);
+						builder.addFeedLine(1);
+						textData.append(rucEmpresa+"\n");
+					}
+					builder.addFeedLine(1);
+					builder.addTextDouble(Builder.FALSE, Builder.FALSE);
 					textData.append(direccionEmpresa+"-"+telefonoEmpresa+"\n");
 				}
 				
@@ -822,6 +855,13 @@ public class PrinterFunctionsEpson{
 					lineasescritas=lineasescritas+1;
 					
 					if(!factelectronica.equals("")){
+						
+						if(fullp==1){
+							builder.addFeedLine(1);
+							textData.append("Este documento no tiene ninguna validez tributaria\n");
+							lineasescritas=lineasescritas+1;
+						}
+						
 						if(lang.equals(1)){
 							textData.append("Revisa tu Factura Electrónica en:\n");
 						}else{
@@ -834,6 +874,20 @@ public class PrinterFunctionsEpson{
 							textData.append(vectordata[1]+" -"+vectordata[2]+"\n");
 						}
 						lineasescritas=lineasescritas+2;
+						
+						//clave acceso
+						if(fullp==1){
+							if(!clave.equals(JSONObject.NULL)){
+								if(!clave.equals("")){
+									builder.addFeedLine(1);
+									textData.append("CLAVE ACCESO SRI:\n");
+									textData.append(clave+":\n");
+									textData.append("AUTORIZACION SRI:\n");
+									textData.append(clave+":\n");
+									lineasescritas=lineasescritas+4;
+								}
+							}
+						}
 					}
 						
 				}

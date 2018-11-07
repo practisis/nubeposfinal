@@ -65,7 +65,8 @@
                    localStorage.setItem("id_version_nube",version);
                    //document.getElementById('main').style.display='block';
                    if(localStorage.getItem("telefono_inte") == ''||localStorage.getItem("telefono_inte") == null){
-      			    $('#pide_telefono').fadeIn();
+				   //ana
+      			   // $('#pide_telefono').fadeIn();
 					//asigna pais.
 					//pais
 					if (pais!=0){
@@ -369,6 +370,7 @@
 			
 		<div id='mybodycontent' class='row'>
 			<div class='container-fluid'>
+				<!---<div id='deviceid' style='display:none;'>c12577f7fceba801</div>--->
 				<div id='deviceid' style='display:none;'>a383bc4552bfb701f96a17a4541b5565</div>
 				<div id='devicemodel' style='display:none;'></div>
 				<div class="alert alert-success" role="alert" id='alert' style='display:none;'></div>
@@ -798,33 +800,27 @@
 			}
 			
 			document.addEventListener("deviceready", function(){
-				onDeviceReady();
-				/*console.log('device ready');
-				var uuid = device.uuid;
-				id_barra=uuid;
-				var model=device.model;
-				$('#deviceid').html(uuid);
-				$('#devicemodel').html(model);*/
-			});
-			
-			
-	$( document ).ready(function(){
-			//alert($(window).width());
-			alert('document ready'+$('#deviceid').html()+'//'+device);
-			if(device){
 				var uuid = device.uuid;
 				id_barra=uuid;
 				var model=device.model;
 				$('#deviceid').html(uuid);
 				$('#devicemodel').html(model);
-			}
-			if(localStorage.getItem('sonido')==null){
-				localStorage.setItem('sonido',true);
-			}
+				//alert("device Ready>>" + device.uuid+'//'+$('#deviceid').html());
+			});
+			
+			
+	$( document ).ready(function(){
 			SyncStart();
 			digitado=false;
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(iniciaDB,errorCB,successCB);
+			
+			if(localStorage.getItem('sonido')==null){
+				localStorage.setItem('sonido',true);
+			}
+			
+			
+			
 			
 			/*if(localStorage.getItem("id_version_nube") == '0'){
 				envia('config');

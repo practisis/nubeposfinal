@@ -84,7 +84,8 @@ public class StarIOAdapter extends CordovaPlugin {
         final StarIOAdapter currentPluginInstance = this;
         final JSONArray Arguments = args;
         final CallbackContext currentCallbackContext = callbackContext;
-		final Context micontext=this.cordova.getActivity().getApplicationContext();
+		//final Context micontext=this.cordova.getActivity().getApplicationContext();
+		final Context micontext=this.cordova.getActivity().getBaseContext();
 	
         if (action.equals("check")) {
             cordova.getThreadPool().execute(new Runnable() {
@@ -239,7 +240,7 @@ public class StarIOAdapter extends CordovaPlugin {
 							Thread t= new Thread(){
 								public void run(){
 									try{
-										Thread.sleep(3000);
+										Thread.sleep(5000);
 									}catch(InterruptedException e){
 										e.printStackTrace();
 									}
@@ -271,7 +272,7 @@ public class StarIOAdapter extends CordovaPlugin {
 				final Runnable ejecutarAccion= new Runnable(){
 					public synchronized void run(){
 						try{
-							DeviceInfo[] deviceList = Finder.getDeviceInfoList(FilterOption.PARAM_DEFAULT);
+							DeviceInfo[] deviceList = Finder.getDeviceInfoList(FilterOption.FILTER_NONE);
 							if(deviceList!=null){
 								if (deviceList.length > 0) {
 									String epsonprinters="";

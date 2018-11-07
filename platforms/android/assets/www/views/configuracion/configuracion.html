@@ -931,8 +931,11 @@
 							<div class='col-lg-12' style='margin-top:20px;'>
 								<p style='text-align:left; padding-left:10px'><b id='trans_label_21'>Preferencias</b></p>
 								<div>
-									 <div  class='col-lg-6 col-md-6 col-sm-6 col-xs-6' style='padding-top:20px; padding-bottom:20px;'>
+									 <div  class='col-lg-4 col-md-4 col-sm-4 col-xs-4' style='padding-top:20px; padding-bottom:20px;'>
 										<input type='checkbox' name='preimpresas' id='preimpresas'/><label id='labpreimpresas' name='labpreimpresas' for='preimpresas'>&nbsp;Facturas Preimpresas</label>
+									 </div>
+									 <div  class='col-lg-4 col-md-4 col-sm-4 col-xs-4' style='padding-top:20px; padding-bottom:20px;'>
+										<input type='checkbox' name='full' id='full'/><label id='labfull' name='labfull' for='full'>&nbsp;Impresión Full</label>
 									 </div>
 									<table class='table table-border'>
 										<tr>
@@ -1286,7 +1289,7 @@ $(document).ready(function(){
 	//alert("Ana");
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){
-				tx.executeSql("SELECT printer,printercom,encabezado,largo,preimpresas FROM CONFIG where id=1",[],function(tx,results){
+				tx.executeSql("SELECT printer,printercom,encabezado,largo,preimpresas,full FROM CONFIG where id=1",[],function(tx,results){
 				console.log(results);
 				if(results.rows.length>0){
 					//alert(results.rows.item(0).printer);
@@ -1307,6 +1310,12 @@ $(document).ready(function(){
 						factpreimp=true;
 					}
 					$('#preimpresas').attr('checked',factpreimp);
+					
+					var imprfull=false;
+					if(idprinter.full=='true'){
+						imprfull=true;
+					}
+					$('#full').attr('checked',imprfull);
 				}
 			});
 		},errorCB,successCB);
@@ -1986,7 +1995,11 @@ $(document).ready(function(){
 					//alert(dataprint);
 					//alert(res);
 					var todasimp=dataprint.split('||');
-					if(todasimp.length>0) $('#btnsetear,#btnprobar,#btnsetearc').css("display","");
+					if(todasimp.length>0) $('#btnsetearc,#btnprobar').css("display","");
+					if(localStorage.getItem('con_comandas')=='true'){
+						$('#btnsetear').css("display","");
+					}
+					
 					for(var m=0;m<todasimp.length;m++){
 						var res=todasimp[m].split('@');
 						var micheck='';
@@ -2033,7 +2046,10 @@ $(document).ready(function(){
 					//alert(dataprinte);
 					//alert(res);
 					var todasimp=dataprinte.split('||');
-					if(todasimp.length>0) $('#btnsetear,#btnprobar,#btnsetearc').css("display","");
+					if(todasimp.length>0) $('#btnprobar,#btnsetearc').css("display","");
+					if(localStorage.getItem('con_comandas')=='true'){
+						$('#btnsetear').css("display","");
+					}
 					for(var m=0;m<todasimp.length;m++){
 						var res=todasimp[m].split('@');
 						//alert(res[0]+''+res[1]);
@@ -2292,12 +2308,18 @@ $(document).ready(function(){
 			if($('#preimpresas').is(':checked')==true){
 				preimpresas='true';
 			}
+			
+			var full='false';
+			if($('#full').is(':checked')==true){
+				full='true';
+			}
 				
-			tx.executeSql('UPDATE CONFIG set encabezado=?,largo=?,preimpresas=? WHERE id=1;',[encab,largo,preimpresas],
+			tx.executeSql('UPDATE CONFIG set encabezado=?,largo=?,preimpresas=?,full=? WHERE id=1;',[encab,largo,preimpresas,full],
 			function(tx,res){
 				localStorage.setItem("encabezado",encab);
 				localStorage.setItem("largo",largo);
 				localStorage.setItem("preimpresas",preimpresas);
+				localStorage.setItem("full",full);
 				if(localStorage.getItem("idioma")==1)
 						showalert("Datos Actualizados con éxito.");
 					else if(localStorage.getItem("idioma")==2)
@@ -2773,7 +2795,7 @@ function actualizar(){
 				setTimeout(function() {
 					$('#msjOk').fadeOut('slow');
 				}, 3000);
-			},errorCB,function(){$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+nombreEsta+'","direccion":"'+dir+'"},');});
+			},errorCB,function(){$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+nombreEsta+'","direccion":"'+dir+'","razon":"'+razon+'","ruc":"'+ruc+'"},');});
 		}
 		
 	}

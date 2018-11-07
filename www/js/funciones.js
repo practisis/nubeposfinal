@@ -2457,6 +2457,7 @@ function pagar(){
 
 	//alert(device+'/'+device.model + '/' +'Device Cordova: '  + device.cordova  + '/' +'Device Platform: ' + device.platform + '/' +'Device UUID: '     + device.uuid     + '/' +'Device Version: '  + device.version);
 	//alert(preimpresas);
+	var fechtime=new Date();
 	json = json.substring(0,json.length -1);
 	json += '],'
 	json += '"factura" : {';
@@ -2464,7 +2465,7 @@ function pagar(){
 		json += '"subtotal_sin_iva" : "'+ subtotalSinIva +'",';
 		json += '"timespanfactura" : "'+ timefactura +'",';
 		json += '"idbarrascajas" : "'+midevice+'",';
-		json += '"fecha" : "'+ new Date().getTime() +'",';
+		json += '"fecha" : "'+ fechtime.getTime() +'",';
 		json += '"anulada" : "false",';
 		json += '"subtotal_iva" : "'+ subtotalIva +'",';
 		json += '"impuestos" : "'+ idimpuestos +'",';
@@ -2563,8 +2564,28 @@ function pagar(){
 				json+=',';
 			json+='{"forma":"consumointerno","valor":"'+$('#valorConsumoI').val()+'","tipotarjeta":"","lote":"","numerocheque":"","banco":""}';
 		}
-		json+=']}]}';
-
+		
+		var clave='';
+		if(localStorage.getItem('generarclave')=='true'){
+			var aniofull=fechtime.getFullYear();
+			var mesfull=(fechtime.getMonth()+1).toString();
+			var diafull=fechtime.getDate().toString();
+			if(mesfull.length<2)
+				mesfull='0'+mesfull;
+			if(diafull.length<2)
+				diafull='0'+diafull;
+			var fec=aniofull+'-'+mesfull+'-'+diafull;
+			//alert(fec);
+			var numf=nofactura.replace(/-/g ,"");
+			clave=GenerarClaveAcceso(fec,numf);
+		}
+		
+		//alert(clave)
+		var fullv=localStorage.getItem('full');
+		if(fullv==null)
+			fullv='false';
+		
+		json+='],"full":"'+fullv+'","clave":"'+clave+'"}]}';
 		$('#json').html(json);
 		//alert("Ana");
 		receiveJson();
@@ -4470,6 +4491,9 @@ function VerificarNumero(valor){
 	var existe=false;
 	var serie='001';
 	var establecimiento='001';
+	var ci=false;
+	if(parseFloat($('#valorConsumoI').val())>0)
+		ci=true;
 	db.transaction(function (tx){
 			tx.executeSql('SELECT id from FACTURAS where CAST(aux as integer) = CAST(? as integer)',[valor],
 			function(tx,res){
@@ -4477,7 +4501,11 @@ function VerificarNumero(valor){
 					console.log(res);
 					showalert("Ya existe una factura con ese número.");
 					db.transaction(function (tx2){
-						tx2.executeSql('SELECT MAX(CAST(aux as integer))+1 as max FROM FACTURAS',[],
+						var sql2='SELECT MAX(CAST(aux as integer))+1 as max FROM FACTURAS where paymentConsumoInterno=0';
+						if(ci==true){
+							sql2='SELECT MAX(CAST(aux as integer))+1 as max FROM FACTURAS where paymentConsumoInterno>0';
+						}
+						tx2.executeSql(sql2,[],
 						function(tx2,res2){
 							var ceros='';
 							var coun=0;
@@ -4507,10 +4535,21 @@ function VerificarNumero(valor){
 				}else{
 					//console.log('admitido');
 					var invoicenr=$('#invoiceNr').val();
-					localStorage.setItem('ultimafact',invoicenr);
-					if(parseInt(localStorage.getItem('ultimafact'))>valor){
-						invoicenr=parseInt(parseInt(localStorage.getItem('ultimafact')))+1;
+					var miultima=localStorage.getItem('ultimafact');
+					if(ci==true)
+						miultima=localStorage.getItem('ultimafactci');
+					
+					if(parseInt(miultima)>valor){
+						//invoicenr=parseInt(parseInt(miultima))+1;
+						invoicenr=parseInt(parseInt(miultima));
 					}
+					
+					if(ci==true){
+						localStorage.setItem('ultimafactci',invoicenr);
+					}else{
+						localStorage.setItem('ultimafact',invoicenr);
+					}
+					
 					$('#invoiceNr').effect('highlight',{},'normal');
 					db.transaction(function (tx2){
 					tx2.executeSql('SELECT serie,establecimiento from config where id=1',[],function(tx2,results){
@@ -6764,6 +6803,7 @@ function SubtotalesDescuento(){
 }
 
 function consultarUltima(fp){
+	//alert(fp);
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	db.transaction(function (tx){
 		var maxfact="SELECT MAX(aux)+1 as max FROM FACTURAS WHERE paymentConsumoInterno=0";
@@ -6778,8 +6818,18 @@ function consultarUltima(fp){
 			var nfact='1';
 			if(res.rows.length>0){
 				var max=1;
-				if(res.rows.item(0).max!=null)
+				if(res.rows.item(0).max!=null){
 					max=res.rows.item(0).max;
+					var ultiman=parseInt(localStorage.getItem("ultimafact"));
+					var ultimaci=parseInt(localStorage.getItem("ultimafactci"));
+					if(fp=='ConsumoI'){
+						if(max<ultimaci)
+							max=ultimaci;
+					}else{
+						if(max<ultiman)
+							max=ultiman;
+					}
+				}
 				else{
 					if(fp=='ConsumoI'){
 						if(localStorage.getItem("ultimafactci")!=null&&localStorage.getItem("ultimafactci")!="")
@@ -6799,10 +6849,10 @@ function consultarUltima(fp){
 				ceroscount++;
 			}
 			
-			if(fp=='ConsumoI'){
+			/*if(fp=='ConsumoI'){*/
 				$('#invoiceNr').val(ceros+nfact);
 				$('#invoiceNrComplete').val($('#seriesfact').html()+ceros+nfact);
-			}
+			//}
 		});
 	},errorCB,successCB);
 }
@@ -6847,4 +6897,78 @@ function ColocarProducto(row,fin){
 				
 		});
 	},errorCB,successCB);
+}
+
+function GenerarClaveAcceso(fecha,num){
+	var claveacceso='';
+	var ambiente=2;
+	if(localStorage.getItem('ambiente')!=null&&localStorage.getItem('ambiente')>0){
+		ambiente=parseInt(localStorage.getItem('ambiente'));
+	}
+	
+	var ruc='';
+	if(localStorage.getItem('ruc')!=null&&localStorage.getItem('ruc')!=''){
+		ruc=parseInt(localStorage.getItem('ruc'));
+	}
+	
+	var splitfec=fecha.split('-');
+	var dia=splitfec[2];
+	var mes=splitfec[1];
+	var anio=splitfec[0];
+	var tipodoc='01';
+	/*if(nc>0)
+		tipodoc='04';*/
+		
+		var numerico8='412'+pad(localStorage.getItem('empresa'),5);
+		//1 Emisión Normal
+		//2 Emisión por Indisponibilidad del Sistema
+		var tipoemision=1;
+		claveacceso+=dia+mes+anio+tipodoc+ruc+ambiente+num+numerico8+tipoemision;
+		
+		var digitoverificador=0;
+		/*algoritmo modulo 11*/
+		var cadenar=invertir(claveacceso);
+		var ponderado=2;
+		var suma=0;
+		for(var i=0;i<cadenar.length;i++){
+			if(ponderado>7)
+				ponderado=2;
+			//echo $ponderado."<br/>";
+			var numn=parseInt(cadenar[i])*ponderado;
+			suma+=numn;
+			ponderado=ponderado+1;
+		}
+		
+		//echo $suma."<br/>";
+		
+		var resto=suma%11;
+		var monce=11-resto;
+		if(monce<10)
+			digitoverificador=monce;
+		else if(monce==11)
+			digitoverificador=0;
+		else if(monce==10)
+			digitoverificador=1;
+		
+		/*algoritmo modulo 11*/
+		claveacceso+=digitoverificador;
+	
+	return claveacceso;
+}
+
+function pad(num, size) {
+    var s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
+
+function invertir(cadena) {
+  var x = cadena.length;
+  var cadenaInvertida = "";
+ 
+  while (x>=0) {
+    cadenaInvertida = cadenaInvertida + cadena.charAt(x);
+    x--;
+  }
+  return cadenaInvertida;
 }

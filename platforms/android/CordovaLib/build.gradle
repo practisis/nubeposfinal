@@ -20,8 +20,10 @@
 
 buildscript {
     repositories {
-        mavenCentral()
-    }
+		maven {
+		url "https://repo1.maven.org/maven2"
+		}
+	}
 
     // Switch the Android Gradle plugin version requirement depending on the
     // installed version of Gradle. This dependency is documented at

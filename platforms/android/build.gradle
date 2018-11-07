@@ -22,9 +22,11 @@
 apply plugin: 'android'
 
 buildscript {
-    repositories {
-        mavenCentral()
-    }
+   repositories {
+	maven {
+	url "https://repo1.maven.org/maven2"
+	}
+  }
 
     // Switch the Android Gradle plugin version requirement depending on the
     // installed version of Gradle. This dependency is documented at
@@ -47,8 +49,10 @@ buildscript {
 
 // Allow plugins to declare Maven dependencies via build-extras.gradle.
 repositories {
-    mavenCentral()
-}
+	maven {
+	url "https://repo1.maven.org/maven2"
+	}
+  }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.2.1'

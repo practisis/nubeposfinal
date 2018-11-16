@@ -511,9 +511,9 @@ public class PrinterFunctionsEpson{
 					builder.addText(nombreEmpresa+"\n");
 					builder.addFeedLine(1);
 					if(fullp==1){
-						builder.addTextDouble(Builder.TRUE, Builder.TRUE);
-						builder.addText(razonEmpresa+"\n");
 						builder.addTextDouble(Builder.FALSE, Builder.FALSE);
+						//builder.addTextDouble(Builder.TRUE, Builder.TRUE);
+						builder.addText(razonEmpresa+"\n");
 						builder.addFeedLine(1);
 						textData.append(rucEmpresa+"\n");
 					}

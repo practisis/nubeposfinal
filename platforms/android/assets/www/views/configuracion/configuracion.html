@@ -718,6 +718,10 @@
             <td  style='text-align:right;'>Sonido</td>
             <td align='left'><input data-size='small' type='checkbox' id='sonido' class='switch'/></td>
 		</tr>
+		<tr>
+            <td  style='text-align:right;'>Generar Clave Acceso/Autorización</td>
+            <td align='left'><input data-size='small' type='checkbox' id='generarclave' class='switch'/></td>
+		</tr>
 		</table>
 		<div class='row'>
 			<div class='col-lg-12' style='margin-bottom:35px;'>
@@ -1782,6 +1786,7 @@ $(document).ready(function(){
         $('#con_imppersonalizados').bootstrapSwitch();
 		$('#backupinf').bootstrapSwitch();
 		$('#sonido').bootstrapSwitch();
+		$('#generarclave').bootstrapSwitch();
 		$('#printlogo').bootstrapSwitch();
         $('#multitablet').bootstrapSwitch();
         $('#obligado').bootstrapSwitch();
@@ -1792,6 +1797,12 @@ $(document).ready(function(){
 			$('#sonido').bootstrapSwitch('state', true, true);
 		}else{
 			$('#sonido').bootstrapSwitch('state', false, true);
+		}
+		
+		if(localStorage.getItem('generarclave')=='true'){
+			$('#generarclave').bootstrapSwitch('state', true, true);
+		}else{
+			$('#generarclave').bootstrapSwitch('state', false, true);
 		}
 
 		if(localStorage.getItem("diseno")==1){
@@ -1814,6 +1825,14 @@ $(document).ready(function(){
 			localStorage.setItem("sonido",true);
 		  }else{
 			localStorage.setItem("sonido",false);
+		  }
+		});
+		
+		$('#generarclave').on('switchChange.bootstrapSwitch', function(event, state) {
+		  if(state){
+			localStorage.setItem("generarclave",true);
+		  }else{
+			localStorage.setItem("generarclave",false);
 		  }
 		});
 		
@@ -2365,11 +2384,12 @@ $(document).ready(function(){
                 var con_backup = $('#backupinf').bootstrapSwitch('state');
                 var ip_servidor = $('#ipservidor').val();
                 localStorage.setItem("ip_servidor",ip_servidor);
+				var generarclave=$('#generarclave').is(':checked');
 
 				if(tabname=='')
 					tabname="Tablet "+$('#devicemodel').html();
 					
-				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=?,respaldar=?,pagarconcredito=?,impuestos_personalizados=?,ip_servidor=?,impuesto_aeropuerto=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub,con_backup,con_pagarconcredito,con_imppersonalizados,ip_servidor,imp_aero],
+				tx1.executeSql("UPDATE CONFIG SET nombreterminal=?,sincronizar=?,id_idioma=?,sin_documento=?,con_nombre_orden=?,con_propina=?,con_tarjeta=?,con_shop=?,con_notasorden=?,con_comanderas=?,con_mesas=?,id_version_nube=?,respaldar=?,pagarconcredito=?,impuestos_personalizados=?,ip_servidor=?,impuesto_aeropuerto=?,generarclave=? where id=1",[tabname,true,idioma,sin_documento,con_orden,con_propina,con_tarjeta,con_shop,con_notas,con_comanderas,con_mesas,version_nub,con_backup,con_pagarconcredito,con_imppersonalizados,ip_servidor,imp_aero,generarclave],
 				function(tx1,results1){
 					
 					var linklang="es";

@@ -2725,8 +2725,8 @@ function borrarCompra(item){
 				});
 			}
 		else{
-			var mival=$('#impuesto-'+value).val();
-			productoImpuestosIndexes.toLowerCase().indexOf('iva')>=0 ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados))) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)));
+			var mival=$('#impuesto-'+productoImpuestosIndexes).val();
+			mival.toLowerCase().indexOf('iva')>=0 ? subtotalIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados))) : subtotalSinIvaCompra = (parseFloat(productoCantidad) * (parseFloat(productoPrecio)+parseFloat(productoAgregados)));
 
 			var impuestoDetalles = $('#impuesto-'+ productoImpuestosIndexes).val().split('|');
 			var currentTax = $('#impuestoFactura-'+ productoImpuestosIndexes).val();

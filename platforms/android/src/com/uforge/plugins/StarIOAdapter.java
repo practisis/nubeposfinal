@@ -141,6 +141,8 @@ public class StarIOAdapter extends CordovaPlugin {
 									if (e.getStatus() != IoStatus.ERR_PROCESSING) {
 										break;
 									}
+								}catch (Exception e) {
+									break;
 								}
 							}
 						}
@@ -212,6 +214,7 @@ public class StarIOAdapter extends CordovaPlugin {
 						}
 						
 					try {
+							System.out.println(iniciadaepson);
 							if(!iniciadaepson){
 								Finder.start(micontext,tipoprint,null);
 								tipoactual=tipoprint;
@@ -229,6 +232,8 @@ public class StarIOAdapter extends CordovaPlugin {
 											if (e.getStatus() != IoStatus.ERR_PROCESSING) {
 												break;
 											}
+										}catch (Exception e) {
+												break;
 										}
 									}
 									Finder.start(micontext,tipoprint,null);
@@ -266,14 +271,20 @@ public class StarIOAdapter extends CordovaPlugin {
 						currentCallbackContext.error(errorstatus);
 						//future = scheduler.scheduleWithFixedDelay(this, 0, DISCOVERY_INTERVAL, TimeUnit.MILLISECONDS);
 						return;
+					}catch(Exception e){
+						System.out.println("Exception...");
+						currentCallbackContext.error("Exception...");
+						return;
 					}
 				}
 				
 				final Runnable ejecutarAccion= new Runnable(){
 					public synchronized void run(){
 						try{
+							//DeviceInfo[] deviceList = Finder.getDeviceInfoList(FilterOption.PARAM_DEFAULT);
 							DeviceInfo[] deviceList = Finder.getDeviceInfoList(FilterOption.FILTER_NONE);
 							if(deviceList!=null){
+								System.out.println("Hay:"+deviceList.length);
 								if (deviceList.length > 0) {
 									String epsonprinters="";
 									int cont=0;
@@ -294,49 +305,62 @@ public class StarIOAdapter extends CordovaPlugin {
 												break;
 										}
 										String model ="TM-m10";
-										if(name.indexOf("t88v".toUpperCase())>-1) model="TM-T88V";
-										if(name.indexOf("t70".toUpperCase())>-1) model="TM-T70";
-										if(name.indexOf("u220".toUpperCase())>-1) model="TM-U220";
-										if(name.indexOf("u330".toUpperCase())>-1) model="TM-U330";
-										if(name.indexOf("p60".toUpperCase())>-1) model="TM-P60";
-										if(name.indexOf("p60ii".toUpperCase())>-1) model="TM-P60II";
-										if(name.indexOf("t20".toUpperCase())>-1) model="TM-T20";
-										if(name.indexOf("t82".toUpperCase())>-1) model="TM-T82";
-										if(name.indexOf("t81ii".toUpperCase())>-1) model="TM-T81II";
-										if(name.indexOf("t82ii".toUpperCase())>-1) model="TM-T82II";
-										if(name.indexOf("t83ii".toUpperCase())>-1) model="TM-T83II";
-										if(name.indexOf("t70ii".toUpperCase())>-1) model="TM-T70II";
-										if(name.indexOf("t90ii".toUpperCase())>-1) model="TM-T90II";
-										if(name.indexOf("t20ii".toUpperCase())>-1) model="TM-T20II";
-										if(name.indexOf("p20".toUpperCase())>-1) model="TM-P20";
-										if(name.indexOf("p80".toUpperCase())>-1) model="TM-P80";
-										if(name.indexOf("m10".toUpperCase())>-1) model="TM-m10";
-										System.out.println("Impresora:"+address+"/"+name+"/"+model+"/"+type);
-										if(cont>0)
-											epsonprinters=epsonprinters+"||";
-										epsonprinters=epsonprinters+address+"@"+name+"@"+model+"@"+type;
-										cont++;
+										if(name!=null){
+											if(name.indexOf("t88v".toUpperCase())>-1) model="TM-T88V";
+											if(name.indexOf("t70".toUpperCase())>-1) model="TM-T70";
+											if(name.indexOf("u220".toUpperCase())>-1) model="TM-U220";
+											if(name.indexOf("u330".toUpperCase())>-1) model="TM-U330";
+											if(name.indexOf("p60".toUpperCase())>-1) model="TM-P60";
+											if(name.indexOf("p60ii".toUpperCase())>-1) model="TM-P60II";
+											if(name.indexOf("t20".toUpperCase())>-1) model="TM-T20";
+											if(name.indexOf("t82".toUpperCase())>-1) model="TM-T82";
+											if(name.indexOf("t81ii".toUpperCase())>-1) model="TM-T81II";
+											if(name.indexOf("t82ii".toUpperCase())>-1) model="TM-T82II";
+											if(name.indexOf("t83ii".toUpperCase())>-1) model="TM-T83II";
+											if(name.indexOf("t70ii".toUpperCase())>-1) model="TM-T70II";
+											if(name.indexOf("t90ii".toUpperCase())>-1) model="TM-T90II";
+											if(name.indexOf("t20ii".toUpperCase())>-1) model="TM-T20II";
+											if(name.indexOf("p20".toUpperCase())>-1) model="TM-P20";
+											if(name.indexOf("p80".toUpperCase())>-1) model="TM-P80";
+											if(name.indexOf("m10".toUpperCase())>-1) model="TM-m10";
+										
+											System.out.println("Impresora:"+address+"/"+name+"/"+model+"/"+type);
+											if(cont>0)
+												epsonprinters=epsonprinters+"||";
+											epsonprinters=epsonprinters+address+"@"+name+"@"+model+"@"+type;
+											cont++;
+										}
 									}
-									currentCallbackContext.success(epsonprinters);
+									System.out.println("epsonpr:"+epsonprinters);
+									if(epsonprinters!=""&&epsonprinters!=null){
+										currentCallbackContext.success(epsonprinters);
+									}else{
+										currentCallbackContext.error("No se encontraron impresoras");
+									}
+									
+								}else{
+									currentCallbackContext.error("No se encontraron impresoras");
 								}
 							}else{
 								currentCallbackContext.error("No se encontraron impresoras");
 							}
 						}catch(EpsonIoException e){
-							System.out.println("Error lista status: "+e.getStatus());
+							System.out.println("Error2 lista status: "+e.getStatus());
 							String errorstatus="";
 							if(e.getStatus()==IoStatus.ERR_PARAM)
-								errorstatus="error: Parametro invalido";
+								errorstatus="error2: Parametro invalido";
 							if(e.getStatus()==IoStatus.ERR_ILLEGAL)
-								errorstatus="error: El API se ha llamado cuando una busqueda ya estaba en progreso";
+								errorstatus="error2: El API se ha llamado cuando una busqueda ya estaba en progreso";
 							if(e.getStatus()==IoStatus.ERR_PROCESSING)
-								errorstatus="error: No se puede ejecutar el proceso";
+								errorstatus="error2: No se puede ejecutar el proceso";
 							if(e.getStatus()==IoStatus.ERR_MEMORY)
-								errorstatus="error: No se puede guardar en la memoria";
+								errorstatus="error2: No se puede guardar en la memoria";
 							if(e.getStatus()==IoStatus.ERR_FAILURE)
-								errorstatus="error: Ocurrió un error inesperado";
+								errorstatus="error2: Ocurrió un error inesperado";
 							System.out.println(errorstatus);
 							currentCallbackContext.error(errorstatus);
+						}catch(Exception e){
+							currentCallbackContext.error("exception");
 						}
 						
 						// stop old finder
@@ -3394,4 +3418,3 @@ private void runPrintSequence(CallbackContext callbackContext,String message,Str
 	}
 }
 }
-

@@ -27,7 +27,7 @@
                 </span>
                 <div class="box-info">
                     <p class="size-h3" id='totalventas'>0.00</p>
-                    <p class="text-muted"><span data-i18n="Ventas $" id='trans_label_1'>Ventas $</span></p>
+                    <p class="text-muted"><span data-i18n="Ventas $" id='trans_label_1' class='coin'>Ventas $</span></p>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
                 </span>
                 <div class="box-info">
                     <p class="size-h3" id='ticketpromedio'>0.00</p>
-                    <p class="text-muted"><span data-i18n="Ticket Promedio $" id='trans_label_2'>Ticket Promedio $</span></p>
+                    <p class="text-muted"><span class='coin' data-i18n="Ticket Promedio $" id='trans_label_2'>Ticket Promedio $</span></p>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
                 </span>
                 <div class="box-info">
                     <p class="size-h3"><span id='cumplimiento'>0.00</span>%</p>
-                    <p class="text-muted"><span data-i18n="cumplimiento $"><span id="trans_label_4">% Cumplimiento - Presupuesto $</span><span id='mipres'></span></span></p>
+                    <p class="text-muted"><span data-i18n="cumplimiento $"><span class='coin' id="trans_label_4">% Cumplimiento - Presupuesto $</span><span id='mipres'></span></span></p>
                 </div>
             </div>
         </div>
@@ -97,7 +97,7 @@
 						<tr>
 							<th>Producto</th>
 							<th>Cantidad</th>
-							<th>Ventas $</th>
+							<th class='coin'>Ventas $</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -247,7 +247,7 @@ function ObtenerDatosDashboard(){
 					if(localStorage.getItem("idioma")==2)
 						titlev="Ranking Sales per Product";
 					datap.addColumn('string', 'Producto');
-					datap.addColumn('number', 'Ventas $');
+					datap.addColumn('number', 'Ventas '+simbolocoin);
 					for(var n=0;n<resvp.length;n++){
 					  var resvpaux = resvp[n].split("@@");
 					  var entot=parseFloat(resvpaux[1]).toFixed(2);
@@ -262,14 +262,14 @@ function ObtenerDatosDashboard(){
                     var resvc = ventascat.split("$$");
                     var data = new google.visualization.DataTable();
 					data.addColumn('string', 'Categoria');
-					data.addColumn('number', 'Ventas $');
+					data.addColumn('number', 'Ventas '+simbolocoin);
 					var titlev="Ventas por Categoría"
 					if(localStorage.getItem("idioma")==2)
 						titlev="Sales per Category";
 					for(var t=0;t<resvc.length;t++){
 					  var resvcaux = resvc[t].split("@@");
 						var entot=parseFloat(resvcaux[1]).toFixed(2);
-						data.addRow([resvcaux[0]+' $',Number(entot)]);
+						data.addRow([resvcaux[0]+simbolocoin+' ',Number(entot)]);
 					}
 					var options = {
 						title:titlev
@@ -351,7 +351,7 @@ function ObtenerDatosDashboard(){
 					if(localStorage.getItem("idioma")==2)
 						titlev="Ranking Sales per Product";
 					datap.addColumn('string', 'Producto');
-					datap.addColumn('number', 'Ventas $');
+					datap.addColumn('number', 'Ventas '+simbolocoin);
 					for(var n=0;n<res.rows.length;n++){
 						var entot=parseFloat(res.rows.item(n).tot).toFixed(2);
 						datap.addRow([res.rows.item(n).formu,Number(entot)]);
@@ -372,13 +372,13 @@ function ObtenerDatosDashboard(){
 				if(res.rows.length>0){
 					var data = new google.visualization.DataTable();
 					data.addColumn('string', 'Categoria');
-					data.addColumn('number', 'Ventas $');
+					data.addColumn('number', 'Ventas '+simbolocoin);
 					var titlev="Ventas por Categoría"
 					if(localStorage.getItem("idioma")==2)
 						titlev="Sales per Category";
 					for(var t=0;t<res.rows.length;t++){
 						var entot=parseFloat(res.rows.item(t).tot).toFixed(2);
-						data.addRow([res.rows.item(t).categ+' $',Number(entot)]);
+						data.addRow([res.rows.item(t).categ+' '+simbolocoin,Number(entot)]);
 					}
 					var options = {
 						title:titlev

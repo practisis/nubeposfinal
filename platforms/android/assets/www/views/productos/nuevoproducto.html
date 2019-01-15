@@ -36,12 +36,12 @@
 		<div class="row">
             <div class="col-sm-12" id='contentteclado'>
     			<div class="col-sm-4">
-    				<h4><label class='trans_precio' style='display:inline;'>Precio $</label> (<label style='display:inline;' class='trans_sinimp'>sin imp.</label>)</h4>
+    				<h4><label class='trans_precio coin' style='display:inline;'>Precio $</label> (<label style='display:inline;' class='trans_sinimp'>sin imp.</label>)</h4>
     				<input style="width:100%;" class="form-control trans_productpsi"  readonly autofocus=""  placeholder="Precio sin imp " name='precioproducto' data-toggle="popover" data-placement="bottom" id='precioproducto' onkeypress="isalphanumeric(event);" data-container="#contentteclado" />
     				<label style="color:red;display:none;"  class="errorLabel3">Ingrese un precio válido</label>
     			</div>
     			<div class="col-sm-4">
-    				<h4><label class='trans_precio' style='display:inline;'>Precio $</label> (<label style='display:inline;' class='trans_conimp'>con imp.</label>)</h4>
+    				<h4><label class='trans_precio coin' style='display:inline;'>Precio $</label> (<label style='display:inline;' class='trans_conimp'>con imp.</label>)</h4>
 					
     				<input style="width:100%;" class="form-control trans_productpci"  data-toggle="popover" data-placement="bottom" data-container="#contentteclado"  autofocus="" id='precioConImpuestos' onkeypress="isalphanumeric(event);" placeholder="Precio con imp" onchange='CalcularSinImpuestos();' readonly />
 					

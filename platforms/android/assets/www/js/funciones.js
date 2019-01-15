@@ -465,7 +465,7 @@ function agregarCompra(item,origen){
 
 	//alert(sumTotal+'/');
 	$('#totalmiFactura').val(sumTotal);
-	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+	$('#total').html($.trim(simbolocoin)+parseFloat(sumTotal).toFixed(2));
 
 	if($('#total').html().toString().length==9)
 		$('#divtotal').css('font-size','26px');
@@ -482,9 +482,9 @@ function agregarCompra(item,origen){
 
 	$('#payButton').html('PAGAR');
 	$('#invoiceTotal').html(parseFloat(sumTotal).toFixed(2));
-	$('#justo').html('$ '+sumTotal.toFixed(2));
+	$('#justo').html(simbolocoin+' '+sumTotal.toFixed(2));
 	$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
-	$('#redondeado').html('$ '+Math.ceil(sumTotal).toFixed(2));
+	$('#redondeado').html(simbolocoin+' '+Math.ceil(sumTotal).toFixed(2));
 	$('#redondeado').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
 	var alta=0;
 	for( var t in misdenominaciones){
@@ -494,7 +494,7 @@ function agregarCompra(item,origen){
 			break;
 		}
 	}
-	$('#altaden').html('$ '+alta.toFixed(2));
+	$('#altaden').html(simbolocoin+' '+alta.toFixed(2));
 	$('#altaden').attr('data-value',-1*alta.toFixed(2));
 	if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
 		$('#altaden').parent().css('display','inline');
@@ -508,7 +508,7 @@ function agregarCompra(item,origen){
 		iter++;
 		p10=iter*10;
 	}
-	$('#prox10').html('$ '+p10.toFixed(2));
+	$('#prox10').html(simbolocoin+' '+p10.toFixed(2));
 	$('#prox10').attr('data-value',-1*p10.toFixed(2));
 	//console.log(p10+'/'+alta);
 	if(p10>0&&p10!=alta)
@@ -523,7 +523,7 @@ function agregarCompra(item,origen){
 		iter++;
 		p20=iter*20;
 	}
-	$('#prox20').html('$ '+p20.toFixed(2));
+	$('#prox20').html(simbolocoin+' '+p20.toFixed(2));
 	$('#prox20').attr('data-value',-1*p20.toFixed(2));
 	if(p20>0&&p20!=p10)
 		$('#prox20').parent().css('display','inline');
@@ -760,7 +760,7 @@ function agregarCompraLocal(item,idmenudiseno){
 
                 	//alert(sumTotal+'/');
                 	$('#totalmiFactura').val(sumTotal);
-                	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+                	$('#total').html($.trim(simbolocoin)+parseFloat(sumTotal).toFixed(2));
 
                 	if($('#total').html().toString().length==9)
                 		$('#divtotal').css('font-size','26px');
@@ -777,9 +777,9 @@ function agregarCompraLocal(item,idmenudiseno){
 
                 	$('#payButton').html('PAGAR');
                 	$('#invoiceTotal').html(parseFloat(sumTotal).toFixed(2));
-                	$('#justo').html('$ '+sumTotal.toFixed(2));
+                	$('#justo').html(simbolocoin+' '+sumTotal.toFixed(2));
                 	$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
-                	$('#redondeado').html('$ '+Math.ceil(sumTotal).toFixed(2));
+                	$('#redondeado').html(simbolocoin+' '+Math.ceil(sumTotal).toFixed(2));
                 	$('#redondeado').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
                 	var alta=0;
                 	for( var t in misdenominaciones){
@@ -789,7 +789,7 @@ function agregarCompraLocal(item,idmenudiseno){
                 			break;
                 		}
                 	}
-                	$('#altaden').html('$ '+alta.toFixed(2));
+                	$('#altaden').html(simbolocoin+' '+alta.toFixed(2));
                 	$('#altaden').attr('data-value',-1*alta.toFixed(2));
                 	if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
                 		$('#altaden').parent().css('display','inline');
@@ -803,7 +803,7 @@ function agregarCompraLocal(item,idmenudiseno){
                 		iter++;
                 		p10=iter*10;
                 	}
-                	$('#prox10').html('$ '+p10.toFixed(2));
+                	$('#prox10').html(simbolocoin+' '+p10.toFixed(2));
                 	$('#prox10').attr('data-value',-1*p10.toFixed(2));
                 	//console.log(p10+'/'+alta);
                 	if(p10>0&&p10!=alta)
@@ -818,7 +818,7 @@ function agregarCompraLocal(item,idmenudiseno){
                 		iter++;
                 		p20=iter*20;
                 	}
-                	$('#prox20').html('$ '+p20.toFixed(2));
+                	$('#prox20').html(simbolocoin+' '+p20.toFixed(2));
                 	$('#prox20').attr('data-value',-1*p20.toFixed(2));
                 	if(p20>0&&p20!=p10)
                 		$('#prox20').parent().css('display','inline');
@@ -1037,7 +1037,7 @@ function agregarCompranew(item,origen){
 
 	//alert(subtotalSinIva+'/'+subtotalSinIvaCompra);
 	$('#totalmiFactura').val(sumTotal);
-	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+	$('#total').html($.trim(simbolocoin)+parseFloat(sumTotal).toFixed(2));
 	if($('#total').html().toString().length==9)
 		$('#divtotal').css('font-size','26px');
 	else if($('#total').html().toString().length>9)
@@ -1245,7 +1245,7 @@ function agregarCompra2(item,origen){
 
 	//alert(subtotalSinIva+'/'+subtotalSinIvaCompra);
 	$('#totalmiFactura').val(sumTotal);
-	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+	$('#total').html($.trim(simbolocoin)+parseFloat(sumTotal).toFixed(2));
 
 	if($('#total').html().toString().length==9)
 		$('#divtotal').css('font-size','26px');
@@ -1413,13 +1413,13 @@ function cambiarCantidad(){
       /*$('#itemsVendidos').css('display','block');
       $('#itemsVendidos').css('background-color','red');*/
 
-      $('#justo').html('$ '+sumTotal.toFixed(2));
+      $('#justo').html(simbolocoin+' '+sumTotal.toFixed(2));
       $('#payButton').html('PAGAR');
       $('#invoiceTotal').html(sumTotal.toFixed(2));
       $('#changeFromPurchase').html(Math.abs(sumTotal).toFixed(2));
       $('#totalmiFactura').val(sumTotal);
-      $('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
-      $('#total').html('$'+sumTotal.toFixed(2));
+      $('#total').html($.trim(simbolocoin)+parseFloat(sumTotal).toFixed(2));
+      $('#total').html($.trim(simbolocoin)+sumTotal.toFixed(2));
 
       if($('#total').html().toString().length==9)
       	$('#divtotal').css('font-size','26px');
@@ -1441,9 +1441,9 @@ function cambiarCantidad(){
       	//$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
       	$('#btn_gpedidos').html('SAVE');
 
-      $('#justo').html('$ '+sumTotal.toFixed(2));
+      $('#justo').html(simbolocoin+' '+sumTotal.toFixed(2));
       $('#justo').attr('data-value',-1*sumTotal.toFixed(2));
-      $('#redondeado').html('$ '+Math.ceil(sumTotal).toFixed(2));
+      $('#redondeado').html(simbolocoin+' '+Math.ceil(sumTotal).toFixed(2));
       $('#redondeado').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
       var alta=0;
       for( var t in misdenominaciones){
@@ -1453,7 +1453,7 @@ function cambiarCantidad(){
       		break;
       	}
       }
-      $('#altaden').html('$ '+alta.toFixed(2));
+      $('#altaden').html(simbolocoin+' '+alta.toFixed(2));
       $('#altaden').attr('data-value',-1*alta.toFixed(2));
       if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
       	$('#altaden').parent().css('display','inline');
@@ -1467,7 +1467,7 @@ function cambiarCantidad(){
       	iter++;
       	p10=iter*10;
       }
-      $('#prox10').html('$ '+p10.toFixed(2));
+      $('#prox10').html(simbolocoin+' '+p10.toFixed(2));
       $('#prox10').attr('data-value',-1*p10.toFixed(2));
       //console.log(p10+'/'+alta);
       if(p10>0&&p10!=alta)
@@ -1482,7 +1482,7 @@ function cambiarCantidad(){
       	iter++;
       	p20=iter*20;
       }
-      $('#prox20').html('$ '+p20.toFixed(2));
+      $('#prox20').html(simbolocoin+' '+p20.toFixed(2));
       $('#prox20').attr('data-value',-1*p20.toFixed(2));
       if(p20>0&&p20!=p10)
       	$('#prox20').parent().css('display','inline');
@@ -1724,13 +1724,13 @@ function cambiarCantidad(){
 						/*$('#itemsVendidos').css('display','block');
 						$('#itemsVendidos').css('background-color','red');*/
 
-						$('#justo').html('$ '+sumTotal.toFixed(2));
+						$('#justo').html(simbolocoin+' '+sumTotal.toFixed(2));
 						$('#payButton').html('PAGAR');
 						$('#invoiceTotal').html(sumTotal.toFixed(2));
 						$('#changeFromPurchase').html(Math.abs(sumTotal).toFixed(2));
 						$('#totalmiFactura').val(sumTotal);
-						$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
-						$('#total').html('$'+sumTotal.toFixed(2));
+						$('#total').html($.trim(simbolocoin)+parseFloat(sumTotal).toFixed(2));
+						$('#total').html($.trim(simbolocoin)+sumTotal.toFixed(2));
 
 						if($('#total').html().toString().length==9)
 							$('#divtotal').css('font-size','26px');
@@ -1752,9 +1752,9 @@ function cambiarCantidad(){
 							//$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
 							$('#btn_gpedidos').html('SAVE');
 
-						$('#justo').html('$ '+sumTotal.toFixed(2));
+						$('#justo').html(simbolocoin+' '+sumTotal.toFixed(2));
 						$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
-						$('#redondeado').html('$ '+Math.ceil(sumTotal).toFixed(2));
+						$('#redondeado').html(simbolocoin+' '+Math.ceil(sumTotal).toFixed(2));
 						$('#redondeado').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
 						var alta=0;
 						for( var t in misdenominaciones){
@@ -1764,7 +1764,7 @@ function cambiarCantidad(){
 								break;
 							}
 						}
-						$('#altaden').html('$ '+alta.toFixed(2));
+						$('#altaden').html(simbolocoin+' '+alta.toFixed(2));
 						$('#altaden').attr('data-value',-1*alta.toFixed(2));
 						if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
 							$('#altaden').parent().css('display','inline');
@@ -1778,7 +1778,7 @@ function cambiarCantidad(){
 							iter++;
 							p10=iter*10;
 						}
-						$('#prox10').html('$ '+p10.toFixed(2));
+						$('#prox10').html(simbolocoin+' '+p10.toFixed(2));
 						$('#prox10').attr('data-value',-1*p10.toFixed(2));
 						//console.log(p10+'/'+alta);
 						if(p10>0&&p10!=alta)
@@ -1793,7 +1793,7 @@ function cambiarCantidad(){
 							iter++;
 							p20=iter*20;
 						}
-						$('#prox20').html('$ '+p20.toFixed(2));
+						$('#prox20').html(simbolocoin+' '+p20.toFixed(2));
 						$('#prox20').attr('data-value',-1*p20.toFixed(2));
 						if(p20>0&&p20!=p10)
 							$('#prox20').parent().css('display','inline');
@@ -1928,13 +1928,13 @@ function cambiarCantidad(){
 						/*$('#itemsVendidos').css('display','block');
 						$('#itemsVendidos').css('background-color','red');*/
 
-						$('#justo').html('$ '+sumTotal.toFixed(2));
+						$('#justo').html(simbolocoin+' '+sumTotal.toFixed(2));
 						$('#payButton').html('PAGAR');
 						$('#invoiceTotal').html(sumTotal.toFixed(2));
 						$('#changeFromPurchase').html(Math.abs(sumTotal).toFixed(2));
 						$('#totalmiFactura').val(sumTotal);
-						$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
-						$('#total').html('$'+sumTotal.toFixed(2));
+						$('#total').html($.trim(simbolocoin)+parseFloat(sumTotal).toFixed(2));
+						$('#total').html($.trim(simbolocoin)+sumTotal.toFixed(2));
 
 						if($('#total').html().toString().length==9)
 							$('#divtotal').css('font-size','26px');
@@ -1956,9 +1956,9 @@ function cambiarCantidad(){
 							//$('#btn_gpedidos').html('SAVE $'+ parseFloat(sumTotal).toFixed(2));
 							$('#btn_gpedidos').html('SAVE');
 
-						$('#justo').html('$ '+sumTotal.toFixed(2));
+						$('#justo').html(simbolocoin+' '+sumTotal.toFixed(2));
 						$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
-						$('#redondeado').html('$ '+Math.ceil(sumTotal).toFixed(2));
+						$('#redondeado').html(simbolocoin+' '+Math.ceil(sumTotal).toFixed(2));
 						$('#redondeado').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
 						var alta=0;
 						for( var t in misdenominaciones){
@@ -1968,7 +1968,7 @@ function cambiarCantidad(){
 								break;
 							}
 						}
-						$('#altaden').html('$ '+alta.toFixed(2));
+						$('#altaden').html(simbolocoin+' '+alta.toFixed(2));
 						$('#altaden').attr('data-value',-1*alta.toFixed(2));
 						if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
 							$('#altaden').parent().css('display','inline');
@@ -1982,7 +1982,7 @@ function cambiarCantidad(){
 							iter++;
 							p10=iter*10;
 						}
-						$('#prox10').html('$ '+p10.toFixed(2));
+						$('#prox10').html(simbolocoin+' '+p10.toFixed(2));
 						$('#prox10').attr('data-value',-1*p10.toFixed(2));
 						//console.log(p10+'/'+alta);
 						if(p10>0&&p10!=alta)
@@ -1997,7 +1997,7 @@ function cambiarCantidad(){
 							iter++;
 							p20=iter*20;
 						}
-						$('#prox20').html('$ '+p20.toFixed(2));
+						$('#prox20').html(simbolocoin+' '+p20.toFixed(2));
 						$('#prox20').attr('data-value',-1*p20.toFixed(2));
 						if(p20>0&&p20!=p10)
 							$('#prox20').parent().css('display','inline');
@@ -2088,6 +2088,8 @@ function cambiarCantidad(){
 	closePopup2();
 }
 
+var r=null;
+clearInterval(r);
 function formarCategorias(){
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 	var selected = '';
@@ -2135,14 +2137,62 @@ function formarCategorias(){
 				    $('#menuSubNew1,#menuSubNew2').fadeIn();
 					$("#menuproductosaux").html('<br><ul role="tablist" id="listacat" class="nav nav-tabs" style="width: 350px;"><li id="categoria_1" class="categoriaActiva esCategoria active" onclick="ActivarCategoriasp(this,1);" ontap="ActivarCategoriasp(this,1);" style="width: 150px; height: 44px;"><a style="height: 44px;">Categoría 1</a></li><li id="profes" class="categoriaActiva esCategoria" onclick="ActivarCategoriasp(this,-14);" ontap="ActivarCategoriasp(this,-14);" style="width: 150px; height: 44px;"><a style="height: 44px;">Personalizado</a></li></ul><div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Ingresar Productos</button></p></div>');
                   }else{
-                    $("#menuproductosaux").html('<div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Ingresar Productos</button></p></div>');
+						if(dorapos==1){
+							$('#menuproductosaux').append('<div class="jumbotron"><h1>Creando tus productos...</h1><p>Por favor, espera unos segundos mientras creamos tus primeros productos para empezar a facturar.</p><p><button id="btntime" class="btn btn-xs" type="button">Espere...</button></p></div>');
+							if($('#btntime').length>0){
+								clearInterval(r);
+								var ts=15;
+								r=setInterval(function(){
+									$('#btntime').html('Espere:'+ts+'s');
+									ts=ts-1;
+									if(ts==-1){
+										clearInterval(r);
+										$('#btntime').html('Facturar Ahora');
+									}
+										
+								},1000);
+							}
+						
+							$('#btntime').on('click',function(){
+								if($('#btntime').html()=='Facturar Ahora'){
+									envia('puntodeventa');
+								}
+							});
+							  
+						}else{
+							$("#menuproductosaux").html('<div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Ingresar Productos</button></p></div>');
+						}
                   }
                 }else if(localStorage.getItem("idioma")==2){
                     if(localStorage.getItem("con_profesionales")=='true'){
                       $('#menuSubNew1,#menuSubNew2').fadeIn();
   					  $("#menuproductosaux").html('<br><ul role="tablist" id="listacat" class="nav nav-tabs" style="width: 350px;"><li id="categoria_1" class="categoriaActiva esCategoria" onclick="ActivarCategoriasp(this,1);" ontap="ActivarCategoriasp(this,1);" style="width: 150px; height: 44px;"><a style="height: 44px;">Category 1</a></li><li id="profes" class="categoriaActiva esCategoria" onclick="ActivarCategoriasp(this,-14);" ontap="ActivarCategoriasp(this,-14);" style="width: 150px; height: 44px;"><a style="height: 44px;">Custom</a></li></ul><div class="jumbotron"><h1>No Products yet</h1><p>Please, enter all your products to begin.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Enter Products</button></p></div>');
                     }else{
-                      $("#menuproductosaux").html('<div class="jumbotron"><h1>No Products yet</h1><p>Please, enter all your products to begin.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Enter Products</button></p></div>');
+						if(dorapos==1){
+							$('#menuproductosaux').append('<div class="jumbotron"><h1>Creando tus productos...</h1><p>Por favor, espera unos segundos mientras creamos tus primeros productos para empezar a facturar.</p><p><button id="btntime" class="btn btn-xs" type="button">Espere...</button></p></div>');
+							if($('#btntime').length>0){
+								clearInterval(r);
+								var ts=15;
+								r=setInterval(function(){
+									$('#btntime').html('Espere:'+ts+'s');
+									ts=ts-1;
+									if(ts==-1){
+										clearInterval(r);
+										$('#btntime').html('Facturar Ahora');
+									}
+										
+								},1000);
+							}
+						
+							$('#btntime').on('click',function(){
+								if($('#btntime').html()=='Facturar Ahora'){
+									envia('puntodeventa');
+								}
+							});
+						}else{
+							 $("#menuproductosaux").html('<div class="jumbotron"><h1>No Products yet</h1><p>Please, enter all your products to begin.</p><p><button class="btn btn-primary btn-lg" type="button" onclick="editarProductoID=0; envia('+"'nuevoproducto'"+')">Enter Products</button></p></div>');
+						}
+                     
                     }
                 }
 			}
@@ -2622,7 +2672,7 @@ function addDiscount(){
 			$('#discountAdded').fadeIn();
 			//$('#totalmiFactura').val(parseFloat(totales) + parseFloat(discount));
 			$('#totalmiFactura').val(parseFloat(totales));
-			$('#total').html('$'+ (parseFloat(totales) - parseFloat(discount)+parseFloat(propina)).toFixed(2));
+			$('#total').html($.trim(simbolocoin)+(parseFloat(totales) - parseFloat(discount)+parseFloat(propina)).toFixed(2));
 			if($('#total').html().length>8)
 				$('#divtotal').css('font-size','26px');
 			else
@@ -2765,7 +2815,7 @@ function borrarCompra(item){
 	$('#itemsVendidos').css('background-color','red');*/
 
 	$('#totalmiFactura').val(sumTotal);
-	$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+	$('#total').html($.trim(simbolocoin)+ parseFloat(sumTotal).toFixed(2));
 	if($('#total').html().toString().length==9)
 		$('#divtotal').css('font-size','26px');
 	else if($('#total').html().toString().length>9)
@@ -2922,7 +2972,8 @@ function DetalleAbajo(){
 
 function AntesDePagar(){
 	//$('#paymentModule').modal('show');
-	if(parseFloat($('#total').html().substring(1))>0){
+	var desdesub=simbolocoin.length;
+	if(parseFloat($('#total').html().substring(desdesub))>0){
 		var concredito=localStorage.getItem('pagarconcredito');
 		if(concredito==null)
 			concredito='false';
@@ -3916,7 +3967,11 @@ function Ready(){
 					var miitemname=todoslabels[k].name;
 					$('#'+miitemname).html(todoslabels[k].text);
 				}
-
+				
+				//alert($('.coin').length);
+					/*$('.coin').each(function(){
+						$(this).html($(this).html().replace('$',simbolocoin));
+					});*/
 		});
 
 	//idioma
@@ -4390,7 +4445,7 @@ function ResetPagos(cual){
 		if($(this).val()!=''){
 			pagado+=parseFloat($(this).val());
 		}
-		$('#'+$(this).attr('id')+'a').html('$ '+$(this).val());
+		$('#'+$(this).attr('id')+'a').html(simbolocoin+' '+$(this).val());
 	});
 
 	console.log(pagado);
@@ -5176,7 +5231,9 @@ function AsignarNombre(){
 
 function VerPropinas(){
 	var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-	var mitot=parseFloat($('#total').html().replace('$',''));
+	//alert($('#total').html().substring(1));
+	var desdesub=simbolocoin.length;
+	var mitot=parseFloat($('#total').html().substring(desdesub));
 	if(localStorage.getItem("con_mesas")=="true"&&mitot==0){
 
     if(localStorage.getItem("con_localhost") == 'true'){
@@ -5314,7 +5371,7 @@ function GuardarPropina(){
 
 	$('#propinaFactura').val($('#valorpropina').val());
 	$('#invoiceprop').html($('#valorpropina').val());
-	$('#total').html("$"+(parseFloat($('#total').html().substring(1))+parseFloat($('#valorpropina').val())).toFixed(2));
+	$('#total').html($.trim(simbolocoin)+(parseFloat($('#total').html().substring(simbolocoin.length))+parseFloat($('#valorpropina').val())).toFixed(2));
 
 	if($('#total').html().toString().length==9)
 		$('#divtotal').css('font-size','26px');
@@ -5333,10 +5390,10 @@ function GuardarPropina(){
 	$('#payButton').html('PAGAR');
 	$('#invoiceTotal').html($('#total').html());
 	/*botones efectivo*/
-	var sumTotal=parseFloat($('#total').html().substring(1));
-	$('#justo').html('$ '+sumTotal.toFixed(2));
+	var sumTotal=parseFloat($('#total').html().substring(simbolocoin.length));
+	$('#justo').html(simbolocoin+' '+sumTotal.toFixed(2));
 	$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
-	$('#redondeado').html('$ '+Math.ceil(sumTotal).toFixed(2));
+	$('#redondeado').html(simbolocoin+' '+Math.ceil(sumTotal).toFixed(2));
 	$('#redondeado').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
 
 	var alta=0;
@@ -5347,7 +5404,7 @@ function GuardarPropina(){
 			break;
 		}
 	}
-	$('#altaden').html('$ '+alta.toFixed(2));
+	$('#altaden').html(simbolocoin+' '+alta.toFixed(2));
 	$('#altaden').attr('data-value',-1*alta.toFixed(2));
 	if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
 		$('#altaden').parent().css('display','inline');
@@ -5361,7 +5418,7 @@ function GuardarPropina(){
 		iter++;
 		p10=iter*10;
 	}
-	$('#prox10').html('$ '+p10.toFixed(2));
+	$('#prox10').html(simbolocoin+' '+p10.toFixed(2));
 	$('#prox10').attr('data-value',-1*p10.toFixed(2));
 	//console.log(p10+'/'+alta);
 	if(p10>0&&p10!=alta)
@@ -5377,7 +5434,7 @@ function GuardarPropina(){
 		p20=iter*20;
 	}
 
-	$('#prox20').html('$ '+p20.toFixed(2));
+	$('#prox20').html(simbolocoin+' '+p20.toFixed(2));
 	$('#prox20').attr('data-value',-1*p20.toFixed(2));
 	if(p20>0&&p20!=p10)
 		$('#prox20').parent().css('display','inline');
@@ -5823,7 +5880,7 @@ function VerConsumos(idmesa){
 				});
 
 				$('#totalmiFactura').val(sumTotal);
-				$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+				$('#total').html($.trim(simbolocoin)+parseFloat(sumTotal).toFixed(2));
 
 				if($('#total').html().toString().length==9)
 					$('#divtotal').css('font-size','26px');
@@ -5839,7 +5896,7 @@ function VerConsumos(idmesa){
 				}
 
 				//$('#total').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2))
-				$('#justo').html('$ '+sumTotal.toFixed(2));
+				$('#justo').html(simbolocoin+' '+sumTotal.toFixed(2));
 				$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
 				$('#redondeado,#redondeado2').html(Math.ceil(sumTotal).toFixed(2));
 				$('#redondeado,#redondeado2').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
@@ -5852,7 +5909,7 @@ function VerConsumos(idmesa){
 					}
 				}
 
-				$('#altaden').html('$ '+alta.toFixed(2));
+				$('#altaden').html(simbolocoin+' '+alta.toFixed(2));
 				$('#altaden').attr('data-value',-1*alta.toFixed(2));
 				if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
 					$('#altaden').parent().css('display','inline');
@@ -5866,7 +5923,7 @@ function VerConsumos(idmesa){
 					iter++;
 					p10=iter*10;
 				}
-				$('#prox10').html('$ '+p10.toFixed(2));
+				$('#prox10').html(simbolocoin+' '+p10.toFixed(2));
 				$('#prox10').attr('data-value',-1*p10.toFixed(2));
 				//console.log(p10+'/'+alta);
 				if(p10>0&&p10!=alta)
@@ -5881,7 +5938,7 @@ function VerConsumos(idmesa){
 					iter++;
 					p20=iter*20;
 				}
-				$('#prox20').html('$ '+p20.toFixed(2));
+				$('#prox20').html(simbolocoin+' '+p20.toFixed(2));
 				$('#prox20').attr('data-value',-1*p20.toFixed(2));
 				if(p20>0&&p20!=p10)
 					$('#prox20').parent().css('display','inline');
@@ -6053,7 +6110,7 @@ function VerConsumos(idmesa){
 				});
 
 				$('#totalmiFactura').val(sumTotal);
-				$('#total').html('$'+ parseFloat(sumTotal).toFixed(2));
+				$('#total').html($.trim(simbolocoin)+parseFloat(sumTotal).toFixed(2));
 				if($('#total').html().toString().length==9)
 					$('#divtotal').css('font-size','26px');
 				else if($('#total').html().toString().length>9)
@@ -6070,9 +6127,9 @@ function VerConsumos(idmesa){
 				$('#payButton').html('PAGAR');
 				$('#invoiceTotal').html(parseFloat(sumTotal).toFixed(2));
 				//$('#total').html('PAGAR $'+ parseFloat(sumTotal).toFixed(2))
-				$('#justo').html('$ '+sumTotal.toFixed(2));
+				$('#justo').html(simbolocoin+' '+sumTotal.toFixed(2));
 				$('#justo').attr('data-value',-1*sumTotal.toFixed(2));
-				$('#redondeado').html('$ '+Math.ceil(sumTotal).toFixed(2));
+				$('#redondeado').html(simbolocoin+' '+Math.ceil(sumTotal).toFixed(2));
 				$('#redondeado').attr('data-value',-1*Math.ceil(sumTotal).toFixed(2));
 				var alta=0;
 				for( var t in misdenominaciones){
@@ -6082,7 +6139,7 @@ function VerConsumos(idmesa){
 						break;
 					}
 				}
-				$('#altaden').html('$ '+alta.toFixed(2));
+				$('#altaden').html(simbolocoin+' '+alta.toFixed(2));
 				$('#altaden').attr('data-value',-1*alta.toFixed(2));
 				if(alta!=sumTotal&&alta!=Math.ceil(sumTotal)&&alta!=0)
 					$('#altaden').parent().css('display','inline');
@@ -6096,7 +6153,7 @@ function VerConsumos(idmesa){
 					iter++;
 					p10=iter*10;
 				}
-				$('#prox10').html('$ '+p10.toFixed(2));
+				$('#prox10').html(simbolocoin+' '+p10.toFixed(2));
 				$('#prox10').attr('data-value',-1*p10.toFixed(2));
 				//console.log(p10+'/'+alta);
 				if(p10>0&&p10!=alta)
@@ -6111,7 +6168,7 @@ function VerConsumos(idmesa){
 					iter++;
 					p20=iter*20;
 				}
-				$('#prox20').html('$ '+p20.toFixed(2));
+				$('#prox20').html(simbolocoin+' '+p20.toFixed(2));
 				$('#prox20').attr('data-value',-1*p20.toFixed(2));
 				if(p20>0&&p20!=p10)
 					$('#prox20').parent().css('display','inline');
@@ -6767,7 +6824,7 @@ function UsarBwise(){
 	StarIOAdapter.bwise(cadenavalores,function(resp){
 		//alert(resp);
 		var dataresp=resp.split("|");
-		var total=$('#total').html().substring(1);
+		var total=$('#total').html().substring(simbolocoin.length);
 		if(parseFloat(dataresp[0])==parseFloat(total)){
 			PagoSimple();
 			elegirTarjeta(7);

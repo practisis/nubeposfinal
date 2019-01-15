@@ -407,7 +407,7 @@
 									</table>
 								</th>
 								<th style="width:50%; text-align:left; padding-left:20px;"  class='trans_prod'>Producto</th>
-								<th style="text-align:right; padding-right:20px;"><span onclick='AbrirDrawer();'>$Total</span></th>
+								<th style="text-align:right; padding-right:20px;"><span onclick='AbrirDrawer();' class='coin'>$Total</span></th>
 							</tr>
 						</table>
 					</td>
@@ -500,7 +500,7 @@
 					</div>
 					<div class='container-fluid'>
 					<div class='row' style='margin-top:10px;'>
-						<div id='divtotal2'>TOTAL: $
+						<div id='divtotal2'><span class='coin'>TOTAL: $</span>
 								<span id="invoiceTotal" class="payOverview">0.00</span>
 						</div>
 					</div>
@@ -538,7 +538,7 @@
 								<div onclick="changePaymentCategory('1','Efectivo');" style='padding:15px;'><span id='caretEfectivo' class='fa fa-caret-down'></span>&nbsp;<span id='trans_label_84' style='font-size:18px; font-weight:bold;'>Efectivo</span></div>
 								</td>
 								<td style='vertical-align:middle'>
-							    <span class="badge" style='float:right;' id='paymentEfectivoa'>$ 0.00</span>
+							    <span class="badge coin" style='float:right;' id='paymentEfectivoa'>$ 0.00</span>
 								</td>
 								<td>
 								<button onclick='ResetPagos(1);'class='btn btn-default basurero' style='margin-left:5px;margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
@@ -580,7 +580,7 @@
 									<div onclick="changePaymentCategory('2','Tarjetas');" style='padding:15px;' ><span id='caretTarjetas' class='fa fa-caret-right'></span>&nbsp;<span id='trans_label_85' style='font-size:18px; font-weight:bold;'>Tarjetas</span></div>
 								</td>
 								<td style='vertical-align:middle'>
-									<span class="badge" id='paymentTarjetasa' style='float:right;'>$ 0.00</span>
+									<span class="badge coin" id='paymentTarjetasa' style='float:right;'>$ 0.00</span>
 								</td>
 								<td>
 									<button onclick='ResetPagos(2);'class='btn btn-default basurero' style='margin-left:5px; margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
@@ -594,7 +594,7 @@
 							<!--<div class='col-lg-12 col-md-12 col-xs-12'>-->
 							<!--<div id='trans_label_35'>Elige la tarjeta con la que vas a pagar</div>-->
 							<div class="input-group" style='display:none;' id='cardgroup'>
-								<span class="input-group-addon trans_valorus" id="basic-addon1" >Valor US</span>
+								<span class="input-group-addon trans_valorus coin" id="basic-addon1" >Valor $</span>
 								<input onchange='valorcardchange();' class='form-control input-lg pop' id='valortarjeta' value='0.00' readonly />
 							</div>
 							<div id='lastarjetas' style='margin-top:15px;'>
@@ -609,7 +609,7 @@
 									<div onclick="changePaymentCategory('3','Cheques');" style='padding:15px;'><span id='caretCheques' class='fa fa-caret-right'></span>&nbsp;<span style='font-size:18px; font-weight:bold;' id='trans_label_86'>Cheques</span></div>
 								</td>
 								<td  style='vertical-align:middle'>
-									 <span class="badge" id='paymentChequesa' style='float:right;'>$ 0.00</span>
+									 <span class="badge coin" id='paymentChequesa' style='float:right;'>$ 0.00</span>
 								</td>
 								<td>
 								<button onclick='ResetPagos(3);'class='btn btn-default basurero'  style='margin-left:5px; margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
@@ -631,7 +631,7 @@
 								<tr>
 								<td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon trans_valorus" id="basic-addon1" style='width:20%;' >Valor US</span>
+								<span class="input-group-addon trans_valorus coin" id="basic-addon1" style='width:20%;' >Valor $</span>
 								<input onchange='valorchequechange();' class='form-control input-lg cheque pop' id='valorcheque1' onkeypress="isalphanumeric(event);" name='valorcheque1' value='0.00' readonly data-container='#touchcheques'/>
 								</div>
 								</td></tr>
@@ -647,7 +647,7 @@
 									<div onclick="changePaymentCategory('4','CxC');" style='padding:15px;'><span id='caretCxC' class='fa fa-caret-right'></span>&nbsp;<span style='font-size:18px; font-weight:bold;' id='trans_label_87'>CxC</span></div>
 								</td>
 								<td  style='vertical-align:middle'>
-									 <span class="badge" id='paymentCxCa' style='float:right;'>$ 0.00</span>
+									 <span class="badge coin" id='paymentCxCa' style='float:right;'>$ 0.00</span>
 								</td>
 								<td>
 									<button onclick='ResetPagos(4);'class='btn btn-default basurero'   style='margin-left:5px; margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
@@ -668,7 +668,7 @@
 								</td></tr>
 								<tr><td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon trans_valorus" id="basic-addon1" style='width:20%;' >Valor US</span>
+								<span class="input-group-addon trans_valorus coin" id="basic-addon1" style='width:20%;' >Valor $</span>
 								<input onchange='valorcxcchange();' class='form-control input input-lg pop' id='valorcxc' name='valorcxc' readonly data-container='#touchcxc'/>
 								</div>
 								</td></tr></table>
@@ -683,7 +683,7 @@
 									Ver Opciones Almuerzos (Consumo Interno)</span></div>
 								</td>
 								<td  style='vertical-align:middle'>
-									 <span class="badge" id='paymentConsumoIa' style='float:right;'>$ 0.00</span>
+									 <span class="badge coin" id='paymentConsumoIa' style='float:right;'>$ 0.00</span>
 								</td>
 								<td>
 									<button onclick='ResetPagos(5);'class='btn btn-default basurero' style='margin-left:5px; margin-right:15px;'><span class='glyphicon glyphicon-trash'></span></button>
@@ -698,7 +698,7 @@
 								<table width='100%' style=''>
 								<tr><td>
 								<div class="input-group" style='margin-top:5px; margin-bottom:5px; width:100%;'>
-								<span class="input-group-addon trans_valorus" id="basic-addon1" style='width:20%;' >Valor US</span>
+								<span class="input-group-addon trans_valorus coin" id="basic-addon1" style='width:20%;' >Valor $</span>
 								<input onchange='valorConsumoIchange();' class='form-control input input-lg pop' id='valorConsumoI' name='valorConsumoI' readonly data-container='#touchConsumoI'/>
 								</div>
 								</td></tr></table>

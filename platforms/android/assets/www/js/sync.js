@@ -69,7 +69,7 @@ function SyncStart(){
 				$('#JSONempresaLocal').html('"empresa":{'+'"nombre":"'+dataemp.nombre+'","direccion":"'+dataemp.direccion+"-"+dataemp.telefono+'","razon":"'+dataemp.razon+'","ruc":"'+dataemp.ruc2+'"},');
 			});
 		});
-		setTimeout(function(){SincronizadorNormal();},120000);
+		setTimeout(function(){SincronizadorNormal();},90000);
 		//setInterval(function(){SincronizadorNormal();},3000);
 	}else if(productosimpuestosya){
 		ExtraeDatosApi(11);
@@ -111,7 +111,8 @@ function ExtraeDatosApi(donde){
 		//$(".navbar").slideUp();
 		//$("#demoGratis,#fadeRow,#finalizado").css("display","none");
 		$("#demoGratis,#finalizado").css("display","none");
-		$("#contentStepSincro,#cuentaactiva,#mensajeperso").fadeIn();
+		//$("#contentStepSincro,#cuentaactiva,#mensajeperso").fadeIn();
+		$("#cuentaactiva,#mensajeperso").fadeIn();
 		$("#txtSincro").html("0%");
 		var jsoncateg=JSON.parse($('#JSONCategoriasNube').html());
 		var jsoncategorias=jsoncateg.Categorias;
@@ -137,11 +138,13 @@ function ExtraeDatosApi(donde){
 		console.log("Datos API 2: Productos y Agregados");
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("15%");
 		
 		/*Agregar modificadores*/
 		var jsonmodif=JSON.parse($('#JSONModifNube').html());
+		//console.log('modif');
+		//console.log(jsonmodif);
 		var jsonmodificadores=jsonmodif.modificadores;
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){
@@ -156,6 +159,7 @@ function ExtraeDatosApi(donde){
 			},errorCB,successCB);
 		/*FIN MODIFICADORES*/
 		
+		//console.log('producto');
 		var jsonprod=JSON.parse($('#JSONproductosNube').html());
 		var jsonproductos=jsonprod.Productos;
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
@@ -164,9 +168,12 @@ function ExtraeDatosApi(donde){
 				tx.executeSql("delete from sqlite_sequence where name='PRODUCTOS'",[],function(tx,results){});
 			for(var n=0;n<jsonproductos.length;n++){
 				var item=jsonproductos[n];
-				tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado,tieneimpuestos) VALUES("'+item.formulado_nombre+'", "'+item.formulado_codigo+'" ,'+item.formulado_precio+','+item.categoria_timespan+','+item.cargaiva+','+item.formulado_productofinal+','+item.formulado_matprima+',"'+item.formulado_timespan+'",'+item.carga_servicio+',"false","'+item.color+'",'+item.activo+',"'+item.tieneimpuestos+'")',[],function(tx,results){
-				console.log("insertado producto:"+results.insertId);
-				});
+				if(item!=null){
+					//console.log(item);
+					tx.executeSql('INSERT OR IGNORE INTO PRODUCTOS(formulado,codigo,precio,categoriaid,cargaiva,productofinal,materiaprima,timespan,servicio,sincronizar,color,estado,tieneimpuestos) VALUES("'+item.formulado_nombre+'", "'+item.formulado_codigo+'" ,'+item.formulado_precio+','+item.categoria_timespan+','+item.cargaiva+','+item.formulado_productofinal+','+item.formulado_matprima+',"'+item.formulado_timespan+'",'+item.carga_servicio+',"false","'+item.color+'",'+item.activo+',"'+item.tieneimpuestos+'")',[],function(tx,results){
+					console.log("insertado producto:"+results.insertId);
+					});
+				}
 			}
 			},errorCB,function(){
 				localStorage.setItem("productosya",true);
@@ -177,8 +184,7 @@ function ExtraeDatosApi(donde){
 	}else if(donde==3){
 		console.log("Datos API 3: Clientes");
 		//$(".navbar").slideUp();
-		$("#demoGratis").css("display","none");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("30%");
 		var jsoncli=JSON.parse($('#JSONclientesNube').html());
 		//{"Clientes":[{"id":"1","nombre":" Consumidor Final","cedula":"9999999999999","telefono":"","direccion":"","email":"","timespan" : "0"}]}
@@ -205,7 +211,7 @@ function ExtraeDatosApi(donde){
 		console.log("Datos API 4: Presupuesto");
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("45%");
 		var jsonpres=JSON.parse($('#JSONpresupuestoNube').html());
 		var jsonpresupuestos=jsonpres.presupuesto;
@@ -228,7 +234,7 @@ function ExtraeDatosApi(donde){
 		console.log("Datos API 5: Categorias Menu");
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("60%");
 		var jsonpres=JSON.parse($('#JSONCatMenuNube').html());
 		var jsonpresupuestos=jsonpres.menucategorias;
@@ -251,7 +257,7 @@ function ExtraeDatosApi(donde){
 		console.log("Datos API 6: Menu");
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("85%");
 		var jsonpres=JSON.parse($('#JSONMenuNube').html());
 		var jsonpresupuestos=jsonpres.menu;
@@ -278,7 +284,7 @@ function ExtraeDatosApi(donde){
 		console.log("Datos API 7: Permisos e impuestos");
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("95%");
 		//alert($('#JSONPermisosNube').html());
 		
@@ -332,12 +338,25 @@ function ExtraeDatosApi(donde){
 			}else{
 				localStorage.setItem("feaceptanc",'false');
 			}
+			
+			if(ext[0].tiene_factura_electronica=='true'){
+				$('.cuantosdisponibles').css('display','');
+			}else{
+				$('.cuantosdisponibles').css('display','none');
+			}
+			
+			if(ext[0].docdisponibles!=null){
+					localStorage.setItem('docdisponibles',ext[0].docdisponibles);
+					$('#cuantosdisponibles').html(ext[0].docdisponibles);
+				}
 
             if(ext[0].id_version_nube == 4){
-              localStorage.setItem("con_profesionales","true");
-
-            var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
-          	db.transaction(function(tx){
+				localStorage.setItem("con_profesionales","true");
+				
+					
+				
+				var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
+				db.transaction(function(tx){
 
                 tx.executeSql("INSERT OR IGNORE INTO CATEGORIAS(categoria,activo,existe,timespan,sincronizar)values('Personalizada','1','1','-14','true');",[],function(tx,results){
                 	console.log("insertada categ:"+results.insertId);
@@ -411,7 +430,7 @@ function ExtraeDatosApi(donde){
 		console.log("Datos API 8: Mesas");
 		//$(".navbar").slideUp();
 		$("#demoGratis").css("display","none");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("98%");
 		//alert($('#JSONPermisosNube').html());
 
@@ -468,7 +487,7 @@ function ExtraeDatosApi(donde){
 
 		console.log("Datos API 9: Locales");
 		$("#demoGratis").css("display","none");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("98%");
 
 		/*json locales*/
@@ -498,7 +517,7 @@ function ExtraeDatosApi(donde){
 
 			console.log("Datos API 10: Productos Impuestos");
 			$("#demoGratis").css("display","none");
-			$("#contentStepSincro").fadeIn();
+			//$("#contentStepSincro").fadeIn();
 			$("#txtSincro").html("99%");
 
 			/*json productos impuestos*/
@@ -533,7 +552,7 @@ function ExtraeDatosApi(donde){
 
 			console.log("Datos API 11: Impuestos Reales");
 			$("#demoGratis").css("display","none");
-			$("#contentStepSincro").fadeIn();
+			//$("#contentStepSincro").fadeIn();
 			$("#txtSincro").html("99%");
 
 			/*json productos impuestos*/
@@ -619,7 +638,8 @@ function SincronizadorNormal(){
 	db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Ready to start the normal synchronizer"]);});
 	procesocount=1;
 	$('#fadeRow,#demoGratis,#finalizado').css("display","none");
-	$('#contentStepSincro,#cuentaactiva,#mensajeperso').fadeIn();
+	//$('#contentStepSincro,#cuentaactiva,#mensajeperso').fadeIn();
+	$('#cuentaactiva,#mensajeperso').fadeIn();
 	DatosRecurrentes(0);
 }
 
@@ -684,6 +704,8 @@ function registrarUser(){
 			var plan=0;
 			var id_idioma = 1;
 			var iddevice=$('#deviceid').html();
+			var id_agente= Math.floor((Math.random() * 5) + 1);
+			var telefono='';
 			localStorage.setItem('datosquemados',empresa+'|'+pais+'|'+nombrePais+'|'+id_idioma);
 			//alert(iddevice+'/'+nombre+'/'+id_idioma+'/'+nombre);
 			//$("#btnNewEmp").html('<img src="images/loader.gif"  width="50%" />');
@@ -691,9 +713,28 @@ function registrarUser(){
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Ready to send the new register post"]);});
 			
-			$.post("https://www.practisis.net/registro/testnubepos.php", {
+			var URLreg='https://www.practisis.net/registro/testnubepos.php';
+			if(dorapos==1){
+				var idpais=$('#newPais').val();
+				//Costa Rica
+				if(idpais==13){
+					URLreg='https://www.practisis.net/registro/registroDoraCostaRicapos.php';
+				}//México
+				else if(idpais==23){
+					URLreg='https://www.practisis.net/registro/registroDoraMexicopos.php';
+				}//Perú
+				else if(idpais==27){
+					URLreg='https://www.practisis.net/registro/registroDoraPerupos.php';
+				}//Ecuador y demás
+				else{
+					URLreg='https://www.practisis.net/registro/registroDorapos.php';
+				}
+			}
+			
+			$.post(URLreg, {
 				nombre : nombre,
 				celular : celular,
+				telefono : celular,
 				email :newEmail,
 				pass : newPass,
 				rpass : newConfirm,
@@ -706,7 +747,9 @@ function registrarUser(){
 				versiones : versiones,
 				id_idioma : newIdioma,
 				terminos : newTerminos,
-				deviceid:iddevice
+				deviceid:iddevice,
+				id_agente:id_agente,
+				repass : newConfirm
 			}).done(function(data){
 				//alert(data);
 				if(data=='existe'){
@@ -862,7 +905,6 @@ function UserLogin(){
 		auxpass = pass;
 		$('#btnvalida2').html("<img src='images/loader.gif' width='20px'/>");
 		var apiURL='https://www.practisis.net/connectnubepos/api2.php';
-		
 		var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 		db.transaction(function(tx){tx.executeSql('insert into LOGACTIONS (time,descripcion) values (?,?)',[new Date().getTime(),"Ready to send the login post"]);});
 		
@@ -1125,7 +1167,7 @@ function DatosRecurrentes(cual){
 	}
 	if(cual==1){
 		console.log("Datos Nube 1: Categorias");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("0");
 		if($('#JSONCategoriasNube').html().length>0){
 			var jsoncategorias=JSON.parse($('#JSONCategoriasNube').html());
@@ -1176,7 +1218,7 @@ function DatosRecurrentes(cual){
 		}	
 	}else if(cual==2){
 		console.log("recurrentes 2: Productos y Modificadores");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("15%");
 		
 		/*Ingreso y actualizacion de modificadores*/
@@ -1267,7 +1309,7 @@ function DatosRecurrentes(cual){
 	
 	}else if(cual==3){
 		console.log("recurrentes 3: Clientes");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("30%");
 		if($('#JSONclientesNube').html().length>0){
 			var jsonclientes=JSON.parse($('#JSONclientesNube').html());
@@ -1338,7 +1380,7 @@ function DatosRecurrentes(cual){
 		}
 	}else if(cual==4){
 		console.log("recurrentes 4: Presupuestos");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("45%");
 		if($('#JSONpresupuestoNube').html().length>0){
 			var jsonpresup=JSON.parse($('#JSONpresupuestoNube').html());
@@ -1389,7 +1431,7 @@ function DatosRecurrentes(cual){
 		}
 	}else if(cual==5){
 		console.log("recurrentes 5: Empresa");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("60%");
 		if($('#JSONEmpresaNube').html().length>0){
 			var jsonpresup=JSON.parse($('#JSONEmpresaNube').html());
@@ -1444,6 +1486,13 @@ function DatosRecurrentes(cual){
 					  }
                       //localStorage.setItem("paquete","36");
                       //localStorage.setItem("paquete","37");
+					  
+						if(item.tiene_factura_electronica=='true'){
+							$('.cuantosdisponibles').css('display','');
+						}else{
+							$('.cuantosdisponibles').css('display','none');
+						}
+					  
 
                       if(item.id_version_nube == 4){
                         localStorage.setItem("con_profesionales","true");
@@ -1512,7 +1561,7 @@ function DatosRecurrentes(cual){
 		}
 	}else if(cual==6){
 		console.log("recurrentes 6: Categorias Diseño Menu");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("75%");
 		if($('#JSONCatMenuNube').html().length>0){
 			var jsoncatmenu=JSON.parse($('#JSONCatMenuNube').html());
@@ -1562,7 +1611,7 @@ function DatosRecurrentes(cual){
 		}
 	}	else if(cual==7){
 		console.log("recurrentes 7: Productos Diseño de Menu");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("90%");
 		if($('#JSONMenuNube').html().length>0){
 			var jsonmenu=JSON.parse($('#JSONMenuNube').html());
@@ -1607,7 +1656,7 @@ function DatosRecurrentes(cual){
 						DatosRecurrentes(8);
 						setTimeout(function(){
 							$("#theProgress").css("width" , "95%");
-							$("#finalizado").fadeIn();
+							//$("#finalizado").fadeIn();
 							$("#contentStepSincro").css("display","none");
 							$("#txtSincro").html("");
 						},1500);
@@ -1623,7 +1672,7 @@ function DatosRecurrentes(cual){
 	}
 	else if(cual==8){
 		console.log("recurrentes 8: Permisos Usuario");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("95%");
 		
 		if($('#JSONImpuestosNube').html()!=''){
@@ -1761,7 +1810,7 @@ function DatosRecurrentes(cual){
 		}
 	}else if(cual==9){
 		console.log("recurrentes 9: Tipos de Mesas");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("98%");
 		if($('#JSONTipoMesasNube').html().length>0){
 			var jsontiposmesas=JSON.parse($('#JSONTipoMesasNube').html());
@@ -1809,7 +1858,7 @@ function DatosRecurrentes(cual){
 	}
 	else if(cual==10){
 		console.log("recurrentes 10: Mesas");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("98%");
 		if($('#JSONMesasNube').html().length>0){
 			var jsonmesas=JSON.parse($('#JSONMesasNube').html());
@@ -1857,7 +1906,7 @@ function DatosRecurrentes(cual){
 		}
         else if(cual==11){
 		console.log("recurrentes 11: Locales");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("99%");
 		if($('#JSONLocales').html().length>0){
 			var jsonlocales=JSON.parse($('#JSONLocales').html());
@@ -1905,7 +1954,7 @@ function DatosRecurrentes(cual){
 			}
 		}else if(cual==12){
 		console.log("recurrentes 12: Productos Impuestos");
-		$("#contentStepSincro").fadeIn();
+		//$("#contentStepSincro").fadeIn();
 		$("#txtSincro").html("99%");
 		if($('#JSONFormuladosImpuestos').html()!=''){
 			var jsonformuladoimp=JSON.parse($('#JSONFormuladosImpuestos').html());
@@ -1960,7 +2009,7 @@ function DatosRecurrentes(cual){
 			}
 		}else if(cual==13){
 			console.log("recurrentes 13: Impuestos Reales");
-			$("#contentStepSincro").fadeIn();
+			//$("#contentStepSincro").fadeIn();
 			$("#txtSincro").html("99%");
 			if($('#JSONImpuestosReales').html()!=''){
 				var jsonformuladoimp=JSON.parse($('#JSONImpuestosReales').html());
@@ -2345,8 +2394,18 @@ function IrTerminos(){
 
 function StartQuemado(){
 	console.log(">>>>Iniciar quemado>>>");
-	JSONproductosNube='{"Productos":[]}';
-	JSONcategoriasNube='{"Categorias":[ {"categoria_id":"1","categoria_nombre":"PRODUCTOS" , "categoria_timespan" : "0"},{"categoria_id":"2","categoria_nombre":"CATEGORíA 1" , "categoria_timespan" : "1"},{"categoria_id":"3","categoria_nombre":"CATEGORíA 2" , "categoria_timespan" : "2"},{"categoria_id":"4","categoria_nombre":"CATEGORíA 3" , "categoria_timespan" : "3"}]}';
+	if(dorapos==1){
+		JSONproductosNube='{"Productos":[ {"formulado_id":9,"formulado_tipo":"5","formulado_nombre":"Alitas","formulado_codigo":"1010131","formulado_precio":"1.7544","color":"rgb(246, 138, 30)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14776688489565303" , "categoria_id" : "5" , "categoria_nombre" : "Cafeteria" , "cargaiva" : "1" , "categoria_timespan" : "14767181815252744" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":19,"formulado_tipo":"5","formulado_nombre":"Capuchino","formulado_codigo":"7046","formulado_precio":"3.125","color":"rgb(51, 122, 183)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14994451628298517" , "categoria_id" : "5" , "categoria_nombre" : "Cafeteria" , "cargaiva" : "1" , "categoria_timespan" : "14767181815252744" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":2,"formulado_tipo":"5","formulado_nombre":"Desayuno Americano","formulado_codigo":"9959","formulado_precio":"2.2321","color":"rgb(51, 122, 183)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14767181977062580" , "categoria_id" : "5" , "categoria_nombre" : "Cafeteria" , "cargaiva" : "1" , "categoria_timespan" : "14767181815252744" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":3,"formulado_tipo":"5","formulado_nombre":"Desayuno Continental Grande","formulado_codigo":"4911","formulado_precio":"1.99","color":"rgb(246, 138, 30)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14767182421654938" , "categoria_id" : "5" , "categoria_nombre" : "Cafeteria" , "cargaiva" : "1" , "categoria_timespan" : "14767181815252744" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":5,"formulado_tipo":"5","formulado_nombre":"Lomo","formulado_codigo":"9730","formulado_precio":"4.386","color":"rgb(82, 79, 161)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14776687371329254" , "categoria_id" : "5" , "categoria_nombre" : "Cafeteria" , "cargaiva" : "1" , "categoria_timespan" : "14767181815252744" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":6,"formulado_tipo":"5","formulado_nombre":"Pollo","formulado_codigo":"9640","formulado_precio":"4.386","color":"rgb(113, 60, 25)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14776687471822672" , "categoria_id" : "5" , "categoria_nombre" : "Cafeteria" , "cargaiva" : "1" , "categoria_timespan" : "14767181815252744" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":20,"formulado_tipo":"5","formulado_nombre":"Teque\u00f1os","formulado_codigo":"1847","formulado_precio":"0.8929","color":"rgb(51, 122, 183)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14994481268286245" , "categoria_id" : "5" , "categoria_nombre" : "Cafeteria" , "cargaiva" : "1" , "categoria_timespan" : "14767181815252744" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":10,"formulado_tipo":"5","formulado_nombre":"Yogurt","formulado_codigo":"1003","formulado_precio":"4.39","color":"","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14776688839202155" , "categoria_id" : "5" , "categoria_nombre" : "Cafeteria" , "cargaiva" : "0" , "categoria_timespan" : "14767181815252744" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":17,"formulado_tipo":"13","formulado_nombre":"Blusas","formulado_codigo":"4482","formulado_precio":"65","color":"rgb(246, 138, 30)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14889808891896152" , "categoria_id" : "13" , "categoria_nombre" : "Categor\u00c3\u00ada 1" , "cargaiva" : "1" , "categoria_timespan" : "158091521044088003" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":15,"formulado_tipo":"13","formulado_nombre":"Frutillas","formulado_codigo":"15","formulado_precio":"0.5","color":"rgb(51, 122, 183)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"1" , "formulado_productofinal":"1" , "formulado_timespan" : "686011487693600000" , "categoria_id" : "13" , "categoria_nombre" : "Categor\u00c3\u00ada 1" , "cargaiva" : "1" , "categoria_timespan" : "158091521044088003" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":16,"formulado_tipo":"13","formulado_nombre":"Uvas","formulado_codigo":"16","formulado_precio":"0.5","color":"","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"1" , "formulado_productofinal":"1" , "formulado_timespan" : "748811487693647000" , "categoria_id" : "13" , "categoria_nombre" : "Categor\u00c3\u00ada 1" , "cargaiva" : "0" , "categoria_timespan" : "158091521044088003" , "carga_servicio" : "0", "activo" : "1","tieneimpuestos":"false"},{"formulado_id":24,"formulado_tipo":"12","formulado_nombre":"COMBO PIZZA ITALIANA","formulado_codigo":"24","formulado_precio":"5","color":"","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"1" , "formulado_productofinal":"1" , "formulado_timespan" : "225211506541852000" , "categoria_id" : "12" , "categoria_nombre" : "COMBOS" , "cargaiva" : "1" , "categoria_timespan" : "170871506541273000" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":23,"formulado_tipo":"12","formulado_nombre":"COMBO SANDUCHE DE PAVO","formulado_codigo":"23","formulado_precio":"5.3279","color":"","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"1" , "formulado_productofinal":"1" , "formulado_timespan" : "996391506541273000" , "categoria_id" : "12" , "categoria_nombre" : "COMBOS" , "cargaiva" : "1" , "categoria_timespan" : "170871506541273000" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":25,"formulado_tipo":"12","formulado_nombre":"COMBO ENSALADA DE POLLO","formulado_codigo":"254556678899","formulado_precio":"8","color":"","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"1" , "formulado_productofinal":"1" , "formulado_timespan" : "916841506542264000" , "categoria_id" : "12" , "categoria_nombre" : "COMBOS" , "cargaiva" : "1" , "categoria_timespan" : "170871506541273000" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":14,"formulado_tipo":"10","formulado_nombre":"Ensalada de Frutas","formulado_codigo":"14","formulado_precio":"2.5","color":"","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "131231487693324000" , "categoria_id" : "10" , "categoria_nombre" : "Ensaladas" , "cargaiva" : "1" , "categoria_timespan" : "1500061840" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":12,"formulado_tipo":"7","formulado_nombre":"GALLETA FRESA Y MIEL","formulado_codigo":"4493","formulado_precio":"1.7456","color":"rgb(182, 35, 103)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14813143480819435" , "categoria_id" : "7" , "categoria_nombre" : "GALLETAS" , "cargaiva" : "1" , "categoria_timespan" : "14813010538948572" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":11,"formulado_tipo":"7","formulado_nombre":"Galletas Animalitos 250gr","formulado_codigo":"2352","formulado_precio":"0.85","color":"rgb(113, 60, 25)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14813010674393733" , "categoria_id" : "7" , "categoria_nombre" : "GALLETAS" , "cargaiva" : "1" , "categoria_timespan" : "14813010538948572" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":4,"formulado_tipo":"6","formulado_nombre":"Leche","formulado_codigo":"8893","formulado_precio":"0.7","color":"rgb(113, 60, 25)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"1" , "formulado_productofinal":"1" , "formulado_timespan" : "14767183328035040" , "categoria_id" : "6" , "categoria_nombre" : "Lacteos" , "cargaiva" : "1" , "categoria_timespan" : "14767183198563438" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":21,"formulado_tipo":"6","formulado_nombre":"Prueba 7","formulado_codigo":"123","formulado_precio":"4.1","color":"","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"1" , "formulado_productofinal":"1" , "formulado_timespan" : "951401505424141000" , "categoria_id" : "6" , "categoria_nombre" : "Lacteos" , "cargaiva" : "1" , "categoria_timespan" : "14767183198563438" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":8,"formulado_tipo":"6","formulado_nombre":"Queso porcion","formulado_codigo":"9404","formulado_precio":"4.386","color":"rgb(246, 138, 30)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14776687974647639" , "categoria_id" : "6" , "categoria_nombre" : "Lacteos" , "cargaiva" : "1" , "categoria_timespan" : "14767183198563438" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":13,"formulado_tipo":"9","formulado_nombre":"Pan de casa x 10","formulado_codigo":"2892","formulado_precio":"5","color":"rgb(246, 138, 30)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "14855450641665181" , "categoria_id" : "9" , "categoria_nombre" : "Panader\u00eda" , "cargaiva" : "0" , "categoria_timespan" : "1500061582" , "carga_servicio" : "0", "activo" : "1","tieneimpuestos":"false"},{"formulado_id":18,"formulado_tipo":"8","formulado_nombre":"Personalizado","formulado_codigo":"1414","formulado_precio":"0","color":"","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "-14" , "categoria_id" : "8" , "categoria_nombre" : "Personalizada" , "cargaiva" : "1" , "categoria_timespan" : "-14" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":7,"formulado_tipo":"1","formulado_nombre":"Corvina","formulado_codigo":"6624","formulado_precio":"4.39","color":"rgb(182, 35, 103)","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"0" , "formulado_productofinal":"1" , "formulado_timespan" : "1477668758872615" , "categoria_id" : "1" , "categoria_nombre" : "Productos" , "cargaiva" : "1" , "categoria_timespan" : "1500061583" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"},{"formulado_id":22,"formulado_tipo":"11","formulado_nombre":"SANDUCHE DE ATUN","formulado_codigo":"22","formulado_precio":"3.5","color":"","formulado_impuestos":"","formulado_tax_id":"","formulado_matprima":"1" , "formulado_productofinal":"1" , "formulado_timespan" : "933021506541087000" , "categoria_id" : "11" , "categoria_nombre" : "SANDUCHES" , "cargaiva" : "1" , "categoria_timespan" : "900891506541087000" , "carga_servicio" : "1", "activo" : "1","tieneimpuestos":"true"}]}';
+	}else{
+		JSONproductosNube='{"Productos":[]}';
+	}
+	
+	if(dorapos==1){
+		JSONcategoriasNube='{"Categorias":[ {"categoria_id":"2","categoria_nombre":"CATEGOR\u00edA 1" , "categoria_timespan" : "1"},{"categoria_id":"3","categoria_nombre":"CATEGOR\u00edA 2" , "categoria_timespan" : "2"},{"categoria_id":"4","categoria_nombre":"CATEGOR\u00edA 3" , "categoria_timespan" : "3"},{"categoria_id":"5","categoria_nombre":"CAFETERIA" , "categoria_timespan" : "14767181815252744"},{"categoria_id":"6","categoria_nombre":"LACTEOS" , "categoria_timespan" : "14767183198563438"},{"categoria_id":"7","categoria_nombre":"GALLETAS" , "categoria_timespan" : "14813010538948572"},{"categoria_id":"8","categoria_nombre":"PERSONALIZADA" , "categoria_timespan" : "-14"},{"categoria_id":"9","categoria_nombre":"PANADER\u00edA" , "categoria_timespan" : "1500061582"},{"categoria_id":"10","categoria_nombre":"ENSALADAS" , "categoria_timespan" : "1500061840"},{"categoria_id":"11","categoria_nombre":"SANDUCHES" , "categoria_timespan" : "900891506541087000"},{"categoria_id":"12","categoria_nombre":"COMBOS" , "categoria_timespan" : "170871506541273000"},{"categoria_id":"1","categoria_nombre":"PRODUCTOS" , "categoria_timespan" : "1500061583"},{"categoria_id":"13","categoria_nombre":"CATEGOR\u00c3\u00adA 1" , "categoria_timespan" : "158091521044088003"},{"categoria_id":"14","categoria_nombre":"PANADER\u00c3\u00adA" , "categoria_timespan" : "158091521044088136"}]}';
+	}else{
+		JSONcategoriasNube='{"Categorias":[ {"categoria_id":"1","categoria_nombre":"PRODUCTOS" , "categoria_timespan" : "0"},{"categoria_id":"2","categoria_nombre":"CATEGORíA 1" , "categoria_timespan" : "1"},{"categoria_id":"3","categoria_nombre":"CATEGORíA 2" , "categoria_timespan" : "2"},{"categoria_id":"4","categoria_nombre":"CATEGORíA 3" , "categoria_timespan" : "3"}]}';
+	}
+	
 	JSONclientesNube='{"Clientes":[{"id":"1","nombre":" Consumidor Final","cedula":"9999999999999","telefono":"","direccion":"","email":"","timespan" : "0"}]}';
 	JSONpresupuestoNube='{"presupuesto":[]}';
 	JSONcategoriasMenuNube='{"menucategorias":[{"orden":"999","nombre":"Categorías Principal","timespan":"1","id":"1","activo":"true"}]}';

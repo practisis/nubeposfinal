@@ -91,13 +91,13 @@ function changePaymentCategory(index,nombre){
 		$('#caretCheques').attr('class','fa fa-caret-down');
 		if(pagonormal==true){
 			$('#valorcxc,#paymentCxC').val("0.00");
-			$('#valorcheque1,#paymentCheques').val(parseFloat($('#total').html().substring(1)).toFixed(2));
-			$('#paymentChequesa').html('$ '+parseFloat($('#total').html().substring(1)).toFixed(2));
+			$('#valorcheque1,#paymentCheques').val(parseFloat($('#total').html().substring(simbolocoin.length)).toFixed(2));
+			$('#paymentChequesa').html(simbolocoin+' '+parseFloat($('#total').html().substring(simbolocoin.length)).toFixed(2));
 		}else{
 				if(parseFloat($('#valorcheque1').val())==0||$('#valorcheque1').val()==""){
 					if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0){
 						$('#valorcheque1,#paymentCheques').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
-						$('#paymentChequesa').html('$ '+parseFloat($('#changeFromPurchase').html()).toFixed(2));
+						$('#paymentChequesa').html(simbolocoin+' '+parseFloat($('#changeFromPurchase').html()).toFixed(2));
 					}
 				}
 		}
@@ -108,13 +108,13 @@ function changePaymentCategory(index,nombre){
 		$('#touchcxc').fadeIn();
 		if(pagonormal==true){
 			$('#valorcheque1,#paymentCheques').val("0.00");
-			$('#valorcxc,#paymentCxC').val(parseFloat($('#total').html().substring(1)).toFixed(2));
-			$('#paymentCxCa').html('$ '+parseFloat($('#total').html().substring(1)).toFixed(2));
+			$('#valorcxc,#paymentCxC').val(parseFloat($('#total').html().substring(simbolocoin.length)).toFixed(2));
+			$('#paymentCxCa').html(simbolocoin+' '+parseFloat($('#total').html().substring(simbolocoin.length)).toFixed(2));
 		}else{
 				if(parseFloat($('#valorcxc').val())==0){
 				if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0){
 					$('#valorcxc,#paymentCxC').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
-					$('#paymentCxCa').html('$ '+parseFloat($('#changeFromPurchase').html()).toFixed(2));
+					$('#paymentCxCa').html(simbolocoin+' '+parseFloat($('#changeFromPurchase').html()).toFixed(2));
 				}
 			}
 		}
@@ -126,14 +126,14 @@ function changePaymentCategory(index,nombre){
 		if(pagonormal==true){
 			$('#valorcheque1,#paymentCheques').val("0.00");
 			$('#valorcxc,#paymentCxC').val("0.00");
-			$('#valorConsumoI,#paymentConsumoI').val(parseFloat($('#total').html().substring(1)).toFixed(2));
-			$('#paymentConsumoIa').html('$ '+parseFloat($('#total').html().substring(1)).toFixed(2));
+			$('#valorConsumoI,#paymentConsumoI').val(parseFloat($('#total').html().substring(simbolocoin.length)).toFixed(2));
+			$('#paymentConsumoIa').html(simbolocoin+' '+parseFloat($('#total').html().substring(simbolocoin.length)).toFixed(2));
 		}else{
 				//alert($('#valorConsumoI').val());
 				if(parseFloat($('#valorConsumoI').val())==0){
 				if((parseFloat($('#invoicePaid').html())-parseFloat($('#invoiceTotal').html()))<0){
 					$('#valorConsumoI,#paymentConsumoI').val(parseFloat($('#changeFromPurchase').html()).toFixed(2));
-					$('#paymentConsumoIa').html('$ '+parseFloat($('#changeFromPurchase').html()).toFixed(2));
+					$('#paymentConsumoIa').html(simbolocoin+' '+parseFloat($('#changeFromPurchase').html()).toFixed(2));
 				}
 			}
 		}
@@ -146,10 +146,10 @@ function changePaymentCategory(index,nombre){
 	$('.paymentMethods').each(function(){
 		if($(this).val() != 0 && $(this).val() != '' && $(this).val() != null){
 			var miid=$('#'+$(this).attr('id')+'a');
-			miid.html('$ '+$(this).val());
+			miid.html(simbolocoin+' '+$(this).val());
 			value += parseFloat($(this).val());
 		}else{
-			var miid=$('#'+$(this).attr('id')+'a').html('$ 0.00');
+			var miid=$('#'+$(this).attr('id')+'a').html(simbolocoin+' 0.00');
 		}
 	});
 
@@ -206,7 +206,7 @@ $('.buttonsPayment').click(function(){
 	
 function updateForm(value){
 	value = parseFloat(value);
-	var total = parseFloat($('#total').html().substring(1));
+	var total = parseFloat($('#total').html().substring(simbolocoin.length));
 	var change = (value - total);
 	//alert(value+'/'+total+'/'+change);
 	if(value < total){
@@ -392,7 +392,7 @@ function performPurchase(restaurant){
 			echo=parseFloat(invoicePaid-invoiceTotal);
 
 			/*VALORES PARA LA FACTURA*/
-			var mitotal=$('#total').html().substring(1);
+			var mitotal=$('#total').html().substring(simbolocoin.length);
 			var subconiva=$('#subtotalIva').val();
 			var subsiniva=$('#subtotalSinIva').val();
 			var eliva=0;
@@ -619,9 +619,9 @@ function performPurchase(restaurant){
 			
 			//popupsavefactura
 			$('#popupprecios').modal('hide');
-			$('#totalalert').html('$ '+totalFac);
-			$('#pagadoalert').html('$ '+$('#invoicePaid').html());
-			$('#vueltoalert').html('$ '+$('#changeFromPurchase').html());
+			$('#totalalert').html(simbolocoin+' '+totalFac);
+			$('#pagadoalert').html(simbolocoin+' '+$('#invoicePaid').html());
+			$('#vueltoalert').html(simbolocoin+' '+$('#changeFromPurchase').html());
 			//
             impresionMovil(fetchJson.toString());
             //setTimeout(function(){localStorage.setItem("nameorder","");},2000);
@@ -749,7 +749,7 @@ function cancelPayment(){
 	$('#paymentModule').fadeOut();
 	$('#row1').fadeIn();
 	var propina=parseFloat($('#invoiceprop').html());
-	$('#total').html("$"+(parseFloat($('#total').html().substring(1))-propina).toFixed(2));
+	$('#total').html(simbolocoin+(parseFloat($('#total').html().substring(simbolocoin.length))-propina).toFixed(2));
 	
 	if($('#total').html().toString().length==9)
 		$('#divtotal').css('font-size','26px');
@@ -1335,6 +1335,11 @@ function noCliente(){
 					$('#'+miitemname).html(todoslabels[k].text);
 				}
 				
+				//alert($('.coin').length);
+					$('.coin').each(function(){
+						$(this).html($(this).html().replace('$',simbolocoin));
+					});
+				
 		});
 		
 		/*idioma*/	
@@ -1365,7 +1370,10 @@ function cedula() {
 				return VerificarPeruSunat(numero);
 			}else if(elpais=="Mexico"){
 				return VerificarMexicoRfc(numero);
-			}else{
+			}else if(elpais=="Costa Rica"){
+				return VerificarCostaRicaCedula(numero);
+			}
+			else{
 				var suma = 0;
 				var residuo = 0;
 				var pri = false;
@@ -1394,7 +1402,7 @@ function cedula() {
 				/* menor que 6 (0,1,2,3,4,5) para personas naturales */
 
 				if (d3==7 || d3==8){
-				console.log('El tercer d?gito ingresado es inv?lido');
+				console.log('El tercer dígito ingresado es inválido');
 				return false;
 				}
 
@@ -1473,7 +1481,7 @@ function cedula() {
 
 				else if(nat == true){
 				if (digitoVerificador != d10){
-				console.log('El n?mero de cédula de la persona natural es incorrecto.');
+				console.log('El número de cédula de la persona natural es incorrecto.');
 				return false;
 				}
 				if (numero.length >10 && numero.substr(10,3) != '001' ){

@@ -5,6 +5,7 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
 			<title>NubePOS V2.0</title>
 			<link rel="shortcut icon" href="favicon.ico">
+			<script>var dorapos=0;</script>
 			<script src="js/jquery-1.11.3.min.js"></script>
 			<script src="js/jquery-ui.min.js"></script>
 			<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -331,6 +332,8 @@
 					</ul>
 					
 				  <ul class="nav navbar-nav navbar-right">
+					<li><button onclick='IrPractipos();' type='button' class='btn btn-success btn-xs cuantosdisponibles' style='margin-top:15px; display:none;'><span>Doc. Disponibles:</span><label id='cuantosdisponibles' style=''>0</label>
+					</button></li>
 					<li id='cloudIndex'><a><i class='fa fa-signal' id='signalinternet' style='color:white;'></i></a></li>
 				  </ul>
 				</div>
@@ -346,7 +349,7 @@
 					<div class="col-xs-3 itemsmenu" id="menuNew2" onclick="clickMenu(2);">
 					Historial
 					</div>
-					<div class="col-xs-3 itemsmenu" id="menuNew3" onclick="clickMenu(3);" >
+					<div class="col-xs-2 itemsmenu" id="menuNew3" onclick="clickMenu(3);" >
 					Productos
 					</div>
 					<div class="col-xs-1 itemsmenu"  id="menuNew4" onclick="clickMenu(4);">
@@ -355,7 +358,11 @@
 					<div class="col-xs-1 itemsmenu" id="menuNew5" onclick="clickMenu(5);">
 					<span style='display:inline;' class='fa fa-cog'></span>
 					</div>
-					<div class="col-xs-1 itemsmenu">
+					<div class="col-xs-2 itemsmenu" id="menuNew6" >
+						<button class='btn btn-success btn-xs cuantosdisponibles' onclick="IrPractipos();" style='display:none;'>
+						<span class='fa fa-file-o'></span>
+						<span id='cuantosdisponibles1'></span>
+						</button>
 					</div>
 				</div>
 				<div class="row">
@@ -815,13 +822,15 @@
 			digitado=false;
 			var db = window.openDatabase("Database", "1.0", "PractisisMobile", 200000);
 			db.transaction(iniciaDB,errorCB,successCB);
-			
-			if(localStorage.getItem('sonido')==null){
-				localStorage.setItem('sonido',true);
+			if(localStorage.getItem('docdisponibles')!=null){
+				$('#cuantosdisponibles,#cuantosdisponibles1').html(localStorage.getItem('docdisponibles'));
+				$('.cuantosdisponibles').css('display','');
 			}
-			
-			
-			
+			else{
+				$('#cuantosdisponibles,#cuantosdisponibles1').html('0');
+				$('.cuantosdisponibles').css('display','none');
+			}
+				
 			
 			/*if(localStorage.getItem("id_version_nube") == '0'){
 				envia('config');
@@ -944,9 +953,29 @@
 						var miitemname=$(todosplaceholder[k]).attr("name");
 						$('.'+miitemname).prop("placeholder",$(todosplaceholder[k]).html());
 					}
+					
 			});
 			startAnimation();
-			//fin idioma
+			//fin idioma	
+			
+			
+			
+			//para moneda
+			var htmlmoneda=$.get("lang/moneda.html",function(d){
+				var jsonmoneda=JSON.parse(d);
+				var signoreal=jsonmoneda.Ecuador;
+				for(var j in jsonmoneda){
+					if(localStorage.getItem('pais')!=null){
+						if(localStorage.getItem('pais')==j){
+							signoreal=jsonmoneda[j];
+						}
+					}
+				}
+				
+				$('.coin').each(function(){
+					$(this).html($(this).html().replace('$',signoreal));
+				});
+			});
 	});
 			
 	function ClickNumeroP(numc){
@@ -1134,6 +1163,10 @@ function clickSubMenu(cual){
 			document.getElementById("productos").style.display="none";
 		}
 	}
+}
+
+function IrPractipos(){
+	window.open("https://www.practisis.net/practipos2/");
 }
 
 	</script>

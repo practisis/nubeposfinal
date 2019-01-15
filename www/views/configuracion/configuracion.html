@@ -31,7 +31,7 @@
 			  <input type="password" id="pass2" name="mipass" value="" class="form-control input-lg trans_pass" placeholder="Password" required="" tabindex='2' autocomplete="off" aria-required="true">
 			</div>
 			<div class="form-group">
-				<a id='trans_label_83' data-toggle="modal" onclick="quitarSignIn();" href="">¿No tienes una cuenta en AvaPOS? Créala aquí.</a><br/>
+				<a id='trans_label_83' class='nameapp' data-toggle="modal" onclick="quitarSignIn();" href="">¿No tienes una cuenta en AvaPOS? Créala aquí.</a><br/>
 			</div>
 		   <button class="btn btn-lg btn-success" tabindex='3'  id="btnvalida2" type="button" onclick="UserLogin();">Login</button>
 		  </form>
@@ -109,7 +109,7 @@
 					<div class="col-md-2"></div>
 					<div class="col-md-8" style="position:relative;min-height: 300px;overflow:hidden;">
 						 <div id="divdatoslogin" style="overflow:auto;">
-						  <h4 style="text-align:left; margin-top:40px; margin-bottom:30px;" id='trans_label_38'>Regístrate! Ingresa tus datos y crea tu cuenta AvaPOS.</h4>
+						  <h4 style="text-align:left; margin-top:40px; margin-bottom:30px;" id='trans_label_38' class='nameapp'>Regístrate! Ingresa tus datos y crea tu cuenta AvaPOS.</h4>
 						<div class="form-group">
 						  <input onkeydown="isalphanumeric(event);" type="form-control input-lg" name="empresa"  class="form-control input-lg trans_companyname" id="newEmpresa" placeholder="Nombre de tu Negocio" tabindex="1" required="" autocomplete="off">
 						</div>
@@ -170,7 +170,7 @@
 						</div>
 
 						<div class="form-group">
-								<a id='trans_label_39' data-toggle="modal" data-target="#recuperarPass" onclick="mostrarSignIn();" href="">¿Ya tienes cuenta AvaPOS haz click aquí?</a><br/>
+								<a id='trans_label_39' data-toggle="modal" data-target="#recuperarPass" onclick="mostrarSignIn();" href="" class='nameapp'>¿Ya tienes cuenta AvaPOS haz click aquí?</a><br/>
 						</div>
 
 
@@ -231,7 +231,7 @@
     		</div>
             <br>
 			<div class='row' style='margin-bottom:30px;'>
-    			<center><button type="button" class="btn btn-lg btn-success trans_active_ava" onclick='guardatelefono()' style="font-size: 20px;">Start AvaPOS</button></center>
+    			<center><button type="button" class="btn btn-lg btn-success trans_active_ava nameapp" onclick='guardatelefono()' style="font-size: 20px;">Start AvaPOS</button></center>
 				<!--<button class='btn btn-default btn-lg' id='trans_label_81' onclick='omitirtelefono();'>Omitir</button>&nbsp;-->
 			</div>
             <div class='row'>
@@ -364,7 +364,7 @@
 				<div class="col-xs-2">
 				</div>
 				<div class="col-xs-8" style="text-align: justify;">
-					<span id='trans_label_99' style="font-size: 18px;">
+					<span id='trans_label_99' style="font-size: 18px;" class='nameapp'>
 						Los términos y condiciones del servicio de AvaPOS han sido actualizados para mejorar nuestro servicio y
 						trabajo con la comunidad de usuarios de AvaPOS. Para ver la los nuevos términos y condiciones del servicio AvaPOS,
 						por favor, de click <a href='javascript:void(0);' onclick='IrTerminos();'>aquí</a>.
@@ -484,7 +484,7 @@
 				  <li role="presentation"><a href="#general" aria-controls="general" role="tab" data-toggle='tab' style='font-size:15px; padding:10px 20px;'>General</a></li>
 				  <li role="presentation"><a href="#ventastab" aria-controls="ventastab" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;' class='trans_sales'>Ventas</a></li>
 				  <li role="presentation"><a href="#impuestostab" aria-controls="impuestostab" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;' class='trans_imp'>Impuestos</a></li>
-				  <li role="presentation"><a href="#plan" aria-controls="plan" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;' onclick='VerPlanes();'>Plan</a></li>
+				  <li role="presentation"><a href="#plan" aria-controls="plan" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;' onclick='VerPlanesBoton();'>Plan</a></li>
 				  <li role="presentation"><a href="#logtab" aria-controls="logtab" role="tab" data-toggle='tab' style='font-size:15px; padding:8px 20px;'>LOG</a></li>
 			</ul>
 		</li>
@@ -507,7 +507,7 @@
                     </div>
 					<div style='margin-bottom:40px;'>
 						<h1>Guía de precios</h1>
-						<p>AvaPOS es gratis por el tiempo que quieras.  Pásate a un plan pagado cuando lo necesites.</p>
+						<p class='nameapp'>AvaPOS es gratis por el tiempo que quieras.  Pásate a un plan pagado cuando lo necesites.</p>
 					</div>
 					<div class='row' style='text-align:center;'>
 					<div class='col-lg-4 col-md-4 col-xs-6'>
@@ -567,7 +567,7 @@
                     </div>
 					<div style='margin-bottom:40px;'>
 						<h1>Pricing Guide</h1>
-						<p>AvaPOS is free to use for as long as you want.  Upgrade when you like.</p>
+						<p class='nameapp'>AvaPOS is free to use for as long as you want.  Upgrade when you like.</p>
 					</div>
 					<div class='col-lg-4 col-md-4 col-xs-6'>
 					 <div class="jumbotron" id='jumbo0en'>
@@ -621,6 +621,18 @@
 					 </div>
 					</div>
 					</div>
+					
+					<!---planes para dora--->
+					<div id='planes_dora' style='display:none;'>
+						<h2>Planes Dora</h2>
+						<br/>
+						<p>Para ver todos los planes que tiene Dora para ti, por favor presiona el siguiente botón, te reenviaremos a la página de Dora para que puedas revisar.</p>
+						<br/>
+						<div style='text-align:center;'>
+						<button class='btn btn-primary' onclick='irDora();'>Ver Planes</button>
+						</div>
+					</div>
+					<!---planes dora-->
 				  </div>
 				  <div class="row" id="contentStepSincro" style="display:none;" >
 					<div class="col-md-3" ></div>
@@ -636,7 +648,7 @@
 					<div class="col-md-3" ></div>
 				  </div>
 				  <div class='row'>
-					<div class='col-lg-12' id='finalizado' style='margin-top:10px; margin-bottom:10px;'>
+					<div class='col-lg-12' id='finalizado' style='margin-top:10px; margin-bottom:10px; display:none;'>
 					<h2 id='trans_label_14'>Sincronizado con exito! </h2>
 					</div>
 				  </div>
@@ -1541,7 +1553,8 @@ $(document).ready(function(){
 			$('.navbar,#barraalternamovil').slideUp();
 			$('#finalizado,#cuentaactiva,#mensajeperso').css('display','none');
 		}else{
-			$('#finalizado,#cuentaactiva,#mensajeperso').fadeIn();
+			//$('#finalizado,#cuentaactiva,#mensajeperso').fadeIn();
+			$('#cuentaactiva,#mensajeperso').fadeIn();
 			if(localStorage.getItem('id_version_nube')!=null&&localStorage.getItem('id_version_nube')!='0'&&localStorage.getItem('telefono_inte')!=null&&localStorage.getItem('telefono_inte')!=''&&localStorage.getItem('terminos')!=null&&localStorage.getItem('terminos')!='false'&&localStorage.getItem('id_locales')!=null&&localStorage.getItem('id_locales')!='0'){
 				$('#pestanasconfig').fadeIn();
 				if($(window).width()>900)
@@ -1557,7 +1570,8 @@ $(document).ready(function(){
 		}
 	}else{
 		$('#finalizado,#demoGratis,#fadeRow,#escojeIdioma').css("display","none");
-		$('#contentStepSincro,#cuentaactiva,#mensajeperso,#pestanasconfig').fadeIn();
+		//$('#contentStepSincro,#cuentaactiva,#mensajeperso,#pestanasconfig').fadeIn();
+		$('#cuentaactiva,#mensajeperso,#pestanasconfig').fadeIn();
 	}
 	
 	///fin planes
@@ -1609,6 +1623,15 @@ $(document).ready(function(){
 					var miitemname=todoslabels[k].name;
 					$('#'+miitemname).html(todoslabels[k].text);
 				}
+			
+				//alert(dorapos+'/'+$('.nameapp').html());
+				if(dorapos==1){
+					$('.nameapp').each(function(){
+						$(this).html($(this).html().replace('AvaPOS','DoraPOS'));
+					});
+					//alert(dorapos+'/'+$('.nameapp').html());
+				}
+					
 				
 		});
 		
@@ -3065,6 +3088,13 @@ function actualizar(){
 				var miitemname=todoslabels[k].name;
 				$('#'+miitemname).html(todoslabels[k].text);
 			}
+			
+			//alert(dorapos+'/'+$('.nameapp').html());
+			if(dorapos==1){
+				$('.nameapp').each(function(){
+					$(this).html($(this).html().replace('AvaPOS','DoraPOS'));
+				});
+			}
 
 	  });
 
@@ -3367,6 +3397,10 @@ function grabarimpuesto(){
     }
 }
 
+function VerPlanesBoton(){
+	$('#planes_dora').fadeIn('fast');
+}
+
 function VerPlanes(){
 		if(localStorage.getItem("idioma")==1){
 			$('#planes_es').fadeIn('fast',function(){
@@ -3445,5 +3479,10 @@ function continuarpasos(paso,que){
 function obtenerfirma(){
   var url = 'http://www.administracionpublica.gob.ec/como-obtener-la-firma-electronica/';
   window.open(url);
+}
+
+function irDora(){
+	var url='https://www.practisis.net/contabilidad/?modulo=administrador&index=planes';
+	window.open(url);
 }
 </script>

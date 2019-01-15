@@ -83,6 +83,7 @@ function updateOnlineStatus(condition) {
 	}
 }
 
+var simbolocoin='$';
 function envia(donde){
 			//if(loopSicnronizador) clearInterval(loopSicnronizador);
             //clearInterval(intervalProcesoRepetir);
@@ -126,6 +127,22 @@ function envia(donde){
 					$('#correoMal').fadeOut('slow');
 					$.get(lugar,function(data){
 						$('#main').html(data);
+						//para moneda
+						var htmlmoneda=$.get("lang/moneda.html",function(d){
+							var jsonmoneda=JSON.parse(d);
+							var signoreal=jsonmoneda.Ecuador;
+							for(var j in jsonmoneda){
+								if(localStorage.getItem('pais')!=null){
+									if(localStorage.getItem('pais')==j){
+										signoreal=jsonmoneda[j];
+									}
+								}
+							}
+							simbolocoin=signoreal;
+							$('.coin').each(function(){
+								$(this).html($(this).html().replace('$',signoreal));
+							});
+						});
 					});
 					/*$('#main').load(lugar,function(){
 						$("#simple-menu").click();
@@ -815,8 +832,8 @@ var app = {
 
 				var subs="";
 				subs+="<table class='table table-hovered'>";
-				subs+="<tr><td style='text-align:right;'>SUBTOTAL NETO</td><td style='text-align:right;'> $"+subtotal.toFixed(2)+"</td></tr>";
-				subs+="<tr><td style='text-align:right;'>SUBTOTAL - DESC </td><td style='text-align:right;'> $"+subtotaldesc.toFixed(2)+"</td></tr>";
+				subs+="<tr><td style='text-align:right;'>SUBTOTAL NETO</td><td style='text-align:right;'> "+simbolocoin+subtotal.toFixed(2)+"</td></tr>";
+				subs+="<tr><td style='text-align:right;'>SUBTOTAL - DESC </td><td style='text-align:right;'> "+simbolocoin+subtotaldesc.toFixed(2)+"</td></tr>";
 				
 				/*descuento*/
 				if(descAplicado>0){
@@ -828,7 +845,7 @@ var app = {
 					var vdetagregados=detagregados.split('@');
 					for(var t=0;t<vdetagregados.length;t++){
 						var dataagr=vdetagregados[t].split('|');
-						subs+="<tr><td style='text-align:right;'>"+dataagr[1]+"</td><td style='text-align:right;'> $"+parseFloat(dataagr[3]).toFixed(2)+"</td></tr>";
+						subs+="<tr><td style='text-align:right;'>"+dataagr[1]+"</td><td style='text-align:right;'> "+simbolocoin+parseFloat(dataagr[3]).toFixed(2)+"</td></tr>";
 					}
 				}
 
@@ -1064,25 +1081,25 @@ var app = {
 				
 				
 				
-				subs+="<tr><td style='text-align:right;'>SUBTOTAL NETO</td><td style='text-align:right;'> $"+subtotal.toFixed(2)+"</td></tr>";
+				subs+="<tr><td style='text-align:right;'>SUBTOTAL NETO</td><td style='text-align:right;'> "+simbolocoin+subtotal.toFixed(2)+"</td></tr>";
 				
 				
 				if(descAplicado>0){
-					subs+="<tr><td style='text-align:right;'>DESCUENTO</td><td style='text-align:right;'> $"+parseFloat(descAplicado).toFixed(2)+"</td></tr>";
+					subs+="<tr><td style='text-align:right;'>DESCUENTO</td><td style='text-align:right;'> "+simbolocoin+parseFloat(descAplicado).toFixed(2)+"</td></tr>";
 				}
 				
 				var subtotaldesc=0;
 				subtotaldesc=parseFloat(datosfact.Pagar[0].factura.subtotal_sin_iva)+parseFloat(datosfact.Pagar[0].factura.subtotal_iva);
 			
 			
-				subs+="<tr><td style='text-align:right;'>SUBTOTAL - DESC </td><td style='text-align:right;'> $"+subtotaldesc.toFixed(2)+"</td></tr>";
+				subs+="<tr><td style='text-align:right;'>SUBTOTAL - DESC </td><td style='text-align:right;'> "+simbolocoin+subtotaldesc.toFixed(2)+"</td></tr>";
 				
 				if(row.dataimpuestos!=""){
 					var detagregados=row.dataimpuestos;
 					var vdetagregados=detagregados.split('@');
 					for(var t=0;t<vdetagregados.length;t++){
 						var dataagr=vdetagregados[t].split('|');
-						subs+="<tr><td style='text-align:right;'>"+dataagr[1]+" ("+(parseFloat(dataagr[2])*100).toFixed(2)+"%)</td><td style='text-align:right;'> $"+parseFloat(dataagr[3]).toFixed(2)+"</td></tr>";
+						subs+="<tr><td style='text-align:right;'>"+dataagr[1]+" ("+(parseFloat(dataagr[2])*100).toFixed(2)+"%)</td><td style='text-align:right;'> "+simbolocoin+parseFloat(dataagr[3]).toFixed(2)+"</td></tr>";
 					}
 				}
 				
@@ -1090,7 +1107,7 @@ var app = {
 				
 				if(datosfact.Pagar[0].factura.propina!=null){
 					if(parseFloat(datosfact.Pagar[0].factura.propina)>0){
-						subs+="<tr><td style='text-align:right;' class='trans_propina'>Propina</td><td style='text-align:right;'> $"+parseFloat(datosfact.Pagar[0].factura.propina).toFixed(2)+"</td></tr>";
+						subs+="<tr><td style='text-align:right;' class='trans_propina'>Propina</td><td style='text-align:right;'> "+simbolocoin+parseFloat(datosfact.Pagar[0].factura.propina).toFixed(2)+"</td></tr>";
 					}
 				}
 				
@@ -1580,6 +1597,31 @@ function VerificarMexicoRfc(cadena){
         return true;
     else
         return false;
+}
+
+function VerificarCostaRicaCedula(cadena){
+	var error=0;
+	var primerdigito=cadena[0];
+	//alert(/^([1-9])*$/.test(primerdigito));
+	//alert(cadena.length);
+	if(cadena.length!=9){
+		error++;
+	}
+	if(!/^([1-9])*$/.test(primerdigito)){
+		error++;
+	}
+	
+	for(var t=0;t<cadena.length;t++){
+		 if(!/^([0-9])*$/.test(cadena[t])){
+			error++;
+		 }
+	}
+	
+	//alert(error);
+	if(error==0)
+		return true;
+	else
+		return false;
 }
 
 function GenerarClaveElectronica(cedula){

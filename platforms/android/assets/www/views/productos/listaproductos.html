@@ -60,7 +60,7 @@
                               <th style="width:25%;" class="trans_prod">Nombre</th>
                               <th style=" width:25%;" class="trans_categ">Categoría</th>
                               <th style="width:10%;" class="trans_code">Código</th>
-                              <th style="width:10%; text-align:right;" class="trans_precio">Precios $</th>
+                              <th style="width:10%; text-align:right;" class="trans_precio coin">Precios $</th>
                               <th style="width:10%; text-align:center;" class="trans_imp" >Aplica Impuestos</th>
                               <th style="text-align:center; width:5%; display:none;"></th><th style="width:15%;"></th>
                             </tr>
@@ -268,6 +268,8 @@ ListarCategorias();
 getSearch();
 
 $(document).ready(function(){
+	var r=null;
+	clearInterval(r);
 	//idioma
 		var linklang="es";
 		if(localStorage.getItem("idioma")==2)
@@ -315,8 +317,7 @@ $(document).ready(function(){
 					//console.log(todoslabels[k].name+"/"+todoslabels[k].name);
 					var miitemname=todoslabels[k].name;
 					$('#'+miitemname).html(todoslabels[k].text);
-				}
-				
+				}				
 		});
 
 	var suma=parseFloat($('.navbar').css('height'))+85;
@@ -402,6 +403,8 @@ function LlenarComboCat(options,options2){
 	//alert("here");
 }
 
+var r=null;
+
 function getSearch(){
 	startForma++;
 	if(startForma > 1) return false;
@@ -452,17 +455,51 @@ function getSearch(){
 		//console.log(resulta);
 		var inhtml='<table class="table table-striped"><tbody>';
 		if(resulta.rows.length==0){
-			if(localStorage.getItem("idioma")==1)
-				$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p></div>');
-			else
-				$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>No products</h1><p>Please, enter all your products to begin.</p></div>');
+			//alert(dorapos);
+			if(dorapos==1){
+				if(localStorage.getItem("idioma")==1){
+					$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>Creando tus productos...</h1><p>Por favor, espera unos segundos mientras creamos tus primeros productos para empezar a facturar.</p><p><button id="btntime" class="btn btn-xs" type="button">Espere...</button></p></div>');
+					}
+					else{
+						$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>Making products...</h1><p>Please, wait a few seconds, we are creating your first products.</p><p><button id="btntime" class="btn btn-xs" type="button">Espere...</button></p></div>');
+					}
+					
+					if($('#btntime').length>0){
+						clearInterval(r);
+						var ts=15;
+						r=setInterval(function(){
+							$('#btntime').html('Espere:'+ts+'s');
+							ts=ts-1;
+							if(ts==-1){
+								clearInterval(r);
+								$('#btntime').html('Ver Productos');
+							}
+								
+						},1000);
+					}
+				
+					$('#btntime').on('click',function(){
+						if($('#btntime').html()=='Ver Productos'){
+							envia('listaproductos');
+						}
+					});
+				
 
+			
+			}else{
+					if(localStorage.getItem("idioma")==1)
+						$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>No hay productos</h1><p>Por favor, ingresa todos tus productos para empezar a facturar.</p></div>');
+					else
+						$('#recibeTodosLosProductos').append('<div class="jumbotron"><h1>No products</h1><p>Please, enter all your products to begin.</p></div>')
+			}
+			
 			setTimeout(function() {
 				$('#nuevoProducto').effect('highlight');
 			}, 3000);
 			setTimeout(function() {
 				$('#nuevoProducto').effect('highlight');
 			}, 3300);
+			
 		}else{
 			$('#nproductos').html(resulta.rows.length);
 			for (var i=0; i < resulta.rows.length; i++){

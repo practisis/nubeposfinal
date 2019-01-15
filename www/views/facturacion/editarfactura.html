@@ -29,7 +29,7 @@
 				<div style='width:100%; margin-top:20px; text-align:right; margin-left:auto; margin-right:auto;'>
 				<div style='text-align:right; font-size:18px; margin-bottom:10px; padding-right:10px;'><span class='trans_items' style='font-weight:bold;'>Total Items</span>:<span id="itemsfacturados"></span></div>
 				<table class='table table-striped' style='text-align:center; margin-left:auto; margin-right:auto;'>
-					<thead><th class='trans_prod'>Producto</th><th class='trans_cant'>Cantidad</th><th style='text-align:right;'><label class='trans_precio'>Precio</label> (<label class='trans_sinimp' >Sin imp</label>)$USD</th><th style='text-align:right;'>Total $USD</th></thead>
+					<thead><th class='trans_prod'>Producto</th><th class='trans_cant'>Cantidad</th><th style='text-align:right;'><label class='trans_precio coin'>Precio</label> (<label class='trans_sinimp' >Sin imp</label>)</th><th style='text-align:right;' class='coin'>Total $</th></thead>
 					<tbody id='cuerpodetalle'>
 					</tbody>
 				</table>
@@ -191,6 +191,12 @@
 					var miitemname=todoslabels[k].name;
 					$('#'+miitemname).html(todoslabels[k].text);
 				}
+				
+				
+				
+				$('.coin').each(function(){
+						$(this).html($(this).html().replace('$',simbolocoin));
+				});
 				
 		});
 		

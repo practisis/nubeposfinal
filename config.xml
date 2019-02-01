@@ -43,6 +43,7 @@
     <icon gap:platform="ios" src="www/res/icon/android/logoC120x120.png" width="120" height="120" />
     <icon gap:platform="ios" src="www/res/icon/android/logoC76x76.png" width="76" height="76" />
     <icon gap:platform="ios" src="www/res/icon/android/logoC152x152.png" width="152" height="152" />
+	<icon gap:platform="ios" src="www/res/icon/android/logoC40x40.png" width="40" height="40" />
     <icon gap:platform="webos" src="www/res/icon/webos/icon-64.png" />
     <icon gap:platform="winphone" src="www/res/icon/windows-phone/icon-48.png" />
     <icon gap:platform="winphone" gap:role="background" src="www/res/icon/windows-phone/icon-173-tile.png" />
